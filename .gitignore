@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+/.vs/MinecraftProject/v17
+/Include/glm
+/Include
+/Lib
+/MinecraftProject/x64/Debug
+/x64/Debug
