@@ -52,7 +52,6 @@ void SinglePlayerWorld::init() {
 }
 
 void SinglePlayerWorld::generateChunks(int amountX, int amountY, int amountZ) {
-    std::cout << "Size of a chunk: " << sizeof(Chunk) << std::endl;
     for(int x = 0; x < amountX; x++) {
         for(int y = 0; y < amountY; y++) {
             for(int z = 0; z < amountZ; z++) {
