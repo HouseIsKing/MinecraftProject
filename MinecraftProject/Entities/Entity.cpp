@@ -34,22 +34,22 @@ void Entity::checkCollisionAndMove() {
     auto movementBox = BoundingBox(myBoundingBox);
     movementBox.expand(velocityX, velocityY, velocityZ);
     movementBox.grow(1.0f,1.0f,1.0f);
-    std::vector<Block*> collidingBoxes = world->getBlocksInBoundingBox(movementBox);
-    for(Block* box : collidingBoxes)
+    std::vector<BoundingBox> collidingBoxes = world->getBlockBoxesInBoundingBox(movementBox);
+    for(BoundingBox& box : collidingBoxes)
     {
-        velocityX = myBoundingBox.clipCollisionX(box->getBoundingBox(),velocityX);
+        velocityX = myBoundingBox.clipCollisionX(box,velocityX);
     }
     myBoundingBox.move(velocityX,0,0);
     tessellationHelper.getTransform().move(velocityX,0,0);
-    for(Block* box : collidingBoxes)
+    for(BoundingBox& box : collidingBoxes)
     {
-        velocityY = myBoundingBox.clipCollisionY(box->getBoundingBox(),velocityY);
+        velocityY = myBoundingBox.clipCollisionY(box,velocityY);
     }
     myBoundingBox.move(0,velocityY,0);
     tessellationHelper.getTransform().move(0,velocityY,0);
-    for(Block* box : collidingBoxes)
+    for(BoundingBox& box : collidingBoxes)
     {
-        velocityZ = myBoundingBox.clipCollisionZ(box->getBoundingBox(),velocityZ);
+        velocityZ = myBoundingBox.clipCollisionZ(box,velocityZ);
     }
     tessellationHelper.getTransform().move(0,0,velocityZ);
     isGrounded = originalY <= 0 && originalY != velocityY;

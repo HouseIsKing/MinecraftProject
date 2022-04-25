@@ -22,17 +22,18 @@ public:
     static void setWorld(SinglePlayerWorld* newWorld);
     static SinglePlayerWorld* getWorld();
     Chunk(int x, int y, int z);
-    Block* getBlockAt(int x, int y, int z);
+    const Block* getBlockAt(int x, int y, int z);
+    EBlockType getBlockTypeAt(int x, int y, int z);
+    bool isCoordsInsideChunk(int x, int y, int z);
     void resetDraw();
     void draw();
-    void setBlockAt(int x, int y, int z, Block* block);
-    ~Chunk();
+    void setBlockTypeAt(int x, int y, int z, EBlockType block);
 private:
     ChunkCoords chunkPosition;
     unique_ptr<TessellationHelper> tessellationHelper;
     static SinglePlayerWorld* world;
-    vector<unique_ptr<Block>> blocks;
-    void drawBlock(Block* block);
+    EBlockType blocks[CHUNK_HEIGHT*CHUNK_DEPTH*CHUNK_WIDTH]{EBlockType::AIR};
+    void drawBlock(EBlockType blockType, int x, int y, int z);
 
 };
 #endif //MINECRAFTPROJECT_CHUNK_H

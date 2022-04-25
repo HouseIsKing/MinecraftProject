@@ -10,12 +10,9 @@
 using std::unique_ptr;
 
 class GrassBlock : public Block {
-private:
-    static unique_ptr<vector<Texture>> textures;
 public:
-    static const vector<Texture> &getTextures();
-    [[nodiscard]] Texture getFaceTexture(BlockFaces face) const override;
-    GrassBlock(float x, float y,float z);
+    void generateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face, const float& x, const float& y, const float& z) const override;
+    GrassBlock();
 };
 
 #endif //MINECRAFTPROJECT_GRASSBLOCK_H

@@ -11,7 +11,6 @@
 #include <memory>
 
 using std::array;
-using std::shared_ptr;
 using glm::floor;
 
 enum class BlockFaces {
@@ -24,23 +23,15 @@ enum class BlockFaces {
 };
 
 class Block {
-private:
-    static shared_ptr<Block> airBlock;
-    static bool initAirBlock;
-    BoundingBox boundingBox;
-    array<float,24> UVs;
-    bool UVsOverride;
 protected:
-    const BlockType* type;
-    Block(const BlockType* type, float x, float y, float z);
-    Block(const BlockType* type, float minX, float minY, float minZ, float maxX, float maxY, float maxZ);
-    Block(const BlockType* type, float minX, float minY, float minZ, float maxX, float maxY, float maxZ, array<float,24> UVs);
-    [[nodiscard]] virtual Texture getFaceTexture(BlockFaces face) const;
+    vector<Texture*> textures;
+    BoundingBox boundingBox;
+    Block();
+    Block(float minX, float minY, float minZ, float maxX, float maxY, float maxZ);
 public:
-    [[nodiscard]] bool isAirBlock() const;
-    BoundingBox& getBoundingBox();
-    void generateTessellationData(TessellationHelper& tessellationHelper, BlockFaces face);
-    static Block* getAirBlock();
+    virtual ~Block();
+    BoundingBox getBoundingBox() const;
+    virtual void generateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face, const float& x, const float& y, const float& z) const = 0;
 };
 
 

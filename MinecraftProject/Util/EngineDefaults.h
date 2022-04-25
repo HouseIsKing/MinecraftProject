@@ -17,10 +17,19 @@ private:
     static unique_ptr<Shader> theShader;
     static bool hasInit;
     static void init();
-    static Block emptyBlocksArray[Chunk::CHUNK_WIDTH][Chunk::CHUNK_HEIGHT][Chunk::CHUNK_DEPTH];
 public:
     static Shader* getShader();
     static int getChunkLocalIndex(int x, int y, int z);
+};
+
+struct PosBlock
+{
+public:
+    int x;
+    int y;
+    int z;
+    EBlockType type;
+    PosBlock(int x, int y, int z, EBlockType type);
 };
 
 

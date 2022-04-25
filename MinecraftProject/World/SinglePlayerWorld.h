@@ -16,7 +16,7 @@ using std::equal_to;
 
 class SinglePlayerWorld {
 private:
-    unordered_map<ChunkCoords,Chunk,std::hash<ChunkCoords>> chunks;
+    unordered_map<ChunkCoords,Chunk,ChunkComparator> chunks;
     unordered_map<uint16_t,Entity*> entities;
     const uint16_t levelWidth;
     const uint16_t levelHeight;
@@ -31,10 +31,11 @@ public:
     void init();
     void generateChunks(int amountX, int amountY, int amountZ);
     bool isBlockExists(int x, int y, int z);
-    Block* getBlockAt(int x, int y, int z);
+    const Block* getBlockAt(int x, int y, int z);
+    EBlockType getBlockTypeAt(int x, int y, int z);
     static ChunkCoords getChunkCoords(int x, int y, int z);
     Chunk* getChunkAt(int x, int y, int z);
-    vector<Block*> getBlocksInBoundingBox(const BoundingBox& boundingBox);
+    vector<BoundingBox> getBlockBoxesInBoundingBox(const BoundingBox& boundingBox);
     void drawWorld();
 };
 #endif //MINECRAFTPROJECT_SINGLEPLAYERWORLD_H

@@ -28,3 +28,7 @@ int EngineDefaults::getChunkLocalIndex(int x, int y, int z) {
 }
 
 unique_ptr<Shader> EngineDefaults::theShader = {};
+
+PosBlock::PosBlock(int x, int y, int z, EBlockType type) : x(x), y(y), z(z), type(type)
+{
+}

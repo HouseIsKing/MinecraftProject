@@ -10,7 +10,7 @@ using glm::vec2;
 using glm::vec4;
 
 enum class VertexUsage : std::uint8_t {
-    POSITION_ONLY, POSITION_AND_TEXTURE_COORDS, POSITION_AND_COLOR, POSITION_AND_TEXTURE_COORDS_AND_COLOR
+    POSITION_AND_COLOR, POSITION_AND_TEXTURE_COORDS_AND_COLOR
 };
 
 struct Vertex {
@@ -21,8 +21,6 @@ public:
     VertexUsage usage;
     [[nodiscard]] VertexUsage getVertexUsage() const;
     Vertex(float x, float y, float z, float u, float v, float r, float g, float b, float a);
-    Vertex(float x, float y, float z, float u, float v);
-    Vertex(float x, float y, float z);
     Vertex(float x, float y, float z, float r, float g, float b, float a);
 
     [[nodiscard]] vec3 getPosition() const;

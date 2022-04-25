@@ -25,16 +25,28 @@ void mainLoop(GLFWwindow* window)
     Camera cam = Camera(glm::vec3(0,0,0),1280/720.0f);
     CameraController::setActiveCamera(cam);
     double start = glfwGetTime();
-    helper = new SinglePlayerWorld(256,8,256);
+    helper = new SinglePlayerWorld(256,64, 256);
     double end = glfwGetTime();
     cout << "World creation took " << end-start << " seconds" << endl;
     glfwSetCursorPosCallback(window, handleMouseInput);
+    double counter = 0;
+    int framesCompleted = 0;
     while (!glfwWindowShouldClose(window))
     {
+        start = glfwGetTime();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         helper->tick();
         helper->drawWorld();
         glfwSwapBuffers(window);
+        end = glfwGetTime();
+        counter += end - start;
+        framesCompleted++;
+        if (counter > 1)
+        {
+            counter -= 1;
+            cout << "FPS: " << framesCompleted << std::endl;
+            framesCompleted = 0;
+        }
         glfwPollEvents();
     }
     delete helper;

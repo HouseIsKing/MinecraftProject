@@ -4,35 +4,32 @@
 
 #ifndef MINECRAFTPROJECT_BLOCKTYPELIST_H
 #define MINECRAFTPROJECT_BLOCKTYPELIST_H
-#include "../../Textures/Texture.h"
-#include <vector>
 #include <memory>
+#include <unordered_map>
 
 class GrassBlock;
+class Block;
 
-using std::vector;
 using std::unique_ptr;
+using std::unordered_map;
 
 enum class EBlockType{
-    AIR,GRASS,COBBLESTONE
+    AIR,GRASS
 };
 
-struct BlockType {
-private:
-    EBlockType type;
-    vector<Texture> textures;
-public:
-    BlockType(EBlockType type, vector<Texture> textures);
-    [[nodiscard]] EBlockType getType() const;
-    [[nodiscard]] const vector<Texture> &getTextures() const;
+template<>
+struct std::hash<EBlockType> {
+    size_t operator()(const EBlockType& blockType) const {
+        return (size_t)blockType;
+    }
 };
 
 class BlockTypeList {
 private:
-    static unordered_map<EBlockType, unique_ptr<BlockType>> blockTypes;
+    static unordered_map<EBlockType, unique_ptr<Block>> blockTypes;
     static bool init;
 public:
-    static const BlockType* getBlockType(EBlockType type);
+    static const Block* getBlockTypeData(EBlockType type);
     static void initBlockTypes();
     static void resetBlockTypes();
 };

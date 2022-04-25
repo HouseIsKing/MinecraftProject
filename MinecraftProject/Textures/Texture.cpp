@@ -11,9 +11,9 @@ using std::runtime_error;
 using std::piecewise_construct;
 using std::forward_as_tuple;
 
-Texture& Texture::loadTexture(const string& path) {
+Texture* Texture::loadTexture(const string& path) {
     if(texturesCache.contains(path)) {
-        return texturesCache.at(path);
+        return texturesCache.at(path).get();
     }
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(true);
@@ -32,14 +32,14 @@ Texture& Texture::loadTexture(const string& path) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glGenerateMipmap(GL_TEXTURE_2D);
     stbi_image_free((void *) pixels);
-    texturesCache.emplace(piecewise_construct, forward_as_tuple(path), forward_as_tuple(textureID));
-    return texturesCache.at(path);
+    texturesCache.emplace(piecewise_construct, forward_as_tuple(path), forward_as_tuple(new Texture(textureID)));
+    return texturesCache.at(path).get();
 }
 
 Texture::Texture(GLuint textureID) : textureID(textureID) {
 }
 
-unordered_map<string, Texture> Texture::texturesCache = {};
+unordered_map<string, unique_ptr<Texture>> Texture::texturesCache{};
 
 GLuint Texture::getTextureID() const {
     return textureID;
@@ -52,4 +52,9 @@ void Texture::use() const {
 
 bool Texture::operator==(const Texture &other) const {
     return textureID == other.textureID;
+}
+
+Texture::~Texture()
+{
+    glDeleteTextures(1, &textureID);
 }

@@ -8,9 +8,11 @@ uniform mat4 transformationMatrix;
 uniform mat4 view;
 uniform mat4 projection;
 out vec2 outTexture;
+out vec4 color;
 
 void main()
 {
 	gl_Position = projection*view*transformationMatrix*vec4(aPos,1.0);
 	outTexture = aUV;
+	color = aColor;
 }

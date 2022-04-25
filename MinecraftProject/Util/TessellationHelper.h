@@ -19,8 +19,8 @@ private:
     GLuint vbo;
     GLuint vao;
     vector<Vertex> vertices;
-    unordered_map<Texture, GLuint> elementBuffers;
-    unordered_map<Texture, vector<uint16_t>> textureIDToTriangles;
+    unordered_map<Texture*, GLuint> elementBuffers;
+    unordered_map<Texture*, vector<uint16_t>> textureIDToTriangles;
     Transform transform;
     Shader* theShader;
     bool hasInit;
@@ -32,7 +32,7 @@ public:
     TessellationHelper(Shader* shader, float x, float y, float z);
     [[nodiscard]] Transform getTransform() const;
     uint16_t addVertex(Vertex vertex);
-    void addTriangle(Texture textureID, uint16_t triangle);
+    void addTriangle(Texture* textureID, uint16_t triangle);
     void changeVertex(uint16_t vertexID, Vertex vertex);
     void draw();
 };

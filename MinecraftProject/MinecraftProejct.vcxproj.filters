@@ -98,6 +98,9 @@
     <ClCompile Include="World\Blocks\GrassBlock.cpp">
       <Filter>Source Files\World\Blocks</Filter>
     </ClCompile>
+    <ClCompile Include="World\Blocks\AirBlock.cpp">
+      <Filter>Source Files\World\Blocks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entities\Entity.h">
@@ -149,6 +152,9 @@
       <Filter>Source Files\World\Blocks</Filter>
     </ClInclude>
     <ClInclude Include="World\Blocks\GrassBlock.h">
+      <Filter>Source Files\World\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Blocks\AirBlock.h">
       <Filter>Source Files\World\Blocks</Filter>
     </ClInclude>
   </ItemGroup>

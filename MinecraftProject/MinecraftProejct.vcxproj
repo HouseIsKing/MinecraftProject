@@ -162,6 +162,7 @@
     <ClCompile Include="Util\TessellationHelper.cpp" />
     <ClCompile Include="Util\Transform.cpp" />
     <ClCompile Include="Util\Vertex.cpp" />
+    <ClCompile Include="World\Blocks\AirBlock.cpp" />
     <ClCompile Include="World\Blocks\Block.cpp" />
     <ClCompile Include="World\Blocks\BlockTypeList.cpp" />
     <ClCompile Include="World\Blocks\GrassBlock.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="Util\TessellationHelper.h" />
     <ClInclude Include="Util\Transform.h" />
     <ClInclude Include="Util\Vertex.h" />
+    <ClInclude Include="World\Blocks\AirBlock.h" />
     <ClInclude Include="World\Blocks\Block.h" />
     <ClInclude Include="World\Blocks\BlockTypeList.h" />
     <ClInclude Include="World\Blocks\GrassBlock.h" />

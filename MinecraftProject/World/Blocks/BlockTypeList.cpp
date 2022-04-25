@@ -4,18 +4,15 @@
 
 #include "BlockTypeList.h"
 #include "GrassBlock.h"
+#include "AirBlock.h"
 
 using std::piecewise_construct;
 using std::forward_as_tuple;
 
-BlockType::BlockType(EBlockType type, vector<Texture> textures) : type(type), textures(std::move(textures)) {}
-
-EBlockType BlockType::getType() const {
-    return type;
-}
-
-const vector<Texture> &BlockType::getTextures() const {
-    return textures;
+const Block* BlockTypeList::getBlockTypeData(EBlockType type)
+{
+    initBlockTypes();
+    return blockTypes.at(type).get();
 }
 
 void BlockTypeList::initBlockTypes() {
@@ -23,13 +20,8 @@ void BlockTypeList::initBlockTypes() {
         return;
     init = true;
     blockTypes.clear();
-    blockTypes.emplace(piecewise_construct, forward_as_tuple(EBlockType::AIR), forward_as_tuple(new BlockType(EBlockType::AIR, vector<Texture>())));
-    blockTypes.emplace(piecewise_construct, forward_as_tuple(EBlockType::GRASS), forward_as_tuple(new BlockType(EBlockType::GRASS, GrassBlock::getTextures())));
-}
-
-const BlockType* BlockTypeList::getBlockType(EBlockType type) {
-    initBlockTypes();
-    return blockTypes.at(type).get();
+    blockTypes.emplace(piecewise_construct, forward_as_tuple(EBlockType::AIR), forward_as_tuple(new AirBlock()));
+    blockTypes.emplace(piecewise_construct, forward_as_tuple(EBlockType::GRASS), forward_as_tuple(new GrassBlock()));
 }
 
 void BlockTypeList::resetBlockTypes() {
@@ -39,4 +31,4 @@ void BlockTypeList::resetBlockTypes() {
 
 bool BlockTypeList::init = false;
 
-unordered_map<EBlockType, unique_ptr<BlockType>> BlockTypeList::blockTypes{};
+unordered_map<EBlockType, unique_ptr<Block>> BlockTypeList::blockTypes{};

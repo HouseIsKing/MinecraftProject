@@ -31,7 +31,7 @@ uint16_t TessellationHelper::addVertex(Vertex vertex) {
     return (uint16_t)vertices.size() - 1;
 }
 
-void TessellationHelper::addTriangle(Texture textureID, uint16_t triangle) {
+void TessellationHelper::addTriangle(Texture* textureID, uint16_t triangle) {
     if(!textureIDToTriangles.contains(textureID))
     {
         GLuint helper;
@@ -65,15 +65,12 @@ void TessellationHelper::draw() {
         glBufferData(GL_ARRAY_BUFFER, (GLintptr)(vertices.size() * sizeof(Vertex)), &vertices[0], GL_STATIC_DRAW);
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
-        if(((int)vertices[0].getVertexUsage() & 0x1) == 1)
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
+        if(vertices[0].getVertexUsage() == VertexUsage::POSITION_AND_TEXTURE_COORDS_AND_COLOR)
         {
             glEnableVertexAttribArray(1);
             glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoords));
-        }
-        if(((int)vertices[0].getVertexUsage() & 0x2) == 0x2)
-        {
-            glEnableVertexAttribArray(2);
-            glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
         }
         for(const auto& [key,ebo]:elementBuffers)
         {
@@ -82,21 +79,19 @@ void TessellationHelper::draw() {
         }
     }
     glEnableVertexAttribArray(0);
-    if(((int)vertices[0].getVertexUsage() & 0x1) == 1)
+    glEnableVertexAttribArray(2);
+    if(vertices[0].getVertexUsage() == VertexUsage::POSITION_AND_TEXTURE_COORDS_AND_COLOR)
         glEnableVertexAttribArray(1);
-    if(((int)vertices[0].getVertexUsage() & 0x2) == 0x2)
-        glEnableVertexAttribArray(2);
     for(const auto& [key,ebo]:elementBuffers)
     {
-        key.use();
+        key->use();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
         glDrawElements(GL_TRIANGLES, (GLint)textureIDToTriangles[key].size(), GL_UNSIGNED_SHORT, nullptr);
     }
     glDisableVertexAttribArray(0);
-    if(((int)vertices[0].getVertexUsage() & 0x1) == 1)
+    glDisableVertexAttribArray(2);
+    if(vertices[0].getVertexUsage() == VertexUsage::POSITION_AND_TEXTURE_COORDS_AND_COLOR)
         glDisableVertexAttribArray(1);
-    if(((int)vertices[0].getVertexUsage() & 0x2) == 0x2)
-        glDisableVertexAttribArray(2);
 }
 
 void TessellationHelper::reset() {

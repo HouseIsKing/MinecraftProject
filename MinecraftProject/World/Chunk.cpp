@@ -16,39 +16,98 @@ SinglePlayerWorld *Chunk::getWorld() {
     return world;
 }
 
-Chunk::Chunk(int x, int y, int z) : tessellationHelper(new TessellationHelper(EngineDefaults::getShader())) , chunkPosition(x,y,z), blocks() {
-    blocks.reserve(CHUNK_WIDTH*CHUNK_HEIGHT*CHUNK_DEPTH);
-    for(int i =0; i < CHUNK_WIDTH; i++) {
-        for (int j = 0; j < CHUNK_HEIGHT; j++) {
-            for (int k = 0; k < CHUNK_DEPTH; k++) {
-                blocks.emplace_back(Block::getAirBlock());
-            }
-        }
+Chunk::Chunk(int x, int y, int z) : tessellationHelper(new TessellationHelper(EngineDefaults::getShader())) , chunkPosition(x,y,z) {
+    for (int i = 0; i < CHUNK_WIDTH*CHUNK_DEPTH*CHUNK_HEIGHT; i++)
+    {
+        blocks[i] = EBlockType::AIR;
     }
 }
 
-Chunk::~Chunk() {
-    blocks.clear();
+void Chunk::drawBlock(EBlockType blockType, int x, int y, int z) {
+    const Block* myBlock = BlockTypeList::getBlockTypeData(blockType);
+    int finalX = x + chunkPosition.getX();
+    int finalY = y + chunkPosition.getY();
+    int finalZ = z + chunkPosition.getZ();
+    if (isCoordsInsideChunk(finalX, finalY + 1, finalZ))
+    {
+        if (blocks[EngineDefaults::getChunkLocalIndex(finalX, finalY + 1, finalZ)] == EBlockType::AIR)
+        {
+            myBlock->generateTessellationData(*tessellationHelper, BlockFaces::TOP, (float)finalX, (float)finalY, (float)finalZ);
+        }
+    }
+    else if (!(getWorld()->isBlockExists(finalX, finalY + 1, finalZ)))
+    {
+        myBlock->generateTessellationData(*tessellationHelper, BlockFaces::TOP, (float)finalX, (float)finalY, (float)finalZ);
+    }
+    if (isCoordsInsideChunk(finalX, finalY - 1, finalZ))
+    {
+        if (blocks[EngineDefaults::getChunkLocalIndex(finalX, finalY - 1, finalZ)] == EBlockType::AIR)
+        {
+            myBlock->generateTessellationData(*tessellationHelper, BlockFaces::BOTTOM, (float)finalX, (float)finalY, (float)finalZ);
+        }
+    }
+    else if (!(getWorld()->isBlockExists(finalX, finalY - 1, finalZ)))
+    {
+        myBlock->generateTessellationData(*tessellationHelper, BlockFaces::BOTTOM, (float)finalX, (float)finalY, (float)finalZ);
+    }
+    if (isCoordsInsideChunk(finalX, finalY, finalZ + 1))
+    {
+        if (blocks[EngineDefaults::getChunkLocalIndex(finalX, finalY, finalZ + 1)] == EBlockType::AIR)
+        {
+            myBlock->generateTessellationData(*tessellationHelper, BlockFaces::NORTH, (float)finalX, (float)finalY, (float)finalZ);
+        }
+    }
+    else if (!(getWorld()->isBlockExists(finalX, finalY, finalZ + 1)))
+    {
+        myBlock->generateTessellationData(*tessellationHelper, BlockFaces::NORTH, (float)finalX, (float)finalY, (float)finalZ);
+    }
+    if (isCoordsInsideChunk(finalX, finalY, finalZ - 1))
+    {
+        if (blocks[EngineDefaults::getChunkLocalIndex(finalX, finalY, finalZ - 1)] == EBlockType::AIR)
+        {
+            myBlock->generateTessellationData(*tessellationHelper, BlockFaces::SOUTH, (float)finalX, (float)finalY, (float)finalZ);
+        }
+    }
+    else if (!(getWorld()->isBlockExists(finalX, finalY, finalZ - 1)))
+    {
+        myBlock->generateTessellationData(*tessellationHelper, BlockFaces::SOUTH, (float)finalX, (float)finalY, (float)finalZ);
+    }
+    if (isCoordsInsideChunk(finalX + 1, finalY, finalZ))
+    {
+        if (blocks[EngineDefaults::getChunkLocalIndex(finalX + 1, finalY, finalZ)] == EBlockType::AIR)
+        {
+            myBlock->generateTessellationData(*tessellationHelper, BlockFaces::EAST, (float)finalX, (float)finalY, (float)finalZ);
+        }
+    }
+    else if (!(getWorld()->isBlockExists(finalX + 1, finalY, finalZ)))
+    {
+        myBlock->generateTessellationData(*tessellationHelper, BlockFaces::EAST, (float)finalX, (float)finalY, (float)finalZ);
+    }
+    if (isCoordsInsideChunk(finalX - 1, finalY, finalZ))
+    {
+        if (blocks[EngineDefaults::getChunkLocalIndex(finalX - 1, finalY, finalZ)] == EBlockType::AIR)
+        {
+            myBlock->generateTessellationData(*tessellationHelper, BlockFaces::WEST, (float)finalX, (float)finalY, (float)finalZ);
+        }
+    }
+    else if (!(getWorld()->isBlockExists(finalX - 1, finalY, finalZ)))
+    {
+        myBlock->generateTessellationData(*tessellationHelper, BlockFaces::WEST, (float)finalX, (float)finalY, (float)finalZ);
+    }
 }
 
-void Chunk::drawBlock(Block* block) {
-    BoundingBox box = block->getBoundingBox();
-    if(!(getWorld()->isBlockExists((int)box.getMinX() + chunkPosition.getX(), (int)box.getMinY() + chunkPosition.getY() + 1, (int)box.getMinZ() + chunkPosition.getZ())))
-        block->generateTessellationData(*tessellationHelper,BlockFaces::TOP);
-    if(!(getWorld()->isBlockExists((int)box.getMinX() + chunkPosition.getX(), (int)box.getMinY() + chunkPosition.getY() - 1, (int)box.getMinZ() + chunkPosition.getZ())))
-        block->generateTessellationData(*tessellationHelper,BlockFaces::BOTTOM);
-    if(!(getWorld()->isBlockExists((int)box.getMinX() + chunkPosition.getX(), (int)box.getMinY() + chunkPosition.getY(), (int)box.getMinZ() + chunkPosition.getZ() + 1)))
-        block->generateTessellationData(*tessellationHelper,BlockFaces::NORTH);
-    if(!(getWorld()->isBlockExists((int)box.getMinX() + chunkPosition.getX(), (int)box.getMinY() + chunkPosition.getY(), (int)box.getMinZ() + chunkPosition.getZ() - 1)))
-        block->generateTessellationData(*tessellationHelper,BlockFaces::SOUTH);
-    if(!(getWorld()->isBlockExists((int)box.getMinX() + chunkPosition.getX() + 1, (int)box.getMinY() + chunkPosition.getY(), (int)box.getMinZ() + chunkPosition.getZ())))
-        block->generateTessellationData(*tessellationHelper,BlockFaces::EAST);
-    if(!(getWorld()->isBlockExists((int)box.getMinX() + chunkPosition.getX() - 1, (int)box.getMinY() + chunkPosition.getY(), (int)box.getMinZ() + chunkPosition.getZ())))
-        block->generateTessellationData(*tessellationHelper,BlockFaces::WEST);
+const Block* Chunk::getBlockAt(int x, int y, int z) {
+    return BlockTypeList::getBlockTypeData(getBlockTypeAt(x,y,z));
 }
 
-Block* Chunk::getBlockAt(int x, int y, int z) {
-    return blocks.at(EngineDefaults::getChunkLocalIndex(x,y,z)).get();
+EBlockType Chunk::getBlockTypeAt(int x, int y, int z)
+{
+    return blocks[EngineDefaults::getChunkLocalIndex(x, y, z)];
+}
+
+bool Chunk::isCoordsInsideChunk(int x, int y, int z)
+{
+    return x >= chunkPosition.getX() && y >= chunkPosition.getY() && z >= chunkPosition.getZ() && x < chunkPosition.getX() + CHUNK_WIDTH && y < chunkPosition.getY() + CHUNK_HEIGHT && z < chunkPosition.getZ() + CHUNK_DEPTH;
 }
 
 void Chunk::resetDraw() {
@@ -58,15 +117,24 @@ void Chunk::resetDraw() {
 void Chunk::draw() {
     if(!tessellationHelper->HasInit())
     {
-        for(const auto& block : blocks)
+        for (int x = 0; x < CHUNK_WIDTH; x++)
         {
-            if(!block->isAirBlock())
-                drawBlock(block.get());
+            for (int y = 0; y < CHUNK_HEIGHT; y++)
+            {
+                for (int z = 0; z < CHUNK_DEPTH; z++)
+                {
+                    EBlockType type = blocks[EngineDefaults::getChunkLocalIndex(x, y, z)];
+                    if (type != EBlockType::AIR)
+                        drawBlock(type, x, y, z);
+                }
+            }
         }
     }
     tessellationHelper->draw();
 }
 
-void Chunk::setBlockAt(int x, int y, int z, Block* block) {
-    blocks.at(EngineDefaults::getChunkLocalIndex(x,y,z)).reset(block);
+void Chunk::setBlockTypeAt(int x, int y, int z, EBlockType block) {
+    blocks[EngineDefaults::getChunkLocalIndex(x, y, z)] = block;
+    if (tessellationHelper->HasInit())
+        tessellationHelper->reset();
 }

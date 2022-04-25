@@ -6,20 +6,23 @@
 #include <glad/gl.h>
 #include <string>
 #include <unordered_map>
+#include <memory>
 
 using std::string;
 using std::unordered_map;
+using std::unique_ptr;
 
 class Texture {
 private:
-    static unordered_map<string, Texture> texturesCache;
+    static unordered_map<string, unique_ptr<Texture>> texturesCache;
     GLuint textureID;
 public:
     explicit Texture(GLuint textureID);
-    static Texture& loadTexture(const string& fileName);
+    static Texture* loadTexture(const string& fileName);
     [[nodiscard]] GLuint getTextureID() const;
     void use() const;
     bool operator == (const Texture& other) const;
+    ~Texture();
 };
 
 template<>
