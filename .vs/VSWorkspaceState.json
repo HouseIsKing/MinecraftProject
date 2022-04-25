@@ -1,6 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\MinecraftProject",
+    "\\MinecraftProject\\Util",
+    "\\MinecraftProject\\World",
+    "\\MinecraftProject\\World\\Blocks"
   ],
   "SelectedNode": "\\MinecraftProject.sln",
   "PreviewInSolutionExplorer": false

@@ -16,9 +16,9 @@ using std::unique_ptr;
 
 class Chunk {
 public:
-    static const char CHUNK_WIDTH = 16;
-    static const char CHUNK_HEIGHT = 16;
-    static const char CHUNK_DEPTH = 16;
+    static const char CHUNK_WIDTH = 8;
+    static const char CHUNK_HEIGHT = 8;
+    static const char CHUNK_DEPTH = 8;
     static void setWorld(SinglePlayerWorld* newWorld);
     static SinglePlayerWorld* getWorld();
     Chunk(int x, int y, int z);
