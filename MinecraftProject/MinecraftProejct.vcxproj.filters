@@ -101,6 +101,9 @@
     <ClCompile Include="World\Blocks\AirBlock.cpp">
       <Filter>Source Files\World\Blocks</Filter>
     </ClCompile>
+    <ClCompile Include="Util\CustomRandomEngine.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entities\Entity.h">
@@ -156,6 +159,9 @@
     </ClInclude>
     <ClInclude Include="World\Blocks\AirBlock.h">
       <Filter>Source Files\World\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\CustomRandomEngine.h">
+      <Filter>Source Files\Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

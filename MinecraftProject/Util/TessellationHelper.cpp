@@ -22,7 +22,7 @@ TessellationHelper::TessellationHelper(Shader* shader) : theShader(shader), vao(
     hasInit = false;
 }
 
-Transform TessellationHelper::getTransform() const {
+Transform& TessellationHelper::getTransform() {
     return transform;
 }
 
