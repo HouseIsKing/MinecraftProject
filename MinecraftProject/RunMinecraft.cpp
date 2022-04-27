@@ -20,26 +20,47 @@ void handleMouseInput(GLFWwindow* window, double mouseX, double mouseY)
     helper->handleMouseMovementInput(mouseX, mouseY);
 }
 
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
+    helper->handleKeyboardPlayerInput(key, action);
+}
+
+void windowsResizeCallback(GLFWwindow* window, int width, int height)
+{
+	helper->handleWindowResize(height, width);
+}
+
+const float tickRate = 0.01666667f;
+
 void mainLoop(GLFWwindow* window)
 {
     Camera cam = Camera(glm::vec3(0,0,0),1280/720.0f);
     CameraController::setActiveCamera(cam);
     double start = glfwGetTime();
-    helper = new SinglePlayerWorld(256,64, 256);
+    helper = new SinglePlayerWorld(256, 64, 256);
     double end = glfwGetTime();
     cout << "World creation took " << end-start << " seconds" << endl;
     glfwSetCursorPosCallback(window, handleMouseInput);
     double counter = 0;
+    double ticksTimer = 0;
     int framesCompleted = 0;
     while (!glfwWindowShouldClose(window))
     {
         start = glfwGetTime();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        helper->tick();
+        int i;
+        for (i = 0; i < ticksTimer / tickRate; i++)
+        {
+            helper->tick();
+        }
+        ticksTimer -= i * tickRate;
         helper->drawWorld();
         glfwSwapBuffers(window);
         end = glfwGetTime();
         counter += end - start;
+		ticksTimer += end - start;
         framesCompleted++;
         if (counter > 1)
         {
@@ -77,6 +98,9 @@ GLFWwindow* initGLFW()
     glfwMakeContextCurrent(window);
     gladLoadGL(glfwGetProcAddress);
     glfwSetErrorCallback(error_callback);
+    glfwSetKeyCallback(window, key_callback);
+    glfwSetFramebufferSizeCallback(window, windowsResizeCallback);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glEnable(GL_DEBUG_OUTPUT);
     glDebugMessageCallback(MessageCallback,nullptr);
     return window;

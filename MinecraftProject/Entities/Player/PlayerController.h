@@ -33,6 +33,7 @@ private:
 public:
     PlayerController(uint16_t entityID, float x, float y, float z);
     void handleMouseMovementInput(float x, float y);
+    void handleKeyboardMovementInput(int key, int action);
     void tick() override;
 };
 
