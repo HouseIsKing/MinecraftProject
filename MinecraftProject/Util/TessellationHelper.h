@@ -30,7 +30,7 @@ public:
     [[nodiscard]] bool HasInit() const;
     explicit TessellationHelper(Shader* shader);
     TessellationHelper(Shader* shader, float x, float y, float z);
-    [[nodiscard]] Transform& getTransform();
+    [[nodiscard]] Transform getTransform() const;
     uint16_t addVertex(Vertex vertex);
     void addTriangle(Texture* textureID, uint16_t triangle);
     void changeVertex(uint16_t vertexID, Vertex vertex);

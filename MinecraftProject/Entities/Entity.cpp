@@ -29,7 +29,7 @@ bool Entity::IsGrounded() const {
 
 void Entity::checkCollisionAndMove() {
     float originalY = velocityY;
-    vec3 pos = tessellationHelper.getTransform().getPosition() + entitySize;
+    vec3 pos = tessellationHelper.getTransform().getPosition();
     BoundingBox myBoundingBox = BoundingBox(pos.x-entitySize.x, pos.y-entitySize.y, pos.z-entitySize.z, pos.x + entitySize.x, pos.y + entitySize.y, pos.z + entitySize.z);
     auto movementBox = BoundingBox(myBoundingBox);
     movementBox.expand(velocityX, velocityY, velocityZ);
@@ -64,9 +64,4 @@ void Entity::tick() {
 
 void Entity::doTick() {
     tick();
-}
-
-Transform& Entity::getTransform()
-{
-    return tessellationHelper.getTransform();
 }

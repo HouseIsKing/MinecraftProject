@@ -96,12 +96,12 @@ bool BoundingBox::isIntersectingZ(const BoundingBox& other) const {
 float BoundingBox::clipCollisionX(const BoundingBox& other, float x) const {
     if(isIntersectingY(other) && isIntersectingZ(other)){
         if(x<0 && minX >= other.getMaxX()) {
-            float max = other.getMaxX() - minX + 0.001f;
+            float max = other.getMaxX() - minX + numeric_limits<float>::epsilon();
             if(max > x)
                 x = max;
         }
         else if(x>0 && maxX <= other.getMinX()) {
-            float min = other.getMinX() - maxX - 0.001f;
+            float min = other.getMinX() - maxX - numeric_limits<float>::epsilon();
             if(min < x)
                 x = min;
         }
@@ -112,12 +112,12 @@ float BoundingBox::clipCollisionX(const BoundingBox& other, float x) const {
 float BoundingBox::clipCollisionY(const BoundingBox& other, float y) const {
     if(isIntersectingX(other) && isIntersectingZ(other)){
         if(y<0 && minY >= other.getMaxY()) {
-            float max = other.getMaxY() - minY + 0.001f;
+            float max = other.getMaxY() - minY + numeric_limits<float>::epsilon();
             if(max > y)
                 y = max;
         }
         else if(y>0 && maxY <= other.getMinY()) {
-            float min = other.getMinY() - maxY - 0.001f;
+            float min = other.getMinY() - maxY - numeric_limits<float>::epsilon();
             if(min < y)
                 y = min;
         }
@@ -128,12 +128,12 @@ float BoundingBox::clipCollisionY(const BoundingBox& other, float y) const {
 float BoundingBox::clipCollisionZ(const BoundingBox& other, float z) const {
     if(isIntersectingX(other) && isIntersectingY(other)){
         if(z<0 && minZ >= other.getMaxZ()) {
-            float max = other.getMaxZ() - minZ + 0.001f;
+            float max = other.getMaxZ() - minZ + numeric_limits<float>::epsilon();
             if(max > z)
                 z = max;
         }
         else if(z>0 && maxZ <= other.getMinZ()) {
-            float min = other.getMinZ() - maxZ - 0.001f;
+            float min = other.getMinZ() - maxZ - numeric_limits<float>::epsilon();
             if(min < z)
                 z = min;
         }

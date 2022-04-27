@@ -27,11 +27,9 @@ public:
     ~SinglePlayerWorld();
     void tick();
     void handleMouseMovementInput(double x, double y);
-    void handleKeyboardPlayerInput(int key, int action);
-    void handleWindowResize(int height, int width);
+    //void handleKeyboardPlayerInput(uint8_t key, bool isPressed);
     void init();
     void generateChunks(int amountX, int amountY, int amountZ);
-    void generateCaves();
     bool isBlockExists(int x, int y, int z);
     const Block* getBlockAt(int x, int y, int z);
     EBlockType getBlockTypeAt(int x, int y, int z);

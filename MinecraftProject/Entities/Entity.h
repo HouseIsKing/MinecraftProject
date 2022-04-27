@@ -29,12 +29,12 @@ protected:
     [[nodiscard]] bool IsGrounded() const;
     void virtual Render();
     void checkCollisionAndMove();
+
     virtual void tick();
 public:
     virtual ~Entity();
     static void setWorld(SinglePlayerWorld* newWorld);
     static SinglePlayerWorld* getWorld();
     void doTick();
-    Transform& getTransform();
 };
 #endif //MINECRAFTPROJECT_ENTITY_H

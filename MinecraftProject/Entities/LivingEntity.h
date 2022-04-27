@@ -10,7 +10,7 @@ using glm::sin;
 using glm::cos;
 using glm::radians;
 
-class LivingEntity : public Entity {
+class LivingEntity : Entity {
 private:
     void calculateVelocity();
 protected:

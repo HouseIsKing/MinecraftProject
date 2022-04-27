@@ -27,5 +27,8 @@ int EngineDefaults::getChunkLocalIndex(int x, int y, int z) {
     return x + z * Chunk::CHUNK_WIDTH + y * Chunk::CHUNK_WIDTH * Chunk::CHUNK_DEPTH;
 }
 
-unique_ptr<Shader> EngineDefaults::theShader{};
-CustomRandomEngine EngineDefaults::engine{};
+unique_ptr<Shader> EngineDefaults::theShader = {};
+
+PosBlock::PosBlock(int x, int y, int z, EBlockType type) : x(x), y(y), z(z), type(type)
+{
+}

@@ -11,7 +11,7 @@ using std::piecewise_construct;
 using std::forward_as_tuple;
 
 SinglePlayerWorld::SinglePlayerWorld(uint16_t width, uint16_t height, uint16_t depth) : levelDepth(depth), levelHeight(height), levelWidth(width),
-                                                                                        playerController(0,5,(float)(height+3),5) {
+                                                                                        playerController(0,-5,(float)(height+3),-5) {
     Entity::setWorld(this);
     Chunk::setWorld(this);
     init();
@@ -24,28 +24,11 @@ void SinglePlayerWorld::tick() {
     }
 }
 
-void SinglePlayerWorld::handleWindowResize(int height, int width)
-{
-    glViewport(0, 0, width, height);
-    CameraController::onResizeWindow(width, height);
-}
-
 void SinglePlayerWorld::init() {
     int amountX = (int)std::ceil((float)levelWidth / (float)Chunk::CHUNK_WIDTH);
     int amountY = (int)std::ceil((float)levelHeight / (float)Chunk::CHUNK_HEIGHT);
     int amountZ = (int)std::ceil((float)levelDepth / (float)Chunk::CHUNK_DEPTH);
     generateChunks(amountX,amountY,amountZ);
-    generateCaves();
-}
-
-void SinglePlayerWorld::generateChunks(int amountX, int amountY, int amountZ) {
-    for(int x = 0; x < amountX; x++) {
-        for(int y = 0; y < amountY; y++) {
-            for(int z = 0; z < amountZ; z++) {
-                chunks.emplace(piecewise_construct, forward_as_tuple(x*Chunk::CHUNK_WIDTH,y*Chunk::CHUNK_HEIGHT,z*Chunk::CHUNK_DEPTH), forward_as_tuple(x*Chunk::CHUNK_WIDTH,y*Chunk::CHUNK_HEIGHT,z*Chunk::CHUNK_DEPTH));
-            }
-        }
-    }
     for (int i = 0; i < amountX; i++)
     {
         for (int j = 0; j < amountY; j++)
@@ -68,32 +51,11 @@ void SinglePlayerWorld::generateChunks(int amountX, int amountY, int amountZ) {
     }
 }
 
-void SinglePlayerWorld::generateCaves()
-{
-    for (int i = 0; i < 10000; i++)
-    {
-        uint16_t caveSize = EngineDefaults::getNext<uint16_t>(1,8);
-        uint16_t caveX = EngineDefaults::getNext<uint16_t>(levelWidth);
-		uint16_t caveY = EngineDefaults::getNext<uint16_t>(levelHeight);
-        uint16_t caveZ = EngineDefaults::getNext<uint16_t>(levelDepth);
-        for (uint16_t radius = 1; radius < caveSize; radius++)
-        {
-            for (uint16_t sphere = 0; sphere < 1000; sphere++)
-            {
-                int32_t offsetX = EngineDefaults::getNext<uint16_t>(radius*2)-(int)radius;
-				int32_t offsetY = EngineDefaults::getNext<uint16_t>(radius*2)-(int)radius;
-				int32_t offsetZ = EngineDefaults::getNext<uint16_t>(radius*2)-(int)radius;
-                int distance = offsetX*offsetX + offsetY*offsetY + offsetZ*offsetZ;
-                if (distance <= radius * radius)
-                {
-                    int tileX = caveX + offsetX;
-                    int tileY = caveY + offsetY;
-                    int tileZ = caveZ + offsetZ;
-                    if (tileX >= 0 && tileX < levelWidth && tileY >= 0 && tileY < levelHeight && tileZ >= 0 && tileZ < levelDepth)
-                    {
-                        getChunkAt(tileX, tileY, tileZ)->setBlockTypeAt(tileX, tileY, tileZ, EBlockType::AIR);
-                    }
-                }
+void SinglePlayerWorld::generateChunks(int amountX, int amountY, int amountZ) {
+    for(int x = 0; x < amountX; x++) {
+        for(int y = 0; y < amountY; y++) {
+            for(int z = 0; z < amountZ; z++) {
+                chunks.emplace(piecewise_construct, forward_as_tuple(x*Chunk::CHUNK_WIDTH,y*Chunk::CHUNK_HEIGHT,z*Chunk::CHUNK_DEPTH), forward_as_tuple(x*Chunk::CHUNK_WIDTH,y*Chunk::CHUNK_HEIGHT,z*Chunk::CHUNK_DEPTH));
             }
         }
     }
@@ -151,12 +113,7 @@ vector<BoundingBox> SinglePlayerWorld::getBlockBoxesInBoundingBox(const Bounding
     for(int x = (int)boundingBox.getMinX(); (float)x <= boundingBox.getMaxX(); x++) {
         for(int y = (int)boundingBox.getMinY(); (float)y <= boundingBox.getMaxY(); y++) {
             for(int z = (int)boundingBox.getMinZ(); (float)z <= boundingBox.getMaxZ(); z++) {
-				EBlockType block = getBlockTypeAt(x, y, z);
-                if (block == EBlockType::AIR)
-                {
-                    continue;
-                }
-                BoundingBox helper = BlockTypeList::getBlockTypeData(block)->getBoundingBox();
+                BoundingBox helper = getBlockAt(x, y, z)->getBoundingBox();
                 helper.move((float)x, (float)y, (float)z);
                 result.push_back(helper);
             }
@@ -167,11 +124,6 @@ vector<BoundingBox> SinglePlayerWorld::getBlockBoxesInBoundingBox(const Bounding
 
 void SinglePlayerWorld::handleMouseMovementInput(double x, double y) {
     playerController.handleMouseMovementInput((float)x,(float)y);
-}
-
-void SinglePlayerWorld::handleKeyboardPlayerInput(int key, int action)
-{
-    playerController.handleKeyboardMovementInput(key, action);
 }
 
 SinglePlayerWorld::~SinglePlayerWorld() = default;
