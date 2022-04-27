@@ -4,13 +4,13 @@
 
 #include "CustomRandomEngine.h"
 
-uint64_t CustomRandomEngine::seed{ (uint64_t)(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1)) };
+uint_fast64_t CustomRandomEngine::seed{ (uint_fast64_t)(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1)) };
 
 CustomRandomEngine::CustomRandomEngine()
 {
 }
 
-uint64_t CustomRandomEngine::getNext()
+uint_fast64_t CustomRandomEngine::getNext()
 {
 	seed = (seed * a + c) % m;
 	return seed;

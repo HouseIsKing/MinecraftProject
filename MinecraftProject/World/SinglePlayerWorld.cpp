@@ -31,14 +31,15 @@ void SinglePlayerWorld::handleWindowResize(int height, int width)
 }
 
 void SinglePlayerWorld::init() {
-    int amountX = (int)std::ceil((float)levelWidth / (float)Chunk::CHUNK_WIDTH);
-    int amountY = (int)std::ceil((float)levelHeight / (float)Chunk::CHUNK_HEIGHT);
-    int amountZ = (int)std::ceil((float)levelDepth / (float)Chunk::CHUNK_DEPTH);
+    uint16_t amountX = (uint16_t)std::ceil((float)levelWidth / (float)Chunk::CHUNK_WIDTH);
+    uint16_t amountY = (uint16_t)std::ceil((float)levelHeight / (float)Chunk::CHUNK_HEIGHT);
+    uint16_t amountZ = (uint16_t)std::ceil((float)levelDepth / (float)Chunk::CHUNK_DEPTH);
     generateChunks(amountX,amountY,amountZ);
     generateCaves();
 }
 
-void SinglePlayerWorld::generateChunks(int amountX, int amountY, int amountZ) {
+void SinglePlayerWorld::generateChunks(uint16_t amountX, uint16_t amountY, uint16_t amountZ) {
+    chunks.reserve((uint64_t)amountX * (uint64_t)amountY * (uint64_t)amountZ);
     for(int x = 0; x < amountX; x++) {
         for(int y = 0; y < amountY; y++) {
             for(int z = 0; z < amountZ; z++) {
@@ -72,18 +73,18 @@ void SinglePlayerWorld::generateCaves()
 {
     for (int i = 0; i < 10000; i++)
     {
-        uint16_t caveSize = EngineDefaults::getNext<uint16_t>(1,8);
-        uint16_t caveX = EngineDefaults::getNext<uint16_t>(levelWidth);
-		uint16_t caveY = EngineDefaults::getNext<uint16_t>(levelHeight);
-        uint16_t caveZ = EngineDefaults::getNext<uint16_t>(levelDepth);
-        for (uint16_t radius = 1; radius < caveSize; radius++)
+        uint_fast8_t caveSize = EngineDefaults::getNext<uint_fast8_t>(1,8);
+        uint_fast16_t caveX = EngineDefaults::getNext<uint16_t>(levelWidth);
+        uint_fast16_t caveY = EngineDefaults::getNext<uint16_t>(levelHeight);
+        uint_fast16_t caveZ = EngineDefaults::getNext<uint16_t>(levelDepth);
+        for (uint_fast32_t radius = 1; radius < caveSize; radius++)
         {
-            for (uint16_t sphere = 0; sphere < 1000; sphere++)
+            for (uint_fast16_t sphere = 0; sphere < 1000; sphere++)
             {
-                int32_t offsetX = EngineDefaults::getNext<uint16_t>(radius*2)-(int)radius;
-				int32_t offsetY = EngineDefaults::getNext<uint16_t>(radius*2)-(int)radius;
-				int32_t offsetZ = EngineDefaults::getNext<uint16_t>(radius*2)-(int)radius;
-                int distance = offsetX*offsetX + offsetY*offsetY + offsetZ*offsetZ;
+                int offsetX = EngineDefaults::getNext<uint_fast16_t>(radius*2)-radius;
+                int offsetY = EngineDefaults::getNext<uint_fast16_t>(radius*2)-radius;
+                int offsetZ = EngineDefaults::getNext<uint_fast16_t>(radius*2)-radius;
+                uint_fast32_t distance = offsetX*offsetX + offsetY*offsetY + offsetZ*offsetZ;
                 if (distance <= radius * radius)
                 {
                     int tileX = caveX + offsetX;
@@ -111,24 +112,8 @@ EBlockType SinglePlayerWorld::getBlockTypeAt(int x, int y, int z)
     return chunk->getBlockTypeAt(x, y, z);
 }
 
-ChunkCoords SinglePlayerWorld::getChunkCoords(int x, int y, int z) {
-    bool xNeg = x < 0;
-    bool yNeg = y < 0;
-    bool zNeg = z < 0;
-    x/=Chunk::CHUNK_WIDTH;
-    y/=Chunk::CHUNK_HEIGHT;
-    z/=Chunk::CHUNK_DEPTH;
-    if(xNeg) x--;
-    if(yNeg) y--;
-    if(zNeg) z--;
-    x*=Chunk::CHUNK_WIDTH;
-    y*=Chunk::CHUNK_HEIGHT;
-    z*=Chunk::CHUNK_DEPTH;
-    return ChunkCoords{x,y,z};
-}
-
 Chunk* SinglePlayerWorld::getChunkAt(int x, int y, int z) {
-    ChunkCoords pos = getChunkCoords(x,y,z);
+    ChunkCoords pos = ChunkCoords(x,y,z);
     if(chunks.find(pos) == chunks.end()) {
         return nullptr;
     }
@@ -141,9 +126,13 @@ bool SinglePlayerWorld::isBlockExists(int x, int y, int z) {
 
 void SinglePlayerWorld::drawWorld() {
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
     for(auto &chunk : chunks) {
         chunk.second.draw();
     }
+	glDisable(GL_CULL_FACE);
+    glDisable(GL_DEPTH_TEST);
 }
 
 vector<BoundingBox> SinglePlayerWorld::getBlockBoxesInBoundingBox(const BoundingBox& boundingBox) {
@@ -151,7 +140,7 @@ vector<BoundingBox> SinglePlayerWorld::getBlockBoxesInBoundingBox(const Bounding
     for(int x = (int)boundingBox.getMinX(); (float)x <= boundingBox.getMaxX(); x++) {
         for(int y = (int)boundingBox.getMinY(); (float)y <= boundingBox.getMaxY(); y++) {
             for(int z = (int)boundingBox.getMinZ(); (float)z <= boundingBox.getMaxZ(); z++) {
-				EBlockType block = getBlockTypeAt(x, y, z);
+                EBlockType block = getBlockTypeAt(x, y, z);
                 if (block == EBlockType::AIR)
                 {
                     continue;

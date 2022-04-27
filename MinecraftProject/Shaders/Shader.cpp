@@ -90,20 +90,24 @@ GLuint Shader::getAttribLocation(const string& name) const {
     return glGetAttribLocation(program, name.c_str());
 }
 
-void Shader::setInt(const string& name, int value) {
-    glUniform1i(uniforms[name], value);
+int Shader::getUniformInt(const string& name) const {
+	return uniforms.at(name);
 }
 
-void Shader::setFloat(const string& name, float value) {
-    glUniform1f(uniforms[name], value);
+void Shader::setInt(int posUniform, int value) {
+    glUniform1i(posUniform, value);
 }
 
-void Shader::setVec3(const string& name, float x, float y, float z) {
-    glUniform3f(uniforms[name], x, y, z);
+void Shader::setFloat(int posUniform, float value) {
+    glUniform1f(posUniform, value);
 }
 
-void Shader::setMat4(const string& name, mat4x4 value) {
-    glUniformMatrix4fv(uniforms[name], 1, GL_FALSE, &value[0][0]);
+void Shader::setVec3(int posUniform, float x, float y, float z) {
+    glUniform3f(posUniform, x, y, z);
+}
+
+void Shader::setMat4(int posUniform, mat4x4 value) {
+    glUniformMatrix4fv(posUniform, 1, GL_FALSE, &value[0][0]);
 }
 
 Shader::~Shader() {

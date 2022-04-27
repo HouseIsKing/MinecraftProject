@@ -24,6 +24,9 @@ private:
     Transform transform;
     Shader* theShader;
     bool hasInit;
+    int positionUniform;
+    int viewUniform;
+    int projectionUniform;
 public:
     void reset();
     ~TessellationHelper();

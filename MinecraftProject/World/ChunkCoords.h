@@ -12,9 +12,6 @@ private:
     int y;
     int z;
 public:
-    static constexpr unsigned short chunkSizeX = 8;
-    static constexpr unsigned short chunkSizeY = 8;
-    static constexpr unsigned short chunkSizeZ = 8;
     [[nodiscard]] int getX() const;
     [[nodiscard]] int getY() const;
     [[nodiscard]] int getZ() const;
@@ -28,7 +25,11 @@ public:
 struct ChunkComparator {
 public:
     std::size_t operator()(const ChunkCoords& other) const {
-        return ((other.getZ() / ChunkCoords::chunkSizeX << 20) & 0x7FF00000) | (other.getZ() < 0 ? 0x80000000 : 0) | ((other.getY() / ChunkCoords::chunkSizeY << 10) & 0x7FC00) | (other.getY() < 0 ? 0x80000 : 0) | (other.getX() / ChunkCoords::chunkSizeZ & 0x1FF) | (other.getX() < 0 ? 0x200 : 0);
+        size_t x = other.getX() >= 0 ? static_cast<long long>(2) * other.getX() : static_cast<long long>(-2) * other.getX() - 1;
+        size_t y = other.getY() >= 0 ? static_cast<long long>(2) * other.getY() : static_cast<long long>(-2) * other.getY() - 1;
+        size_t z = other.getZ() >= 0 ? static_cast<long long>(2) * other.getZ() : static_cast<long long>(-2) * other.getZ() - 1;
+        size_t xyPair = x >= y ? x * x + x + y : y * y + x;
+        return xyPair >= z ? xyPair * xyPair + xyPair + z : z * z + xyPair;
     }
 };
 #endif //MINECRAFTPROJECT_CHUNKCOORDS_H

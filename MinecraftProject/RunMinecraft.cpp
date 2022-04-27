@@ -29,7 +29,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 void windowsResizeCallback(GLFWwindow* window, int width, int height)
 {
-	helper->handleWindowResize(height, width);
+    helper->handleWindowResize(height, width);
 }
 
 const float tickRate = 0.01666667f;
@@ -60,7 +60,7 @@ void mainLoop(GLFWwindow* window)
         glfwSwapBuffers(window);
         end = glfwGetTime();
         counter += end - start;
-		ticksTimer += end - start;
+        ticksTimer += end - start;
         framesCompleted++;
         if (counter > 1)
         {

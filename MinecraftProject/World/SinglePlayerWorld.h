@@ -30,12 +30,11 @@ public:
     void handleKeyboardPlayerInput(int key, int action);
     void handleWindowResize(int height, int width);
     void init();
-    void generateChunks(int amountX, int amountY, int amountZ);
+    void generateChunks(uint16_t amountX, uint16_t amountY, uint16_t amountZ);
     void generateCaves();
     bool isBlockExists(int x, int y, int z);
     const Block* getBlockAt(int x, int y, int z);
     EBlockType getBlockTypeAt(int x, int y, int z);
-    static ChunkCoords getChunkCoords(int x, int y, int z);
     Chunk* getChunkAt(int x, int y, int z);
     vector<BoundingBox> getBlockBoxesInBoundingBox(const BoundingBox& boundingBox);
     void drawWorld();

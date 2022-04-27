@@ -26,9 +26,9 @@ public:
 };
 
 template<>
-struct std::hash<Texture> {
-    size_t operator()(const Texture& texture) const {
-        return std::hash<GLuint>()(texture.getTextureID());
+struct std::hash<Texture*> {
+    size_t operator()(const Texture* texture) const {
+        return std::hash<GLuint>()(texture->getTextureID());
     }
 };
 

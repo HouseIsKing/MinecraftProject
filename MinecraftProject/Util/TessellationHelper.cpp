@@ -19,6 +19,10 @@ bool TessellationHelper::HasInit() const {
 TessellationHelper::TessellationHelper(Shader* shader) : theShader(shader), vao(0), vbo(0) {
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
+    theShader->use();
+    positionUniform = theShader->getUniformInt("transformationMatrix");
+    viewUniform = theShader->getUniformInt("view");
+	projectionUniform = theShader->getUniformInt("projection");
     hasInit = false;
 }
 
@@ -53,10 +57,9 @@ void TessellationHelper::draw() {
         hasInit = true;
         return;
     }
-    theShader->use();
-    theShader->setMat4("transformationMatrix", transform.getTransformMatrix());
-    theShader->setMat4("view", CameraController::getActiveCamera().getViewMatrix());
-    theShader->setMat4("projection", CameraController::getActiveCamera().getProjectionMatrix());
+    theShader->setMat4(positionUniform, transform.getTransformMatrix());
+    theShader->setMat4(viewUniform, CameraController::getActiveCamera().getViewMatrix());
+    theShader->setMat4(projectionUniform, CameraController::getActiveCamera().getProjectionMatrix());
     glBindVertexArray(vao);
     if(!hasInit)
     {

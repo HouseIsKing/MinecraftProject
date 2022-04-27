@@ -25,9 +25,9 @@ Chunk::Chunk(int x, int y, int z) : tessellationHelper(new TessellationHelper(En
 
 void Chunk::drawBlock(EBlockType blockType, int x, int y, int z) {
     const Block* myBlock = BlockTypeList::getBlockTypeData(blockType);
-    int finalX = x + chunkPosition.getX();
-    int finalY = y + chunkPosition.getY();
-    int finalZ = z + chunkPosition.getZ();
+    int finalX = x + chunkPosition.getX()*Chunk::CHUNK_WIDTH;
+    int finalY = y + chunkPosition.getY()*Chunk::CHUNK_HEIGHT;
+    int finalZ = z + chunkPosition.getZ()*Chunk::CHUNK_DEPTH;
     if (isCoordsInsideChunk(finalX, finalY + 1, finalZ))
     {
         if (blocks[EngineDefaults::getChunkLocalIndex(finalX, finalY + 1, finalZ)] == EBlockType::AIR)

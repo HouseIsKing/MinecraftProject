@@ -31,10 +31,11 @@ public:
     Shader(const string& vertPath, const string& fragPath);
     void use() const;
     [[nodiscard]] GLuint getAttribLocation(const string& name) const;
-    void setInt(const string& name, int value);
-    void setFloat(const string& name, float value);
-    void setVec3(const string& name, float x, float y, float z);
-    void setMat4(const string& name, mat4x4);
+    int getUniformInt(const string& name) const;
+    void setInt(int posUniform, int value);
+    void setFloat(int posUniform, float value);
+    void setVec3(int posUniform, float x, float y, float z);
+    void setMat4(int posUniform, mat4x4);
 };
 
 
