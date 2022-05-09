@@ -18,7 +18,7 @@ void LivingEntity::calculateVelocity() {
         speedModifier *= 0.25f;
     }
     velocityY -= 0.005f;
-    vec3 rotation = tessellationHelper.getTransform().getRotation();
+    vec3 rotation = tessellationHelper.GetTransform().getRotation();
     if (verticalInput != 0 || horizontalInput != 0)
     {
 		speedModifier /= sqrt(horizontalInput * horizontalInput + verticalInput * verticalInput);

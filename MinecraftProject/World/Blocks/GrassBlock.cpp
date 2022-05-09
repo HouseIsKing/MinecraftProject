@@ -4,67 +4,62 @@
 
 #include "GrassBlock.h"
 
-#include <memory>
-
 void GrassBlock::generateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face, const float& x, const float& y, const float& z) const
 {
-	Texture* textureToUse = nullptr;
-	uint16_t triangleIndex1 = 0, triangleIndex2 = 0, triangleIndex3 = 0, triangleIndex4 = 0;
-    switch (face)
-    {
-    case BlockFaces::TOP:
-		textureToUse = textures.at(0);
-        triangleIndex1 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMaxY(), z + boundingBox.getMinZ(), 0, 0, 0.368627451f, 0.6156862745f, 0.2039215686f,1.0f));
-		triangleIndex2 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMaxY(), z + boundingBox.getMaxZ(), 0, 1, 0.368627451f, 0.6156862745f, 0.2039215686f,1.0f));
-		triangleIndex3 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMaxY(), z + boundingBox.getMinZ(), 1, 0, 0.368627451f, 0.6156862745f, 0.2039215686f,1.0f));
-		triangleIndex4 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMaxY(), z + boundingBox.getMaxZ(), 1, 1, 0.368627451f, 0.6156862745f, 0.2039215686f,1.0f));
+	uint16_t triangleIndex1 = 0;
+	uint16_t triangleIndex2 = 0;
+	uint16_t triangleIndex3 = 0;
+	uint16_t triangleIndex4 = 0;
+	switch (face)
+	{
+	case BlockFaces::TOP:
+		triangleIndex1 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMaxY(), z + boundingBox.getMinZ(), 0, 0, 0.368627451F, 0.6156862745F, 0.2039215686F, 1.0F, IndexTextures[0]));
+		triangleIndex2 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMaxY(), z + boundingBox.getMaxZ(), 0, 1, 0.368627451F, 0.6156862745F, 0.2039215686F, 1.0F, IndexTextures[0]));
+		triangleIndex3 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMaxY(), z + boundingBox.getMinZ(), 1, 0, 0.368627451F, 0.6156862745F, 0.2039215686F, 1.0F, IndexTextures[0]));
+		triangleIndex4 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMaxY(), z + boundingBox.getMaxZ(), 1, 1, 0.368627451F, 0.6156862745F, 0.2039215686F, 1.0F, IndexTextures[0]));
 		break;
-    case BlockFaces::BOTTOM:
-		textureToUse = textures.at(2);
-		triangleIndex1 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMinY(), z + boundingBox.getMinZ(), 0, 0, 1.0f,1.0f,1.0f,1.0f));
-		triangleIndex2 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMinY(), z + boundingBox.getMinZ(), 1, 0, 1.0f,1.0f,1.0f,1.0f));
-		triangleIndex3 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMinY(), z + boundingBox.getMaxZ(), 0, 1, 1.0f,1.0f,1.0f,1.0f));
-		triangleIndex4 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMinY(), z + boundingBox.getMaxZ(), 1, 1, 1.0f,1.0f,1.0f,1.0f));
+	case BlockFaces::BOTTOM:
+		triangleIndex1 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMinY(), z + boundingBox.getMinZ(), 0, 0, 1.0F, 1.0F, 1.0F, 1.0F, IndexTextures[2]));
+		triangleIndex2 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMinY(), z + boundingBox.getMinZ(), 1, 0, 1.0F, 1.0F, 1.0F, 1.0F, IndexTextures[2]));
+		triangleIndex3 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMinY(), z + boundingBox.getMaxZ(), 0, 1, 1.0F, 1.0F, 1.0F, 1.0F, IndexTextures[2]));
+		triangleIndex4 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMinY(), z + boundingBox.getMaxZ(), 1, 1, 1.0F, 1.0F, 1.0F, 1.0F, IndexTextures[2]));
 		break;
 	case BlockFaces::SOUTH:
-		textureToUse = textures.at(1);
-		triangleIndex1 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMinY(), z + boundingBox.getMinZ(), 0, 0, 1.0f,1.0f,1.0f,1.0f));
-		triangleIndex2 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMaxY(), z + boundingBox.getMinZ(), 0, 1, 1.0f,1.0f,1.0f,1.0f));
-		triangleIndex3 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMinY(), z + boundingBox.getMinZ(), 1, 0, 1.0f,1.0f,1.0f,1.0f));
-		triangleIndex4 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMaxY(), z + boundingBox.getMinZ(), 1, 1, 1.0f,1.0f,1.0f,1.0f));
+		triangleIndex1 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMinY(), z + boundingBox.getMinZ(), 0, 0, 1.0F, 1.0F, 1.0F, 1.0F, IndexTextures[1]));
+		triangleIndex2 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMaxY(), z + boundingBox.getMinZ(), 0, 1, 1.0F, 1.0F, 1.0F, 1.0F, IndexTextures[1]));
+		triangleIndex3 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMinY(), z + boundingBox.getMinZ(), 1, 0, 1.0F, 1.0F, 1.0F, 1.0F, IndexTextures[1]));
+		triangleIndex4 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMaxY(), z + boundingBox.getMinZ(), 1, 1, 1.0F, 1.0F, 1.0F, 1.0F, IndexTextures[1]));
 		break;
 	case BlockFaces::NORTH:
-		textureToUse = textures.at(1);
-		triangleIndex1 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMinY(), z + boundingBox.getMaxZ(), 0, 0, 1.0f, 1.0f, 1.0f, 1.0f));
-		triangleIndex2 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMinY(), z + boundingBox.getMaxZ(), 1, 0, 1.0f, 1.0f, 1.0f, 1.0f));
-		triangleIndex3 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMaxY(), z + boundingBox.getMaxZ(), 0, 1, 1.0f, 1.0f, 1.0f, 1.0f));
-		triangleIndex4 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMaxY(), z + boundingBox.getMaxZ(), 1, 1, 1.0f, 1.0f, 1.0f, 1.0f));
+		triangleIndex1 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMinY(), z + boundingBox.getMaxZ(), 0, 0, 1.0F, 1.0F, 1.0F, 1.0F, IndexTextures[1]));
+		triangleIndex2 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMinY(), z + boundingBox.getMaxZ(), 1, 0, 1.0F, 1.0F, 1.0F, 1.0F, IndexTextures[1]));
+		triangleIndex3 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMaxY(), z + boundingBox.getMaxZ(), 0, 1, 1.0F, 1.0F, 1.0F, 1.0F, IndexTextures[1]));
+		triangleIndex4 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMaxY(), z + boundingBox.getMaxZ(), 1, 1, 1.0F, 1.0F, 1.0F, 1.0F, IndexTextures[1]));
 		break;
 	case BlockFaces::EAST:
-		textureToUse = textures.at(1);
-		triangleIndex1 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMinY(), z + boundingBox.getMinZ(), 0, 0, 1.0f, 1.0f, 1.0f, 1.0f));
-		triangleIndex2 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMaxY(), z + boundingBox.getMinZ(), 0, 1, 1.0f, 1.0f, 1.0f, 1.0f));
-		triangleIndex3 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMinY(), z + boundingBox.getMaxZ(), 1, 0, 1.0f, 1.0f, 1.0f, 1.0f));
-		triangleIndex4 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMaxY(), z + boundingBox.getMaxZ(), 1, 1, 1.0f, 1.0f, 1.0f, 1.0f));
+		triangleIndex1 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMinY(), z + boundingBox.getMinZ(), 0, 0, 1.0F, 1.0F, 1.0F, 1.0F, IndexTextures[1]));
+		triangleIndex2 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMaxY(), z + boundingBox.getMinZ(), 0, 1, 1.0F, 1.0F, 1.0F, 1.0F, IndexTextures[1]));
+		triangleIndex3 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMinY(), z + boundingBox.getMaxZ(), 1, 0, 1.0F, 1.0F, 1.0F, 1.0F, IndexTextures[1]));
+		triangleIndex4 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMaxX(), y + boundingBox.getMaxY(), z + boundingBox.getMaxZ(), 1, 1, 1.0F, 1.0F, 1.0F, 1.0F, IndexTextures[1]));
 		break;
 	case BlockFaces::WEST:
-		textureToUse = textures.at(1);
-		triangleIndex1 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMinY(), z + boundingBox.getMinZ(), 0, 0, 1.0f, 1.0f, 1.0f, 1.0f));
-		triangleIndex2 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMinY(), z + boundingBox.getMaxZ(), 1, 0, 1.0f, 1.0f, 1.0f, 1.0f));
-		triangleIndex3 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMaxY(), z + boundingBox.getMinZ(), 0, 1, 1.0f, 1.0f, 1.0f, 1.0f));
-		triangleIndex4 = tessellationHelper.addVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMaxY(), z + boundingBox.getMaxZ(), 1, 1, 1.0f, 1.0f, 1.0f, 1.0f));
+		triangleIndex1 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMinY(), z + boundingBox.getMinZ(), 0, 0, 1.0F, 1.0F, 1.0F, 1.0F, IndexTextures[1]));
+		triangleIndex2 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMinY(), z + boundingBox.getMaxZ(), 1, 0, 1.0F, 1.0F, 1.0F, 1.0F, IndexTextures[1]));
+		triangleIndex3 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMaxY(), z + boundingBox.getMinZ(), 0, 1, 1.0F, 1.0F, 1.0F, 1.0F, IndexTextures[1]));
+		triangleIndex4 = tessellationHelper.AddVertex(Vertex(x + boundingBox.getMinX(), y + boundingBox.getMaxY(), z + boundingBox.getMaxZ(), 1, 1, 1.0F, 1.0F, 1.0F, 1.0F, IndexTextures[1]));
 		break;
-    }
-	tessellationHelper.addTriangle(textureToUse, triangleIndex1);
-	tessellationHelper.addTriangle(textureToUse, triangleIndex2);
-	tessellationHelper.addTriangle(textureToUse, triangleIndex3);
-	tessellationHelper.addTriangle(textureToUse, triangleIndex4);
-	tessellationHelper.addTriangle(textureToUse, triangleIndex3);
-	tessellationHelper.addTriangle(textureToUse, triangleIndex2);
+	}
+	tessellationHelper.AddTriangle(triangleIndex1);
+	tessellationHelper.AddTriangle(triangleIndex2);
+	tessellationHelper.AddTriangle(triangleIndex3);
+	tessellationHelper.AddTriangle(triangleIndex4);
+	tessellationHelper.AddTriangle(triangleIndex3);
+	tessellationHelper.AddTriangle(triangleIndex2);
 }
 
-GrassBlock::GrassBlock() : Block() {
-    textures.push_back(Texture::loadTexture("Textures/Blocks/GrassTop.png"));
-    textures.push_back(Texture::loadTexture("Textures/Blocks/GrassSide.png"));
-    textures.push_back(Texture::loadTexture("Textures/Blocks/Dirt.png"));
+GrassBlock::GrassBlock()
+{
+	IndexTextures.push_back(BlockTypeList::RegisterTexture(Texture::LoadTexture("Textures/Blocks/GrassTop.png")));
+	IndexTextures.push_back(BlockTypeList::RegisterTexture(Texture::LoadTexture("Textures/Blocks/GrassSide.png")));
+	IndexTextures.push_back(BlockTypeList::RegisterTexture(Texture::LoadTexture("Textures/Blocks/Dirt.png")));
 }

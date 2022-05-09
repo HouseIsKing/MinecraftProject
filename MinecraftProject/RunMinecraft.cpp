@@ -1,5 +1,5 @@
 #include <iostream>
-#include <glad/gl.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "World/SinglePlayerWorld.h"
 #include "Shaders/Shader.h"
@@ -46,18 +46,17 @@ void mainLoop(GLFWwindow* window)
     double counter = 0;
     double ticksTimer = 0;
     int framesCompleted = 0;
+    start = glfwGetTime();
     while (!glfwWindowShouldClose(window))
     {
-        start = glfwGetTime();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         int i;
-        for (i = 0; i < ticksTimer / tickRate; i++)
+        for (i = 0; i < ticksTimer / static_cast<double>(tickRate); i++)
         {
             helper->tick();
         }
         ticksTimer -= i * tickRate;
         helper->drawWorld();
-        glfwSwapBuffers(window);
         end = glfwGetTime();
         counter += end - start;
         ticksTimer += end - start;
@@ -68,21 +67,26 @@ void mainLoop(GLFWwindow* window)
             cout << "FPS: " << framesCompleted << std::endl;
             framesCompleted = 0;
         }
+        start = end;
         glfwPollEvents();
+        glfwSwapBuffers(window);
     }
     delete helper;
 }
 void GLAPIENTRY MessageCallback( GLenum source,GLenum type,
                  GLuint id,GLenum severity,GLsizei length,const GLchar* message,const void* userParam ) {
     if(severity != GL_DEBUG_SEVERITY_NOTIFICATION)
-    fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-            (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
-            type, severity, message);
+    {
+        fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+                (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
+                type, severity, message);
+    }
 }
 
-GLFWwindow* initGLFW()
+GLFWwindow* InitGlfw()
 {
-    if(!glfwInit()) {
+    if (glfwInit() == 0)
+    {
         cout << "Failed to initialize GLFW" << endl;
         return nullptr;
     }
@@ -90,13 +94,14 @@ GLFWwindow* initGLFW()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     GLFWwindow* window = glfwCreateWindow(1280, 720, "Minecraft C++ Project", nullptr, nullptr);
-    if(!window) {
+    if (!window)
+    {
         cout << "Failed to create GLFW window" << endl;
         glfwTerminate();
         return nullptr;
     }
     glfwMakeContextCurrent(window);
-    gladLoadGL(glfwGetProcAddress);
+    gladLoadGL();
     glfwSetErrorCallback(error_callback);
     glfwSetKeyCallback(window, key_callback);
     glfwSetFramebufferSizeCallback(window, windowsResizeCallback);
@@ -106,9 +111,11 @@ GLFWwindow* initGLFW()
     return window;
 }
 
-int main() {
-    GLFWwindow* window = initGLFW();
-    if(!window) {
+int main()
+{
+    GLFWwindow* window = InitGlfw();
+    if (window == nullptr)
+    {
         return -1;
     }
     mainLoop(window);

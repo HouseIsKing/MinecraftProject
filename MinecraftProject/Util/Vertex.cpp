@@ -4,22 +4,22 @@
 
 #include "Vertex.h"
 
-vec4 Vertex::getColor() const {
-    return color;
+vec4 Vertex::GetColor() const
+{
+	return Color;
 }
 
-vec2 Vertex::getTexCoords() const {
-    return texCoords;
+vec2 Vertex::GetTexCoords() const
+{
+	return TexCoords;
 }
 
-vec3 Vertex::getPosition() const {
-    return position;
+vec3 Vertex::GetPosition() const
+{
+	return Position;
 }
 
-Vertex::Vertex(float x, float y, float z, float u, float v, float r, float g, float b, float a) : usage(VertexUsage::POSITION_AND_TEXTURE_COORDS_AND_COLOR), position(x,y,z), texCoords(u,v), color(r,g,b,a) {}
-
-Vertex::Vertex(float x, float y, float z, float r, float g, float b, float a) : usage(VertexUsage::POSITION_AND_COLOR) ,position(x,y,z), color(r,g,b,a), texCoords(0,0) {}
-
-VertexUsage Vertex::getVertexUsage() const {
-    return usage;
+Vertex::Vertex(const float x, const float y, const float z, const float u, const float v, const float r, const float g, const float b, const float a, const uint16_t indexTexture) : Position(x, y, z), TexCoords(u, v), Color(r, g, b, a), IndexTexture(
+	static_cast<float>(indexTexture))
+{
 }

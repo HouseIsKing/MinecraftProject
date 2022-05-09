@@ -3,60 +3,76 @@
 //
 
 #include "Camera.h"
-#include <iostream>
 
-void Camera::updateVectors() {
-    front.x = cos(radians(pitch)) * cos(radians(yaw));
-    front.y = sin(radians(pitch));
-    front.z = cos(radians(pitch)) * sin(radians(yaw));
-    front = normalize(front);
-    right = normalize(cross(front, vec3(0, 1, 0)));
-    up = normalize(cross(right, front));
-    isDirtyViewMatrix = true;
+#include "../../Util/EngineDefaults.h"
+
+void Camera::UpdateVectors() {
+    Front.x = cos(radians(Pitch)) * cos(radians(Yaw));
+    Front.y = sin(radians(Pitch));
+    Front.z = cos(radians(Pitch)) * sin(radians(Yaw));
+    Front = normalize(Front);
+    Right = normalize(cross(Front, vec3(0, 1, 0)));
+    Up = normalize(cross(Right, Front));
+    IsDirtyViewMatrix = true;
 }
 
-void Camera::setCameraPosition(vec3 newPosition) {
-    position = newPosition;
-    isDirtyViewMatrix = true;
+void Camera::SetCameraPosition(const vec3 newPosition)
+{
+    Position = newPosition;
+    IsDirtyViewMatrix = true;
 }
 
-Camera::Camera(vec3 startPosition, float aspectRatio) : position(startPosition), aspectRatio(aspectRatio), yaw(0), pitch(0), front(0, 0, -1), right(1, 0, 0), up(0, 1, 0), fov(60), viewMatrix(), projectionMatrix(),isDirtyProjectionMatrix(true), isDirtyViewMatrix(true), prevPitch(0),prevYaw(0) {
-    updateVectors();
+Camera::Camera(vec3 position, float aspectRatio) : Front(0, 0, -1), Up(0, 1, 0), Right(1, 0, 0),
+                                                   Fov(60), AspectRatio(aspectRatio), Position(position),
+                                                   ViewMatrix(), ProjectionMatrix(),
+                                                   IsDirtyViewMatrix(true), IsDirtyProjectionMatrix(true),
+                                                   PrevYaw(0),
+                                                   PrevPitch(0), Pitch(0), Yaw(0)
+{
+    UpdateVectors();
 }
 
-void Camera::setFov(float newFov) {
-    fov = newFov;
-    isDirtyProjectionMatrix = true;
+void Camera::SetFov(const float newFov)
+{
+    Fov = newFov;
+    IsDirtyProjectionMatrix = true;
 }
 
-mat4x4 Camera::getViewMatrix() {
-    if(prevYaw != yaw || prevPitch != pitch)
-        isDirtyViewMatrix = true;
-    if(isDirtyViewMatrix)
-        recalculateViewMatrix();
-    return viewMatrix;
+mat4x4 Camera::GetViewMatrix()
+{
+    IsDirtyViewMatrix = true;
+    if (IsDirtyViewMatrix)
+    {
+        RecalculateViewMatrix();
+    }
+    return ViewMatrix;
 }
 
-mat4x4 Camera::getProjectionMatrix() {
-    if(isDirtyProjectionMatrix)
-        recalculateProjectionMatrix();
-    return projectionMatrix;
+mat4x4 Camera::GetProjectionMatrix() {
+    if(IsDirtyProjectionMatrix)
+        RecalculateProjectionMatrix();
+    return ProjectionMatrix;
 }
 
-void Camera::recalculateProjectionMatrix() {
-    projectionMatrix = perspective(glm::radians(fov), aspectRatio, 0.1f, 100.0f);
-    isDirtyProjectionMatrix= false;
+void Camera::RecalculateProjectionMatrix()
+{
+    ProjectionMatrix = perspective(glm::radians(Fov), AspectRatio, 0.1f, 100.0f);
+    IsDirtyProjectionMatrix= false;
+    //EngineDefaults::getShader()->setMat4(EngineDefaults::getShader()->getUniformInt("projection"), ProjectionMatrix);
 }
 
-void Camera::setAspectRatio(float newAspectRatio) {
-    aspectRatio = newAspectRatio;
-    isDirtyProjectionMatrix = true;
+void Camera::SetAspectRatio(float newAspectRatio) {
+    AspectRatio = newAspectRatio;
+    IsDirtyProjectionMatrix = true;
+    RecalculateProjectionMatrix();
 }
 
-void Camera::recalculateViewMatrix() {
-    prevYaw = yaw;
-    prevPitch = pitch;
-    updateVectors();
-    viewMatrix = lookAt(position, position + front, up);
-    isDirtyViewMatrix = false;
+void Camera::RecalculateViewMatrix()
+{
+    PrevYaw = Yaw;
+    PrevPitch = Pitch;
+    UpdateVectors();
+    ViewMatrix = lookAt(Position, Position + Front, Up);
+    IsDirtyViewMatrix = false;
+    //EngineDefaults::getShader()->setMat4(EngineDefaults::getShader()->getUniformInt("view"), ViewMatrix);
 }

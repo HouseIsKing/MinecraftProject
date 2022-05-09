@@ -19,18 +19,18 @@ SinglePlayerWorld *Chunk::getWorld() {
 Chunk::Chunk(int x, int y, int z) : tessellationHelper(new TessellationHelper(EngineDefaults::getShader())) , chunkPosition(x,y,z) {
     for (int i = 0; i < CHUNK_WIDTH*CHUNK_DEPTH*CHUNK_HEIGHT; i++)
     {
-        blocks[i] = EBlockType::AIR;
+        blocks[i] = EBlockType::Air;
     }
 }
 
 void Chunk::drawBlock(EBlockType blockType, int x, int y, int z) {
-    const Block* myBlock = BlockTypeList::getBlockTypeData(blockType);
+    const Block* myBlock = BlockTypeList::GetBlockTypeData(blockType);
     int finalX = x + chunkPosition.getX()*Chunk::CHUNK_WIDTH;
     int finalY = y + chunkPosition.getY()*Chunk::CHUNK_HEIGHT;
     int finalZ = z + chunkPosition.getZ()*Chunk::CHUNK_DEPTH;
     if (isCoordsInsideChunk(finalX, finalY + 1, finalZ))
     {
-        if (blocks[EngineDefaults::getChunkLocalIndex(finalX, finalY + 1, finalZ)] == EBlockType::AIR)
+        if (blocks[EngineDefaults::getChunkLocalIndex(finalX, finalY + 1, finalZ)] == EBlockType::Air)
         {
             myBlock->generateTessellationData(*tessellationHelper, BlockFaces::TOP, (float)finalX, (float)finalY, (float)finalZ);
         }
@@ -41,7 +41,7 @@ void Chunk::drawBlock(EBlockType blockType, int x, int y, int z) {
     }
     if (isCoordsInsideChunk(finalX, finalY - 1, finalZ))
     {
-        if (blocks[EngineDefaults::getChunkLocalIndex(finalX, finalY - 1, finalZ)] == EBlockType::AIR)
+        if (blocks[EngineDefaults::getChunkLocalIndex(finalX, finalY - 1, finalZ)] == EBlockType::Air)
         {
             myBlock->generateTessellationData(*tessellationHelper, BlockFaces::BOTTOM, (float)finalX, (float)finalY, (float)finalZ);
         }
@@ -52,7 +52,7 @@ void Chunk::drawBlock(EBlockType blockType, int x, int y, int z) {
     }
     if (isCoordsInsideChunk(finalX, finalY, finalZ + 1))
     {
-        if (blocks[EngineDefaults::getChunkLocalIndex(finalX, finalY, finalZ + 1)] == EBlockType::AIR)
+        if (blocks[EngineDefaults::getChunkLocalIndex(finalX, finalY, finalZ + 1)] == EBlockType::Air)
         {
             myBlock->generateTessellationData(*tessellationHelper, BlockFaces::NORTH, (float)finalX, (float)finalY, (float)finalZ);
         }
@@ -63,7 +63,7 @@ void Chunk::drawBlock(EBlockType blockType, int x, int y, int z) {
     }
     if (isCoordsInsideChunk(finalX, finalY, finalZ - 1))
     {
-        if (blocks[EngineDefaults::getChunkLocalIndex(finalX, finalY, finalZ - 1)] == EBlockType::AIR)
+        if (blocks[EngineDefaults::getChunkLocalIndex(finalX, finalY, finalZ - 1)] == EBlockType::Air)
         {
             myBlock->generateTessellationData(*tessellationHelper, BlockFaces::SOUTH, (float)finalX, (float)finalY, (float)finalZ);
         }
@@ -74,7 +74,7 @@ void Chunk::drawBlock(EBlockType blockType, int x, int y, int z) {
     }
     if (isCoordsInsideChunk(finalX + 1, finalY, finalZ))
     {
-        if (blocks[EngineDefaults::getChunkLocalIndex(finalX + 1, finalY, finalZ)] == EBlockType::AIR)
+        if (blocks[EngineDefaults::getChunkLocalIndex(finalX + 1, finalY, finalZ)] == EBlockType::Air)
         {
             myBlock->generateTessellationData(*tessellationHelper, BlockFaces::EAST, (float)finalX, (float)finalY, (float)finalZ);
         }
@@ -85,7 +85,7 @@ void Chunk::drawBlock(EBlockType blockType, int x, int y, int z) {
     }
     if (isCoordsInsideChunk(finalX - 1, finalY, finalZ))
     {
-        if (blocks[EngineDefaults::getChunkLocalIndex(finalX - 1, finalY, finalZ)] == EBlockType::AIR)
+        if (blocks[EngineDefaults::getChunkLocalIndex(finalX - 1, finalY, finalZ)] == EBlockType::Air)
         {
             myBlock->generateTessellationData(*tessellationHelper, BlockFaces::WEST, (float)finalX, (float)finalY, (float)finalZ);
         }
@@ -97,7 +97,7 @@ void Chunk::drawBlock(EBlockType blockType, int x, int y, int z) {
 }
 
 const Block* Chunk::getBlockAt(int x, int y, int z) {
-    return BlockTypeList::getBlockTypeData(getBlockTypeAt(x,y,z));
+    return BlockTypeList::GetBlockTypeData(getBlockTypeAt(x,y,z));
 }
 
 EBlockType Chunk::getBlockTypeAt(int x, int y, int z)
@@ -124,17 +124,17 @@ void Chunk::draw() {
                 for (int z = 0; z < CHUNK_DEPTH; z++)
                 {
                     EBlockType type = blocks[EngineDefaults::getChunkLocalIndex(x, y, z)];
-                    if (type != EBlockType::AIR)
+                    if (type != EBlockType::Air)
                         drawBlock(type, x, y, z);
                 }
             }
         }
     }
-    tessellationHelper->draw();
+    tessellationHelper->Draw();
 }
 
 void Chunk::setBlockTypeAt(int x, int y, int z, EBlockType block) {
     blocks[EngineDefaults::getChunkLocalIndex(x, y, z)] = block;
     if (tessellationHelper->HasInit())
-        tessellationHelper->reset();
+        tessellationHelper->Reset();
 }

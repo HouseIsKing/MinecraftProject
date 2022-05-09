@@ -5,7 +5,7 @@
 #ifndef MINECRAFTPROJECT_SHADER_H
 #define MINECRAFTPROJECT_SHADER_H
 #include <unordered_map>
-#include "glad/gl.h"
+#include "glad/glad.h"
 #include <string>
 #include <glm/glm.hpp>
 #include <iostream>
@@ -31,6 +31,7 @@ public:
     Shader(const string& vertPath, const string& fragPath);
     void use() const;
     [[nodiscard]] GLuint getAttribLocation(const string& name) const;
+    GLuint GetUniformBlockIndex(const string& name) const;
     int getUniformInt(const string& name) const;
     void setInt(int posUniform, int value);
     void setFloat(int posUniform, float value);

@@ -1,36 +1,36 @@
 //
 // Created by amit on 4/22/2022.
 //
-#ifndef MINECRAFTPROJECT_TEXTURE_H
-#define MINECRAFTPROJECT_TEXTURE_H
-#include <glad/gl.h>
+#pragma once
+#include <glad/glad.h>
+#include <memory>
 #include <string>
 #include <unordered_map>
-#include <memory>
 
 using std::string;
 using std::unordered_map;
 using std::unique_ptr;
 
-class Texture {
-private:
-    static unordered_map<string, unique_ptr<Texture>> texturesCache;
-    GLuint textureID;
+class Texture
+{
+    static unordered_map<string, unique_ptr<Texture>> TexturesCache;
+    GLuint64 Handle;
+    GLuint TextureId;
 public:
-    explicit Texture(GLuint textureID);
-    static Texture* loadTexture(const string& fileName);
-    [[nodiscard]] GLuint getTextureID() const;
-    void use() const;
-    bool operator == (const Texture& other) const;
+    Texture(GLuint64 handle, GLuint textureId);
+    static Texture* LoadTexture(const string& path);
+    [[nodiscard]] GLuint64 GetHandle() const;
+    void Resident() const;
+    void NonResident() const;
+    bool operator ==(const Texture& other) const;
     ~Texture();
 };
 
-template<>
-struct std::hash<Texture*> {
-    size_t operator()(const Texture* texture) const {
-        return std::hash<GLuint>()(texture->getTextureID());
+template <>
+struct std::hash<Texture*>
+{
+    size_t operator()(const Texture* texture) const noexcept
+    {
+        return std::hash<GLuint64>()(texture->GetHandle());
     }
 };
-
-
-#endif //MINECRAFTPROJECT_TEXTURE_H

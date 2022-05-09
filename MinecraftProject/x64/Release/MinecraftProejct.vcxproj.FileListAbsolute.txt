@@ -1,0 +1,6 @@
+C:\Users\amitz\source\repos\MinecraftProject\x64\Release\Textures\Blocks\cobblestone.png
+C:\Users\amitz\source\repos\MinecraftProject\x64\Release\Textures\Blocks\Dirt.png
+C:\Users\amitz\source\repos\MinecraftProject\x64\Release\Textures\Blocks\GrassSide.png
+C:\Users\amitz\source\repos\MinecraftProject\x64\Release\Textures\Blocks\GrassTop.png
+C:\Users\amitz\source\repos\MinecraftProject\x64\Release\Shaders\FragmentShader.glsl
+C:\Users\amitz\source\repos\MinecraftProject\x64\Release\Shaders\VertexShader.glsl

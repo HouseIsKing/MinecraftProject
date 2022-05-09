@@ -1,15 +1,14 @@
 //
 // Created by amit on 4/21/2022.
 //
-#ifndef MINECRAFTPROJECT_SINGLEPLAYERWORLD_H
-#define MINECRAFTPROJECT_SINGLEPLAYERWORLD_H
-#include <unordered_map>
-#include "ChunkCoords.h"
-#include "Chunk.h"
+#pragma once
 #include "../Entities/Entity.h"
 #include "../Entities/Player/PlayerController.h"
 #include "Blocks/Block.h"
+#include "Chunk.h"
+#include "ChunkCoords.h"
 #include "GLFW/glfw3.h"
+#include <unordered_map>
 
 using std::unordered_map;
 using std::equal_to;
@@ -39,4 +38,3 @@ public:
     vector<BoundingBox> getBlockBoxesInBoundingBox(const BoundingBox& boundingBox);
     void drawWorld();
 };
-#endif //MINECRAFTPROJECT_SINGLEPLAYERWORLD_H

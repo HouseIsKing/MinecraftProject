@@ -2,8 +2,7 @@
 // Created by amit on 4/22/2022.
 //
 
-#ifndef MINECRAFTPROJECT_CAMERA_H
-#define MINECRAFTPROJECT_CAMERA_H
+#pragma once
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 
@@ -16,33 +15,31 @@ using glm::normalize;
 using glm::lookAt;
 using glm::perspective;
 
-class Camera {
-private:
-    vec3 front;
-    vec3 up;
-    vec3 right;
-    float fov;
-    float aspectRatio;
-    vec3 position;
-    void updateVectors();
-    mat4x4 viewMatrix;
-    mat4x4 projectionMatrix;
-    bool isDirtyViewMatrix;
-    bool isDirtyProjectionMatrix;
-    float prevYaw;
-    float prevPitch;
+class Camera
+{
+    vec3 Front;
+    vec3 Up;
+    vec3 Right;
+    float Fov;
+    float AspectRatio;
+    vec3 Position;
+    void UpdateVectors();
+    mat4x4 ViewMatrix;
+    mat4x4 ProjectionMatrix;
+    bool IsDirtyViewMatrix;
+    bool IsDirtyProjectionMatrix;
+    float PrevYaw;
+    float PrevPitch;
 public:
-    void setCameraPosition(vec3 position);
+    void SetCameraPosition(vec3 newPosition);
     Camera(vec3 position, float aspectRatio);
-    float pitch;
-    float yaw;
-    void setFov(float newFov);
-    void setAspectRatio(float newAspectRatio);
-    void recalculateProjectionMatrix();
-    void recalculateViewMatrix();
-    mat4x4 getViewMatrix();
-    mat4x4 getProjectionMatrix();
+    float Pitch;
+    float Yaw;
+    void SetFov(float newFov);
+    void SetAspectRatio(float newAspectRatio);
+    void RecalculateProjectionMatrix();
+    void RecalculateViewMatrix();
+    mat4x4 GetViewMatrix();
+    mat4x4 GetProjectionMatrix();
 };
 
-
-#endif //MINECRAFTPROJECT_CAMERA_H

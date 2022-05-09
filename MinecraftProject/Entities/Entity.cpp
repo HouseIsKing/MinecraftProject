@@ -29,7 +29,7 @@ bool Entity::IsGrounded() const {
 
 void Entity::checkCollisionAndMove() {
     float originalY = velocityY;
-    vec3 pos = tessellationHelper.getTransform().getPosition() + entitySize;
+    vec3 pos = tessellationHelper.GetTransform().getPosition() + entitySize;
     BoundingBox myBoundingBox = BoundingBox(pos.x-entitySize.x, pos.y-entitySize.y, pos.z-entitySize.z, pos.x + entitySize.x, pos.y + entitySize.y, pos.z + entitySize.z);
     auto movementBox = BoundingBox(myBoundingBox);
     movementBox.expand(velocityX, velocityY, velocityZ);
@@ -40,18 +40,18 @@ void Entity::checkCollisionAndMove() {
         velocityX = myBoundingBox.clipCollisionX(box,velocityX);
     }
     myBoundingBox.move(velocityX,0,0);
-    tessellationHelper.getTransform().move(velocityX,0,0);
+    tessellationHelper.GetTransform().move(velocityX,0,0);
     for(BoundingBox& box : collidingBoxes)
     {
         velocityY = myBoundingBox.clipCollisionY(box,velocityY);
     }
     myBoundingBox.move(0,velocityY,0);
-    tessellationHelper.getTransform().move(0,velocityY,0);
+    tessellationHelper.GetTransform().move(0,velocityY,0);
     for(BoundingBox& box : collidingBoxes)
     {
         velocityZ = myBoundingBox.clipCollisionZ(box,velocityZ);
     }
-    tessellationHelper.getTransform().move(0,0,velocityZ);
+    tessellationHelper.GetTransform().move(0,0,velocityZ);
     isGrounded = originalY <= 0 && originalY != velocityY;
 }
 
@@ -68,5 +68,5 @@ void Entity::doTick() {
 
 Transform& Entity::getTransform()
 {
-    return tessellationHelper.getTransform();
+    return tessellationHelper.GetTransform();
 }

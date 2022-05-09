@@ -18,11 +18,11 @@ Camera& CameraController::getActiveCamera() {
 }
 
 void CameraController::onResizeWindow(int width, int height) {
-    activeCamera->setAspectRatio((float) width / (float) height);
+    activeCamera->SetAspectRatio((float) width / (float) height);
 }
 
 PlayerController::PlayerController(uint16_t entityID, float x, float y, float z) : LivingEntity(entityID, playerSize,x,y,z), myCamera(CameraController::getActiveCamera()), mouseX(0), mouseY(0), prevMouseX(0), prevMouseY(0) {
-    myCamera.setCameraPosition(vec3(x,y,z));
+    myCamera.SetCameraPosition(vec3(x,y,z));
 }
 
 void PlayerController::tick() {
@@ -31,17 +31,19 @@ void PlayerController::tick() {
 	//std::cout << getPos().x << " " << getPos().y << " " << getPos().z << std::endl;
 	vec3 finalCameraPosition = getTransform().getPosition() + playerSize;
 	finalCameraPosition.y += cameraOffset - playerSize.y;
-	myCamera.setCameraPosition(finalCameraPosition);
+	myCamera.SetCameraPosition(finalCameraPosition);
+	EngineDefaults::getShader()->setMat4(EngineDefaults::getShader()->getUniformInt("view"), myCamera.GetViewMatrix());
+	EngineDefaults::getShader()->setMat4(EngineDefaults::getShader()->getUniformInt("projection"), myCamera.GetProjectionMatrix());
 }
 
 void PlayerController::handlePlayerInputs() {
-    myCamera.yaw += mouseX * mouseSensitivity;
-    myCamera.pitch += -mouseY * mouseSensitivity;
-	if (myCamera.pitch > 89.0f)
-		myCamera.pitch = 89.0f;
-	if(myCamera.pitch < -89.0f)
-		myCamera.pitch = -89.0f;
-	getTransform().setRotation(myCamera.pitch, myCamera.yaw,0);
+    myCamera.Yaw += mouseX * mouseSensitivity;
+    myCamera.Pitch += -mouseY * mouseSensitivity;
+	if (myCamera.Pitch > 89.0f)
+		myCamera.Pitch = 89.0f;
+	if(myCamera.Pitch < -89.0f)
+		myCamera.Pitch = -89.0f;
+	getTransform().setRotation(myCamera.Pitch, myCamera.Yaw,0);
     mouseX=0;
     mouseY=0;
 }

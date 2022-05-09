@@ -8,9 +8,9 @@
 
 struct ChunkCoords {
 private:
-    int x;
-    int y;
-    int z;
+    int X;
+    int Y;
+    int Z;
 public:
     [[nodiscard]] int getX() const;
     [[nodiscard]] int getY() const;
@@ -18,12 +18,11 @@ public:
     ChunkCoords(int x, int y, int z);
     ChunkCoords();
     constexpr bool operator==(const ChunkCoords& other) const {
-        return x == other.x && y == other.y && z == other.z;
+        return X == other.X && Y == other.Y && Z == other.Z;
     }
 };
 
 struct ChunkComparator {
-public:
     std::size_t operator()(const ChunkCoords& other) const {
         size_t x = other.getX() >= 0 ? static_cast<long long>(2) * other.getX() : static_cast<long long>(-2) * other.getX() - 1;
         size_t y = other.getY() >= 0 ? static_cast<long long>(2) * other.getY() : static_cast<long long>(-2) * other.getY() - 1;

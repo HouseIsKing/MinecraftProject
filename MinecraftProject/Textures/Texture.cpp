@@ -11,50 +11,63 @@ using std::runtime_error;
 using std::piecewise_construct;
 using std::forward_as_tuple;
 
-Texture* Texture::loadTexture(const string& path) {
-    if(texturesCache.contains(path)) {
-        return texturesCache.at(path).get();
+Texture* Texture::LoadTexture(const string& path)
+{
+    if (TexturesCache.contains(path))
+    {
+        return TexturesCache.at(path).get();
     }
-    int width, height, nrChannels;
-    stbi_set_flip_vertically_on_load(true);
-    const unsigned char* pixels = stbi_load(path.c_str(), &width, &height, &nrChannels, 4);
-    if (pixels == nullptr) {
+    int width;
+    int height;
+    int nrChannels;
+    stbi_set_flip_vertically_on_load(1);
+    unsigned char* pixels = stbi_load(path.c_str(), &width, &height, &nrChannels, 4);
+    if (pixels == nullptr)
+    {
         throw runtime_error("Failed to load texture");
     }
-    GLuint textureID;
-    glGenTextures(1, &textureID);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, textureID);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    stbi_image_free((void *) pixels);
-    texturesCache.emplace(piecewise_construct, forward_as_tuple(path), forward_as_tuple(new Texture(textureID)));
-    return texturesCache.at(path).get();
+    GLuint textureId;
+    glCreateTextures(GL_TEXTURE_2D, 1, &textureId);
+    GLsizei numMipmaps = static_cast<GLsizei>(log2(std::max(width, height))) + 1;
+    glTextureStorage2D(textureId, numMipmaps, GL_RGBA8, width, height);
+    glTextureSubImage2D(textureId, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+    glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTextureParameteri(textureId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glGenerateTextureMipmap(textureId);
+    stbi_image_free(pixels);
+    TexturesCache.emplace(piecewise_construct, forward_as_tuple(path),
+                          forward_as_tuple(new Texture(glGetTextureHandleARB(textureId), textureId)));
+    return TexturesCache.at(path).get();
 }
 
-Texture::Texture(GLuint textureID) : textureID(textureID) {
+Texture::Texture(const GLuint64 handle, const GLuint textureId) : Handle(handle), TextureId(textureId)
+{
 }
 
-unordered_map<string, unique_ptr<Texture>> Texture::texturesCache{};
+unordered_map<string, unique_ptr<Texture>> Texture::TexturesCache;
 
-GLuint Texture::getTextureID() const {
-    return textureID;
+GLuint64 Texture::GetHandle() const
+{
+    return Handle;
 }
 
-void Texture::use() const {
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, textureID);
+void Texture::Resident() const
+{
+    glMakeTextureHandleResidentARB(Handle);
 }
 
-bool Texture::operator==(const Texture &other) const {
-    return textureID == other.textureID;
+void Texture::NonResident() const
+{
+    glMakeTextureHandleNonResidentARB(Handle);
+}
+
+bool Texture::operator==(const Texture& other) const
+{
+    return Handle == other.Handle;
 }
 
 Texture::~Texture()
 {
-    glDeleteTextures(1, &textureID);
+    NonResident();
+    glDeleteTextures(1, &TextureId);
 }

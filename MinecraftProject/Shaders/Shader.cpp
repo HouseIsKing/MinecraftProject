@@ -90,6 +90,11 @@ GLuint Shader::getAttribLocation(const string& name) const {
     return glGetAttribLocation(program, name.c_str());
 }
 
+GLuint Shader::GetUniformBlockIndex(const string& name) const
+{
+    return glGetUniformBlockIndex(program, name.c_str());
+}
+
 int Shader::getUniformInt(const string& name) const {
 	return uniforms.at(name);
 }

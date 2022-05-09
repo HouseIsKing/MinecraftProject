@@ -4,14 +4,13 @@
 
 #include "SinglePlayerWorld.h"
 #include "Blocks/GrassBlock.h"
-#include <iostream>
 #include <cmath>
 
 using std::piecewise_construct;
 using std::forward_as_tuple;
 
 SinglePlayerWorld::SinglePlayerWorld(uint16_t width, uint16_t height, uint16_t depth) : levelDepth(depth), levelHeight(height), levelWidth(width),
-                                                                                        playerController(0,5,(float)(height+3),5) {
+    playerController(0,5,(float)(height+3),5) {
     Entity::setWorld(this);
     Chunk::setWorld(this);
     init();
@@ -60,7 +59,7 @@ void SinglePlayerWorld::generateChunks(uint16_t amountX, uint16_t amountY, uint1
                     {
                         for (int z = 0; z < Chunk::CHUNK_DEPTH; z++)
                         {
-                            chunk->setBlockTypeAt(x, y, z, EBlockType::GRASS);
+                            chunk->setBlockTypeAt(x, y, z, EBlockType::Grass);
                         }
                     }
                 }
@@ -92,7 +91,7 @@ void SinglePlayerWorld::generateCaves()
                     int tileZ = caveZ + offsetZ;
                     if (tileX >= 0 && tileX < levelWidth && tileY >= 0 && tileY < levelHeight && tileZ >= 0 && tileZ < levelDepth)
                     {
-                        getChunkAt(tileX, tileY, tileZ)->setBlockTypeAt(tileX, tileY, tileZ, EBlockType::AIR);
+                        getChunkAt(tileX, tileY, tileZ)->setBlockTypeAt(tileX, tileY, tileZ, EBlockType::Air);
                     }
                 }
             }
@@ -101,33 +100,34 @@ void SinglePlayerWorld::generateCaves()
 }
 
 const Block* SinglePlayerWorld::getBlockAt(int x, int y, int z) {
-    return BlockTypeList::getBlockTypeData(getBlockTypeAt(x, y, z));
+    return BlockTypeList::GetBlockTypeData(getBlockTypeAt(x, y, z));
 }
 
 EBlockType SinglePlayerWorld::getBlockTypeAt(int x, int y, int z)
 {
     Chunk* chunk = getChunkAt(x, y, z);
     if (chunk == nullptr)
-        return EBlockType::AIR;
+        return EBlockType::Air;
     return chunk->getBlockTypeAt(x, y, z);
 }
 
 Chunk* SinglePlayerWorld::getChunkAt(int x, int y, int z) {
     ChunkCoords pos = ChunkCoords(x,y,z);
-    if(chunks.find(pos) == chunks.end()) {
+    if (!chunks.contains(pos))
+    {
         return nullptr;
     }
     return &chunks.at(pos);
 }
 
 bool SinglePlayerWorld::isBlockExists(int x, int y, int z) {
-    return getBlockTypeAt(x, y, z) != EBlockType::AIR;
+    return getBlockTypeAt(x, y, z) != EBlockType::Air;
 }
 
-void SinglePlayerWorld::drawWorld() {
+void SinglePlayerWorld::drawWorld()
+{
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
     for(auto &chunk : chunks) {
         chunk.second.draw();
     }
@@ -141,11 +141,11 @@ vector<BoundingBox> SinglePlayerWorld::getBlockBoxesInBoundingBox(const Bounding
         for(int y = (int)boundingBox.getMinY(); (float)y <= boundingBox.getMaxY(); y++) {
             for(int z = (int)boundingBox.getMinZ(); (float)z <= boundingBox.getMaxZ(); z++) {
                 EBlockType block = getBlockTypeAt(x, y, z);
-                if (block == EBlockType::AIR)
+                if (block == EBlockType::Air)
                 {
                     continue;
                 }
-                BoundingBox helper = BlockTypeList::getBlockTypeData(block)->getBoundingBox();
+                BoundingBox helper = BlockTypeList::GetBlockTypeData(block)->getBoundingBox();
                 helper.move((float)x, (float)y, (float)z);
                 result.push_back(helper);
             }

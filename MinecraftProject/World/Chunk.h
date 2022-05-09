@@ -32,7 +32,7 @@ private:
     ChunkCoords chunkPosition;
     unique_ptr<TessellationHelper> tessellationHelper;
     static SinglePlayerWorld* world;
-    EBlockType blocks[CHUNK_HEIGHT*CHUNK_DEPTH*CHUNK_WIDTH]{EBlockType::AIR};
+    EBlockType blocks[CHUNK_HEIGHT*CHUNK_DEPTH*CHUNK_WIDTH]{EBlockType::Air};
     void drawBlock(EBlockType blockType, int x, int y, int z);
 
 };

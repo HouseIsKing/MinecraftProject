@@ -3,32 +3,62 @@
 //
 
 #include "BlockTypeList.h"
-#include "GrassBlock.h"
+#include "../../Util/EngineDefaults.h"
 #include "AirBlock.h"
+#include "GrassBlock.h"
 
 using std::piecewise_construct;
 using std::forward_as_tuple;
 
-const Block* BlockTypeList::getBlockTypeData(EBlockType type)
+const Block* BlockTypeList::GetBlockTypeData(EBlockType type)
 {
-    initBlockTypes();
-    return blockTypes.at(type).get();
+    InitBlockTypes();
+    return BlockTypes.at(type).get();
 }
 
-void BlockTypeList::initBlockTypes() {
-    if(init)
+uint16_t BlockTypeList::RegisterTexture(Texture* texture)
+{
+    TextureList.push_back(texture);
+    texture->Resident();
+    return static_cast<uint16_t>(TextureList.size() - 1);
+}
+
+void BlockTypeList::InitBlockTypes()
+{
+    if (Init)
+    {
         return;
-    init = true;
-    blockTypes.clear();
-    blockTypes.emplace(piecewise_construct, forward_as_tuple(EBlockType::AIR), forward_as_tuple(new AirBlock()));
-    blockTypes.emplace(piecewise_construct, forward_as_tuple(EBlockType::GRASS), forward_as_tuple(new GrassBlock()));
+    }
+    glGenBuffers(1, &UBO);
+    Init = true;
+    for (const Texture* texture : TextureList)
+    {
+        texture->NonResident();
+    }
+    TextureList.clear();
+    BlockTypes.clear();
+    BlockTypes.emplace(piecewise_construct, forward_as_tuple(EBlockType::Air), forward_as_tuple(new AirBlock()));
+    BlockTypes.emplace(piecewise_construct, forward_as_tuple(EBlockType::Grass), forward_as_tuple(new GrassBlock()));
+    vector<GLuint64> helper;
+    helper.reserve(TextureList.size());
+    for (const Texture* texture : TextureList)
+    {
+        helper.push_back(texture->GetHandle());
+    }
+    glBindBuffer(GL_UNIFORM_BUFFER, UBO);
+    glBufferData(GL_UNIFORM_BUFFER, static_cast<GLintptr>(sizeof(GLuint64) * helper.size()), helper.data(), GL_STATIC_DRAW);
+    glBindBufferRange(GL_UNIFORM_BUFFER, 0, UBO, 0, static_cast<GLintptr>(sizeof(GLuint64) * helper.size()));
 }
 
-void BlockTypeList::resetBlockTypes() {
-    init = false;
-    initBlockTypes();
+void BlockTypeList::ResetBlockTypes()
+{
+    Init = false;
+    glDeleteBuffers(1, &UBO);
+    InitBlockTypes();
 }
 
-bool BlockTypeList::init = false;
+bool BlockTypeList::Init = false;
 
-unordered_map<EBlockType, unique_ptr<Block>> BlockTypeList::blockTypes{};
+unordered_map<EBlockType, unique_ptr<Block>> BlockTypeList::BlockTypes{};
+std::vector<Texture*> BlockTypeList::TextureList{};
+GLuint BlockTypeList::UBO = 0;

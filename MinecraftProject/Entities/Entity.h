@@ -4,11 +4,9 @@
 
 #ifndef MINECRAFTPROJECT_ENTITY_H
 #define MINECRAFTPROJECT_ENTITY_H
-//#include "../World/SinglePlayerWorld.h"
-#include <glm/glm.hpp>
-#include "../Util/TessellationHelper.h"
 #include "../Util/EngineDefaults.h"
-#include "../Util/BoundingBox.h"
+#include "../Util/TessellationHelper.h"
+#include <glm/glm.hpp>
 
 class SinglePlayerWorld;
 
