@@ -2,37 +2,38 @@
 // Created by amit on 4/22/2022.
 //
 
-#ifndef MINECRAFTPROJECT_BOUNDINGBOX_H
-#define MINECRAFTPROJECT_BOUNDINGBOX_H
+#pragma once
 #include <limits>
 
 using std::numeric_limits;
 
-struct BoundingBox {
+struct BoundingBox
+{
 private:
-    float minX, minY, minZ;
-    float maxX, maxY, maxZ;
+    float MinX, MinY, MinZ;
+    float MaxX, MaxY, MaxZ;
 public:
     BoundingBox(float minX, float minY, float minZ, float maxX, float maxY, float maxZ);
-    BoundingBox(BoundingBox const &other);
-    [[nodiscard]] float getMinX() const;
-    [[nodiscard]] float getMinY() const;
-    [[nodiscard]] float getMinZ() const;
-    [[nodiscard]] float getMaxX() const;
-    [[nodiscard]] float getMaxY() const;
-    [[nodiscard]] float getMaxZ() const;
-    void expand(float x, float y, float z);
-    void grow(float x, float y, float z);
-    void move(float x, float y, float z);
-    [[nodiscard]] bool isPointInside(float x, float y, float z) const;
-    [[nodiscard]] bool isIntersecting(const BoundingBox& other) const;
-    [[nodiscard]] bool isIntersectingX(const BoundingBox& other) const;
-    [[nodiscard]] bool isIntersectingY(const BoundingBox& other) const;
-    [[nodiscard]] bool isIntersectingZ(const BoundingBox& other) const;
-    [[nodiscard]] float clipCollisionX(const BoundingBox& other, float x) const;
-    [[nodiscard]] float clipCollisionY(const BoundingBox& other, float y) const;
-    [[nodiscard]] float clipCollisionZ(const BoundingBox& other, float z) const;
+    BoundingBox(const BoundingBox& other) = default;
+    BoundingBox& operator=(const BoundingBox& other) = default;
+    BoundingBox(BoundingBox&& other) = default;
+    BoundingBox& operator=(BoundingBox&& other) = default;
+    ~BoundingBox() = default;
+    [[nodiscard]] float GetMinX() const;
+    [[nodiscard]] float GetMinY() const;
+    [[nodiscard]] float GetMinZ() const;
+    [[nodiscard]] float GetMaxX() const;
+    [[nodiscard]] float GetMaxY() const;
+    [[nodiscard]] float GetMaxZ() const;
+    void Expand(float x, float y, float z);
+    void Grow(float x, float y, float z);
+    void Move(float x, float y, float z);
+    [[nodiscard]] bool IsPointInside(float x, float y, float z) const;
+    [[nodiscard]] bool IsIntersecting(const BoundingBox& other) const;
+    [[nodiscard]] bool IsIntersectingX(const BoundingBox& other) const;
+    [[nodiscard]] bool IsIntersectingY(const BoundingBox& other) const;
+    [[nodiscard]] bool IsIntersectingZ(const BoundingBox& other) const;
+    [[nodiscard]] float ClipCollisionX(const BoundingBox& other, float x) const;
+    [[nodiscard]] float ClipCollisionY(const BoundingBox& other, float y) const;
+    [[nodiscard]] float ClipCollisionZ(const BoundingBox& other, float z) const;
 };
-
-
-#endif //MINECRAFTPROJECT_BOUNDINGBOX_H

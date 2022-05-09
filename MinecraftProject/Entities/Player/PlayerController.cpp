@@ -3,100 +3,111 @@
 //
 
 #include "PlayerController.h"
+#include "../../Util/EngineDefaults.h"
 #include <GLFW/glfw3.h>
 
 using std::make_unique;
 
-unique_ptr<Camera> CameraController::activeCamera = {};
+unique_ptr<Camera> CameraController::ActiveCamera = {};
 
-void CameraController::setActiveCamera(Camera& camera) {
-    activeCamera = make_unique<Camera>(camera);
-}
-
-Camera& CameraController::getActiveCamera() {
-    return *activeCamera;
-}
-
-void CameraController::onResizeWindow(int width, int height) {
-    activeCamera->SetAspectRatio((float) width / (float) height);
-}
-
-PlayerController::PlayerController(uint16_t entityID, float x, float y, float z) : LivingEntity(entityID, playerSize,x,y,z), myCamera(CameraController::getActiveCamera()), mouseX(0), mouseY(0), prevMouseX(0), prevMouseY(0) {
-    myCamera.SetCameraPosition(vec3(x,y,z));
-}
-
-void PlayerController::tick() {
-    handlePlayerInputs();
-    LivingEntity::tick();
-	//std::cout << getPos().x << " " << getPos().y << " " << getPos().z << std::endl;
-	vec3 finalCameraPosition = getTransform().getPosition() + playerSize;
-	finalCameraPosition.y += cameraOffset - playerSize.y;
-	myCamera.SetCameraPosition(finalCameraPosition);
-	EngineDefaults::getShader()->setMat4(EngineDefaults::getShader()->getUniformInt("view"), myCamera.GetViewMatrix());
-	EngineDefaults::getShader()->setMat4(EngineDefaults::getShader()->getUniformInt("projection"), myCamera.GetProjectionMatrix());
-}
-
-void PlayerController::handlePlayerInputs() {
-    myCamera.Yaw += mouseX * mouseSensitivity;
-    myCamera.Pitch += -mouseY * mouseSensitivity;
-	if (myCamera.Pitch > 89.0f)
-		myCamera.Pitch = 89.0f;
-	if(myCamera.Pitch < -89.0f)
-		myCamera.Pitch = -89.0f;
-	getTransform().setRotation(myCamera.Pitch, myCamera.Yaw,0);
-    mouseX=0;
-    mouseY=0;
-}
-
-void PlayerController::handleMouseMovementInput(float x, float y) {
-    mouseX = x-prevMouseX;
-    mouseY = y-prevMouseY;
-    prevMouseX = x;
-    prevMouseY = y;
-}
-
-void PlayerController::handleKeyboardMovementInput(int key, int action)
+void CameraController::SetActiveCamera(Camera& camera)
 {
-    if (action == GLFW_PRESS)
-    {
-        if (key == GLFW_KEY_W)
-        {
-			verticalInput++;
+	ActiveCamera = make_unique<Camera>(camera);
+}
+
+Camera& CameraController::GetActiveCamera()
+{
+	return *ActiveCamera;
+}
+
+void CameraController::OnResizeWindow(const int width, const int height)
+{
+	ActiveCamera->SetAspectRatio(static_cast<float>(width) / static_cast<float>(height));
+}
+
+PlayerController::PlayerController(const uint16_t entityId, const float x, const float y, const float z) : LivingEntity(entityId, PLAYER_SIZE, x, y, z), MyCamera(CameraController::GetActiveCamera()), MouseX(0), MouseY(0), PrevMouseX(0), PrevMouseY(0)
+{
+	MyCamera.SetCameraPosition(vec3(x, y, z));
+}
+
+void PlayerController::Tick()
+{
+	HandlePlayerInputs();
+	LivingEntity::Tick();
+	vec3 finalCameraPosition = GetTransform().GetPosition() + PLAYER_SIZE;
+	finalCameraPosition.y += CAMERA_OFFSET - PLAYER_SIZE.y;
+	MyCamera.SetCameraPosition(finalCameraPosition);
+	EngineDefaults::GetShader()->setMat4(EngineDefaults::GetShader()->getUniformInt("view"), MyCamera.GetViewMatrix());
+	EngineDefaults::GetShader()->setMat4(EngineDefaults::GetShader()->getUniformInt("projection"), MyCamera.GetProjectionMatrix());
+}
+
+void PlayerController::HandlePlayerInputs()
+{
+	MyCamera.Yaw += MouseX * MouseSensitivity;
+	MyCamera.Pitch += -MouseY * MouseSensitivity;
+	if (MyCamera.Pitch > 89.0F)
+	{
+		MyCamera.Pitch = 89.0F;
+	}
+	if (MyCamera.Pitch < -89.0F)
+	{
+		MyCamera.Pitch = -89.0F;
+	}
+	GetTransform().SetRotation(MyCamera.Pitch, MyCamera.Yaw, 0);
+	MouseX = 0;
+	MouseY = 0;
+}
+
+void PlayerController::HandleMouseMovementInput(const float x, const float y)
+{
+	MouseX = x - PrevMouseX;
+	MouseY = y - PrevMouseY;
+	PrevMouseX = x;
+	PrevMouseY = y;
+}
+
+void PlayerController::HandleKeyboardMovementInput(const int key, const int action)
+{
+	if (action == GLFW_PRESS)
+	{
+		if (key == GLFW_KEY_W)
+		{
+			VerticalInput++;
 		}
 		else if (key == GLFW_KEY_S)
 		{
-			verticalInput--;
+			VerticalInput--;
 		}
 		else if (key == GLFW_KEY_A)
 		{
-			horizontalInput--;
+			HorizontalInput--;
 		}
 		else if (key == GLFW_KEY_D)
 		{
-			horizontalInput++;
+			HorizontalInput++;
 		}
 		else if (key == GLFW_KEY_SPACE)
 		{
-			jumpRequested = true;
+			JumpRequested = true;
 		}
-    }
+	}
 	if (action == GLFW_RELEASE)
 	{
 		if (key == GLFW_KEY_W)
 		{
-			verticalInput--;
+			VerticalInput--;
 		}
 		else if (key == GLFW_KEY_S)
 		{
-			verticalInput++;
+			VerticalInput++;
 		}
 		else if (key == GLFW_KEY_A)
 		{
-			horizontalInput++;
+			HorizontalInput++;
 		}
 		else if (key == GLFW_KEY_D)
 		{
-			horizontalInput--;
+			HorizontalInput--;
 		}
 	}
 }

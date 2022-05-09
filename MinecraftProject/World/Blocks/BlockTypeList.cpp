@@ -10,7 +10,7 @@
 using std::piecewise_construct;
 using std::forward_as_tuple;
 
-const Block* BlockTypeList::GetBlockTypeData(EBlockType type)
+const Block* BlockTypeList::GetBlockTypeData(const EBlockType type)
 {
     InitBlockTypes();
     return BlockTypes.at(type).get();
@@ -29,7 +29,7 @@ void BlockTypeList::InitBlockTypes()
     {
         return;
     }
-    glGenBuffers(1, &UBO);
+    glGenBuffers(1, &Ubo);
     Init = true;
     for (const Texture* texture : TextureList)
     {
@@ -45,15 +45,15 @@ void BlockTypeList::InitBlockTypes()
     {
         helper.push_back(texture->GetHandle());
     }
-    glBindBuffer(GL_UNIFORM_BUFFER, UBO);
+    glBindBuffer(GL_UNIFORM_BUFFER, Ubo);
     glBufferData(GL_UNIFORM_BUFFER, static_cast<GLintptr>(sizeof(GLuint64) * helper.size()), helper.data(), GL_STATIC_DRAW);
-    glBindBufferRange(GL_UNIFORM_BUFFER, 0, UBO, 0, static_cast<GLintptr>(sizeof(GLuint64) * helper.size()));
+    glBindBufferRange(GL_UNIFORM_BUFFER, 0, Ubo, 0, static_cast<GLintptr>(sizeof(GLuint64) * helper.size()));
 }
 
 void BlockTypeList::ResetBlockTypes()
 {
     Init = false;
-    glDeleteBuffers(1, &UBO);
+    glDeleteBuffers(1, &Ubo);
     InitBlockTypes();
 }
 
@@ -61,4 +61,4 @@ bool BlockTypeList::Init = false;
 
 unordered_map<EBlockType, unique_ptr<Block>> BlockTypeList::BlockTypes{};
 std::vector<Texture*> BlockTypeList::TextureList{};
-GLuint BlockTypeList::UBO = 0;
+GLuint BlockTypeList::Ubo = 0;

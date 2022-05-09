@@ -13,12 +13,12 @@ TessellationHelper::~TessellationHelper()
     glDeleteVertexArrays(1, &Vao);
 }
 
-bool TessellationHelper::HasInit() const
+bool TessellationHelper::HasInitialized() const
 {
-	return hasInit;
+	return HasInit;
 }
 
-TessellationHelper::TessellationHelper(Shader* shader) : Vbo(0), Vao(0), Ebo(0), TheShader(shader), hasInit(false)
+TessellationHelper::TessellationHelper(Shader* shader) : Vbo(0), Vao(0), Ebo(0), TheShader(shader), HasInit(false)
 {
     glGenVertexArrays(1, &Vao);
     glGenBuffers(1, &Vbo);
@@ -52,17 +52,16 @@ void TessellationHelper::changeVertex(uint16_t vertexID, Vertex vertex) {
 */
 void TessellationHelper::Draw()
 {
-	
 	if (Vertices.empty())
 	{
-		hasInit = true;
+		HasInit = true;
 		return;
 	}
-	TheShader->setMat4(PositionUniform, TessellationTransform.getTransformMatrix());
+	TheShader->setMat4(PositionUniform, TessellationTransform.GetTransformMatrix());
 	glBindVertexArray(Vao);
-	if (!hasInit)
+	if (!HasInit)
 	{
-		hasInit = true;
+		HasInit = true;
 		glBindBuffer(GL_ARRAY_BUFFER, Vbo);
 		glBufferData(GL_ARRAY_BUFFER, static_cast<GLintptr>(Vertices.size() * sizeof(Vertex)), Vertices.data(), GL_DYNAMIC_DRAW);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
@@ -82,7 +81,6 @@ void TessellationHelper::Draw()
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
 	glDisableVertexAttribArray(3);
-	
 }
 
 void TessellationHelper::Reset()
@@ -95,10 +93,10 @@ void TessellationHelper::Reset()
     glGenVertexArrays(1, &Vao);
     glGenBuffers(1, &Vbo);
 	glGenBuffers(1, &Ebo);
-    hasInit = false;
+    HasInit = false;
 }
 
 TessellationHelper::TessellationHelper(Shader* shader, const float x, const float y, const float z) : TessellationHelper(shader)
 {
-	TessellationTransform.setPosition(x, y, z);
+	TessellationTransform.SetPosition(x, y, z);
 }

@@ -4,142 +4,176 @@
 
 #include "BoundingBox.h"
 
-float BoundingBox::getMinX() const {
-    return minX;
+float BoundingBox::GetMinX() const
+{
+    return MinX;
 }
 
-float BoundingBox::getMinY() const {
-    return minY;
+float BoundingBox::GetMinY() const
+{
+    return MinY;
 }
 
-float BoundingBox::getMinZ() const {
-    return minZ;
+float BoundingBox::GetMinZ() const
+{
+    return MinZ;
 }
 
-float BoundingBox::getMaxX() const {
-    return maxX;
+float BoundingBox::GetMaxX() const
+{
+    return MaxX;
 }
 
-float BoundingBox::getMaxY() const {
-    return maxY;
+float BoundingBox::GetMaxY() const
+{
+    return MaxY;
 }
 
-float BoundingBox::getMaxZ() const {
-    return maxZ;
+float BoundingBox::GetMaxZ() const
+{
+    return MaxZ;
 }
 
-BoundingBox::BoundingBox(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
-    this->minX = minX;
-    this->minY = minY;
-    this->minZ = minZ;
-    this->maxX = maxX;
-    this->maxY = maxY;
-    this->maxZ = maxZ;
+BoundingBox::BoundingBox(const float minX, const float minY, const float minZ, const float maxX, const float maxY, const float maxZ) :
+    MinX(minX), MinY(minY), MinZ(minZ), MaxX(maxX), MaxY(maxY), MaxZ(maxZ)
+{
 }
 
-void BoundingBox::expand(float x, float y, float z) {
-    if(x< 0) {
-        minX += x;
-    } else {
-        maxX += x;
+void BoundingBox::Expand(const float x, const float y, const float z)
+{
+    if (x < 0)
+    {
+        MinX += x;
     }
-    if(y < 0) {
-        minY += y;
-    } else {
-        maxY += y;
+    else
+    {
+        MaxX += x;
     }
-    if(z < 0) {
-        minZ += z;
-    } else {
-        maxZ += z;
+    if (y < 0)
+    {
+        MinY += y;
+    }
+    else
+    {
+        MaxY += y;
+    }
+    if (z < 0)
+    {
+        MinZ += z;
+    }
+    else
+    {
+        MaxZ += z;
     }
 }
 
-void BoundingBox::grow(float x, float y, float z) {
-    minX -= x;
-    minY -= y;
-    minZ -= z;
-    maxX += x;
-    maxY += y;
-    maxZ += z;
+void BoundingBox::Grow(const float x, const float y, const float z)
+{
+    MinX -= x;
+    MinY -= y;
+    MinZ -= z;
+    MaxX += x;
+    MaxY += y;
+    MaxZ += z;
 }
 
-void BoundingBox::move(float x, float y, float z) {
-    minX += x;
-    minY += y;
-    minZ += z;
-    maxX += x;
-    maxY += y;
-    maxZ += z;
+void BoundingBox::Move(const float x, const float y, const float z)
+{
+    MinX += x;
+    MinY += y;
+    MinZ += z;
+    MaxX += x;
+    MaxY += y;
+    MaxZ += z;
 }
 
-bool BoundingBox::isPointInside(float x, float y, float z) const {
-    return x >= minX && x <= maxX && y >= minY && y <= maxY && z >= minZ && z <= maxZ;
+bool BoundingBox::IsPointInside(const float x, const float y, const float z) const
+{
+    return x >= MinX && x <= MaxX && y >= MinY && y <= MaxY && z >= MinZ && z <= MaxZ;
 }
 
-bool BoundingBox::isIntersecting(const BoundingBox& other) const {
-    return isIntersectingX(other) && isIntersectingY(other) && isIntersectingZ(other);
+bool BoundingBox::IsIntersecting(const BoundingBox& other) const
+{
+    return IsIntersectingX(other) && IsIntersectingY(other) && IsIntersectingZ(other);
 }
 
-bool BoundingBox::isIntersectingX(const BoundingBox& other) const {
-    return minX <= other.getMaxX() && maxX >= other.getMinX();
+bool BoundingBox::IsIntersectingX(const BoundingBox& other) const
+{
+    return MinX <= other.GetMaxX() && MaxX >= other.GetMinX();
 }
 
-bool BoundingBox::isIntersectingY(const BoundingBox& other) const {
-    return minY <= other.getMaxY() && maxY >= other.getMinY();
+bool BoundingBox::IsIntersectingY(const BoundingBox& other) const
+{
+    return MinY <= other.GetMaxY() && MaxY >= other.GetMinY();
 }
 
-bool BoundingBox::isIntersectingZ(const BoundingBox& other) const {
-    return minZ <= other.getMaxZ() && maxZ >= other.getMinZ();
+bool BoundingBox::IsIntersectingZ(const BoundingBox& other) const
+{
+    return MinZ <= other.GetMaxZ() && MaxZ >= other.GetMinZ();
 }
 
-float BoundingBox::clipCollisionX(const BoundingBox& other, float x) const {
-    if(isIntersectingY(other) && isIntersectingZ(other)){
-        if(x<0 && minX >= other.getMaxX()) {
-            float max = other.getMaxX() - minX + 0.001f;
-            if(max > x)
+float BoundingBox::ClipCollisionX(const BoundingBox& other, float x) const
+{
+    if (IsIntersectingY(other) && IsIntersectingZ(other))
+    {
+        if (x < 0 && MinX >= other.GetMaxX())
+        {
+            if (const float max = other.GetMaxX() - MinX + 0.001F; max > x)
+            {
                 x = max;
+            }
         }
-        else if(x>0 && maxX <= other.getMinX()) {
-            float min = other.getMinX() - maxX - 0.001f;
-            if(min < x)
+        else if (x > 0 && MaxX <= other.GetMinX())
+        {
+            if (const float min = other.GetMinX() - MaxX - 0.001F; min < x)
+            {
                 x = min;
+            }
         }
     }
     return x;
 }
 
-float BoundingBox::clipCollisionY(const BoundingBox& other, float y) const {
-    if(isIntersectingX(other) && isIntersectingZ(other)){
-        if(y<0 && minY >= other.getMaxY()) {
-            float max = other.getMaxY() - minY + 0.001f;
-            if(max > y)
+float BoundingBox::ClipCollisionY(const BoundingBox& other, float y) const
+{
+    if (IsIntersectingX(other) && IsIntersectingZ(other))
+    {
+        if (y < 0 && MinY >= other.GetMaxY())
+        {
+            if (const float max = other.GetMaxY() - MinY + 0.001F; max > y)
+            {
                 y = max;
+            }
         }
-        else if(y>0 && maxY <= other.getMinY()) {
-            float min = other.getMinY() - maxY - 0.001f;
-            if(min < y)
+        else if (y > 0 && MaxY <= other.GetMinY())
+        {
+            if (const float min = other.GetMinY() - MaxY - 0.001F; min < y)
+            {
                 y = min;
+            }
         }
     }
     return y;
 }
 
-float BoundingBox::clipCollisionZ(const BoundingBox& other, float z) const {
-    if(isIntersectingX(other) && isIntersectingY(other)){
-        if(z<0 && minZ >= other.getMaxZ()) {
-            float max = other.getMaxZ() - minZ + 0.001f;
-            if(max > z)
+float BoundingBox::ClipCollisionZ(const BoundingBox& other, float z) const
+{
+    if (IsIntersectingX(other) && IsIntersectingY(other))
+    {
+        if (z < 0 && MinZ >= other.GetMaxZ())
+        {
+            if (const float max = other.GetMaxZ() - MinZ + 0.001F; max > z)
+            {
                 z = max;
+            }
         }
-        else if(z>0 && maxZ <= other.getMinZ()) {
-            float min = other.getMinZ() - maxZ - 0.001f;
-            if(min < z)
+        else if (z > 0 && MaxZ <= other.GetMinZ())
+        {
+            if (const float min = other.GetMinZ() - MaxZ - 0.001F; min < z)
+            {
                 z = min;
+            }
         }
     }
     return z;
-}
-
-BoundingBox::BoundingBox(const BoundingBox &other) : minX(other.getMinX()), minY(other.getMinY()), minZ(other.getMinZ()), maxX(other.getMaxX()), maxY(other.getMaxY()), maxZ(other.getMaxZ()) {
 }

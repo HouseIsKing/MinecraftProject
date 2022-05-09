@@ -1,9 +1,7 @@
 #include "AirBlock.h"
 
-AirBlock::AirBlock() : Block()
-{
-}
+AirBlock::AirBlock() = default;
 
-void AirBlock::generateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face, const float& x, const float& y, const float& z) const
+void AirBlock::GenerateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face, const float& x, const float& y, const float& z) const
 {
 }

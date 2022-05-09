@@ -4,70 +4,83 @@
 
 #include "Transform.h"
 
-Transform::Transform() : position(vec3(0.0f)), rotation(vec3(0.0f)), scale(vec3(1.0f)), transformMatrix(1.0f), isDirty(true) {
+Transform::Transform() : Position(vec3(0.0F)), Rotation(vec3(0.0F)), Scale(vec3(1.0F)), TransformMatrix(1.0F), IsDirty(true)
+{
 }
 
-void Transform::calculateTransformMatrix() {
-    transformMatrix = translate(position);
-    transformMatrix = glm::rotate(transformMatrix, glm::radians(rotation.x), vec3(1.0f, 0.0f, 0.0f));
-    transformMatrix = glm::rotate(transformMatrix, glm::radians(rotation.y), vec3(0.0f, 1.0f, 0.0f));
-    transformMatrix = glm::rotate(transformMatrix, glm::radians(rotation.z), vec3(0.0f, 0.0f, 1.0f));
-    transformMatrix = glm::scale(transformMatrix, scale);
-    isDirty = false;
+void Transform::CalculateTransformMatrix()
+{
+    TransformMatrix = translate(Position);
+    TransformMatrix = rotate(TransformMatrix, glm::radians(Rotation.x), vec3(1.0F, 0.0F, 0.0F));
+    TransformMatrix = rotate(TransformMatrix, glm::radians(Rotation.y), vec3(0.0F, 1.0F, 0.0F));
+    TransformMatrix = rotate(TransformMatrix, glm::radians(Rotation.z), vec3(0.0F, 0.0F, 1.0F));
+    TransformMatrix = scale(TransformMatrix, Scale);
+    IsDirty = false;
 }
 
-vec3 Transform::getPosition() {
-    return position;
+vec3 Transform::GetPosition() const
+{
+    return Position;
 }
 
-vec3 Transform::getRotation() {
-    return rotation;
+vec3 Transform::GetRotation() const
+{
+    return Rotation;
 }
 
-void Transform::rotate(float x, float y, float z) {
-    rotation.x += x;
-    rotation.y += y;
-    rotation.z += z;
-    isDirty = true;
+void Transform::Rotate(const float x, const float y, const float z)
+{
+    Rotation.x += x;
+    Rotation.y += y;
+    Rotation.z += z;
+    IsDirty = true;
 }
 
-void Transform::setRotation(float x, float y, float z) {
-    rotation.x = x;
-    rotation.y = y;
-    rotation.z = z;
-    isDirty = true;
+void Transform::SetRotation(const float x, const float y, const float z)
+{
+    Rotation.x = x;
+    Rotation.y = y;
+    Rotation.z = z;
+    IsDirty = true;
 }
 
-void Transform::move(float x, float y, float z) {
-    position.x += x;
-    position.y += y;
-    position.z += z;
-    isDirty = true;
+void Transform::Move(const float x, const float y, const float z)
+{
+    Position.x += x;
+    Position.y += y;
+    Position.z += z;
+    IsDirty = true;
 }
 
-void Transform::setPosition(float x, float y, float z) {
-    position.x = x;
-    position.y = y;
-    position.z = z;
-    isDirty = true;
+void Transform::SetPosition(const float x, const float y, const float z)
+{
+    Position.x = x;
+    Position.y = y;
+    Position.z = z;
+    IsDirty = true;
 }
 
-void Transform::grow(float x, float y, float z) {
-    scale.x += x;
-    scale.y += y;
-    scale.z += z;
-    isDirty = true;
+void Transform::Grow(const float x, const float y, const float z)
+{
+    Scale.x += x;
+    Scale.y += y;
+    Scale.z += z;
+    IsDirty = true;
 }
 
-void Transform::setScale(float x, float y, float z) {
-    scale.x = x;
-    scale.y = y;
-    scale.z = z;
-    isDirty = true;
+void Transform::SetScale(const float x, const float y, const float z)
+{
+    Scale.x = x;
+    Scale.y = y;
+    Scale.z = z;
+    IsDirty = true;
 }
 
-mat4x4 Transform::getTransformMatrix() {
-    if(isDirty)
-        calculateTransformMatrix();
-    return transformMatrix;
+mat4x4 Transform::GetTransformMatrix()
+{
+    if (IsDirty)
+    {
+        CalculateTransformMatrix();
+    }
+    return TransformMatrix;
 }

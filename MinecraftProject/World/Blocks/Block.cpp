@@ -4,19 +4,17 @@
 
 #include "Block.h"
 
-#include <utility>
-
-Block::Block() : Block(0,0,0,1,1,1) {
-}
-
-Block::Block(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) : boundingBox(minX, minY, minZ, maxX, maxY, maxZ) {
-
-}
-
-Block::~Block()
+Block::Block() : Block(0, 0, 0, 1, 1, 1)
 {
 }
 
-BoundingBox Block::getBoundingBox() const {
-    return boundingBox;
+Block::Block(const float minX, const float minY, const float minZ, const float maxX, const float maxY, const float maxZ) : BlockBounds(minX, minY, minZ, maxX, maxY, maxZ)
+{
+}
+
+Block::~Block() = default;
+
+BoundingBox Block::GetBoundingBox() const
+{
+    return BlockBounds;
 }

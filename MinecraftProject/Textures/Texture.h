@@ -24,6 +24,10 @@ public:
     void NonResident() const;
     bool operator ==(const Texture& other) const;
     ~Texture();
+    Texture(const Texture& other) = default;
+    Texture(Texture&& other) = default;
+    Texture& operator =(const Texture& other) = default;
+    Texture& operator =(Texture&& other) = default;
 };
 
 template <>

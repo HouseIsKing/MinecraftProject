@@ -1,9 +1,10 @@
 #pragma once
 #include "Block.h"
-class AirBlock : public Block
+
+class AirBlock final : public Block
 {
 public:
 	AirBlock();
-	void generateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face, const float& x, const float& y, const float& z) const override;
+	void GenerateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face, const float& x, const float& y, const float& z) const override;
 };
 

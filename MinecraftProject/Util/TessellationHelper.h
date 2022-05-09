@@ -20,12 +20,16 @@ class TessellationHelper
     vector<GLushort> TriangleIndices{};
     Transform TessellationTransform;
     Shader* TheShader;
-    bool hasInit;
+    bool HasInit;
     int PositionUniform;
 public:
     void Reset();
     ~TessellationHelper();
-    [[nodiscard]] bool HasInit() const;
+    TessellationHelper(const TessellationHelper&) = delete;
+    TessellationHelper& operator=(const TessellationHelper&) = delete;
+    TessellationHelper(TessellationHelper&&) = delete;
+    TessellationHelper& operator=(TessellationHelper&&) = delete;
+    [[nodiscard]] bool HasInitialized() const;
     explicit TessellationHelper(Shader* shader);
     TessellationHelper(Shader* shader, float x, float y, float z);
     [[nodiscard]] Transform& GetTransform();

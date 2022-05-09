@@ -2,38 +2,36 @@
 // Created by amit on 4/21/2022.
 //
 
-#ifndef MINECRAFTPROJECT_CHUNK_H
-#define MINECRAFTPROJECT_CHUNK_H
-#include "ChunkCoords.h"
+#pragma once
 #include "../Util/TessellationHelper.h"
-#include <array>
 #include "Blocks/Block.h"
+#include "ChunkCoords.h"
+#include <array>
 
 class SinglePlayerWorld;
 
 using std::array;
 using std::unique_ptr;
 
-class Chunk {
+class Chunk
+{
 public:
-    static const char CHUNK_WIDTH = 8;
-    static const char CHUNK_HEIGHT = 8;
-    static const char CHUNK_DEPTH = 8;
-    static void setWorld(SinglePlayerWorld* newWorld);
-    static SinglePlayerWorld* getWorld();
+    static constexpr char CHUNK_WIDTH = 16;
+    static constexpr char CHUNK_HEIGHT = 16;
+    static constexpr char CHUNK_DEPTH = 16;
+    static void SetWorld(SinglePlayerWorld* newWorld);
+    static SinglePlayerWorld* GetWorld();
     Chunk(int x, int y, int z);
-    const Block* getBlockAt(int x, int y, int z);
-    EBlockType getBlockTypeAt(int x, int y, int z);
-    bool isCoordsInsideChunk(int x, int y, int z);
-    void resetDraw();
-    void draw();
-    void setBlockTypeAt(int x, int y, int z, EBlockType block);
+    [[nodiscard]] const Block* GetBlockAt(int x, int y, int z) const;
+    [[nodiscard]] EBlockType GetBlockTypeAt(int x, int y, int z) const;
+    [[nodiscard]] bool IsCoordsInsideChunk(int x, int y, int z) const;
+    void ResetDraw();
+    void Draw() const;
+    void SetBlockTypeAt(int x, int y, int z, EBlockType block);
 private:
-    ChunkCoords chunkPosition;
-    unique_ptr<TessellationHelper> tessellationHelper;
-    static SinglePlayerWorld* world;
-    EBlockType blocks[CHUNK_HEIGHT*CHUNK_DEPTH*CHUNK_WIDTH]{EBlockType::Air};
-    void drawBlock(EBlockType blockType, int x, int y, int z);
-
+    ChunkCoords ChunkPosition;
+    unique_ptr<TessellationHelper> Tessellation;
+    static SinglePlayerWorld* World;
+    std::array<EBlockType, static_cast<size_t>(CHUNK_HEIGHT * CHUNK_DEPTH * CHUNK_WIDTH)> Blocks{EBlockType::Air};
+    void DrawBlock(EBlockType blockType, int x, int y, int z) const;
 };
-#endif //MINECRAFTPROJECT_CHUNK_H

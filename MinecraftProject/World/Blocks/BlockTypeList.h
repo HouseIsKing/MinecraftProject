@@ -33,7 +33,7 @@ class BlockTypeList
     static unordered_map<EBlockType, unique_ptr<Block>> BlockTypes;
     static std::vector<Texture*> TextureList;
     static bool Init;
-    static GLuint UBO;
+    static GLuint Ubo;
 public:
     static const Block* GetBlockTypeData(EBlockType type);
     static uint16_t RegisterTexture(Texture* texture);

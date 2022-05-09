@@ -1,65 +1,67 @@
-#include <iostream>
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 #include "World/SinglePlayerWorld.h"
-#include "Shaders/Shader.h"
 #include "Entities/Player/PlayerController.h"
+#include "Shaders/Shader.h"
+#include <GLFW/glfw3.h>
+#include <glad/glad.h>
+#include <iostream>
+#include <memory>
 
 using std::cout;
 using std::endl;
 
-void error_callback(int error, const char* description)
+unique_ptr<SinglePlayerWorld> helper{};
+constexpr float TICK_RATE = 0.01666667F;
+
+void ErrorCallback(const int error, const char* description)
 {
-    fprintf(stderr, "Error: CODE: %d %s\n", error,description);
+    std::cout << "Error: CODE: " << error << " " << description << endl;
 }
 
-SinglePlayerWorld* helper;
-
-void handleMouseInput(GLFWwindow* window, double mouseX, double mouseY)
+void HandleMouseInput(GLFWwindow* /*window*/, const double mouseX, const double mouseY)
 {
-    helper->handleMouseMovementInput(mouseX, mouseY);
+    helper->HandleMouseMovementInput(mouseX, mouseY);
 }
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+void KeyCallback(GLFWwindow* window, const int key, int /*scancode*/, const int action, int /*mods*/)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
-    helper->handleKeyboardPlayerInput(key, action);
+    }
+    helper->HandleKeyboardPlayerInput(key, action);
 }
 
-void windowsResizeCallback(GLFWwindow* window, int width, int height)
+void WindowsResizeCallback(GLFWwindow* /*window*/, const int width, const int height)
 {
-    helper->handleWindowResize(height, width);
+    helper->HandleWindowResize(height, width);
 }
 
-const float tickRate = 0.01666667f;
-
-void mainLoop(GLFWwindow* window)
+void MainLoop(GLFWwindow* window)
 {
-    Camera cam = Camera(glm::vec3(0,0,0),1280/720.0f);
-    CameraController::setActiveCamera(cam);
+    auto cam = Camera(glm::vec3(0.0F, 0.0F, 0.0F), 1280 / 720.0F);
+    CameraController::SetActiveCamera(cam);
     double start = glfwGetTime();
-    helper = new SinglePlayerWorld(256, 64, 256);
+    helper = std::make_unique<SinglePlayerWorld>(static_cast<uint16_t>(256), static_cast<uint16_t>(64), static_cast<uint16_t>(256));
     double end = glfwGetTime();
-    cout << "World creation took " << end-start << " seconds" << endl;
-    glfwSetCursorPosCallback(window, handleMouseInput);
+    cout << "World creation took " << end - start << " seconds" << endl;
+    glfwSetCursorPosCallback(window, HandleMouseInput);
     double counter = 0;
-    double ticksTimer = 0;
+    float ticksTimer = 0;
     int framesCompleted = 0;
     start = glfwGetTime();
-    while (!glfwWindowShouldClose(window))
+    while (glfwWindowShouldClose(window) == 0)
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         int i;
-        for (i = 0; i < ticksTimer / static_cast<double>(tickRate); i++)
+        for (i = 0; static_cast<float>(i) < ticksTimer / TICK_RATE; i++)
         {
-            helper->tick();
+            helper->Tick();
         }
-        ticksTimer -= i * tickRate;
-        helper->drawWorld();
+        ticksTimer -= static_cast<float>(i) * TICK_RATE;
+        helper->DrawWorld();
         end = glfwGetTime();
         counter += end - start;
-        ticksTimer += end - start;
+        ticksTimer += static_cast<float>(end - start);
         framesCompleted++;
         if (counter > 1)
         {
@@ -71,15 +73,14 @@ void mainLoop(GLFWwindow* window)
         glfwPollEvents();
         glfwSwapBuffers(window);
     }
-    delete helper;
 }
-void GLAPIENTRY MessageCallback( GLenum source,GLenum type,
-                 GLuint id,GLenum severity,GLsizei length,const GLchar* message,const void* userParam ) {
-    if(severity != GL_DEBUG_SEVERITY_NOTIFICATION)
+
+void GLAPIENTRY MessageCallback(GLenum /*source*/, const GLenum type,
+                                GLuint /*id*/, const GLenum severity, GLsizei /*length*/, const GLchar* message, const void* /*userParam*/)
+{
+    if (severity != GL_DEBUG_SEVERITY_NOTIFICATION)
     {
-        fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-                (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
-                type, severity, message);
+        std::cerr << "GL CALLBACK: " << (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "") << " type = " << type << ", severity = " << severity << ", message = " << message << std::endl;
     }
 }
 
@@ -94,7 +95,7 @@ GLFWwindow* InitGlfw()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     GLFWwindow* window = glfwCreateWindow(1280, 720, "Minecraft C++ Project", nullptr, nullptr);
-    if (!window)
+    if (window == nullptr)
     {
         cout << "Failed to create GLFW window" << endl;
         glfwTerminate();
@@ -102,12 +103,12 @@ GLFWwindow* InitGlfw()
     }
     glfwMakeContextCurrent(window);
     gladLoadGL();
-    glfwSetErrorCallback(error_callback);
-    glfwSetKeyCallback(window, key_callback);
-    glfwSetFramebufferSizeCallback(window, windowsResizeCallback);
+    glfwSetErrorCallback(ErrorCallback);
+    glfwSetKeyCallback(window, KeyCallback);
+    glfwSetFramebufferSizeCallback(window, WindowsResizeCallback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallback(MessageCallback,nullptr);
+    glDebugMessageCallback(MessageCallback, nullptr);
     return window;
 }
 
@@ -118,7 +119,7 @@ int main()
     {
         return -1;
     }
-    mainLoop(window);
+    MainLoop(window);
     glfwDestroyWindow(window);
     glfwTerminate();
     return 0;

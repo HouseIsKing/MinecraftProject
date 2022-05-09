@@ -4,30 +4,36 @@
 
 #pragma once
 #include "../../Util/BoundingBox.h"
-#include "BlockTypeList.h"
 #include "../../Util/TessellationHelper.h"
+#include "BlockTypeList.h"
 #include <array>
 
 using std::array;
 using glm::floor;
 
-enum class BlockFaces {
-    TOP,
-    BOTTOM,
-    WEST,
-    EAST,
-    NORTH,
-    SOUTH
+enum class BlockFaces
+{
+    Top,
+    Bottom,
+    West,
+    East,
+    North,
+    South
 };
 
-class Block {
+class Block
+{
 protected:
     vector<uint16_t> IndexTextures;
-    BoundingBox boundingBox;
+    BoundingBox BlockBounds;
     Block();
     Block(float minX, float minY, float minZ, float maxX, float maxY, float maxZ);
 public:
     virtual ~Block();
-    BoundingBox getBoundingBox() const;
-    virtual void generateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face, const float& x, const float& y, const float& z) const = 0;
+    Block(const Block&) = delete;
+    Block& operator=(const Block&) = delete;
+    Block(Block&&) = delete;
+    Block& operator=(Block&&) = delete;
+    [[nodiscard]] BoundingBox GetBoundingBox() const;
+    virtual void GenerateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face, const float& x, const float& y, const float& z) const = 0;
 };

@@ -3,70 +3,71 @@
 //
 
 #include "Entity.h"
+#include "../Util/EngineDefaults.h"
 #include "../World/SinglePlayerWorld.h"
 
-SinglePlayerWorld* Entity::world = nullptr;
+SinglePlayerWorld* Entity::World = nullptr;
 
-Entity::Entity(uint16_t setEntityID, vec3 entitySize, float x, float y, float z) : isGrounded(false), velocityX(0), velocityY(0), velocityZ(0), entityID(setEntityID), entitySize(entitySize),
-                                                                                tessellationHelper(EngineDefaults::getShader(),x,y,z) {
+Entity::Entity(uint16_t setEntityID, vec3 entitySize, float x, float y, float z) : IsGrounded(false), VelocityX(0), VelocityY(0), VelocityZ(0), EntityId(setEntityID), EntitySize(entitySize),
+    TessellationHelper(EngineDefaults::GetShader(),x,y,z) {
 }
 
 Entity::~Entity()
 {
 }
 
-void Entity::setWorld(SinglePlayerWorld *newWorld) {
-    Entity::world = newWorld;
+void Entity::SetWorld(SinglePlayerWorld *newWorld) {
+    Entity::World = newWorld;
 }
 
-SinglePlayerWorld *Entity::getWorld() {
-    return Entity::world;
+SinglePlayerWorld *Entity::GetWorld() {
+    return Entity::World;
 }
 
-bool Entity::IsGrounded() const {
-    return isGrounded;
+bool Entity::IsOnGround() const {
+    return IsGrounded;
 }
 
-void Entity::checkCollisionAndMove() {
-    float originalY = velocityY;
-    vec3 pos = tessellationHelper.GetTransform().getPosition() + entitySize;
-    BoundingBox myBoundingBox = BoundingBox(pos.x-entitySize.x, pos.y-entitySize.y, pos.z-entitySize.z, pos.x + entitySize.x, pos.y + entitySize.y, pos.z + entitySize.z);
+void Entity::CheckCollisionAndMove() {
+    float originalY = VelocityY;
+    vec3 pos = TessellationHelper.GetTransform().GetPosition() + EntitySize;
+    BoundingBox myBoundingBox = BoundingBox(pos.x-EntitySize.x, pos.y-EntitySize.y, pos.z-EntitySize.z, pos.x + EntitySize.x, pos.y + EntitySize.y, pos.z + EntitySize.z);
     auto movementBox = BoundingBox(myBoundingBox);
-    movementBox.expand(velocityX, velocityY, velocityZ);
-    movementBox.grow(1.0f,1.0f,1.0f);
-    std::vector<BoundingBox> collidingBoxes = world->getBlockBoxesInBoundingBox(movementBox);
+    movementBox.Expand(VelocityX, VelocityY, VelocityZ);
+    movementBox.Grow(1.0f,1.0f,1.0f);
+    std::vector<BoundingBox> collidingBoxes = World->GetBlockBoxesInBoundingBox(movementBox);
     for(BoundingBox& box : collidingBoxes)
     {
-        velocityX = myBoundingBox.clipCollisionX(box,velocityX);
+        VelocityX = myBoundingBox.ClipCollisionX(box,VelocityX);
     }
-    myBoundingBox.move(velocityX,0,0);
-    tessellationHelper.GetTransform().move(velocityX,0,0);
+    myBoundingBox.Move(VelocityX,0,0);
+    TessellationHelper.GetTransform().Move(VelocityX,0,0);
     for(BoundingBox& box : collidingBoxes)
     {
-        velocityY = myBoundingBox.clipCollisionY(box,velocityY);
+        VelocityY = myBoundingBox.ClipCollisionY(box,VelocityY);
     }
-    myBoundingBox.move(0,velocityY,0);
-    tessellationHelper.GetTransform().move(0,velocityY,0);
+    myBoundingBox.Move(0,VelocityY,0);
+    TessellationHelper.GetTransform().Move(0,VelocityY,0);
     for(BoundingBox& box : collidingBoxes)
     {
-        velocityZ = myBoundingBox.clipCollisionZ(box,velocityZ);
+        VelocityZ = myBoundingBox.ClipCollisionZ(box,VelocityZ);
     }
-    tessellationHelper.GetTransform().move(0,0,velocityZ);
-    isGrounded = originalY <= 0 && originalY != velocityY;
+    TessellationHelper.GetTransform().Move(0,0,VelocityZ);
+    IsGrounded = originalY <= 0 && originalY != VelocityY;
 }
 
 void Entity::Render() {
 
 }
 
-void Entity::tick() {
+void Entity::Tick() {
 }
 
-void Entity::doTick() {
-    tick();
+void Entity::DoTick() {
+    Tick();
 }
 
-Transform& Entity::getTransform()
+Transform& Entity::GetTransform()
 {
-    return tessellationHelper.GetTransform();
+    return TessellationHelper.GetTransform();
 }

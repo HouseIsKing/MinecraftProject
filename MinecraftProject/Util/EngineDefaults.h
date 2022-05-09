@@ -3,39 +3,37 @@
 //
 #pragma once
 #include "../Shaders/Shader.h"
-#include "../World/Blocks/Block.h"
-#include <array>
-#include "../World/Chunk.h"
 #include "CustomRandomEngine.h"
+#include <array>
 
 using std::array;
 using std::unique_ptr;
 
-class EngineDefaults {
-private:
-    static unique_ptr<Shader> theShader;
-    static bool hasInit;
-    static void init();
-    static CustomRandomEngine engine;
+class EngineDefaults
+{
+    static unique_ptr<Shader> TheShader;
+    static bool HasInit;
+    static void Init();
+    static CustomRandomEngine Engine;
 public:
-    static Shader* getShader();
-	template<typename T>
-    static T getNext(T maxValue);
-    template<typename T>	
-    static T getNext(T minValue, T maxValue);
-    static int getChunkLocalIndex(int x, int y, int z);
+    static Shader* GetShader();
+    template <typename T>
+    static T GetNext(T maxValue);
+    template <typename T>
+    static T GetNext(T minValue, T maxValue);
+    static int GetChunkLocalIndex(int x, int y, int z);
 };
 
-template<typename T>
-inline T EngineDefaults::getNext(T maxValue)
+template <typename T>
+T EngineDefaults::GetNext(T maxValue)
 {
-    return getNext<T>(0, maxValue);
+    return GetNext<T>(0, maxValue);
 }
 
-template<typename T>
-inline T EngineDefaults::getNext(T minValue, T maxValue)
+template <typename T>
+T EngineDefaults::GetNext(T minValue, T maxValue)
 {
-    T modulu = maxValue - minValue;
-	T next = engine.getNext() % modulu;
-	return next + minValue;
+    T modulo = maxValue - minValue;
+    T next = Engine.GetNext() % modulo;
+    return next + minValue;
 }

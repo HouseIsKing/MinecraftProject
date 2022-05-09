@@ -2,8 +2,7 @@
 // Created by amit on 4/22/2022.
 //
 
-#ifndef MINECRAFTPROJECT_TRANSFORM_H
-#define MINECRAFTPROJECT_TRANSFORM_H
+#pragma once
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 
@@ -11,26 +10,23 @@ using glm::vec3;
 using glm::mat4x4;
 using glm::translate;
 
-class Transform {
-private:
-    vec3 position;
-    vec3 rotation;
-    vec3 scale;
-    mat4x4 transformMatrix;
-    bool isDirty;
-    void calculateTransformMatrix();
+class Transform
+{
+    vec3 Position;
+    vec3 Rotation;
+    vec3 Scale;
+    mat4x4 TransformMatrix;
+    bool IsDirty;
+    void CalculateTransformMatrix();
 public:
     Transform();
-    vec3 getPosition();
-    vec3 getRotation();
-    void rotate(float x, float y, float z);
-    void setRotation(float x, float y, float z);
-    void move(float x, float y, float z);
-    void setPosition(float x, float y, float z);
-    void grow(float x, float y, float z);
-    void setScale(float x, float y, float z);
-    mat4x4 getTransformMatrix();
+    [[nodiscard]] vec3 GetPosition() const;
+    [[nodiscard]] vec3 GetRotation() const;
+    void Rotate(float x, float y, float z);
+    void SetRotation(float x, float y, float z);
+    void Move(float x, float y, float z);
+    void SetPosition(float x, float y, float z);
+    void Grow(float x, float y, float z);
+    void SetScale(float x, float y, float z);
+    mat4x4 GetTransformMatrix();
 };
-
-
-#endif //MINECRAFTPROJECT_TRANSFORM_H

@@ -3,29 +3,33 @@
 //
 
 #include "EngineDefaults.h"
-
+#include "../World/Chunk.h"
 #include <memory>
 
-bool EngineDefaults::hasInit = false;
-Shader* EngineDefaults::getShader()
+bool EngineDefaults::HasInit = false;
+
+Shader* EngineDefaults::GetShader()
 {
-    if(!hasInit) {
-        init();
+    if (!HasInit)
+    {
+        Init();
     }
-    return theShader.get();
+    return TheShader.get();
 }
 
-void EngineDefaults::init() {
-    hasInit = true;
-    theShader = std::make_unique<Shader>("Shaders/VertexShader.glsl", "Shaders/FragmentShader.glsl");
+void EngineDefaults::Init()
+{
+    HasInit = true;
+    TheShader = std::make_unique<Shader>("Shaders/VertexShader.glsl", "Shaders/FragmentShader.glsl");
 }
 
-int EngineDefaults::getChunkLocalIndex(int x, int y, int z) {
+int EngineDefaults::GetChunkLocalIndex(int x, int y, int z)
+{
     x %= Chunk::CHUNK_WIDTH;
     y %= Chunk::CHUNK_HEIGHT;
     z %= Chunk::CHUNK_DEPTH;
     return x + z * Chunk::CHUNK_WIDTH + y * Chunk::CHUNK_WIDTH * Chunk::CHUNK_DEPTH;
 }
 
-unique_ptr<Shader> EngineDefaults::theShader = {};
-CustomRandomEngine EngineDefaults::engine = {};
+unique_ptr<Shader> EngineDefaults::TheShader = {};
+CustomRandomEngine EngineDefaults::Engine = {};

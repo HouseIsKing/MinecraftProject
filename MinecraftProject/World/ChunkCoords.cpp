@@ -5,19 +5,22 @@
 #include "ChunkCoords.h"
 #include "Chunk.h"
 
-int ChunkCoords::getX() const {
+int ChunkCoords::GetX() const
+{
     return X;
 }
 
-int ChunkCoords::getY() const {
+int ChunkCoords::GetY() const
+{
     return Y;
 }
 
-int ChunkCoords::getZ() const {
+int ChunkCoords::GetZ() const
+{
     return Z;
 }
 
-ChunkCoords::ChunkCoords(const int x, const int y, const int z) : X(x/Chunk::CHUNK_WIDTH), Y(y/Chunk::CHUNK_HEIGHT), Z(z/Chunk::CHUNK_DEPTH) 
+ChunkCoords::ChunkCoords(const int x, const int y, const int z) : X(x / Chunk::CHUNK_WIDTH), Y(y / Chunk::CHUNK_HEIGHT), Z(z / Chunk::CHUNK_DEPTH)
 {
     if (x < 0)
     {
@@ -33,4 +36,6 @@ ChunkCoords::ChunkCoords(const int x, const int y, const int z) : X(x/Chunk::CHU
     }
 }
 
-ChunkCoords::ChunkCoords() : ChunkCoords(0,0,0){}
+ChunkCoords::ChunkCoords() : ChunkCoords(0, 0, 0)
+{
+}

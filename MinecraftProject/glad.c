@@ -22,61 +22,62 @@
         https://glad.dav1d.de/#profile=core&language=c&specification=gl&loader=on&api=gl%3D4.6&extensions=GL_ARB_bindless_texture&extensions=GL_NV_bindless_multi_draw_indirect&extensions=GL_NV_bindless_multi_draw_indirect_count&extensions=GL_NV_bindless_texture
 */
 
+#include <glad/glad.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <glad/glad.h>
 
-static void* get_proc(const char *namez);
+static void* GetProc(const char* names);
 
 #if defined(_WIN32) || defined(__CYGWIN__)
 #ifndef _WINDOWS_
 #undef APIENTRY
 #endif
-#include <windows.h>
-static HMODULE libGL;
+#include <Windows.h>
+static HMODULE libGl;
 
-typedef void* (APIENTRYP PFNWGLGETPROCADDRESSPROC_PRIVATE)(const char*);
-static PFNWGLGETPROCADDRESSPROC_PRIVATE gladGetProcAddressPtr;
+typedef void* (APIENTRYP PfnwglgetprocaddressprocPrivate)(const char*);
+static PfnwglgetprocaddressprocPrivate gladGetProcAddressPtr;
 
 #ifdef _MSC_VER
 #ifdef __has_include
-  #if __has_include(<winapifamily.h>)
-    #define HAVE_WINAPIFAMILY 1
-  #endif
+#if __has_include(<winapifamily.h>)
+#define HAVE_WINAPIFAMILY 1
+#endif
 #elif _MSC_VER >= 1700 && !_USING_V110_SDK71_
   #define HAVE_WINAPIFAMILY 1
 #endif
 #endif
 
 #ifdef HAVE_WINAPIFAMILY
-  #include <winapifamily.h>
-  #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) && WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+#include <winapifamily.h>
+#if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) && WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
     #define IS_UWP 1
-  #endif
+#endif
 #endif
 
-static
-int open_gl(void) {
+static int OpenGl(void)
+{
 #ifndef IS_UWP
-    libGL = LoadLibraryW(L"opengl32.dll");
-    if(libGL != NULL) {
-        void (* tmp)(void);
-        tmp = (void(*)(void)) GetProcAddress(libGL, "wglGetProcAddress");
-        gladGetProcAddressPtr = (PFNWGLGETPROCADDRESSPROC_PRIVATE) tmp;
-        return gladGetProcAddressPtr != NULL;
-    }
+	libGl = LoadLibraryW(L"opengl32.dll");
+	if (libGl != NULL)
+	{
+		void (* tmp)(void) = (void(*)(void))GetProcAddress(libGl, "wglGetProcAddress");
+		gladGetProcAddressPtr = (PfnwglgetprocaddressprocPrivate)tmp;
+		return gladGetProcAddressPtr != NULL;
+	}
 #endif
 
-    return 0;
+	return 0;
 }
 
-static
-void close_gl(void) {
-    if(libGL != NULL) {
-        FreeLibrary((HMODULE) libGL);
-        libGL = NULL;
-    }
+static void CloseGl(void)
+{
+	if (libGl != NULL)
+	{
+		FreeLibrary(libGl);
+		libGl = NULL;
+	}
 }
 #else
 #include <dlfcn.h>
@@ -128,18 +129,18 @@ void close_gl(void) {
 #endif
 
 static
-void* get_proc(const char *namez) {
+void* GetProc(const char *names) {
     void* result = NULL;
-    if(libGL == NULL) return NULL;
+    if(libGl == NULL) return NULL;
 
 #if !defined(__APPLE__) && !defined(__HAIKU__)
     if(gladGetProcAddressPtr != NULL) {
-        result = gladGetProcAddressPtr(namez);
+        result = gladGetProcAddressPtr(names);
     }
 #endif
     if(result == NULL) {
 #if defined(_WIN32) || defined(__CYGWIN__)
-        result = (void*)GetProcAddress((HMODULE) libGL, namez);
+        result = (void*)GetProcAddress((HMODULE) libGl, names);
 #else
         result = dlsym(libGL, namez);
 #endif
@@ -151,9 +152,9 @@ void* get_proc(const char *namez) {
 int gladLoadGL(void) {
     int status = 0;
 
-    if(open_gl()) {
-        status = gladLoadGLLoader(&get_proc);
-        close_gl();
+    if(OpenGl()) {
+        status = gladLoadGLLoader(&GetProc);
+        CloseGl();
     }
 
     return status;

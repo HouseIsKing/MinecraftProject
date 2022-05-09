@@ -4,8 +4,6 @@
 
 #pragma once
 #include <glm/glm.hpp>
-
-#include "../World/Blocks/BlockTypeList.h"
 using glm::vec3;
 using glm::vec2;
 using glm::vec4;

@@ -6,7 +6,8 @@
 
 #include "../../Util/EngineDefaults.h"
 
-void Camera::UpdateVectors() {
+void Camera::UpdateVectors()
+{
     Front.x = cos(radians(Pitch)) * cos(radians(Yaw));
     Front.y = sin(radians(Pitch));
     Front.z = cos(radians(Pitch)) * sin(radians(Yaw));
@@ -48,20 +49,23 @@ mat4x4 Camera::GetViewMatrix()
     return ViewMatrix;
 }
 
-mat4x4 Camera::GetProjectionMatrix() {
-    if(IsDirtyProjectionMatrix)
+mat4x4 Camera::GetProjectionMatrix()
+{
+    if (IsDirtyProjectionMatrix)
+    {
         RecalculateProjectionMatrix();
+    }
     return ProjectionMatrix;
 }
 
 void Camera::RecalculateProjectionMatrix()
 {
-    ProjectionMatrix = perspective(glm::radians(Fov), AspectRatio, 0.1f, 100.0f);
-    IsDirtyProjectionMatrix= false;
-    //EngineDefaults::getShader()->setMat4(EngineDefaults::getShader()->getUniformInt("projection"), ProjectionMatrix);
+    ProjectionMatrix = perspective(radians(Fov), AspectRatio, 0.1F, 100.0F);
+    IsDirtyProjectionMatrix = false;
 }
 
-void Camera::SetAspectRatio(float newAspectRatio) {
+void Camera::SetAspectRatio(const float newAspectRatio)
+{
     AspectRatio = newAspectRatio;
     IsDirtyProjectionMatrix = true;
     RecalculateProjectionMatrix();
@@ -74,5 +78,4 @@ void Camera::RecalculateViewMatrix()
     UpdateVectors();
     ViewMatrix = lookAt(Position, Position + Front, Up);
     IsDirtyViewMatrix = false;
-    //EngineDefaults::getShader()->setMat4(EngineDefaults::getShader()->getUniformInt("view"), ViewMatrix);
 }

@@ -4,38 +4,38 @@
 
 #include "LivingEntity.h"
 
-LivingEntity::LivingEntity(uint16_t entityID, vec3 entitySize, float x, float y, float z) : Entity(entityID, entitySize,
-                                                                                                   x, y, z) , jumpRequested(false) , horizontalInput(0) , verticalInput(0) {
+LivingEntity::LivingEntity(uint16_t entityId, vec3 entitySize, float x, float y, float z) : Entity(entityId, entitySize,
+                                                                                                   x, y, z) , JumpRequested(false) , HorizontalInput(0) , VerticalInput(0) {
 }
 
-void LivingEntity::calculateVelocity() {
+void LivingEntity::CalculateVelocity() {
     float speedModifier = 0.02f;
-    if(jumpRequested && IsGrounded()) {
-        velocityY = 0.12f;
+    if(JumpRequested && IsOnGround()) {
+        VelocityY = 0.12f;
     }
-    jumpRequested = false;
-    if(!IsGrounded()) {
+    JumpRequested = false;
+    if(!IsOnGround()) {
         speedModifier *= 0.25f;
     }
-    velocityY -= 0.005f;
-    vec3 rotation = tessellationHelper.GetTransform().getRotation();
-    if (verticalInput != 0 || horizontalInput != 0)
+    VelocityY -= 0.005f;
+    vec3 rotation = TessellationHelper.GetTransform().GetRotation();
+    if (VerticalInput != 0 || HorizontalInput != 0)
     {
-		speedModifier /= sqrt(horizontalInput * horizontalInput + verticalInput * verticalInput);
-        velocityX += speedModifier * (verticalInput * cos(radians(rotation.y)) - horizontalInput * sin(radians(rotation.y)));
-        velocityZ += speedModifier * (horizontalInput * cos(radians(rotation.y)) + verticalInput * sin(radians(rotation.y)));
+		speedModifier /= sqrt(HorizontalInput * HorizontalInput + VerticalInput * VerticalInput);
+        VelocityX += speedModifier * (VerticalInput * cos(radians(rotation.y)) - HorizontalInput * sin(radians(rotation.y)));
+        VelocityZ += speedModifier * (HorizontalInput * cos(radians(rotation.y)) + VerticalInput * sin(radians(rotation.y)));
     }
-    velocityX *= 0.91f;
-    velocityZ *= 0.91f;
-    velocityY *= 0.98f;
-    if(IsGrounded()) {
-        velocityX *= 0.8f;
-        velocityZ *= 0.8f;
+    VelocityX *= 0.91f;
+    VelocityZ *= 0.91f;
+    VelocityY *= 0.98f;
+    if(IsOnGround()) {
+        VelocityX *= 0.8f;
+        VelocityZ *= 0.8f;
     }
-    checkCollisionAndMove();
+    CheckCollisionAndMove();
 }
 
-void LivingEntity::tick() {
-    calculateVelocity();
-    Entity::tick();
+void LivingEntity::Tick() {
+    CalculateVelocity();
+    Entity::Tick();
 }
