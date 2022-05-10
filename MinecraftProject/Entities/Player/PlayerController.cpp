@@ -37,8 +37,8 @@ void PlayerController::Tick()
 	vec3 finalCameraPosition = GetTransform().GetPosition() + PLAYER_SIZE;
 	finalCameraPosition.y += CAMERA_OFFSET - PLAYER_SIZE.y;
 	MyCamera.SetCameraPosition(finalCameraPosition);
-	EngineDefaults::GetShader()->setMat4(EngineDefaults::GetShader()->getUniformInt("view"), MyCamera.GetViewMatrix());
-	EngineDefaults::GetShader()->setMat4(EngineDefaults::GetShader()->getUniformInt("projection"), MyCamera.GetProjectionMatrix());
+	Shader::SetMat4(EngineDefaults::GetShader()->GetUniformInt("view"), MyCamera.GetViewMatrix());
+	Shader::SetMat4(EngineDefaults::GetShader()->GetUniformInt("projection"), MyCamera.GetProjectionMatrix());
 }
 
 void PlayerController::HandlePlayerInputs()

@@ -2,15 +2,12 @@
 // Created by amit on 4/22/2022.
 //
 
-#ifndef MINECRAFTPROJECT_SHADER_H
-#define MINECRAFTPROJECT_SHADER_H
-#include <unordered_map>
+#pragma once
 #include "glad/glad.h"
-#include <string>
 #include <glm/glm.hpp>
 #include <iostream>
-#include <fstream>
-#include <sstream>
+#include <string>
+#include <unordered_map>
 
 using std::string;
 using std::unordered_map;
@@ -20,24 +17,25 @@ using std::endl;
 using std::ifstream;
 using std::stringstream;
 
-class Shader {
-private:
-    unordered_map<string, int> uniforms;
-    static void compileShader(GLuint shader);
-    static void linkProgram(GLuint program);
+class Shader
+{
+    unordered_map<string, int> Uniforms;
+    static void CompileShader(GLuint shader);
+    static void LinkProgram(GLuint program);
 public:
     ~Shader();
-    const GLuint program;
+    Shader(Shader&& other) noexcept = default;
+    Shader& operator=(Shader&& other) noexcept = delete;
+    Shader(const Shader& other) = default;
+    Shader& operator=(const Shader& other) = delete;
+    const GLuint Program;
     Shader(const string& vertPath, const string& fragPath);
-    void use() const;
-    [[nodiscard]] GLuint getAttribLocation(const string& name) const;
-    GLuint GetUniformBlockIndex(const string& name) const;
-    int getUniformInt(const string& name) const;
-    void setInt(int posUniform, int value);
-    void setFloat(int posUniform, float value);
-    void setVec3(int posUniform, float x, float y, float z);
-    void setMat4(int posUniform, mat4x4);
+    void Use() const;
+    [[nodiscard]] GLuint GetAttribLocation(const string& name) const;
+    [[nodiscard]] GLuint GetUniformBlockIndex(const string& name) const;
+    [[nodiscard]] int GetUniformInt(const string& name) const;
+    static void SetInt(int posUniform, int value);
+    static void SetFloat(int posUniform, float value);
+    static void SetVec3(int posUniform, float x, float y, float z);
+    static void SetMat4(int posUniform, mat4x4 value);
 };
-
-
-#endif //MINECRAFTPROJECT_SHADER_H

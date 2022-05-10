@@ -4,8 +4,6 @@
 
 #include "Camera.h"
 
-#include "../../Util/EngineDefaults.h"
-
 void Camera::UpdateVectors()
 {
     Front.x = cos(radians(Pitch)) * cos(radians(Yaw));

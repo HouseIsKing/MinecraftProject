@@ -20,7 +20,6 @@ public:
 
 class PlayerController final : LivingEntity
 {
-private:
     Camera& MyCamera;
     constexpr static vec3 PLAYER_SIZE = vec3(0.3F, 0.9F, 0.3F);
     constexpr static float CAMERA_OFFSET = 1.62F;

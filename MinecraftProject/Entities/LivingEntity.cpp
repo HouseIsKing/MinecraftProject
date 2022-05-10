@@ -4,38 +4,44 @@
 
 #include "LivingEntity.h"
 
-LivingEntity::LivingEntity(uint16_t entityId, vec3 entitySize, float x, float y, float z) : Entity(entityId, entitySize,
-                                                                                                   x, y, z) , JumpRequested(false) , HorizontalInput(0) , VerticalInput(0) {
+LivingEntity::LivingEntity(const uint16_t entityId, const vec3 entitySize, const float x, const float y, const float z) : Entity(entityId, entitySize,
+    x, y, z), JumpRequested(false), HorizontalInput(0), VerticalInput(0)
+{
 }
 
-void LivingEntity::CalculateVelocity() {
-    float speedModifier = 0.02f;
-    if(JumpRequested && IsOnGround()) {
-        VelocityY = 0.12f;
+void LivingEntity::CalculateVelocity()
+{
+    float speedModifier = 0.02F;
+    if (JumpRequested && IsOnGround())
+    {
+        VelocityY = 0.12F;
     }
     JumpRequested = false;
-    if(!IsOnGround()) {
-        speedModifier *= 0.25f;
-    }
-    VelocityY -= 0.005f;
-    vec3 rotation = TessellationHelper.GetTransform().GetRotation();
-    if (VerticalInput != 0 || HorizontalInput != 0)
+    if (!IsOnGround())
     {
-		speedModifier /= sqrt(HorizontalInput * HorizontalInput + VerticalInput * VerticalInput);
+        speedModifier *= 0.25F;
+    }
+    VelocityY -= 0.005F;
+    const vec3 rotation = TessellationHelper.GetTransform().GetRotation();
+    if (const float d = sqrt(HorizontalInput * HorizontalInput + VerticalInput * VerticalInput); d > 0.001F)
+    {
+        speedModifier /= d;
         VelocityX += speedModifier * (VerticalInput * cos(radians(rotation.y)) - HorizontalInput * sin(radians(rotation.y)));
         VelocityZ += speedModifier * (HorizontalInput * cos(radians(rotation.y)) + VerticalInput * sin(radians(rotation.y)));
     }
-    VelocityX *= 0.91f;
-    VelocityZ *= 0.91f;
-    VelocityY *= 0.98f;
-    if(IsOnGround()) {
-        VelocityX *= 0.8f;
-        VelocityZ *= 0.8f;
+    VelocityX *= 0.91F;
+    VelocityZ *= 0.91F;
+    VelocityY *= 0.98F;
+    if (IsOnGround())
+    {
+        VelocityX *= 0.8F;
+        VelocityZ *= 0.8F;
     }
     CheckCollisionAndMove();
 }
 
-void LivingEntity::Tick() {
+void LivingEntity::Tick()
+{
     CalculateVelocity();
     Entity::Tick();
 }

@@ -1,6 +1,5 @@
 #include "World/SinglePlayerWorld.h"
 #include "Entities/Player/PlayerController.h"
-#include "Shaders/Shader.h"
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 #include <iostream>
@@ -38,7 +37,7 @@ void WindowsResizeCallback(GLFWwindow* /*window*/, const int width, const int he
 
 void MainLoop(GLFWwindow* window)
 {
-    auto cam = Camera(glm::vec3(0.0F, 0.0F, 0.0F), 1280 / 720.0F);
+    auto cam = Camera(vec3(0.0F, 0.0F, 0.0F), 1280 / 720.0F);
     CameraController::SetActiveCamera(cam);
     double start = glfwGetTime();
     helper = std::make_unique<SinglePlayerWorld>(static_cast<uint16_t>(256), static_cast<uint16_t>(64), static_cast<uint16_t>(256));

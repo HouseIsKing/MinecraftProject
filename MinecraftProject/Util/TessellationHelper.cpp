@@ -23,8 +23,8 @@ TessellationHelper::TessellationHelper(Shader* shader) : Vbo(0), Vao(0), Ebo(0),
     glGenVertexArrays(1, &Vao);
     glGenBuffers(1, &Vbo);
 	glGenBuffers(1, &Ebo);
-    TheShader->use();
-    PositionUniform = TheShader->getUniformInt("transformationMatrix");
+    TheShader->Use();
+    PositionUniform = TheShader->GetUniformInt("transformationMatrix");
 }
 
 Transform& TessellationHelper::GetTransform()
@@ -57,7 +57,7 @@ void TessellationHelper::Draw()
 		HasInit = true;
 		return;
 	}
-	TheShader->setMat4(PositionUniform, TessellationTransform.GetTransformMatrix());
+	Shader::SetMat4(PositionUniform, TessellationTransform.GetTransformMatrix());
 	glBindVertexArray(Vao);
 	if (!HasInit)
 	{
