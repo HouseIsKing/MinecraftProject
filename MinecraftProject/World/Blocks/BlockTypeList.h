@@ -13,7 +13,7 @@ class Block;
 using std::unique_ptr;
 using std::unordered_map;
 
-enum class EBlockType
+enum class EBlockType : uint8_t
 {
     Air,
     Grass
@@ -27,6 +27,8 @@ struct std::hash<EBlockType>
         return static_cast<size_t>(blockType);
     }
 };
+
+std::istream& operator>>(std::istream& is, EBlockType& blockType);
 
 class BlockTypeList
 {

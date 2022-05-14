@@ -3,7 +3,9 @@
 //
 
 #pragma once
-#include <cstdlib>
+#include <ostream>
+
+#include "../Util/CustomFileManager.h"
 
 struct ChunkCoords
 {
@@ -22,6 +24,9 @@ public:
     {
         return X == other.X && Y == other.Y && Z == other.Z;
     }
+
+    friend CustomFileManager& operator<<(CustomFileManager& file, const ChunkCoords& coords);
+    friend CustomFileManager& operator>>(CustomFileManager& file, ChunkCoords& coords);
 };
 
 struct ChunkComparator

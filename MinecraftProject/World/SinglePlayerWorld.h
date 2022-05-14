@@ -21,6 +21,8 @@ class SinglePlayerWorld
     const uint16_t LevelHeight;
     const uint16_t LevelDepth;
     PlayerController PlayerController;
+    void SaveWorld();
+    void LoadWorld();
 public:
     SinglePlayerWorld(uint16_t width, uint16_t height, uint16_t depth);
     ~SinglePlayerWorld();

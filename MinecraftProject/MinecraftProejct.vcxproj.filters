@@ -104,6 +104,9 @@
     <ClCompile Include="glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Util\CustomFileManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entities\Entity.h">
@@ -163,6 +166,7 @@
     <ClInclude Include="Util\CustomRandomEngine.h">
       <Filter>Source Files\Util</Filter>
     </ClInclude>
+    <ClInclude Include="Util\CustomFileManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\FragmentShader.glsl">

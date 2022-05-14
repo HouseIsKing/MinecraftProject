@@ -10,6 +10,14 @@
 using std::piecewise_construct;
 using std::forward_as_tuple;
 
+std::istream& operator>>(std::istream& is, EBlockType& blockType)
+{
+    uint8_t temp = 0;
+    is >> temp;
+    blockType = static_cast<EBlockType>(temp);
+    return is;
+}
+
 const Block* BlockTypeList::GetBlockTypeData(const EBlockType type)
 {
     InitBlockTypes();

@@ -4,7 +4,6 @@
 
 #pragma once
 #include "../Util/TessellationHelper.h"
-#include "Blocks/Block.h"
 #include "ChunkCoords.h"
 #include <array>
 
@@ -28,6 +27,8 @@ public:
     void ResetDraw();
     void Draw() const;
     void SetBlockTypeAt(int x, int y, int z, EBlockType block);
+    friend CustomFileManager& operator<<(CustomFileManager& fileManager, const Chunk& chunk);
+    friend CustomFileManager& operator>>(CustomFileManager& fileManager, Chunk& chunk);
 private:
     ChunkCoords ChunkPosition;
     unique_ptr<TessellationHelper> Tessellation;

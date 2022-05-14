@@ -149,3 +149,22 @@ void Chunk::SetBlockTypeAt(const int x, const int y, const int z, const EBlockTy
         Tessellation->Reset();
     }
 }
+
+CustomFileManager& operator<<(CustomFileManager& fileManager, const Chunk& chunk)
+{
+    fileManager << chunk.ChunkPosition;
+    for (const auto& block : chunk.Blocks)
+    {
+        fileManager << block;
+    }
+    return fileManager;
+}
+
+CustomFileManager& operator>>(CustomFileManager& fileManager, Chunk& chunk)
+{
+    for (auto& block : chunk.Blocks)
+    {
+        fileManager >> block;
+    }
+    return fileManager;
+}

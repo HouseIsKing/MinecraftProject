@@ -3,16 +3,44 @@
 //
 
 #include "SinglePlayerWorld.h"
+#include "../Util/CustomFileManager.h"
 #include "../Util/EngineDefaults.h"
 #include "Blocks/GrassBlock.h"
 #include <cmath>
+#include <filesystem>
 #include <ranges>
 
 using std::piecewise_construct;
 using std::forward_as_tuple;
 
-SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth) : LevelWidth(width), LevelHeight(height), LevelDepth(depth),
-    PlayerController(0, 5, static_cast<float>(height + 3), 5)
+
+void SinglePlayerWorld::SaveWorld()
+{
+    CustomFileManager fileManager{"level.dat", "w"};
+    fileManager << Chunks.size();
+    for (auto& val : Chunks | std::views::values)
+    {
+        fileManager << val;
+    }
+}
+
+void SinglePlayerWorld::LoadWorld()
+{
+    CustomFileManager fileManager{"level.dat", "r"};
+    size_t size;
+    fileManager >> size;
+    for (size_t i = 0; i < size; i++)
+    {
+        ChunkCoords coords;
+        fileManager >> coords;
+        int x = coords.GetX() * Chunk::CHUNK_WIDTH;
+        int y = coords.GetY() * Chunk::CHUNK_HEIGHT;
+        int z = coords.GetZ() * Chunk::CHUNK_DEPTH;
+        fileManager >> Chunks.emplace(piecewise_construct, forward_as_tuple(x, y, z), forward_as_tuple(x, y, z)).first->second;
+    }
+}
+
+SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth) : LevelWidth(width), LevelHeight(height), LevelDepth(depth), PlayerController(0, 5, static_cast<float>(height + 3), 5)
 {
     Entity::SetWorld(this);
     Chunk::SetWorld(this);
@@ -36,11 +64,18 @@ void SinglePlayerWorld::HandleWindowResize(const int height, const int width)
 
 void SinglePlayerWorld::Init()
 {
-    const auto amountX = static_cast<uint16_t>(std::ceil(static_cast<float>(LevelWidth) / static_cast<float>(Chunk::CHUNK_WIDTH)));
-    const auto amountY = static_cast<uint16_t>(std::ceil(static_cast<float>(LevelHeight) / static_cast<float>(Chunk::CHUNK_HEIGHT)));
-    const auto amountZ = static_cast<uint16_t>(std::ceil(static_cast<float>(LevelDepth) / static_cast<float>(Chunk::CHUNK_DEPTH)));
-    GenerateChunks(amountX, amountY, amountZ);
-    GenerateCaves();
+    if (std::filesystem::exists("level.dat"))
+    {
+        LoadWorld();
+    }
+    else
+    {
+        const auto amountX = static_cast<uint16_t>(std::ceil(static_cast<float>(LevelWidth) / static_cast<float>(Chunk::CHUNK_WIDTH)));
+        const auto amountY = static_cast<uint16_t>(std::ceil(static_cast<float>(LevelHeight) / static_cast<float>(Chunk::CHUNK_HEIGHT)));
+        const auto amountZ = static_cast<uint16_t>(std::ceil(static_cast<float>(LevelDepth) / static_cast<float>(Chunk::CHUNK_DEPTH)));
+        GenerateChunks(amountX, amountY, amountZ);
+        GenerateCaves();
+    }
 }
 
 void SinglePlayerWorld::GenerateChunks(const uint16_t amountX, const uint16_t amountY, const uint16_t amountZ)
@@ -182,4 +217,14 @@ void SinglePlayerWorld::HandleKeyboardPlayerInput(const int key, const int actio
     PlayerController.HandleKeyboardMovementInput(key, action);
 }
 
-SinglePlayerWorld::~SinglePlayerWorld() = default;
+SinglePlayerWorld::~SinglePlayerWorld()
+{
+    try
+    {
+        SaveWorld();
+    }
+    catch (...)
+    {
+        std::cout << "Error while saving world" << std::endl;
+    }
+}

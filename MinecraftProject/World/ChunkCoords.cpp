@@ -39,3 +39,15 @@ ChunkCoords::ChunkCoords(const int x, const int y, const int z) : X(x / Chunk::C
 ChunkCoords::ChunkCoords() : ChunkCoords(0, 0, 0)
 {
 }
+
+CustomFileManager& operator<<(CustomFileManager& file, const ChunkCoords& coords)
+{
+    file << coords.X << coords.Y << coords.Z;
+    return file;
+}
+
+CustomFileManager& operator>>(CustomFileManager& file, ChunkCoords& coords)
+{
+    file >> coords.X >> coords.Y >> coords.Z;
+    return file;
+}
