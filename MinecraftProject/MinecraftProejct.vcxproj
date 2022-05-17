@@ -184,6 +184,7 @@
     <ClCompile Include="World\Blocks\AirBlock.cpp" />
     <ClCompile Include="World\Blocks\Block.cpp" />
     <ClCompile Include="World\Blocks\BlockTypeList.cpp" />
+    <ClCompile Include="World\Blocks\CobblestoneBlock.cpp"/>
     <ClCompile Include="World\Blocks\GrassBlock.cpp" />
     <ClCompile Include="World\Chunk.cpp" />
     <ClCompile Include="World\ChunkCoords.cpp" />
@@ -206,6 +207,7 @@
     <ClInclude Include="World\Blocks\AirBlock.h" />
     <ClInclude Include="World\Blocks\Block.h" />
     <ClInclude Include="World\Blocks\BlockTypeList.h" />
+      <ClInclude Include="World\Blocks\CobblestoneBlock.h"/>
     <ClInclude Include="World\Blocks\GrassBlock.h" />
     <ClInclude Include="World\Chunk.h" />
     <ClInclude Include="World\ChunkCoords.h" />
@@ -220,9 +222,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Textures\Blocks\cobblestone.png">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
+      <Image Include="Textures\Blocks\Cobblestone.png">
+          <DeploymentContent>true</DeploymentContent>
+      </Image>
     <Image Include="Textures\Blocks\Dirt.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>

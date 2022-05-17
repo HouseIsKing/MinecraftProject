@@ -16,7 +16,8 @@ using std::unordered_map;
 enum class EBlockType : uint8_t
 {
     Air,
-    Grass
+    Grass,
+    Cobblestone
 };
 
 template <>

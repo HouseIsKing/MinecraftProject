@@ -5,6 +5,7 @@
 #include "BlockTypeList.h"
 #include "../../Util/EngineDefaults.h"
 #include "AirBlock.h"
+#include "CobblestoneBlock.h"
 #include "GrassBlock.h"
 
 using std::piecewise_construct;
@@ -47,6 +48,7 @@ void BlockTypeList::InitBlockTypes()
     BlockTypes.clear();
     BlockTypes.emplace(piecewise_construct, forward_as_tuple(EBlockType::Air), forward_as_tuple(new AirBlock()));
     BlockTypes.emplace(piecewise_construct, forward_as_tuple(EBlockType::Grass), forward_as_tuple(new GrassBlock()));
+    BlockTypes.emplace(piecewise_construct, forward_as_tuple(EBlockType::Cobblestone), forward_as_tuple(new CobblestoneBlock()));
     vector<GLuint64> helper;
     helper.reserve(TextureList.size());
     for (const Texture* texture : TextureList)

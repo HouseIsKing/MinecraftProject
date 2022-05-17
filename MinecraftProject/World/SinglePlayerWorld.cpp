@@ -130,7 +130,14 @@ void SinglePlayerWorld::GenerateChunks(const uint16_t amountX, const uint16_t am
                     {
                         for (int z = 0; z < Chunk::CHUNK_DEPTH; z++)
                         {
-                            chunk->SetBlockTypeAt(x, y, z, EBlockType::Grass);
+                            if (y + j * Chunk::CHUNK_HEIGHT >= LevelHeight - 7)
+                            {
+                                chunk->SetBlockTypeAt(x, y, z, EBlockType::Grass);
+                            }
+                            else
+                            {
+                                chunk->SetBlockTypeAt(x, y, z, EBlockType::Cobblestone);
+                            }
                         }
                     }
                 }
