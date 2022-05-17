@@ -15,7 +15,9 @@ struct Vertex
 	vec2 TexCoords;
 	vec4 Color;
 	float IndexTexture;
-	Vertex(float x, float y, float z, float u, float v, float r, float g, float b, float a, uint16_t indexTexture);
+	vec3 Normal;
+	float Brightness;
+	Vertex(float x, float y, float z, float u, float v, float r, float g, float b, float a, uint16_t indexTexture, float normalX, float normalY, float normalZ, float brightness);
 
 	[[nodiscard]] vec3 GetPosition() const;
 	[[nodiscard]] vec2 GetTexCoords() const;

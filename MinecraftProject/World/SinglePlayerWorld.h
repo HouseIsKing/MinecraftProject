@@ -20,9 +20,15 @@ class SinglePlayerWorld
     const uint16_t LevelWidth;
     const uint16_t LevelHeight;
     const uint16_t LevelDepth;
+    vector<uint8_t> LightLevels;
+    const uint8_t MaxChunkRebuilt = 2;
     PlayerController PlayerController;
     void SaveWorld();
     void LoadWorld();
+    void GenerateChunks(uint16_t amountX, uint16_t amountY, uint16_t amountZ);
+    void GenerateCaves();
+    void Init();
+    void RecalculateLightLevels();
 public:
     SinglePlayerWorld(uint16_t width, uint16_t height, uint16_t depth);
     ~SinglePlayerWorld();
@@ -34,13 +40,11 @@ public:
     void HandleMouseMovementInput(double x, double y);
     void HandleKeyboardPlayerInput(int key, int action);
     static void HandleWindowResize(int height, int width);
-    void Init();
-    void GenerateChunks(uint16_t amountX, uint16_t amountY, uint16_t amountZ);
-    void GenerateCaves();
     bool IsBlockExists(int x, int y, int z);
     const Block* GetBlockAt(int x, int y, int z);
     EBlockType GetBlockTypeAt(int x, int y, int z);
     Chunk* GetChunkAt(int x, int y, int z);
+    [[nodiscard]] float GetBrightnessAt(int x, int y, int z) const;
     vector<BoundingBox> GetBlockBoxesInBoundingBox(const BoundingBox& boundingBox);
     void DrawWorld();
 };

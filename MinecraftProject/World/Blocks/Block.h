@@ -35,5 +35,5 @@ public:
     Block(Block&&) = delete;
     Block& operator=(Block&&) = delete;
     [[nodiscard]] BoundingBox GetBoundingBox() const;
-    virtual void GenerateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face, const float& x, const float& y, const float& z) const = 0;
+    virtual void GenerateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face, const float& x, const float& y, const float& z, const float& brightness) const = 0;
 };

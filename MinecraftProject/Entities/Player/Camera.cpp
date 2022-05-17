@@ -4,6 +4,8 @@
 
 #include "Camera.h"
 
+#include <glad/glad.h>
+
 void Camera::UpdateVectors()
 {
     Front.x = cos(radians(Pitch)) * cos(radians(Yaw));
@@ -22,14 +24,15 @@ void Camera::SetCameraPosition(const vec3 newPosition)
 }
 
 Camera::Camera(vec3 position, float aspectRatio) : Front(0, 0, -1), Up(0, 1, 0), Right(1, 0, 0),
-                                                   Fov(60), AspectRatio(aspectRatio), Position(position),
+                                                   Fov(70), AspectRatio(aspectRatio), Position(position),
                                                    ViewMatrix(), ProjectionMatrix(),
                                                    IsDirtyViewMatrix(true), IsDirtyProjectionMatrix(true),
                                                    PrevYaw(0),
-                                                   PrevPitch(0), Pitch(0), Yaw(0)
+                                                   ZNear(0.05F), ZFar(1000.0F), PrevPitch(0), Pitch(0), Yaw(0)
 {
     UpdateVectors();
 }
+
 
 void Camera::SetFov(const float newFov)
 {
@@ -58,7 +61,7 @@ mat4x4 Camera::GetProjectionMatrix()
 
 void Camera::RecalculateProjectionMatrix()
 {
-    ProjectionMatrix = perspective(radians(Fov), AspectRatio, 0.1F, 100.0F);
+    ProjectionMatrix = perspective(radians(Fov), AspectRatio, ZNear, ZFar);
     IsDirtyProjectionMatrix = false;
 }
 

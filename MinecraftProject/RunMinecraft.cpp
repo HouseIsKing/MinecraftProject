@@ -48,6 +48,10 @@ void MainLoop(GLFWwindow* window)
     double counter = 0;
     float ticksTimer = 0;
     int framesCompleted = 0;
+    glClearColor(0.5F, 0.8F, 1.0F, 1.0F);
+    glClearDepthf(1.0F);
+    glDepthFunc(GL_LEQUAL);
+    bool firstTick = true;
     start = glfwGetTime();
     while (glfwWindowShouldClose(window) == 0)
     {
@@ -60,15 +64,19 @@ void MainLoop(GLFWwindow* window)
         ticksTimer -= static_cast<float>(i) * TICK_RATE;
         helper->DrawWorld();
         end = glfwGetTime();
-        counter += end - start;
-        ticksTimer += static_cast<float>(end - start);
-        framesCompleted++;
-        if (counter > 1)
+        if (!firstTick)
         {
-            counter -= 1;
-            cout << "FPS: " << framesCompleted << std::endl;
-            framesCompleted = 0;
+            counter += end - start;
+            ticksTimer += static_cast<float>(end - start);
+            framesCompleted++;
+            if (counter > 1)
+            {
+                counter -= 1;
+                cout << "FPS: " << framesCompleted << std::endl;
+                framesCompleted = 0;
+            }
         }
+        firstTick = false;
         start = end;
         glfwPollEvents();
         glfwSwapBuffers(window);
@@ -93,6 +101,7 @@ GLFWwindow* InitGlfw()
     }
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     GLFWwindow* window = glfwCreateWindow(1280, 720, "Minecraft C++ Project", nullptr, nullptr);
     if (window == nullptr)

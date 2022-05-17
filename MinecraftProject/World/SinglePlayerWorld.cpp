@@ -40,7 +40,7 @@ void SinglePlayerWorld::LoadWorld()
     }
 }
 
-SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth) : LevelWidth(width), LevelHeight(height), LevelDepth(depth), PlayerController(0, 5, static_cast<float>(height + 3), 5)
+SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth) : LevelWidth(width), LevelHeight(height), LevelDepth(depth), PlayerController(0, EngineDefaults::GetNext(width), static_cast<float>(height + 3), EngineDefaults::GetNext(depth))
 {
     Entity::SetWorld(this);
     Chunk::SetWorld(this);
@@ -64,6 +64,11 @@ void SinglePlayerWorld::HandleWindowResize(const int height, const int width)
 
 void SinglePlayerWorld::Init()
 {
+    //Shader::SetVec3(EngineDefaults::GetShader()->GetUniformInt("directionalLightDirection"), -1.0F, -1.0F, -1.0F);
+    //Shader::SetFloat(EngineDefaults::GetShader()->GetUniformInt("ambientLightIntensity"), 1.0F);
+    Shader::SetFloat(EngineDefaults::GetShader()->GetUniformInt("fogStart"), -10.0F);
+    Shader::SetFloat(EngineDefaults::GetShader()->GetUniformInt("fogEnd"), 20.0F);
+    Shader::SetVec3(EngineDefaults::GetShader()->GetUniformInt("fogColor"), 14.0F / 255.0F, 11.0F / 255.0F, 10.0F / 255.0F);
     if (std::filesystem::exists("level.dat"))
     {
         LoadWorld();
@@ -75,6 +80,27 @@ void SinglePlayerWorld::Init()
         const auto amountZ = static_cast<uint16_t>(std::ceil(static_cast<float>(LevelDepth) / static_cast<float>(Chunk::CHUNK_DEPTH)));
         GenerateChunks(amountX, amountY, amountZ);
         GenerateCaves();
+    }
+    RecalculateLightLevels();
+}
+
+void SinglePlayerWorld::RecalculateLightLevels()
+{
+    LightLevels.clear();
+    LightLevels.reserve(static_cast<size_t>(LevelWidth * LevelDepth));
+    for (int x = 0; x < LevelWidth; x++)
+    {
+        for (int z = 0; z < LevelDepth; z++)
+        {
+            for (int y = LevelHeight - 1; y >= 0; y--)
+            {
+                if (GetBlockTypeAt(x, y, z) != EBlockType::Air)
+                {
+                    LightLevels.emplace_back(static_cast<uint8_t>(y));
+                    break;
+                }
+            }
+        }
     }
 }
 
@@ -167,6 +193,19 @@ Chunk* SinglePlayerWorld::GetChunkAt(const int x, const int y, const int z)
     return &Chunks.at(pos);
 }
 
+float SinglePlayerWorld::GetBrightnessAt(const int x, const int y, const int z) const
+{
+    if (x < 0 || x >= LevelWidth || y < 0 || y >= LevelHeight || z < 0 || z >= LevelDepth)
+    {
+        return 1.0F;
+    }
+    if (const uint8_t lightLevel = LightLevels.at(static_cast<size_t>(x * LevelDepth + z)); y >= lightLevel)
+    {
+        return 1.0F;
+    }
+    return 0.8F;
+}
+
 bool SinglePlayerWorld::IsBlockExists(const int x, const int y, const int z)
 {
     return GetBlockTypeAt(x, y, z) != EBlockType::Air;
@@ -176,8 +215,14 @@ void SinglePlayerWorld::DrawWorld()
 {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+    uint8_t chunksRebuilt = 0;
     for (auto& val : Chunks | std::views::values)
     {
+        if (chunksRebuilt < MaxChunkRebuilt && val.IsDirtyChunk())
+        {
+            chunksRebuilt++;
+            val.GenerateTessellationData();
+        }
         val.Draw();
     }
 	glDisable(GL_CULL_FACE);

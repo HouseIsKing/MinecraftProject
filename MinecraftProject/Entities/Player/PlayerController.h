@@ -27,7 +27,7 @@ class PlayerController final : LivingEntity
     float MouseY;
     float PrevMouseX;
     float PrevMouseY;
-    float MouseSensitivity = 0.2F;
+    float MouseSensitivity = 0.15F;
     void HandlePlayerInputs();
 public:
     PlayerController(uint16_t entityId, float x, float y, float z);

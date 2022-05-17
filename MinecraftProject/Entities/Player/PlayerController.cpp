@@ -64,6 +64,7 @@ void PlayerController::HandleMouseMovementInput(const float x, const float y)
 	MouseY = y - PrevMouseY;
 	PrevMouseX = x;
 	PrevMouseY = y;
+	HandlePlayerInputs();
 }
 
 void PlayerController::HandleKeyboardMovementInput(const int key, const int action)
@@ -108,6 +109,10 @@ void PlayerController::HandleKeyboardMovementInput(const int key, const int acti
 		else if (key == GLFW_KEY_D)
 		{
 			HorizontalInput--;
+		}
+		else if (key == GLFW_KEY_SPACE)
+		{
+			JumpRequested = false;
 		}
 	}
 }

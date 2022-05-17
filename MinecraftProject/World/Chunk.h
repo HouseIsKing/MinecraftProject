@@ -24,8 +24,10 @@ public:
     [[nodiscard]] const Block* GetBlockAt(int x, int y, int z) const;
     [[nodiscard]] EBlockType GetBlockTypeAt(int x, int y, int z) const;
     [[nodiscard]] bool IsCoordsInsideChunk(int x, int y, int z) const;
+    [[nodiscard]] bool IsDirtyChunk() const;
     void ResetDraw();
     void Draw() const;
+    void GenerateTessellationData();
     void SetBlockTypeAt(int x, int y, int z, EBlockType block);
     friend CustomFileManager& operator<<(CustomFileManager& fileManager, const Chunk& chunk);
     friend CustomFileManager& operator>>(CustomFileManager& fileManager, Chunk& chunk);
@@ -33,6 +35,9 @@ private:
     ChunkCoords ChunkPosition;
     unique_ptr<TessellationHelper> Tessellation;
     static SinglePlayerWorld* World;
+    bool IsDirty;
+    bool IsDirtyLights;
     std::array<EBlockType, static_cast<size_t>(CHUNK_HEIGHT * CHUNK_DEPTH * CHUNK_WIDTH)> Blocks{EBlockType::Air};
+    std::array<uint8_t, static_cast<size_t>(CHUNK_WIDTH * CHUNK_DEPTH * CHUNK_HEIGHT)> LightValues{0};
     void DrawBlock(EBlockType blockType, int x, int y, int z) const;
 };

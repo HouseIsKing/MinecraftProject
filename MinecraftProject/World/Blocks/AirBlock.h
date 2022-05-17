@@ -5,6 +5,6 @@ class AirBlock final : public Block
 {
 public:
 	AirBlock();
-	void GenerateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face, const float& x, const float& y, const float& z) const override;
+	void GenerateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face, const float& x, const float& y, const float& z, const float& brightness) const override;
 };
 

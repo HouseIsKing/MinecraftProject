@@ -16,7 +16,6 @@ void LivingEntity::CalculateVelocity()
     {
         VelocityY = 0.12F;
     }
-    JumpRequested = false;
     if (!IsOnGround())
     {
         speedModifier *= 0.25F;

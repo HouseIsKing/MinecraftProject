@@ -29,6 +29,8 @@ class Camera
     bool IsDirtyViewMatrix;
     bool IsDirtyProjectionMatrix;
     float PrevYaw;
+    float ZNear;
+    float ZFar;
     float PrevPitch;
 public:
     void SetCameraPosition(vec3 newPosition);

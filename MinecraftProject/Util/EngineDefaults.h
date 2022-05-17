@@ -22,6 +22,7 @@ public:
     template <typename T>
     static T GetNext(T minValue, T maxValue);
     static int GetChunkLocalIndex(int x, int y, int z);
+    static int GetLocalIndex2D(int x, int z);
 };
 
 template <typename T>
