@@ -17,12 +17,6 @@ void Camera::UpdateVectors()
     IsDirtyViewMatrix = true;
 }
 
-void Camera::SetCameraPosition(const vec3 newPosition)
-{
-    Position = newPosition;
-    IsDirtyViewMatrix = true;
-}
-
 Camera::Camera(vec3 position, float aspectRatio) : Front(0, 0, -1), Up(0, 1, 0), Right(1, 0, 0),
                                                    Fov(70), AspectRatio(aspectRatio), Position(position),
                                                    ViewMatrix(), ProjectionMatrix(),
@@ -38,6 +32,11 @@ void Camera::SetFov(const float newFov)
 {
     Fov = newFov;
     IsDirtyProjectionMatrix = true;
+}
+
+vec3 Camera::GetFrontVector() const
+{
+    return Front;
 }
 
 mat4x4 Camera::GetViewMatrix()

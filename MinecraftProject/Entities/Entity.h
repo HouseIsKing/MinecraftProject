@@ -35,5 +35,6 @@ public:
     static void SetWorld(SinglePlayerWorld* newWorld);
     static SinglePlayerWorld* GetWorld();
     void DoTick();
+    void DoRender();
     Transform& GetTransform();
 };

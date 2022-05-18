@@ -4,6 +4,8 @@
 
 #include "GrassBlock.h"
 
+#include "Util/EngineDefaults.h"
+
 void GrassBlock::GenerateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face, const float& x, const float& y, const float& z, const float& brightness) const
 {
 	uint16_t triangleIndex1 = 0;
@@ -59,7 +61,7 @@ void GrassBlock::GenerateTessellationData(TessellationHelper& tessellationHelper
 
 GrassBlock::GrassBlock()
 {
-	IndexTextures.push_back(BlockTypeList::RegisterTexture(Texture::LoadTexture("Textures/Blocks/GrassTop.png")));
-	IndexTextures.push_back(BlockTypeList::RegisterTexture(Texture::LoadTexture("Textures/Blocks/GrassSide.png")));
-	IndexTextures.push_back(BlockTypeList::RegisterTexture(Texture::LoadTexture("Textures/Blocks/Dirt.png")));
+	IndexTextures.push_back(EngineDefaults::RegisterTexture(Texture::LoadTexture("Textures/Blocks/GrassTop.png")));
+	IndexTextures.push_back(EngineDefaults::RegisterTexture(Texture::LoadTexture("Textures/Blocks/GrassSide.png")));
+	IndexTextures.push_back(EngineDefaults::RegisterTexture(Texture::LoadTexture("Textures/Blocks/Dirt.png")));
 }

@@ -1,5 +1,7 @@
 #include "CobblestoneBlock.h"
 
+#include "Util/EngineDefaults.h"
+
 void CobblestoneBlock::GenerateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face,
                                                 const float& x, const float& y, const float& z, const float& brightness) const
 {
@@ -56,5 +58,5 @@ void CobblestoneBlock::GenerateTessellationData(TessellationHelper& tessellation
 
 CobblestoneBlock::CobblestoneBlock()
 {
-	IndexTextures.push_back(BlockTypeList::RegisterTexture(Texture::LoadTexture("Textures/Blocks/Cobblestone.png")));
+	IndexTextures.push_back(EngineDefaults::RegisterTexture(Texture::LoadTexture("Textures/Blocks/Cobblestone.png")));
 }

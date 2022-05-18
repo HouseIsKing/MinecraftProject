@@ -17,18 +17,12 @@ void ErrorCallback(const int error, const char* description)
     std::cout << "Error: CODE: " << error << " " << description << endl;
 }
 
-void HandleMouseInput(GLFWwindow* /*window*/, const double mouseX, const double mouseY)
-{
-    helper->HandleMouseMovementInput(mouseX, mouseY);
-}
-
 void KeyCallback(GLFWwindow* window, const int key, int /*scancode*/, const int action, int /*mods*/)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     }
-    helper->HandleKeyboardPlayerInput(key, action);
 }
 
 void WindowsResizeCallback(GLFWwindow* /*window*/, const int width, const int height)
@@ -41,16 +35,16 @@ void MainLoop(GLFWwindow* window)
     auto cam = Camera(vec3(0.0F, 0.0F, 0.0F), 1280 / 720.0F);
     CameraController::SetActiveCamera(cam);
     double start = glfwGetTime();
-    helper = std::make_unique<SinglePlayerWorld>(static_cast<uint16_t>(256), static_cast<uint16_t>(64), static_cast<uint16_t>(256));
+    helper = std::make_unique<SinglePlayerWorld>(static_cast<uint16_t>(256), static_cast<uint16_t>(64), static_cast<uint16_t>(256), window);
     double end = glfwGetTime();
     cout << "World creation took " << end - start << " seconds" << endl;
-    glfwSetCursorPosCallback(window, HandleMouseInput);
     double counter = 0;
     float ticksTimer = 0;
     int framesCompleted = 0;
     glClearColor(0.5F, 0.8F, 1.0F, 1.0F);
     glClearDepthf(1.0F);
     glDepthFunc(GL_LEQUAL);
+    glEnable(GL_DEPTH_TEST);
     bool firstTick = true;
     start = glfwGetTime();
     while (glfwWindowShouldClose(window) == 0)

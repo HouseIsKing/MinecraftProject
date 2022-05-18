@@ -170,6 +170,7 @@
     <ClCompile Include="Entities\LivingEntity.cpp" />
     <ClCompile Include="Entities\Player\Camera.cpp" />
     <ClCompile Include="Entities\Player\PlayerController.cpp" />
+    <ClCompile Include="Entities\Player\PlayerSelectionHighlight.cpp"/>
     <ClCompile Include="glad.c" />
     <ClCompile Include="RunMinecraft.cpp" />
     <ClCompile Include="Shaders\Shader.cpp" />
@@ -184,7 +185,7 @@
     <ClCompile Include="World\Blocks\AirBlock.cpp" />
     <ClCompile Include="World\Blocks\Block.cpp" />
     <ClCompile Include="World\Blocks\BlockTypeList.cpp" />
-    <ClCompile Include="World\Blocks\CobblestoneBlock.cpp"/>
+      <ClCompile Include="World\Blocks\CobblestoneBlock.cpp"/>
     <ClCompile Include="World\Blocks\GrassBlock.cpp" />
     <ClCompile Include="World\Chunk.cpp" />
     <ClCompile Include="World\ChunkCoords.cpp" />
@@ -195,6 +196,7 @@
     <ClInclude Include="Entities\LivingEntity.h" />
     <ClInclude Include="Entities\Player\Camera.h" />
     <ClInclude Include="Entities\Player\PlayerController.h" />
+      <ClInclude Include="Entities\Player\PlayerSelectionHighlight.h"/>
     <ClInclude Include="Shaders\Shader.h" />
     <ClInclude Include="Textures\Texture.h" />
     <ClInclude Include="Util\BoundingBox.h" />
@@ -221,21 +223,31 @@
       <DeploymentContent>true</DeploymentContent>
     </None>
   </ItemGroup>
-  <ItemGroup>
-      <Image Include="Textures\Blocks\Cobblestone.png">
-          <DeploymentContent>true</DeploymentContent>
-      </Image>
-    <Image Include="Textures\Blocks\Dirt.png">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="Textures\Blocks\GrassSide.png">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="Textures\Blocks\GrassTop.png">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-  </ItemGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+    <ItemGroup>
+        <Image Include="Textures\Blocks\Cobblestone.png">
+            <DeploymentContent>true</DeploymentContent>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Image>
+        <Image Include="Textures\Blocks\Dirt.png">
+            <DeploymentContent>true</DeploymentContent>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Image>
+        <Image Include="Textures\Blocks\GrassSide.png">
+            <DeploymentContent>true</DeploymentContent>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Image>
+        <Image Include="Textures\Blocks\GrassTop.png">
+            <DeploymentContent>true</DeploymentContent>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Image>
+    </ItemGroup>
+    <ItemGroup>
+        <Image Include="Textures\HighlightTexture.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <DeploymentContent>true</DeploymentContent>
+        </Image>
+    </ItemGroup>
+    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
+    <ImportGroup Label="ExtensionTargets">
+    </ImportGroup>
 </Project>

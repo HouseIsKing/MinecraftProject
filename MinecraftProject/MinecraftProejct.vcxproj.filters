@@ -107,6 +107,12 @@
     <ClCompile Include="Util\CustomFileManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Entities\Player\PlayerSelectionHighlight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="World\Blocks\CobblestoneBlock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entities\Entity.h">
@@ -167,6 +173,8 @@
       <Filter>Source Files\Util</Filter>
     </ClInclude>
     <ClInclude Include="Util\CustomFileManager.h" />
+    <ClInclude Include="Entities\Player\PlayerSelectionHighlight.h" />
+    <ClInclude Include="World\Blocks\CobblestoneBlock.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\FragmentShader.glsl">
@@ -188,6 +196,9 @@
     </Image>
     <Image Include="Textures\Blocks\GrassTop.png">
       <Filter>Resource Files\Textures\Blocks</Filter>
+    </Image>
+    <Image Include="Textures\HighlightTexture.png">
+      <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
 </Project>

@@ -72,6 +72,11 @@ void Entity::DoTick()
     Tick();
 }
 
+void Entity::DoRender()
+{
+    Render();
+}
+
 Transform& Entity::GetTransform()
 {
     return TessellationHelper.GetTransform();

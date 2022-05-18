@@ -20,6 +20,7 @@ class SinglePlayerWorld
     const uint16_t LevelWidth;
     const uint16_t LevelHeight;
     const uint16_t LevelDepth;
+    GLFWwindow* TheAppWindow;
     vector<uint8_t> LightLevels;
     const uint8_t MaxChunkRebuilt = 2;
     PlayerController PlayerController;
@@ -30,15 +31,13 @@ class SinglePlayerWorld
     void Init();
     void RecalculateLightLevels();
 public:
-    SinglePlayerWorld(uint16_t width, uint16_t height, uint16_t depth);
+    SinglePlayerWorld(uint16_t width, uint16_t height, uint16_t depth, GLFWwindow* window);
     ~SinglePlayerWorld();
     SinglePlayerWorld(const SinglePlayerWorld& other) = delete;
     SinglePlayerWorld& operator=(const SinglePlayerWorld& other) = delete;
     SinglePlayerWorld(SinglePlayerWorld&& other) = delete;
     SinglePlayerWorld& operator=(SinglePlayerWorld&& other) = delete;
     void Tick();
-    void HandleMouseMovementInput(double x, double y);
-    void HandleKeyboardPlayerInput(int key, int action);
     static void HandleWindowResize(int height, int width);
     bool IsBlockExists(int x, int y, int z);
     const Block* GetBlockAt(int x, int y, int z);
@@ -47,4 +46,5 @@ public:
     [[nodiscard]] float GetBrightnessAt(int x, int y, int z) const;
     vector<BoundingBox> GetBlockBoxesInBoundingBox(const BoundingBox& boundingBox);
     void DrawWorld();
+    [[nodiscard]] GLFWwindow* GetWindow() const;
 };

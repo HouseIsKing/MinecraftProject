@@ -5,7 +5,6 @@
 #include "SinglePlayerWorld.h"
 #include "../Util/CustomFileManager.h"
 #include "../Util/EngineDefaults.h"
-#include "Blocks/GrassBlock.h"
 #include <cmath>
 #include <filesystem>
 #include <ranges>
@@ -40,7 +39,7 @@ void SinglePlayerWorld::LoadWorld()
     }
 }
 
-SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth) : LevelWidth(width), LevelHeight(height), LevelDepth(depth), PlayerController(0, EngineDefaults::GetNext(width), static_cast<float>(height + 3), EngineDefaults::GetNext(depth))
+SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth, GLFWwindow* window) : LevelWidth(width), LevelHeight(height), LevelDepth(depth), TheAppWindow(window), PlayerController(0, EngineDefaults::GetNext(width), static_cast<float>(height + 3), EngineDefaults::GetNext(depth))
 {
     Entity::SetWorld(this);
     Chunk::SetWorld(this);
@@ -69,6 +68,8 @@ void SinglePlayerWorld::Init()
     Shader::SetFloat(EngineDefaults::GetShader()->GetUniformInt("fogStart"), -10.0F);
     Shader::SetFloat(EngineDefaults::GetShader()->GetUniformInt("fogEnd"), 20.0F);
     Shader::SetVec3(EngineDefaults::GetShader()->GetUniformInt("fogColor"), 14.0F / 255.0F, 11.0F / 255.0F, 10.0F / 255.0F);
+    BlockTypeList::InitBlockTypes();
+    EngineDefaults::BuildTextureUbo();
     if (std::filesystem::exists("level.dat"))
     {
         LoadWorld();
@@ -220,7 +221,6 @@ bool SinglePlayerWorld::IsBlockExists(const int x, const int y, const int z)
 
 void SinglePlayerWorld::DrawWorld()
 {
-    glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     uint8_t chunksRebuilt = 0;
     for (auto& val : Chunks | std::views::values)
@@ -232,8 +232,16 @@ void SinglePlayerWorld::DrawWorld()
         }
         val.Draw();
     }
+    for (const auto& entity : Entities | std::views::values)
+    {
+        entity->DoRender();
+    }
 	glDisable(GL_CULL_FACE);
-    glDisable(GL_DEPTH_TEST);
+}
+
+GLFWwindow* SinglePlayerWorld::GetWindow() const
+{
+    return TheAppWindow;
 }
 
 vector<BoundingBox> SinglePlayerWorld::GetBlockBoxesInBoundingBox(const BoundingBox& boundingBox)
@@ -257,16 +265,6 @@ vector<BoundingBox> SinglePlayerWorld::GetBlockBoxesInBoundingBox(const Bounding
         }
     }
     return result;
-}
-
-void SinglePlayerWorld::HandleMouseMovementInput(const double x, const double y)
-{
-    PlayerController.HandleMouseMovementInput(static_cast<float>(x), static_cast<float>(y));
-}
-
-void SinglePlayerWorld::HandleKeyboardPlayerInput(const int key, const int action)
-{
-    PlayerController.HandleKeyboardMovementInput(key, action);
 }
 
 SinglePlayerWorld::~SinglePlayerWorld()

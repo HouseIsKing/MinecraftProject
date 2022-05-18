@@ -22,7 +22,6 @@ class Camera
     vec3 Right;
     float Fov;
     float AspectRatio;
-    vec3 Position;
     void UpdateVectors();
     mat4x4 ViewMatrix;
     mat4x4 ProjectionMatrix;
@@ -33,11 +32,12 @@ class Camera
     float ZFar;
     float PrevPitch;
 public:
-    void SetCameraPosition(vec3 newPosition);
-    Camera(vec3 position, float aspectRatio);
+    vec3 Position;
     float Pitch;
     float Yaw;
+    Camera(vec3 position, float aspectRatio);
     void SetFov(float newFov);
+    [[nodiscard]] vec3 GetFrontVector() const;
     void SetAspectRatio(float newAspectRatio);
     void RecalculateProjectionMatrix();
     void RecalculateViewMatrix();
