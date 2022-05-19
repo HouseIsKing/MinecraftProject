@@ -8,5 +8,9 @@ class PlayerSelectionHighlight
     uint16_t TextureIndex;
 public:
     PlayerSelectionHighlight();
-    void Render(const float& x, const float& y, const float& z, const BlockFaces& face, const float& brightness, const Block& blockToDrawUpon);
+    void Reset();
+    const Block* BlockHit;
+    BlockFaces FaceHit;
+    glm::ivec3 HitPosition;
+    void Render(const float& brightness);
 };

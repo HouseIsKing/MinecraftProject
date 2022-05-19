@@ -4,3 +4,4 @@ C:\Users\amitz\source\repos\MinecraftProject\x64\Release\Textures\Blocks\GrassSi
 C:\Users\amitz\source\repos\MinecraftProject\x64\Release\Textures\Blocks\GrassTop.png
 C:\Users\amitz\source\repos\MinecraftProject\x64\Release\Shaders\FragmentShader.glsl
 C:\Users\amitz\source\repos\MinecraftProject\x64\Release\Shaders\VertexShader.glsl
+C:\Users\amitz\source\repos\MinecraftProject\x64\Release\Textures\HighlightTexture.png

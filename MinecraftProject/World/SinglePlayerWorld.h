@@ -30,6 +30,8 @@ class SinglePlayerWorld
     void GenerateCaves();
     void Init();
     void RecalculateLightLevels();
+    int RecalculateLightLevels(int x, int z);
+    void UpdateChunksNear(int x, int y, int z);
 public:
     SinglePlayerWorld(uint16_t width, uint16_t height, uint16_t depth, GLFWwindow* window);
     ~SinglePlayerWorld();
@@ -40,6 +42,8 @@ public:
     void Tick();
     static void HandleWindowResize(int height, int width);
     bool IsBlockExists(int x, int y, int z);
+    void PlaceBlockAt(int x, int y, int z);
+    void RemoveBlockAt(int x, int y, int z);
     const Block* GetBlockAt(int x, int y, int z);
     EBlockType GetBlockTypeAt(int x, int y, int z);
     Chunk* GetChunkAt(int x, int y, int z);

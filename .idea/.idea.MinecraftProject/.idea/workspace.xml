@@ -5,27 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4f885148-8e28-4ab6-9a1d-8675988ae9cb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerSelectionHighlight.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerSelectionHighlight.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftProject/Textures/HighlightTexture.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MinecraftProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MinecraftProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Entity.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Entity.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Entity.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Entity.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Player/Camera.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Player/Camera.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Player/Camera.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Player/Camera.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerController.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerController.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerController.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/MinecraftProejct.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/MinecraftProejct.vcxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/MinecraftProejct.vcxproj.filters" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/MinecraftProejct.vcxproj.filters" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/RunMinecraft.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/RunMinecraft.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/EngineDefaults.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/EngineDefaults.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/EngineDefaults.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/EngineDefaults.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/BlockTypeList.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/BlockTypeList.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/BlockTypeList.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/BlockTypeList.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/CobblestoneBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/CobblestoneBlock.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/GrassBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/GrassBlock.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerSelectionHighlight.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerSelectionHighlight.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerSelectionHighlight.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerSelectionHighlight.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Chunk.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Chunk.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Chunk.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Chunk.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/World/SinglePlayerWorld.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/SinglePlayerWorld.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/World/SinglePlayerWorld.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/SinglePlayerWorld.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/x64/Release/MinecraftProejct.vcxproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/x64/Release/MinecraftProejct.vcxproj.FileListAbsolute.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,6 +35,7 @@
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files (x86)/Windows Kits/10/Include/10.0.19041.0/ucrt/stdio.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files (x86)/Windows Kits/10/Include/10.0.19041.0/ucrt/sys/stat.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files (x86)/Windows Kits/10/Include/10.0.19041.0/um/WinBase.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.31.31103/include/chrono" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.31.31103/include/cstddef" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.31.31103/include/fstream" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.31.31103/include/list" root0="SKIP_HIGHLIGHTING" />
@@ -76,7 +66,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="SWEA" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectId" id="28ZN1jy80nEXv1cnmawVFFqadPh" />
   <component name="ProjectLevelVcsManager">
@@ -86,19 +76,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "XThreadsFramesViewSplitterKey": "0.49522674",
-    "settings.editor.selected.configurable": "configurable.group.editor",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.49346018&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="MinecraftProejct" type="CppProject" factoryName="C++ Project">
       <configuration_1>
@@ -193,7 +183,10 @@
       <workItem from="1652703640146" duration="4493000" />
       <workItem from="1652758159382" duration="12345000" />
       <workItem from="1652849903787" duration="15794000" />
-      <workItem from="1652884679605" duration="9517000" />
+      <workItem from="1652884679605" duration="10755000" />
+      <workItem from="1652936427443" duration="679000" />
+      <workItem from="1652937134662" duration="5837000" />
+      <workItem from="1652945951385" duration="8945000" />
     </task>
     <task id="LOCAL-00001" summary="AAAAAAAAAAAAAAAAAAAAAA finally got the bindless textures to work">
       <created>1652106111120</created>
@@ -244,7 +237,14 @@
       <option name="project" value="LOCAL" />
       <updated>1652781976790</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Added Highlight and cleaned up more code.">
+      <created>1652898750177</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1652898750177</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -285,7 +285,8 @@
     <MESSAGE value="added IDE configs" />
     <MESSAGE value="Finished Minecraft Version rd-131655" />
     <MESSAGE value="Forgot to add the cobblestone to the system, now it's done rd-131655 onto the next version" />
-    <option name="LAST_COMMIT_MESSAGE" value="Forgot to add the cobblestone to the system, now it's done rd-131655 onto the next version" />
+    <MESSAGE value="Added Highlight and cleaned up more code." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Highlight and cleaned up more code." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />

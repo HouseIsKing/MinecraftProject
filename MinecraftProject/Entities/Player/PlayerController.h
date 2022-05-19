@@ -25,20 +25,20 @@ class PlayerController final : LivingEntity
     Camera& MyCamera;
     constexpr static vec3 PLAYER_SIZE = vec3(0.3F, 0.9F, 0.3F);
     constexpr static float CAMERA_OFFSET = 1.62F;
-    float MouseX;
-    float MouseY;
+    bool LeftMousePressed;
+    bool RightMousePressed;
     float PrevMouseX;
     float PrevMouseY;
     float MouseSensitivity = 0.15F;
     PlayerSelectionHighlight SelectionHighlight;
-    void HandlePlayerInputs();
     static float GetSelectionHighlightBrightness(int x, int y, int z, BlockFaces face);
     void DisplaySelectionHighlight();
     BlockFaces FindClosestFace(glm::ivec3& blockPosition, bool& foundBlock) const;
     [[nodiscard]] float CalculateMaxDistanceForHighlight(const vec3& front, bool up, bool right, bool forward) const;
+    void PlaceBlock() const;
 public:
     PlayerController(uint16_t entityId, float x, float y, float z);
-    void HandleMouseMovementInput();
+    void HandleMouseInput();
     void HandleKeyboardMovementInput();
     void Tick() override;
     void Render() override;

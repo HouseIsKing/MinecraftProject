@@ -27,15 +27,14 @@ void CameraController::OnResizeWindow(const int width, const int height)
 	ActiveCamera->SetAspectRatio(static_cast<float>(width) / static_cast<float>(height));
 }
 
-PlayerController::PlayerController(const uint16_t entityId, const float x, const float y, const float z) : LivingEntity(entityId, PLAYER_SIZE, x, y, z), MyCamera(CameraController::GetActiveCamera()), MouseX(0), MouseY(0), PrevMouseX(0), PrevMouseY(0)
+PlayerController::PlayerController(const uint16_t entityId, const float x, const float y, const float z) : LivingEntity(entityId, PLAYER_SIZE, x, y, z), MyCamera(CameraController::GetActiveCamera()), LeftMousePressed(false), RightMousePressed(false), PrevMouseX(0), PrevMouseY(0)
 {
 	MyCamera.Position = vec3(x, y, z);
 }
 
 void PlayerController::Tick()
 {
-	HandleMouseMovementInput();
-	HandlePlayerInputs();
+	HandleKeyboardMovementInput();
 	LivingEntity::Tick();
 	vec3 finalCameraPosition = GetTransform().GetPosition() + PLAYER_SIZE;
 	finalCameraPosition.y += CAMERA_OFFSET - PLAYER_SIZE.y;
@@ -46,26 +45,13 @@ void PlayerController::Tick()
 
 void PlayerController::Render()
 {
+	SelectionHighlight.Reset();
+	bool found;
+	SelectionHighlight.FaceHit = FindClosestFace(SelectionHighlight.HitPosition, found);
+	SelectionHighlight.BlockHit = found ? GetWorld()->GetBlockAt(SelectionHighlight.HitPosition.x, SelectionHighlight.HitPosition.y, SelectionHighlight.HitPosition.z) : nullptr;
 	LivingEntity::Render();
+	HandleMouseInput();
 	DisplaySelectionHighlight();
-}
-
-void PlayerController::HandlePlayerInputs()
-{
-	HandleKeyboardMovementInput();
-	MyCamera.Yaw += MouseX * MouseSensitivity;
-	MyCamera.Pitch += -MouseY * MouseSensitivity;
-	if (MyCamera.Pitch > 89.0F)
-	{
-		MyCamera.Pitch = 89.0F;
-	}
-	if (MyCamera.Pitch < -89.0F)
-	{
-		MyCamera.Pitch = -89.0F;
-	}
-	GetTransform().SetRotation(0, MyCamera.Yaw, 0);
-	MouseX = 0;
-	MouseY = 0;
 }
 
 float PlayerController::GetSelectionHighlightBrightness(const int x, const int y, const int z, const BlockFaces face)
@@ -91,13 +77,10 @@ float PlayerController::GetSelectionHighlightBrightness(const int x, const int y
 void PlayerController::DisplaySelectionHighlight()
 {
 	//find closest face
-	glm::ivec3 pos;
-	bool found;
-	const BlockFaces face = FindClosestFace(pos, found);
-	const float brightness = GetSelectionHighlightBrightness(pos.x, pos.y, pos.z, face);
-	if (found)
+	const float brightness = GetSelectionHighlightBrightness(SelectionHighlight.HitPosition.x, SelectionHighlight.HitPosition.y, SelectionHighlight.HitPosition.z, SelectionHighlight.FaceHit);
+	if (SelectionHighlight.BlockHit != nullptr)
 	{
-		SelectionHighlight.Render(static_cast<float>(pos.x), static_cast<float>(pos.y), static_cast<float>(pos.z), face, brightness, *GetWorld()->GetBlockAt(pos.x, pos.y, pos.z));
+		SelectionHighlight.Render(brightness);
 	}
 }
 
@@ -118,9 +101,21 @@ BlockFaces PlayerController::FindClosestFace(glm::ivec3& blockPosition, bool& fo
 		const float distanceForX = ((right ? floor(xDistance) : ceil(xDistance)) - xDistance + (right ? 1.0F : -1.0F)) / frontVector.x;
 		const float distanceForY = ((up ? floor(yDistance) : ceil(yDistance)) - yDistance + (up ? 1.0F : -1.0F)) / frontVector.y;
 		const float distanceForZ = ((forward ? floor(zDistance) : ceil(zDistance)) - zDistance + (forward ? 1.0F : -1.0F)) / frontVector.z;
-		const float distanceForXAbs = abs(distanceForX);
-		const float distanceForYAbs = abs(distanceForY);
-		const float distanceForZAbs = abs(distanceForZ);
+		float distanceForXAbs = abs(distanceForX);
+		if (distanceForXAbs < 0.00001F)
+		{
+			distanceForXAbs += 1.0F;
+		}
+		float distanceForYAbs = abs(distanceForY);
+		if (distanceForYAbs < 0.00001F)
+		{
+			distanceForYAbs += 1.0F;
+		}
+		float distanceForZAbs = abs(distanceForZ);
+		if (distanceForZAbs < 0.00001F)
+		{
+			distanceForZAbs += 1.0F;
+		}
 		float minDistance;
 		int xyzChoice;
 		if (distanceForXAbs < distanceForYAbs && distanceForXAbs < distanceForZAbs)
@@ -181,9 +176,9 @@ BlockFaces PlayerController::FindClosestFace(glm::ivec3& blockPosition, bool& fo
 
 float PlayerController::CalculateMaxDistanceForHighlight(const vec3& front, const bool up, const bool right, const bool forward) const
 {
-	float xDistance = right ? 4.0F : 3.0F;
-	float yDistance = up ? 3.28F : 3.72F;
-	float zDistance = forward ? 4.0F : 3.0F;
+	float xDistance = right ? 4.0F + PLAYER_SIZE.x : 3.0F + PLAYER_SIZE.x;
+	float yDistance = up ? 4.0F + 2 * PLAYER_SIZE.y - CAMERA_OFFSET : 3.0F + CAMERA_OFFSET;
+	float zDistance = forward ? 4.0F + PLAYER_SIZE.z : 3.0F + PLAYER_SIZE.z;
 	xDistance /= front.x;
 	yDistance /= front.y;
 	zDistance /= front.z;
@@ -193,16 +188,80 @@ float PlayerController::CalculateMaxDistanceForHighlight(const vec3& front, cons
 	return glm::min(xDistance, glm::min(yDistance, zDistance));
 }
 
-void PlayerController::HandleMouseMovementInput()
+void PlayerController::PlaceBlock() const
+{
+	if (SelectionHighlight.BlockHit != nullptr)
+	{
+		const int x = SelectionHighlight.HitPosition.x;
+		const int y = SelectionHighlight.HitPosition.y;
+		const int z = SelectionHighlight.HitPosition.z;
+		switch (SelectionHighlight.FaceHit)
+		{
+		case BlockFaces::Bottom:
+			GetWorld()->PlaceBlockAt(x, y - 1, z);
+			break;
+		case BlockFaces::Top:
+			GetWorld()->PlaceBlockAt(x, y + 1, z);
+			break;
+		case BlockFaces::North:
+			GetWorld()->PlaceBlockAt(x, y, z + 1);
+			break;
+		case BlockFaces::South:
+			GetWorld()->PlaceBlockAt(x, y, z - 1);
+			break;
+		case BlockFaces::East:
+			GetWorld()->PlaceBlockAt(x + 1, y, z);
+			break;
+		case BlockFaces::West:
+			GetWorld()->PlaceBlockAt(x - 1, y, z);
+			break;
+		}
+	}
+}
+
+void PlayerController::HandleMouseInput()
 {
 	double x;
 	double y;
 	glfwGetCursorPos(GetWorld()->GetWindow(), &x, &y);
-	MouseX = static_cast<float>(x) - PrevMouseX;
-	MouseY = static_cast<float>(y) - PrevMouseY;
+	const float mouseX = static_cast<float>(x) - PrevMouseX;
+	const float mouseY = static_cast<float>(y) - PrevMouseY;
 	PrevMouseX = static_cast<float>(x);
 	PrevMouseY = static_cast<float>(y);
-	HandlePlayerInputs();
+	MyCamera.Yaw += mouseX * MouseSensitivity;
+	MyCamera.Pitch += -mouseY * MouseSensitivity;
+	if (MyCamera.Pitch > 89.0F)
+	{
+		MyCamera.Pitch = 89.0F;
+	}
+	if (MyCamera.Pitch < -89.0F)
+	{
+		MyCamera.Pitch = -89.0F;
+	}
+	GetTransform().SetRotation(0, MyCamera.Yaw, 0);
+	int state = glfwGetMouseButton(GetWorld()->GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
+	if (state == GLFW_PRESS && !LeftMousePressed)
+	{
+		LeftMousePressed = true;
+		if (SelectionHighlight.BlockHit != nullptr)
+		{
+			GetWorld()->RemoveBlockAt(SelectionHighlight.HitPosition.x, SelectionHighlight.HitPosition.y, SelectionHighlight.HitPosition.z);
+		}
+	}
+	else if (state == GLFW_RELEASE)
+	{
+		LeftMousePressed = false;
+	}
+	state = glfwGetMouseButton(GetWorld()->GetWindow(), GLFW_MOUSE_BUTTON_RIGHT);
+	if (state == GLFW_PRESS && !RightMousePressed)
+	{
+		RightMousePressed = true;
+		PlaceBlock();
+	}
+	else if (state == GLFW_RELEASE)
+	{
+		RightMousePressed = false;
+	}
 }
 
 void PlayerController::HandleKeyboardMovementInput()

@@ -89,19 +89,64 @@ void SinglePlayerWorld::RecalculateLightLevels()
 {
     LightLevels.clear();
     LightLevels.reserve(static_cast<size_t>(LevelWidth * LevelDepth));
+    while (LightLevels.size() < static_cast<size_t>(LevelWidth * LevelDepth))
+    {
+        LightLevels.push_back(0);
+    }
     for (int x = 0; x < LevelWidth; x++)
     {
         for (int z = 0; z < LevelDepth; z++)
         {
-            for (int y = LevelHeight - 1; y >= 0; y--)
-            {
-                if (GetBlockTypeAt(x, y, z) != EBlockType::Air)
-                {
-                    LightLevels.emplace_back(static_cast<uint8_t>(y));
-                    break;
-                }
-            }
+            RecalculateLightLevels(x, z);
         }
+    }
+}
+
+int SinglePlayerWorld::RecalculateLightLevels(const int x, const int z)
+{
+    const int previousLightLevel = LightLevels[static_cast<size_t>(x * LevelDepth + z)];
+    for (int y = LevelHeight - 1; y >= 0; y--)
+    {
+        if (GetBlockTypeAt(x, y, z) != EBlockType::Air || y == 0)
+        {
+            LightLevels.at(static_cast<size_t>(x * LevelDepth + z)) = static_cast<uint8_t>(y);
+            return y - previousLightLevel;
+        }
+    }
+    return 0 - previousLightLevel;
+}
+
+void SinglePlayerWorld::UpdateChunksNear(const int x, const int y, const int z)
+{
+    Chunk* chunk = GetChunkAt(x, y + 1, z);
+    if (chunk != nullptr)
+    {
+        chunk->IsDirty = true;
+    }
+    chunk = GetChunkAt(x, y - 1, z);
+    if (chunk != nullptr)
+    {
+        chunk->IsDirty = true;
+    }
+    chunk = GetChunkAt(x, y, z + 1);
+    if (chunk != nullptr)
+    {
+        chunk->IsDirty = true;
+    }
+    chunk = GetChunkAt(x, y, z - 1);
+    if (chunk != nullptr)
+    {
+        chunk->IsDirty = true;
+    }
+    chunk = GetChunkAt(x + 1, y, z);
+    if (chunk != nullptr)
+    {
+        chunk->IsDirty = true;
+    }
+    chunk = GetChunkAt(x - 1, y, z);
+    if (chunk != nullptr)
+    {
+        chunk->IsDirty = true;
     }
 }
 
@@ -219,13 +264,58 @@ bool SinglePlayerWorld::IsBlockExists(const int x, const int y, const int z)
     return GetBlockTypeAt(x, y, z) != EBlockType::Air;
 }
 
+void SinglePlayerWorld::PlaceBlockAt(const int x, const int y, const int z)
+{
+    Chunk* chunk = GetChunkAt(x, y, z);
+    if (chunk == nullptr)
+    {
+        return;
+    }
+    if (y >= LevelHeight - 7)
+    {
+        chunk->SetBlockTypeAt(x, y, z, EBlockType::Grass);
+    }
+    else
+    {
+        chunk->SetBlockTypeAt(x, y, z, EBlockType::Cobblestone);
+    }
+    UpdateChunksNear(x, y, z);
+    const int lightLevelsChange = RecalculateLightLevels(x, z);
+    for (int i = 0; i <= abs(lightLevelsChange); i++)
+    {
+        if (Chunk* chunkLight = GetChunkAt(x, y + i * (lightLevelsChange > 0 ? -1 : 1), z); chunkLight != nullptr)
+        {
+            chunkLight->IsDirty = true;
+        }
+    }
+}
+
+void SinglePlayerWorld::RemoveBlockAt(const int x, const int y, const int z)
+{
+    Chunk* chunk = GetChunkAt(x, y, z);
+    if (chunk == nullptr)
+    {
+        return;
+    }
+    chunk->SetBlockTypeAt(x, y, z, EBlockType::Air);
+    UpdateChunksNear(x, y, z);
+    const int lightLevelsChange = RecalculateLightLevels(x, z);
+    for (int i = 0; i <= abs(lightLevelsChange); i++)
+    {
+        if (Chunk* chunkLight = GetChunkAt(x, y + i * (lightLevelsChange > 0 ? 1 : -1), z); chunkLight != nullptr)
+        {
+            chunkLight->IsDirty = true;
+        }
+    }
+}
+
 void SinglePlayerWorld::DrawWorld()
 {
     glEnable(GL_CULL_FACE);
     uint8_t chunksRebuilt = 0;
     for (auto& val : Chunks | std::views::values)
     {
-        if (chunksRebuilt < MaxChunkRebuilt && val.IsDirtyChunk())
+        if (chunksRebuilt < MaxChunkRebuilt && val.IsDirty)
         {
             chunksRebuilt++;
             val.GenerateTessellationData();

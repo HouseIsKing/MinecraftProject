@@ -127,9 +127,9 @@ bool Chunk::IsCoordsInsideChunk(const int x, const int y, const int z) const
     return x >= ChunkPosition.GetX() && y >= ChunkPosition.GetY() && z >= ChunkPosition.GetZ() && x < ChunkPosition.GetX() + CHUNK_WIDTH && y < ChunkPosition.GetY() + CHUNK_HEIGHT && z < ChunkPosition.GetZ() + CHUNK_DEPTH;
 }
 
-void Chunk::ResetDraw()
+void Chunk::ResetDraw() const
 {
-    Tessellation.reset();
+    Tessellation->Reset();
 }
 
 void Chunk::Draw() const
@@ -164,11 +164,6 @@ void Chunk::SetBlockTypeAt(const int x, const int y, const int z, const EBlockTy
     Blocks[static_cast<size_t>(EngineDefaults::GetChunkLocalIndex(x, y, z))] = block;
     IsDirty = true;
     IsDirtyLights = true;
-}
-
-bool Chunk::IsDirtyChunk() const
-{
-    return IsDirty;
 }
 
 CustomFileManager& operator<<(CustomFileManager& fileManager, const Chunk& chunk)
