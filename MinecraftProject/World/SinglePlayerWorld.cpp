@@ -9,6 +9,8 @@
 #include <filesystem>
 #include <ranges>
 
+#include "Entities/Zombie.h"
+
 using std::piecewise_construct;
 using std::forward_as_tuple;
 
@@ -39,12 +41,17 @@ void SinglePlayerWorld::LoadWorld()
     }
 }
 
-SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth, GLFWwindow* window) : LevelWidth(width), LevelHeight(height), LevelDepth(depth), TheAppWindow(window), PlayerController(0, EngineDefaults::GetNext(width), static_cast<float>(height + 3), EngineDefaults::GetNext(depth))
+SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth, GLFWwindow* window) : LevelWidth(width), LevelHeight(height), LevelDepth(depth), TheAppWindow(window)
 {
     Entity::SetWorld(this);
     Chunk::SetWorld(this);
     Init();
-    Entities.emplace(static_cast<uint16_t>(0), reinterpret_cast<Entity*>(&PlayerController));
+    Entities.emplace(piecewise_construct, forward_as_tuple(static_cast<uint16_t>(0)), forward_as_tuple(reinterpret_cast<Entity*>(new PlayerController(0, EngineDefaults::GetNext(width), static_cast<float>(height + 3), EngineDefaults::GetNext(depth)))));
+    for (uint16_t i = 1; i <= 1; i++)
+    {
+        Entities.emplace(piecewise_construct, forward_as_tuple(i), forward_as_tuple(reinterpret_cast<Entity*>(new Zombie(i, EngineDefaults::GetNext(width), static_cast<float>(LevelHeight + 3), EngineDefaults::GetNext(depth)))));
+    }
+    EngineDefaults::BuildTextureUbo();
 }
 
 void SinglePlayerWorld::Tick()
@@ -69,7 +76,6 @@ void SinglePlayerWorld::Init()
     Shader::SetFloat(EngineDefaults::GetShader()->GetUniformInt("fogEnd"), 20.0F);
     Shader::SetVec3(EngineDefaults::GetShader()->GetUniformInt("fogColor"), 14.0F / 255.0F, 11.0F / 255.0F, 10.0F / 255.0F);
     BlockTypeList::InitBlockTypes();
-    EngineDefaults::BuildTextureUbo();
     if (std::filesystem::exists("level.dat"))
     {
         LoadWorld();

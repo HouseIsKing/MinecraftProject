@@ -98,23 +98,26 @@ BlockFaces PlayerController::FindClosestFace(glm::ivec3& blockPosition, bool& fo
 	float zDistance = cameraPos.z;
 	while (totalDistance <= maxDistance)
 	{
-		const float distanceForX = ((right ? floor(xDistance) : ceil(xDistance)) - xDistance + (right ? 1.0F : -1.0F)) / frontVector.x;
-		const float distanceForY = ((up ? floor(yDistance) : ceil(yDistance)) - yDistance + (up ? 1.0F : -1.0F)) / frontVector.y;
-		const float distanceForZ = ((forward ? floor(zDistance) : ceil(zDistance)) - zDistance + (forward ? 1.0F : -1.0F)) / frontVector.z;
+		float distanceForX = ((right ? floor(xDistance) : ceil(xDistance)) - xDistance + (right ? 1.0F : -1.0F)) / frontVector.x;
+		float distanceForY = ((up ? floor(yDistance) : ceil(yDistance)) - yDistance + (up ? 1.0F : -1.0F)) / frontVector.y;
+		float distanceForZ = ((forward ? floor(zDistance) : ceil(zDistance)) - zDistance + (forward ? 1.0F : -1.0F)) / frontVector.z;
 		float distanceForXAbs = abs(distanceForX);
-		if (distanceForXAbs < 0.00001F)
+		if (distanceForXAbs < 0.000001F)
 		{
-			distanceForXAbs += 1.0F;
+			distanceForXAbs = 1.0F;
+			distanceForX += right ? 1.0F : -1.0F;
 		}
 		float distanceForYAbs = abs(distanceForY);
-		if (distanceForYAbs < 0.00001F)
+		if (distanceForYAbs < 0.000001F)
 		{
-			distanceForYAbs += 1.0F;
+			distanceForYAbs = 1.0F;
+			distanceForY += up ? 1.0F : -1.0F;
 		}
 		float distanceForZAbs = abs(distanceForZ);
-		if (distanceForZAbs < 0.00001F)
+		if (distanceForZAbs < 0.000001F)
 		{
-			distanceForZAbs += 1.0F;
+			distanceForZAbs = 1.0F;
+			distanceForZ += forward ? 1.0F : -1.0F;
 		}
 		float minDistance;
 		int xyzChoice;
@@ -138,7 +141,7 @@ BlockFaces PlayerController::FindClosestFace(glm::ivec3& blockPosition, bool& fo
 			xDistance += frontVector.x * minDistance;
 			yDistance += frontVector.y * minDistance;
 			zDistance += frontVector.z * minDistance;
-			blockPosition = vec3(static_cast<int>(xDistance) - (!right && xyzChoice == 0 ? 1 : 0), static_cast<int>(yDistance) - (!up && xyzChoice == 1 ? 1 : 0), static_cast<int>(zDistance) - (!forward && xyzChoice == 2 ? 1 : 0));
+			blockPosition = vec3(static_cast<int>(floor(xDistance)) - (!right && xyzChoice == 0 ? 1 : 0), static_cast<int>(floor(yDistance)) - (!up && xyzChoice == 1 ? 1 : 0), static_cast<int>(floor(zDistance)) - (!forward && xyzChoice == 2 ? 1 : 0));
 			if (GetWorld()->IsBlockExists(blockPosition.x, blockPosition.y, blockPosition.z))
 			{
 				foundBlock = true;
@@ -238,6 +241,7 @@ void PlayerController::HandleMouseInput()
 	{
 		MyCamera.Pitch = -89.0F;
 	}
+	std::cout << MyCamera.Yaw << std::endl;
 	GetTransform().SetRotation(0, MyCamera.Yaw, 0);
 	int state = glfwGetMouseButton(GetWorld()->GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
 	if (state == GLFW_PRESS && !LeftMousePressed)

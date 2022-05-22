@@ -20,7 +20,7 @@ protected:
     float VelocityX;
     float VelocityY;
     float VelocityZ;
-    TessellationHelper TessellationHelper;
+    TessellationHelper Tessellation;
     Entity(uint16_t entityId, vec3 entitySize, float x, float y, float z);
     [[nodiscard]] bool IsOnGround() const;
     void virtual Render();

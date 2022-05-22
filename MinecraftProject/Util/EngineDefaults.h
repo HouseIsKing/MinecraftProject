@@ -14,7 +14,7 @@ using std::unique_ptr;
 class EngineDefaults
 {
     static unique_ptr<Shader> TheShader;
-    static std::vector<Texture*> TextureList;
+    static std::unordered_map<Texture*, uint16_t> TextureList;
     static GLuint UboTextures;
     static bool HasBuiltTextureUbo;
     static bool HasInit;
@@ -26,6 +26,7 @@ public:
     static T GetNext(T maxValue);
     template <typename T>
     static T GetNext(T minValue, T maxValue);
+    static float GetNextFloat();
     static int GetChunkLocalIndex(int x, int y, int z);
     static uint16_t RegisterTexture(Texture* texture);
     static void BuildTextureUbo();

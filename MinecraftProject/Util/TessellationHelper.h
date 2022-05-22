@@ -22,6 +22,7 @@ class TessellationHelper
     Shader* TheShader;
     bool HasInit;
     int PositionUniform;
+    size_t TrianglesCount;
 public:
     void Reset();
     ~TessellationHelper();

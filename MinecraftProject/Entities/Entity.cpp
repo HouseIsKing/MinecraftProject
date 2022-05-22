@@ -9,7 +9,7 @@
 SinglePlayerWorld* Entity::World = nullptr;
 
 Entity::Entity(uint16_t entityId, vec3 entitySize, float x, float y, float z) : IsGrounded(false), EntitySize(entitySize), EntityId(entityId), VelocityX(0), VelocityY(0), VelocityZ(0),
-    TessellationHelper(EngineDefaults::GetShader(), x, y, z)
+    Tessellation(EngineDefaults::GetShader(), x, y, z)
 {
 }
 
@@ -33,7 +33,7 @@ bool Entity::IsOnGround() const
 void Entity::CheckCollisionAndMove()
 {
     const float originalY = VelocityY;
-    const vec3 pos = TessellationHelper.GetTransform().GetPosition() + EntitySize;
+    const vec3 pos = Tessellation.GetTransform().GetPosition() + EntitySize;
     auto myBoundingBox = BoundingBox(pos.x - EntitySize.x, pos.y - EntitySize.y, pos.z - EntitySize.z, pos.x + EntitySize.x, pos.y + EntitySize.y, pos.z + EntitySize.z);
     auto movementBox = BoundingBox(myBoundingBox);
     movementBox.Expand(VelocityX, VelocityY, VelocityZ);
@@ -44,18 +44,18 @@ void Entity::CheckCollisionAndMove()
         VelocityX = myBoundingBox.ClipCollisionX(box, VelocityX);
     }
     myBoundingBox.Move(VelocityX, 0.0F, 0.0F);
-    TessellationHelper.GetTransform().Move(VelocityX, 0.0F, 0.0F);
+    Tessellation.GetTransform().Move(VelocityX, 0.0F, 0.0F);
     for (BoundingBox& box : collidingBoxes)
     {
         VelocityY = myBoundingBox.ClipCollisionY(box, VelocityY);
     }
     myBoundingBox.Move(0.0F, VelocityY, 0.0F);
-    TessellationHelper.GetTransform().Move(0.0F, VelocityY, 0.0F);
+    Tessellation.GetTransform().Move(0.0F, VelocityY, 0.0F);
     for (BoundingBox& box : collidingBoxes)
     {
         VelocityZ = myBoundingBox.ClipCollisionZ(box, VelocityZ);
     }
-    TessellationHelper.GetTransform().Move(0.0F, 0.0F, VelocityZ);
+    Tessellation.GetTransform().Move(0.0F, 0.0F, VelocityZ);
     IsGrounded = originalY <= 0 && abs(VelocityY - originalY) > 0.001F;
 }
 
@@ -79,5 +79,5 @@ void Entity::DoRender()
 
 Transform& Entity::GetTransform()
 {
-    return TessellationHelper.GetTransform();
+    return Tessellation.GetTransform();
 }

@@ -16,14 +16,13 @@ using std::equal_to;
 class SinglePlayerWorld
 {
     unordered_map<ChunkCoords, Chunk, ChunkComparator> Chunks;
-    unordered_map<uint16_t, Entity*> Entities;
+    unordered_map<uint16_t, unique_ptr<Entity>> Entities;
     const uint16_t LevelWidth;
     const uint16_t LevelHeight;
     const uint16_t LevelDepth;
     GLFWwindow* TheAppWindow;
     vector<uint8_t> LightLevels;
     const uint8_t MaxChunkRebuilt = 2;
-    PlayerController PlayerController;
     void SaveWorld();
     void LoadWorld();
     void GenerateChunks(uint16_t amountX, uint16_t amountY, uint16_t amountZ);

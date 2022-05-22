@@ -18,7 +18,7 @@ bool TessellationHelper::HasInitialized() const
 	return HasInit;
 }
 
-TessellationHelper::TessellationHelper(Shader* shader) : Vbo(0), Vao(0), Ebo(0), TheShader(shader), HasInit(false)
+TessellationHelper::TessellationHelper(Shader* shader) : Vbo(0), Vao(0), Ebo(0), TheShader(shader), HasInit(false), TrianglesCount(0)
 {
     glGenVertexArrays(1, &Vao);
     glGenBuffers(1, &Vbo);
@@ -52,7 +52,7 @@ void TessellationHelper::changeVertex(uint16_t vertexID, Vertex vertex) {
 */
 void TessellationHelper::Draw()
 {
-	if (Vertices.empty())
+	if (Vertices.empty() && !HasInit)
 	{
 		return;
 	}
@@ -71,6 +71,9 @@ void TessellationHelper::Draw()
 		glVertexAttribPointer(5, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, Brightness)));
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLintptr>(TriangleIndices.size() * sizeof(GLushort)), TriangleIndices.data(), GL_STATIC_DRAW);
+		TrianglesCount = TriangleIndices.size();
+		Vertices.clear();
+		TriangleIndices.clear();
 	}
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
@@ -79,7 +82,7 @@ void TessellationHelper::Draw()
 	glEnableVertexAttribArray(4);
 	glEnableVertexAttribArray(5);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Ebo);
-	glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(TriangleIndices.size()), GL_UNSIGNED_SHORT, nullptr);
+	glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(TrianglesCount), GL_UNSIGNED_SHORT, nullptr);
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
@@ -93,11 +96,11 @@ void TessellationHelper::Reset()
     glDeleteBuffers(1, &Vbo);
 	glDeleteBuffers(1, &Ebo);
     glDeleteVertexArrays(1, &Vao);
-    Vertices.clear();
-    TriangleIndices.clear();
     glGenVertexArrays(1, &Vao);
     glGenBuffers(1, &Vbo);
 	glGenBuffers(1, &Ebo);
+	Vertices.clear();
+	TriangleIndices.clear();
     HasInit = false;
 }
 

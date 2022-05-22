@@ -5,12 +5,13 @@
 #include "EngineDefaults.h"
 #include "../World/Chunk.h"
 #include <memory>
+#include <ranges>
 
 bool EngineDefaults::HasInit = false;
 bool EngineDefaults::HasBuiltTextureUbo = false;
 unique_ptr<Shader> EngineDefaults::TheShader = {};
 CustomRandomEngine EngineDefaults::Engine = {};
-vector<Texture*> EngineDefaults::TextureList = {};
+std::unordered_map<Texture*, uint16_t> EngineDefaults::TextureList = {};
 GLuint EngineDefaults::UboTextures = 0;
 
 Shader* EngineDefaults::GetShader()
@@ -18,6 +19,7 @@ Shader* EngineDefaults::GetShader()
     if (!HasInit)
     {
         Init();
+        TheShader->Use();
     }
     return TheShader.get();
 }
@@ -27,6 +29,11 @@ void EngineDefaults::Init()
     HasInit = true;
     TheShader = std::make_unique<Shader>("Shaders/VertexShader.glsl", "Shaders/FragmentShader.glsl");
     glGenBuffers(1, &UboTextures);
+}
+
+float EngineDefaults::GetNextFloat()
+{
+    return static_cast<float>(static_cast<double>(CustomRandomEngine::GetNext()) / CustomRandomEngine::M);
 }
 
 int EngineDefaults::GetChunkLocalIndex(int x, int y, int z)
@@ -40,7 +47,10 @@ int EngineDefaults::GetChunkLocalIndex(int x, int y, int z)
 uint16_t EngineDefaults::RegisterTexture(Texture* texture)
 {
     HasBuiltTextureUbo = false;
-    TextureList.push_back(texture);
+    if (!TextureList.emplace(texture, static_cast<uint16_t>(TextureList.size())).second)
+    {
+        return TextureList.at(texture);
+    }
     texture->Resident();
     return static_cast<uint16_t>(TextureList.size() - 1);
 }
@@ -54,7 +64,7 @@ void EngineDefaults::BuildTextureUbo()
     HasBuiltTextureUbo = true;
     vector<GLuint64> helper;
     helper.reserve(TextureList.size());
-    for (const Texture* texture : TextureList)
+    for (const Texture* texture : TextureList | std::ranges::views::keys)
     {
         helper.push_back(texture->GetHandle());
     }
@@ -65,7 +75,7 @@ void EngineDefaults::BuildTextureUbo()
 
 void EngineDefaults::ResetTextures()
 {
-    for (const auto& texture : TextureList)
+    for (const auto& texture : TextureList | std::ranges::views::keys)
     {
         texture->NonResident();
     }
