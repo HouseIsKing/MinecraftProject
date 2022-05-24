@@ -9,7 +9,7 @@
 SinglePlayerWorld* Entity::World = nullptr;
 
 Entity::Entity(uint16_t entityId, vec3 entitySize, float x, float y, float z) : IsGrounded(false), EntitySize(entitySize), EntityId(entityId), VelocityX(0), VelocityY(0), VelocityZ(0),
-    Tessellation(EngineDefaults::GetShader(), x, y, z)
+    Tessellation(EngineDefaults::GetShader(), x + entitySize.x, y + entitySize.y, z + entitySize.z)
 {
 }
 
@@ -33,7 +33,7 @@ bool Entity::IsOnGround() const
 void Entity::CheckCollisionAndMove()
 {
     const float originalY = VelocityY;
-    const vec3 pos = Tessellation.GetTransform().GetPosition() + EntitySize;
+    const vec3 pos = Tessellation.GetTransform().GetPosition();
     auto myBoundingBox = BoundingBox(pos.x - EntitySize.x, pos.y - EntitySize.y, pos.z - EntitySize.z, pos.x + EntitySize.x, pos.y + EntitySize.y, pos.z + EntitySize.z);
     auto movementBox = BoundingBox(myBoundingBox);
     movementBox.Expand(VelocityX, VelocityY, VelocityZ);

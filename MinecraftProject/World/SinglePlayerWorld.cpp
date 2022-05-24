@@ -28,7 +28,7 @@ void SinglePlayerWorld::SaveWorld()
 void SinglePlayerWorld::LoadWorld()
 {
     CustomFileManager fileManager{"level.dat", "r"};
-    size_t size;
+    size_t size = 0;
     fileManager >> size;
     for (size_t i = 0; i < size; i++)
     {
@@ -47,7 +47,7 @@ SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height
     Chunk::SetWorld(this);
     Init();
     Entities.emplace(piecewise_construct, forward_as_tuple(static_cast<uint16_t>(0)), forward_as_tuple(reinterpret_cast<Entity*>(new PlayerController(0, EngineDefaults::GetNext(width), static_cast<float>(height + 3), EngineDefaults::GetNext(depth)))));
-    for (uint16_t i = 1; i <= 1; i++)
+    for (uint16_t i = 1; i <= 100; i++)
     {
         Entities.emplace(piecewise_construct, forward_as_tuple(i), forward_as_tuple(reinterpret_cast<Entity*>(new Zombie(i, EngineDefaults::GetNext(width), static_cast<float>(LevelHeight + 3), EngineDefaults::GetNext(depth)))));
     }
@@ -332,7 +332,7 @@ void SinglePlayerWorld::DrawWorld()
     {
         entity->DoRender();
     }
-	glDisable(GL_CULL_FACE);
+    glDisable(GL_CULL_FACE);
 }
 
 GLFWwindow* SinglePlayerWorld::GetWindow() const

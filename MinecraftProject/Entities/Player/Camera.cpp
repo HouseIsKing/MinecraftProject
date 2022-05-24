@@ -4,8 +4,6 @@
 
 #include "Camera.h"
 
-#include <glad/glad.h>
-
 void Camera::UpdateVectors()
 {
     Front.x = cos(radians(Pitch)) * cos(radians(Yaw));
@@ -18,11 +16,11 @@ void Camera::UpdateVectors()
 }
 
 Camera::Camera(vec3 position, float aspectRatio) : Front(0, 0, -1), Up(0, 1, 0), Right(1, 0, 0),
-                                                   Fov(70), AspectRatio(aspectRatio), Position(position),
-                                                   ViewMatrix(), ProjectionMatrix(),
-                                                   IsDirtyViewMatrix(true), IsDirtyProjectionMatrix(true),
-                                                   PrevYaw(0),
-                                                   ZNear(0.05F), ZFar(1000.0F), PrevPitch(0), Pitch(0), Yaw(0)
+                                                   Fov(70), AspectRatio(aspectRatio), ViewMatrix(),
+                                                   ProjectionMatrix(), IsDirtyViewMatrix(true),
+                                                   IsDirtyProjectionMatrix(true), PrevYaw(0),
+                                                   ZNear(0.05F),
+                                                   ZFar(1000.0F), PrevPitch(0), Position(position), Pitch(0), Yaw(0)
 {
     UpdateVectors();
 }

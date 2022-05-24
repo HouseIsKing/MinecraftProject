@@ -22,7 +22,7 @@ public:
     [[nodiscard]] GLuint64 GetHandle() const;
     void Resident() const;
     void NonResident() const;
-    bool operator ==(const Texture& other) const;
+    bool operator==(const Texture& other) const;
     ~Texture();
     Texture(const Texture& other) = default;
     Texture(Texture&& other) = default;

@@ -17,16 +17,16 @@ Texture* Texture::LoadTexture(const string& path)
     {
         return TexturesCache.at(path).get();
     }
-    int width;
-    int height;
-    int nrChannels;
+    int width = 0;
+    int height = 0;
+    int nrChannels = 0;
     stbi_set_flip_vertically_on_load(1);
     unsigned char* pixels = stbi_load(path.c_str(), &width, &height, &nrChannels, 4);
     if (pixels == nullptr)
     {
         throw runtime_error("Failed to load texture");
     }
-    GLuint textureId;
+    GLuint textureId = 0;
     glCreateTextures(GL_TEXTURE_2D, 1, &textureId);
     const GLsizei numMipmaps = static_cast<GLsizei>(log2(std::max(width, height))) + 1;
     glTextureStorage2D(textureId, numMipmaps, GL_RGBA8, width, height);

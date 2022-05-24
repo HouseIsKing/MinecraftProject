@@ -80,10 +80,10 @@
     <IncludePath>$(ProjectDir);$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir);C:\Users\amitz\source\repos\MinecraftProject\Include</IncludePath>
-    <LibraryPath>C:\Users\amitz\source\repos\MinecraftProject\Lib;$(LibraryPath)</LibraryPath>
-    <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
+      <LinkIncremental>true</LinkIncremental>
+      <IncludePath>$(ProjectDir);$(SolutionDir)/Include</IncludePath>
+      <LibraryPath>$(SolutionDir)/lib;$(LibraryPath)</LibraryPath>
+      <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -92,13 +92,15 @@
     <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-    </ClCompile>
+      <ClCompile>
+          <WarningLevel>Level3</WarningLevel>
+          <SDLCheck>true</SDLCheck>
+          <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+          <ConformanceMode>true</ConformanceMode>
+          <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+          <LanguageStandard>stdcpplatest</LanguageStandard>
+          <LanguageStandard_C>stdc17</LanguageStandard_C>
+      </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -106,15 +108,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-    </ClCompile>
+      <ClCompile>
+          <WarningLevel>Level3</WarningLevel>
+          <FunctionLevelLinking>true</FunctionLevelLinking>
+          <IntrinsicFunctions>true</IntrinsicFunctions>
+          <SDLCheck>true</SDLCheck>
+          <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+          <ConformanceMode>true</ConformanceMode>
+          <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+          <LanguageStandard>stdcpplatest</LanguageStandard>
+          <LanguageStandard_C>stdc17</LanguageStandard_C>
+      </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -165,23 +169,23 @@
       </IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-      <ClCompile Include="Entities\Entity.cpp"/>
-      <ClCompile Include="Entities\EntityMeshBlock.cpp"/>
-      <ClCompile Include="Entities\LivingEntity.cpp"/>
-      <ClCompile Include="Entities\Player\Camera.cpp"/>
-      <ClCompile Include="Entities\Player\PlayerController.cpp"/>
-      <ClCompile Include="Entities\Player\PlayerSelectionHighlight.cpp"/>
-      <ClCompile Include="Entities\Zombie.cpp">
-          <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
-          <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-          <Optimization>Disabled</Optimization>
-          <SupportJustMyCode>true</SupportJustMyCode>
-          <AssemblerOutput>NoListing</AssemblerOutput>
-          <AssemblerListingLocation>x64\Debug\</AssemblerListingLocation>
-          <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
-          <BrowseInformation>false</BrowseInformation>
-          <BrowseInformationFile>x64\Debug\</BrowseInformationFile>
+    <ItemGroup>
+        <ClCompile Include="Entities\Entity.cpp"/>
+        <ClCompile Include="Entities\EntityMeshBlock.cpp"/>
+        <ClCompile Include="Entities\LivingEntity.cpp"/>
+        <ClCompile Include="Entities\Player\Camera.cpp"/>
+        <ClCompile Include="Entities\Player\PlayerController.cpp"/>
+        <ClCompile Include="Entities\Player\PlayerSelectionHighlight.cpp"/>
+        <ClCompile Include="Entities\Zombie.cpp">
+            <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
+            <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+            <Optimization>Disabled</Optimization>
+            <SupportJustMyCode>true</SupportJustMyCode>
+            <AssemblerOutput>NoListing</AssemblerOutput>
+            <AssemblerListingLocation>x64\Debug\</AssemblerListingLocation>
+            <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+            <BrowseInformation>false</BrowseInformation>
+            <BrowseInformationFile>x64\Debug\</BrowseInformationFile>
           <CompileAs>Default</CompileAs>
           <ConformanceMode>true</ConformanceMode>
           <DiagnosticsFormat>Column</DiagnosticsFormat>
@@ -236,36 +240,36 @@
           <WarningLevel>Level4</WarningLevel>
           <XMLDocumentationFileName>x64\Debug\</XMLDocumentationFileName>
           <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-          <IntelJCCErratum>false</IntelJCCErratum>
-          <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
-          <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
-          <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
-          <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
-          <PreprocessorDefinitions>_DEBUG;_CONSOLE;_UNICODE;UNICODE;</PreprocessorDefinitions>
-          <SDLCheck>true</SDLCheck>
-          <DisableSpecificWarnings>4100;4101</DisableSpecificWarnings>
-          <LinkCompiled>true</LinkCompiled>
-      </ClCompile>
-      <ClCompile Include="glad.c"/>
-      <ClCompile Include="RunMinecraft.cpp"/>
-      <ClCompile Include="Shaders\Shader.cpp"/>
-      <ClCompile Include="Textures\Texture.cpp"/>
-      <ClCompile Include="Util\BoundingBox.cpp"/>
-      <ClCompile Include="Util\CustomFileManager.cpp"/>
-      <ClCompile Include="Util\CustomRandomEngine.cpp"/>
-      <ClCompile Include="Util\EngineDefaults.cpp"/>
-      <ClCompile Include="Util\TessellationHelper.cpp"/>
-      <ClCompile Include="Util\Transform.cpp"/>
-    <ClCompile Include="Util\Vertex.cpp" />
-    <ClCompile Include="World\Blocks\AirBlock.cpp" />
-    <ClCompile Include="World\Blocks\Block.cpp" />
-    <ClCompile Include="World\Blocks\BlockTypeList.cpp" />
-      <ClCompile Include="World\Blocks\CobblestoneBlock.cpp"/>
-    <ClCompile Include="World\Blocks\GrassBlock.cpp" />
-    <ClCompile Include="World\Chunk.cpp" />
-    <ClCompile Include="World\ChunkCoords.cpp" />
-    <ClCompile Include="World\SinglePlayerWorld.cpp" />
-  </ItemGroup>
+            <IntelJCCErratum>false</IntelJCCErratum>
+            <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+            <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+            <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+            <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+            <PreprocessorDefinitions>_DEBUG;_CONSOLE;_UNICODE;UNICODE;</PreprocessorDefinitions>
+            <SDLCheck>true</SDLCheck>
+            <DisableSpecificWarnings>4100;4101</DisableSpecificWarnings>
+            <LinkCompiled>true</LinkCompiled>
+        </ClCompile>
+        <ClCompile Include="glad.c"/>
+        <ClCompile Include="RunMinecraft.cpp"/>
+        <ClCompile Include="Shaders\Shader.cpp"/>
+        <ClCompile Include="Textures\Texture.cpp"/>
+        <ClCompile Include="Util\BoundingBox.cpp"/>
+        <ClCompile Include="Util\CustomFileManager.cpp"/>
+        <ClCompile Include="Util\CustomRandomEngine.cpp"/>
+        <ClCompile Include="Util\EngineDefaults.cpp"/>
+        <ClCompile Include="Util\TessellationHelper.cpp"/>
+        <ClCompile Include="Util\Transform.cpp"/>
+        <ClCompile Include="Util\Vertex.cpp"/>
+        <ClCompile Include="World\Blocks\AirBlock.cpp"/>
+        <ClCompile Include="World\Blocks\Block.cpp"/>
+        <ClCompile Include="World\Blocks\BlockTypeList.cpp"/>
+        <ClCompile Include="World\Blocks\CobblestoneBlock.cpp"/>
+        <ClCompile Include="World\Blocks\GrassBlock.cpp"/>
+        <ClCompile Include="World\Chunk.cpp"/>
+        <ClCompile Include="World\ChunkCoords.cpp"/>
+        <ClCompile Include="World\SinglePlayerWorld.cpp"/>
+    </ItemGroup>
     <ItemGroup>
         <ClInclude Include="Entities\Entity.h"/>
         <ClInclude Include="Entities\EntityMeshBlock.h"/>
@@ -284,14 +288,14 @@
         <ClInclude Include="Util\Transform.h"/>
         <ClInclude Include="Util\Vertex.h"/>
         <ClInclude Include="World\Blocks\AirBlock.h"/>
-    <ClInclude Include="World\Blocks\Block.h" />
-    <ClInclude Include="World\Blocks\BlockTypeList.h" />
+        <ClInclude Include="World\Blocks\Block.h"/>
+        <ClInclude Include="World\Blocks\BlockTypeList.h"/>
         <ClInclude Include="World\Blocks\CobblestoneBlock.h"/>
-    <ClInclude Include="World\Blocks\GrassBlock.h" />
-    <ClInclude Include="World\Chunk.h" />
-    <ClInclude Include="World\ChunkCoords.h" />
-    <ClInclude Include="World\SinglePlayerWorld.h" />
-  </ItemGroup>
+        <ClInclude Include="World\Blocks\GrassBlock.h"/>
+        <ClInclude Include="World\Chunk.h"/>
+        <ClInclude Include="World\ChunkCoords.h"/>
+        <ClInclude Include="World\SinglePlayerWorld.h"/>
+    </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\FragmentShader.glsl">
       <DeploymentContent>true</DeploymentContent>
