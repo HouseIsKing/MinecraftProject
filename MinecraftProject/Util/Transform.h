@@ -16,15 +16,13 @@ class Transform
     vec3 Rotation;
     vec3 Scale;
     mat4x4 TransformMatrix;
-    bool IsDirtyLocal;
-    Transform* Parent;
+    bool IsDirty;
     void CalculateTransformMatrix();
 public:
     Transform();
     explicit Transform(Transform* parent);
     [[nodiscard]] vec3 GetPosition() const;
     [[nodiscard]] vec3 GetRotation() const;
-    [[nodiscard]] bool IsDirty() const;
     void Rotate(float x, float y, float z);
     void SetRotation(float x, float y, float z);
     void Move(float x, float y, float z);

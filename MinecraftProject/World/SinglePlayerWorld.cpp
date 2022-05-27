@@ -41,15 +41,17 @@ void SinglePlayerWorld::LoadWorld()
     }
 }
 
-SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth, GLFWwindow* window) : LevelWidth(width), LevelHeight(height), LevelDepth(depth), TheAppWindow(window)
+SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth, GLFWwindow* window) : Player(new PlayerController(0, EngineDefaults::GetNext(width), static_cast<float>(height + 3),
+    EngineDefaults::GetNext(depth))), LevelWidth(width), LevelHeight(height), LevelDepth(depth), TheAppWindow(window)
 {
     Entity::SetWorld(this);
     Chunk::SetWorld(this);
     Init();
-    Entities.emplace(piecewise_construct, forward_as_tuple(static_cast<uint16_t>(0)), forward_as_tuple(reinterpret_cast<Entity*>(new PlayerController(0, EngineDefaults::GetNext(width), static_cast<float>(height + 3), EngineDefaults::GetNext(depth)))));
-    for (uint16_t i = 1; i <= 100; i++)
+
+    Entities.emplace(piecewise_construct, forward_as_tuple(static_cast<uint16_t>(0)), forward_as_tuple(dynamic_cast<Entity*>(Player)));
+    for (uint16_t i = 1; i <= 1000; i++)
     {
-        Entities.emplace(piecewise_construct, forward_as_tuple(i), forward_as_tuple(reinterpret_cast<Entity*>(new Zombie(i, EngineDefaults::GetNext(width), static_cast<float>(LevelHeight + 3), EngineDefaults::GetNext(depth)))));
+        Entities.emplace(piecewise_construct, forward_as_tuple(i), forward_as_tuple(dynamic_cast<Entity*>(new Zombie(i, EngineDefaults::GetNext(width), static_cast<float>(LevelHeight + 3), EngineDefaults::GetNext(depth)))));
     }
     EngineDefaults::BuildTextureUbo();
 }
@@ -319,18 +321,24 @@ void SinglePlayerWorld::DrawWorld()
 {
     glEnable(GL_CULL_FACE);
     uint8_t chunksRebuilt = 0;
-    for (auto& val : Chunks | std::views::values)
+    for (auto& [fst, snd] : Chunks)
     {
-        if (chunksRebuilt < MaxChunkRebuilt && val.IsDirty)
+        if (chunksRebuilt < MaxChunkRebuilt && snd.IsDirty)
         {
             chunksRebuilt++;
-            val.GenerateTessellationData();
+            snd.GenerateTessellationData();
         }
-        val.Draw();
+        if (ChunkCoords pos = fst; Player->GetCameraFrustum().CubeInFrustum(static_cast<float>(pos.GetX() * Chunk::CHUNK_WIDTH), static_cast<float>(pos.GetY() * Chunk::CHUNK_HEIGHT), static_cast<float>(pos.GetZ() * Chunk::CHUNK_DEPTH), static_cast<float>(pos.GetX() * Chunk::CHUNK_WIDTH + Chunk::CHUNK_WIDTH), static_cast<float>(pos.GetY() * Chunk::CHUNK_HEIGHT + Chunk::CHUNK_HEIGHT), static_cast<float>(pos.GetZ() * Chunk::CHUNK_DEPTH + Chunk::CHUNK_DEPTH)))
+        {
+            snd.Draw();
+        }
     }
     for (const auto& entity : Entities | std::views::values)
     {
-        entity->DoRender();
+        if (Player->GetCameraFrustum().CubeInFrustum(entity->GetBoundingBox()))
+        {
+            entity->DoRender();
+        }
     }
     glDisable(GL_CULL_FACE);
 }

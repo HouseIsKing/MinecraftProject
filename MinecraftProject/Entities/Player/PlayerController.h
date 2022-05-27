@@ -20,7 +20,7 @@ public:
     static void OnResizeWindow(int width, int height);
 };
 
-class PlayerController final : LivingEntity
+class PlayerController final : public LivingEntity
 {
     Camera& MyCamera;
     constexpr static vec3 PLAYER_SIZE = vec3(0.3F, 0.9F, 0.3F);
@@ -42,4 +42,5 @@ public:
     void HandleKeyboardMovementInput();
     void Tick() override;
     void Render() override;
+    [[nodiscard]] Frustum GetCameraFrustum() const;
 };

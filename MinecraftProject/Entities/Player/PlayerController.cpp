@@ -222,6 +222,11 @@ void PlayerController::PlaceBlock() const
     }
 }
 
+Frustum PlayerController::GetCameraFrustum() const
+{
+    return MyCamera.GetFrustum();
+}
+
 void PlayerController::HandleMouseInput()
 {
     double x;

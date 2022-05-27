@@ -17,6 +17,7 @@ class SinglePlayerWorld
 {
     unordered_map<ChunkCoords, Chunk, ChunkComparator> Chunks;
     unordered_map<uint16_t, unique_ptr<Entity>> Entities;
+    PlayerController* Player;
     const uint16_t LevelWidth;
     const uint16_t LevelHeight;
     const uint16_t LevelDepth;

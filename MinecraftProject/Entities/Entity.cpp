@@ -33,7 +33,7 @@ bool Entity::IsOnGround() const
 void Entity::CheckCollisionAndMove()
 {
     const float originalY = VelocityY;
-    const vec3 pos = Tessellation.GetTransform().GetPosition();
+    const vec3 pos = Tessellation.GetTransform(0).GetPosition();
     auto myBoundingBox = BoundingBox(pos.x - EntitySize.x, pos.y - EntitySize.y, pos.z - EntitySize.z, pos.x + EntitySize.x, pos.y + EntitySize.y, pos.z + EntitySize.z);
     auto movementBox = BoundingBox(myBoundingBox);
     movementBox.Expand(VelocityX, VelocityY, VelocityZ);
@@ -44,18 +44,18 @@ void Entity::CheckCollisionAndMove()
         VelocityX = myBoundingBox.ClipCollisionX(box, VelocityX);
     }
     myBoundingBox.Move(VelocityX, 0.0F, 0.0F);
-    Tessellation.GetTransform().Move(VelocityX, 0.0F, 0.0F);
+    Tessellation.GetTransform(0).Move(VelocityX, 0.0F, 0.0F);
     for (BoundingBox& box : collidingBoxes)
     {
         VelocityY = myBoundingBox.ClipCollisionY(box, VelocityY);
     }
     myBoundingBox.Move(0.0F, VelocityY, 0.0F);
-    Tessellation.GetTransform().Move(0.0F, VelocityY, 0.0F);
+    Tessellation.GetTransform(0).Move(0.0F, VelocityY, 0.0F);
     for (BoundingBox& box : collidingBoxes)
     {
         VelocityZ = myBoundingBox.ClipCollisionZ(box, VelocityZ);
     }
-    Tessellation.GetTransform().Move(0.0F, 0.0F, VelocityZ);
+    Tessellation.GetTransform(0).Move(0.0F, 0.0F, VelocityZ);
     IsGrounded = originalY <= 0 && abs(VelocityY - originalY) > 0.001F;
 }
 
@@ -79,5 +79,11 @@ void Entity::DoRender()
 
 Transform& Entity::GetTransform()
 {
-    return Tessellation.GetTransform();
+    return Tessellation.GetTransform(0);
+}
+
+BoundingBox Entity::GetBoundingBox()
+{
+    const vec3 pos = Tessellation.GetTransform(0).GetPosition();
+    return {pos.x - EntitySize.x, pos.y - EntitySize.y, pos.z - EntitySize.z, pos.x + EntitySize.x, pos.y + EntitySize.y, pos.z + EntitySize.z};
 }

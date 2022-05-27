@@ -105,13 +105,19 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Util\CustomFileManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Entities\Player\PlayerSelectionHighlight.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Util</Filter>
     </ClCompile>
     <ClCompile Include="World\Blocks\CobblestoneBlock.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\World\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="Entities\EntityMeshBlock.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Entities\Player\PlayerSelectionHighlight.cpp">
+      <Filter>Source Files\Entities\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Entities\Zombie.cpp">
+      <Filter>Source Files\Entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -172,9 +178,21 @@
     <ClInclude Include="Util\CustomRandomEngine.h">
       <Filter>Source Files\Util</Filter>
     </ClInclude>
-    <ClInclude Include="Util\CustomFileManager.h" />
-    <ClInclude Include="Entities\Player\PlayerSelectionHighlight.h" />
-    <ClInclude Include="World\Blocks\CobblestoneBlock.h" />
+    <ClInclude Include="World\Blocks\CobblestoneBlock.h">
+      <Filter>Source Files\World\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\CustomFileManager.h">
+      <Filter>Source Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities\EntityMeshBlock.h">
+      <Filter>Source Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities\Player\PlayerSelectionHighlight.h">
+      <Filter>Source Files\Entities\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities\Zombie.h">
+      <Filter>Source Files\Entities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\FragmentShader.glsl">

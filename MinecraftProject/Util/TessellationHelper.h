@@ -18,11 +18,12 @@ class TessellationHelper
     GLuint Ebo;
     vector<Vertex> Vertices{};
     vector<GLushort> TriangleIndices{};
-    Transform TessellationTransform;
+    vector<Transform> TessellationTransforms{};
     Shader* TheShader;
     bool HasInit;
     int PositionUniform;
     size_t TrianglesCount;
+    mat4x4 GetTransformationMatrix(size_t id);
 public:
     void Reset();
     ~TessellationHelper();
@@ -33,9 +34,12 @@ public:
     [[nodiscard]] bool HasInitialized() const;
     explicit TessellationHelper(Shader* shader);
     TessellationHelper(Shader* shader, float x, float y, float z);
-    [[nodiscard]] Transform& GetTransform();
+    [[nodiscard]] Transform& GetTransform(size_t id);
     uint16_t AddVertex(const Vertex& vertex);
     void AddTriangle(uint16_t triangle);
     //void changeVertex(uint16_t vertexID, Vertex vertex);
     void Draw();
+    void Draw(size_t transformId, size_t startPos, size_t count);
+    size_t AddTransform(Transform transform);
+    [[nodiscard]] size_t GetCurrentTriangleCount() const;
 };

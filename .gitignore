@@ -31,11 +31,9 @@
 *.out
 *.app
 /.vs/MinecraftProject/v17
-/Include/glm
+/MinecraftProject/x64
 /Include
 /Lib
-/MinecraftProject/x64/Debug
 /x64/Debug
-/MinecraftProject/Debug
-/MinecraftProject/level.dat
 /x64/Release
+/MinecraftProject/level.dat

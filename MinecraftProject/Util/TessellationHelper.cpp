@@ -9,7 +9,7 @@
 TessellationHelper::~TessellationHelper()
 {
     glDeleteBuffers(1, &Vbo);
-	glDeleteBuffers(1, &Ebo);
+    glDeleteBuffers(1, &Ebo);
     glDeleteVertexArrays(1, &Vao);
 }
 
@@ -22,14 +22,15 @@ TessellationHelper::TessellationHelper(Shader* shader) : Vbo(0), Vao(0), Ebo(0),
 {
     glGenVertexArrays(1, &Vao);
     glGenBuffers(1, &Vbo);
-	glGenBuffers(1, &Ebo);
+    glGenBuffers(1, &Ebo);
     TheShader->Use();
     PositionUniform = TheShader->GetUniformInt("transformationMatrix");
+    TessellationTransforms.emplace_back();
 }
 
-Transform& TessellationHelper::GetTransform()
+Transform& TessellationHelper::GetTransform(const size_t id)
 {
-	return TessellationTransform;
+	return TessellationTransforms.at(id);
 }
 
 uint16_t TessellationHelper::AddVertex(const Vertex& vertex)
@@ -43,6 +44,21 @@ void TessellationHelper::AddTriangle(const uint16_t triangle)
 	TriangleIndices.push_back(triangle);
 }
 
+mat4x4 TessellationHelper::GetTransformationMatrix(const size_t id)
+{
+	const mat4x4 helper = TessellationTransforms.at(0).GetTransformMatrix();
+	if (id == 0)
+	{
+		return helper;
+	}
+	return helper * TessellationTransforms.at(id).GetTransformMatrix();
+}
+
+size_t TessellationHelper::GetCurrentTriangleCount() const
+{
+	return TriangleIndices.size();
+}
+
 /*
 void TessellationHelper::changeVertex(uint16_t vertexID, Vertex vertex) {
     vertices.at(vertexID) = vertex;
@@ -52,11 +68,16 @@ void TessellationHelper::changeVertex(uint16_t vertexID, Vertex vertex) {
 */
 void TessellationHelper::Draw()
 {
+	Draw(0, 0, TrianglesCount);
+}
+
+void TessellationHelper::Draw(const size_t transformId, const size_t startPos, size_t count)
+{
 	if (Vertices.empty() && !HasInit)
 	{
 		return;
 	}
-	Shader::SetMat4(PositionUniform, TessellationTransform.GetTransformMatrix());
+	Shader::SetMat4(PositionUniform, GetTransformationMatrix(transformId));
 	glBindVertexArray(Vao);
 	if (!HasInit)
 	{
@@ -75,6 +96,10 @@ void TessellationHelper::Draw()
 		Vertices.clear();
 		TriangleIndices.clear();
 	}
+	if (count == 0)
+	{
+		count = TrianglesCount;
+	}
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
@@ -82,7 +107,8 @@ void TessellationHelper::Draw()
 	glEnableVertexAttribArray(4);
 	glEnableVertexAttribArray(5);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Ebo);
-	glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(TrianglesCount), GL_UNSIGNED_SHORT, nullptr);
+	//glDrawRangeElements(GL_TRIANGLES, static_cast<GLuint>(startPos), static_cast<GLuint>(startPos + count), static_cast<GLsizei>(count), GL_UNSIGNED_SHORT, reinterpret_cast<void*>(startPos));
+	glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(count), GL_UNSIGNED_SHORT, reinterpret_cast<void*>(startPos * sizeof(GLushort))); // startPos * sizeof(GLushort)
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
@@ -91,20 +117,26 @@ void TessellationHelper::Draw()
 	glDisableVertexAttribArray(5);
 }
 
+size_t TessellationHelper::AddTransform(const Transform transform)
+{
+	TessellationTransforms.push_back(transform);
+	return TessellationTransforms.size() - 1;
+}
+
 void TessellationHelper::Reset()
 {
     glDeleteBuffers(1, &Vbo);
-	glDeleteBuffers(1, &Ebo);
+    glDeleteBuffers(1, &Ebo);
     glDeleteVertexArrays(1, &Vao);
     glGenVertexArrays(1, &Vao);
     glGenBuffers(1, &Vbo);
-	glGenBuffers(1, &Ebo);
-	Vertices.clear();
-	TriangleIndices.clear();
+    glGenBuffers(1, &Ebo);
+    Vertices.clear();
+    TriangleIndices.clear();
     HasInit = false;
 }
 
 TessellationHelper::TessellationHelper(Shader* shader, const float x, const float y, const float z) : TessellationHelper(shader)
 {
-	TessellationTransform.SetPosition(x, y, z);
+	GetTransform(0).SetPosition(x, y, z);
 }

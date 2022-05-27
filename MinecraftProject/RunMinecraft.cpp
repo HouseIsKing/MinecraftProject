@@ -27,7 +27,7 @@ void KeyCallback(GLFWwindow* window, const int key, int /*scancode*/, const int 
 
 void WindowsResizeCallback(GLFWwindow* /*window*/, const int width, const int height)
 {
-    helper->HandleWindowResize(height, width);
+	helper->HandleWindowResize(height, width);
 }
 
 void MainLoop(GLFWwindow* window)
@@ -112,6 +112,7 @@ GLFWwindow* InitGlfw()
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glEnable(GL_DEBUG_OUTPUT);
     glDebugMessageCallback(MessageCallback, nullptr);
+    glfwSwapInterval(0);
     return window;
 }
 

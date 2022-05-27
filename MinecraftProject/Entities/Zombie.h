@@ -2,7 +2,7 @@
 #include "EntityMeshBlock.h"
 #include "LivingEntity.h"
 
-class Zombie final : LivingEntity
+class Zombie final : public LivingEntity
 {
     constexpr static vec3 ZOMBIE_SIZE = vec3(0.3F, 0.9F, 0.3F);
     constexpr static float ZOMBIE_SCALE_FACTOR = 0.05833334F;

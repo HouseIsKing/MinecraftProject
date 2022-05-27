@@ -4,8 +4,9 @@
     "\\MinecraftProject",
     "\\MinecraftProject\\Util",
     "\\MinecraftProject\\World",
-    "\\MinecraftProject\\World\\Blocks"
+    "\\MinecraftProject\\World\\Blocks",
+    "\\x64"
   ],
-  "SelectedNode": "\\MinecraftProject.sln",
+  "SelectedNode": "\\MinecraftProject\\glad.c",
   "PreviewInSolutionExplorer": false
 }
