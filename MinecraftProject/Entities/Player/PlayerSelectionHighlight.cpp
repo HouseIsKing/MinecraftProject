@@ -13,7 +13,7 @@ void PlayerSelectionHighlight::Reset()
 	BlockHit = nullptr;
 }
 
-void PlayerSelectionHighlight::Render(const float& brightness)
+void PlayerSelectionHighlight::Render(const int& brightness)
 {
 	const auto x = static_cast<float>(HitPosition.x);
 	const auto y = static_cast<float>(HitPosition.y);

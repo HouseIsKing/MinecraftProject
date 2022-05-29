@@ -37,6 +37,5 @@ private:
     static SinglePlayerWorld* World;
     bool IsDirtyLights;
     std::array<EBlockType, static_cast<size_t>(CHUNK_HEIGHT * CHUNK_DEPTH * CHUNK_WIDTH)> Blocks{EBlockType::Air};
-    std::array<uint8_t, static_cast<size_t>(CHUNK_WIDTH * CHUNK_DEPTH * CHUNK_HEIGHT)> LightValues{0};
     void DrawBlock(EBlockType blockType, int x, int y, int z) const;
 };

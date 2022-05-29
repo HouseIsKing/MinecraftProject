@@ -27,7 +27,7 @@ void KeyCallback(GLFWwindow* window, const int key, int /*scancode*/, const int 
 
 void WindowsResizeCallback(GLFWwindow* /*window*/, const int width, const int height)
 {
-	helper->HandleWindowResize(height, width);
+    helper->HandleWindowResize(height, width);
 }
 
 void MainLoop(GLFWwindow* window)

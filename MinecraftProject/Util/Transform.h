@@ -20,7 +20,6 @@ class Transform
     void CalculateTransformMatrix();
 public:
     Transform();
-    explicit Transform(Transform* parent);
     [[nodiscard]] vec3 GetPosition() const;
     [[nodiscard]] vec3 GetRotation() const;
     void Rotate(float x, float y, float z);

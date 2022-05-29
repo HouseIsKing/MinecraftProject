@@ -21,6 +21,7 @@ class EngineDefaults
     static void Init();
     static CustomRandomEngine Engine;
 public:
+    static float ConvertLightLevelToAmbient(int lightLevel);
     static Shader* GetShader();
     template <typename T>
     static T GetNext(T maxValue);

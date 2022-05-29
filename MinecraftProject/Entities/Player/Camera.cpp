@@ -4,8 +4,6 @@
 
 #include "Camera.h"
 
-#include <glm/gtx/string_cast.hpp>
-
 bool Frustum::CubeInFrustum(const float minX, const float minY, const float minZ, const float maxX, const float maxY,
                             const float maxZ) const
 {

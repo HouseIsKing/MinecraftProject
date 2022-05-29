@@ -39,6 +39,7 @@ public:
     void AddTriangle(uint16_t triangle);
     //void changeVertex(uint16_t vertexID, Vertex vertex);
     void Draw();
+    void FreeMemory();
     void Draw(size_t transformId, size_t startPos, size_t count);
     size_t AddTransform(Transform transform);
     [[nodiscard]] size_t GetCurrentTriangleCount() const;

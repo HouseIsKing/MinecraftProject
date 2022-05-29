@@ -8,7 +8,7 @@
 
 SinglePlayerWorld* Entity::World = nullptr;
 
-Entity::Entity(uint16_t entityId, vec3 entitySize, float x, float y, float z) : IsGrounded(false), EntitySize(entitySize), EntityId(entityId), VelocityX(0), VelocityY(0), VelocityZ(0),
+Entity::Entity(const uint16_t entityId, const vec3 entitySize, const float x, const float y, const float z) : IsGrounded(false), EntitySize(entitySize), EntityId(entityId), VelocityX(0), VelocityY(0), VelocityZ(0),
     Tessellation(EngineDefaults::GetShader(), x + entitySize.x, y + entitySize.y, z + entitySize.z)
 {
 }

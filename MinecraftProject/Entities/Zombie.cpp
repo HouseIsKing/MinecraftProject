@@ -2,7 +2,26 @@
 
 #include "Util/EngineDefaults.h"
 #include <chrono>
-#include <glm/gtx/string_cast.hpp>
+
+#include "World/SinglePlayerWorld.h"
+
+void Zombie::RebuildRender(const int brightness)
+{
+    Tessellation.Reset();
+    PreviousLightLevel = brightness;
+    Head.PrepareRender(Tessellation);
+    Head.GenerateTessellationData(Tessellation, brightness);
+    Body.PrepareRender(Tessellation);
+    Body.GenerateTessellationData(Tessellation, brightness);
+    RightArm.PrepareRender(Tessellation);
+    RightArm.GenerateTessellationData(Tessellation, brightness);
+    LeftArm.PrepareRender(Tessellation);
+    LeftArm.GenerateTessellationData(Tessellation, brightness);
+    RightLeg.PrepareRender(Tessellation);
+    RightLeg.GenerateTessellationData(Tessellation, brightness);
+    LeftLeg.PrepareRender(Tessellation);
+    LeftLeg.GenerateTessellationData(Tessellation, brightness);
+}
 
 Zombie::Zombie(const uint16_t entityId, const float x, const float y, const float z) :
     LivingEntity(entityId, ZOMBIE_SIZE, x, y, z),
@@ -51,22 +70,30 @@ Zombie::Zombie(const uint16_t entityId, const float x, const float y, const floa
                 0.0F, 0.125F, 0.375F, 0.125F, 0.0F, 0.1875F, 0.375F, 0.0F, 0.0F, 0.0625F, 0.375F
             }, Tessellation)
 {
+    const vec3 pos = GetTransform().GetPosition();
+    const int brightness = GetWorld()->GetBrightnessAt(static_cast<int>(pos.x), static_cast<int>(pos.y), static_cast<int>(pos.z));
+    PreviousLightLevel = brightness;
     Head.PrepareRender(Tessellation);
-    Head.GenerateTessellationData(Tessellation);
+    Head.GenerateTessellationData(Tessellation, brightness);
     Body.PrepareRender(Tessellation);
-    Body.GenerateTessellationData(Tessellation);
+    Body.GenerateTessellationData(Tessellation, brightness);
     RightArm.PrepareRender(Tessellation);
-    RightArm.GenerateTessellationData(Tessellation);
+    RightArm.GenerateTessellationData(Tessellation, brightness);
     LeftArm.PrepareRender(Tessellation);
-    LeftArm.GenerateTessellationData(Tessellation);
+    LeftArm.GenerateTessellationData(Tessellation, brightness);
     RightLeg.PrepareRender(Tessellation);
-    RightLeg.GenerateTessellationData(Tessellation);
+    RightLeg.GenerateTessellationData(Tessellation, brightness);
     LeftLeg.PrepareRender(Tessellation);
-    LeftLeg.GenerateTessellationData(Tessellation);
+    LeftLeg.GenerateTessellationData(Tessellation, brightness);
 }
 
 void Zombie::Render()
 {
+    const vec3 pos = GetTransform().GetPosition();
+    if (const int brightness = GetWorld()->GetBrightnessAt(static_cast<int>(pos.x), static_cast<int>(pos.y), static_cast<int>(pos.z)); PreviousLightLevel != brightness)
+    {
+        RebuildRender(brightness);
+    }
     LivingEntity::Render();
     const double time = static_cast<double>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch()).count()) / 1.0E9 * 10.0 + static_cast<double>(TimeOffset);
     Head.SetRotationRadians(0.0F, static_cast<float>(sin(time * 0.83)), static_cast<float>(sin(time)) * 0.8F, Tessellation);
@@ -80,15 +107,16 @@ void Zombie::Render()
     Tessellation.Draw(RightLeg.GetBlockTransformId(), RightLeg.GetTrianglesStartPos(), 36);
     LeftLeg.SetRotationRadians(0.0F, 0.0F, static_cast<float>(sin(time * 0.6662)) * 1.4F, Tessellation);
     Tessellation.Draw(LeftLeg.GetBlockTransformId(), LeftLeg.GetTrianglesStartPos(), 36);
+    Tessellation.FreeMemory();
     //Tessellation.Draw();
 }
 
 void Zombie::Tick()
 {
-//    GetTransform().Rotate(0, glm::degrees(NextRotation), 0);
-//    NextRotation *= 0.99F;
-//    NextRotation += (EngineDefaults::GetNextFloat() - EngineDefaults::GetNextFloat()) * EngineDefaults::GetNextFloat() * EngineDefaults::GetNextFloat() * 0.01F;
-//    VerticalInput = 1;
-//    JumpRequested = EngineDefaults::GetNextFloat() < 0.01F;
+    GetTransform().Rotate(0, glm::degrees(NextRotation), 0);
+    NextRotation *= 0.99F;
+    NextRotation += (EngineDefaults::GetNextFloat() - EngineDefaults::GetNextFloat()) * EngineDefaults::GetNextFloat() * EngineDefaults::GetNextFloat() * 0.01F;
+    VerticalInput = 1;
+    JumpRequested = EngineDefaults::GetNextFloat() < 0.01F;
     LivingEntity::Tick();
 }

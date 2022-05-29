@@ -31,6 +31,15 @@ void EngineDefaults::Init()
     glGenBuffers(1, &UboTextures);
 }
 
+float EngineDefaults::ConvertLightLevelToAmbient(const int lightLevel)
+{
+    if (lightLevel == 0)
+    {
+        return 0.6F;
+    }
+    return 1.0F;
+}
+
 float EngineDefaults::GetNextFloat()
 {
     return static_cast<float>(static_cast<double>(CustomRandomEngine::GetNext()) / CustomRandomEngine::M);
@@ -69,7 +78,7 @@ void EngineDefaults::BuildTextureUbo()
         helper.push_back(texture->GetHandle());
     }
     glBindBuffer(GL_UNIFORM_BUFFER, UboTextures);
-    glBufferData(GL_UNIFORM_BUFFER, static_cast<GLintptr>(sizeof(GLuint64) * helper.size()), helper.data(), GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, static_cast<GLintptr>(sizeof(GLuint64) * helper.size()), helper.data(), GL_STATIC_COPY);
     glBindBufferRange(GL_UNIFORM_BUFFER, 0, UboTextures, 0, static_cast<GLintptr>(sizeof(GLuint64) * helper.size()));
 }
 

@@ -12,5 +12,5 @@ public:
     const Block* BlockHit;
     BlockFaces FaceHit;
     glm::ivec3 HitPosition;
-    void Render(const float& brightness);
+    void Render(const int& brightness);
 };

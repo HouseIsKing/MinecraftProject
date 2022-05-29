@@ -28,6 +28,7 @@ struct Frustum
 
     std::array<glm::vec4, 6> Planes;
 };
+
 class Camera
 {
     vec3 Front;

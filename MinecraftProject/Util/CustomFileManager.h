@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "../World/Blocks/BlockTypeList.h"
-#include "ZLib/zlib.h"
+#include "Zlib/zlib.h"
 
 class CustomFileManager
 {

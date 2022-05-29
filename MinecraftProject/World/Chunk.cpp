@@ -18,7 +18,8 @@ SinglePlayerWorld* Chunk::GetWorld()
     return World;
 }
 
-Chunk::Chunk(const int x, const int y, const int z) : ChunkPosition(x, y, z), Tessellation(new TessellationHelper(EngineDefaults::GetShader())), IsDirty(true), IsDirtyLights(true)
+Chunk::Chunk(const int x, const int y, const int z) : IsDirty(true), ChunkPosition(x, y, z),
+                                                      Tessellation(new TessellationHelper(EngineDefaults::GetShader())), IsDirtyLights(true)
 {
     for (auto& block : Blocks)
     {
@@ -34,7 +35,7 @@ void Chunk::DrawBlock(const EBlockType blockType, const int x, const int y, cons
     const int finalZ = z + ChunkPosition.GetZ() * CHUNK_DEPTH;
     if (IsCoordsInsideChunk(finalX, finalY + 1, finalZ))
     {
-        const float brightness = World->GetBrightnessAt(finalX, finalY + 1, finalZ);
+        const int brightness = World->GetBrightnessAt(finalX, finalY + 1, finalZ);
         if (Blocks[static_cast<size_t>(EngineDefaults::GetChunkLocalIndex(finalX, finalY + 1, finalZ))] == EBlockType::Air)
         {
             myBlock->GenerateTessellationData(*Tessellation, BlockFaces::Top, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
@@ -42,12 +43,12 @@ void Chunk::DrawBlock(const EBlockType blockType, const int x, const int y, cons
     }
     else if (!GetWorld()->IsBlockExists(finalX, finalY + 1, finalZ))
     {
-        const float brightness = World->GetBrightnessAt(finalX, finalY + 1, finalZ);
+        const int brightness = World->GetBrightnessAt(finalX, finalY + 1, finalZ);
         myBlock->GenerateTessellationData(*Tessellation, BlockFaces::Top, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
     }
     if (IsCoordsInsideChunk(finalX, finalY - 1, finalZ))
     {
-        const float brightness = World->GetBrightnessAt(finalX, finalY - 1, finalZ);
+        const int brightness = World->GetBrightnessAt(finalX, finalY - 1, finalZ);
         if (Blocks[static_cast<size_t>(EngineDefaults::GetChunkLocalIndex(finalX, finalY - 1, finalZ))] == EBlockType::Air)
         {
             myBlock->GenerateTessellationData(*Tessellation, BlockFaces::Bottom, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
@@ -55,12 +56,12 @@ void Chunk::DrawBlock(const EBlockType blockType, const int x, const int y, cons
     }
     else if (!GetWorld()->IsBlockExists(finalX, finalY - 1, finalZ))
     {
-        const float brightness = World->GetBrightnessAt(finalX, finalY - 1, finalZ);
+        const int brightness = World->GetBrightnessAt(finalX, finalY - 1, finalZ);
         myBlock->GenerateTessellationData(*Tessellation, BlockFaces::Bottom, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
     }
     if (IsCoordsInsideChunk(finalX, finalY, finalZ + 1))
     {
-        const float brightness = World->GetBrightnessAt(finalX, finalY, finalZ + 1);
+        const int brightness = World->GetBrightnessAt(finalX, finalY, finalZ + 1);
         if (Blocks[static_cast<size_t>(EngineDefaults::GetChunkLocalIndex(finalX, finalY, finalZ + 1))] == EBlockType::Air)
         {
             myBlock->GenerateTessellationData(*Tessellation, BlockFaces::North, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
@@ -68,12 +69,12 @@ void Chunk::DrawBlock(const EBlockType blockType, const int x, const int y, cons
     }
     else if (!GetWorld()->IsBlockExists(finalX, finalY, finalZ + 1))
     {
-        const float brightness = World->GetBrightnessAt(finalX, finalY, finalZ + 1);
+        const int brightness = World->GetBrightnessAt(finalX, finalY, finalZ + 1);
         myBlock->GenerateTessellationData(*Tessellation, BlockFaces::North, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
     }
     if (IsCoordsInsideChunk(finalX, finalY, finalZ - 1))
     {
-        const float brightness = World->GetBrightnessAt(finalX, finalY, finalZ - 1);
+        const int brightness = World->GetBrightnessAt(finalX, finalY, finalZ - 1);
         if (Blocks[static_cast<size_t>(EngineDefaults::GetChunkLocalIndex(finalX, finalY, finalZ - 1))] == EBlockType::Air)
         {
             myBlock->GenerateTessellationData(*Tessellation, BlockFaces::South, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
@@ -81,12 +82,12 @@ void Chunk::DrawBlock(const EBlockType blockType, const int x, const int y, cons
     }
     else if (!GetWorld()->IsBlockExists(finalX, finalY, finalZ - 1))
     {
-        const float brightness = World->GetBrightnessAt(finalX, finalY, finalZ - 1);
+        const int brightness = World->GetBrightnessAt(finalX, finalY, finalZ - 1);
         myBlock->GenerateTessellationData(*Tessellation, BlockFaces::South, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
     }
     if (IsCoordsInsideChunk(finalX + 1, finalY, finalZ))
     {
-        const float brightness = World->GetBrightnessAt(finalX + 1, finalY, finalZ);
+        const int brightness = World->GetBrightnessAt(finalX + 1, finalY, finalZ);
         if (Blocks[static_cast<size_t>(EngineDefaults::GetChunkLocalIndex(finalX + 1, finalY, finalZ))] == EBlockType::Air)
         {
             myBlock->GenerateTessellationData(*Tessellation, BlockFaces::East, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
@@ -94,12 +95,12 @@ void Chunk::DrawBlock(const EBlockType blockType, const int x, const int y, cons
     }
     else if (!GetWorld()->IsBlockExists(finalX + 1, finalY, finalZ))
     {
-        const float brightness = World->GetBrightnessAt(finalX + 1, finalY, finalZ);
+        const int brightness = World->GetBrightnessAt(finalX + 1, finalY, finalZ);
         myBlock->GenerateTessellationData(*Tessellation, BlockFaces::East, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
     }
     if (IsCoordsInsideChunk(finalX - 1, finalY, finalZ))
     {
-        const float brightness = World->GetBrightnessAt(finalX - 1, finalY, finalZ);
+        const int brightness = World->GetBrightnessAt(finalX - 1, finalY, finalZ);
         if (Blocks[static_cast<size_t>(EngineDefaults::GetChunkLocalIndex(finalX - 1, finalY, finalZ))] == EBlockType::Air)
         {
             myBlock->GenerateTessellationData(*Tessellation, BlockFaces::West, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
@@ -107,7 +108,7 @@ void Chunk::DrawBlock(const EBlockType blockType, const int x, const int y, cons
     }
     else if (!GetWorld()->IsBlockExists(finalX - 1, finalY, finalZ))
     {
-        const float brightness = World->GetBrightnessAt(finalX - 1, finalY, finalZ);
+        const int brightness = World->GetBrightnessAt(finalX - 1, finalY, finalZ);
         myBlock->GenerateTessellationData(*Tessellation, BlockFaces::West, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
     }
 }
@@ -135,6 +136,10 @@ void Chunk::ResetDraw() const
 void Chunk::Draw() const
 {
     Tessellation->Draw();
+    if (Tessellation->HasInitialized())
+    {
+        Tessellation->FreeMemory();
+    }
 }
 
 void Chunk::GenerateTessellationData()

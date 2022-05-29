@@ -24,6 +24,9 @@ enum class BlockFaces
 class Block
 {
 protected:
+    static constexpr float X_SIDE_SHADE = 0.6F;
+    static constexpr float Z_SIDE_SHADE = 0.8F;
+    static constexpr float Y_SIDE_SHADE = 1.0F;
     vector<uint16_t> IndexTextures;
     BoundingBox BlockBounds;
     Block();
@@ -35,5 +38,5 @@ public:
     Block(Block&&) = delete;
     Block& operator=(Block&&) = delete;
     [[nodiscard]] BoundingBox GetBoundingBox() const;
-    virtual void GenerateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face, const float& x, const float& y, const float& z, const float& brightness) const = 0;
+    virtual void GenerateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face, const float& x, const float& y, const float& z, const int& brightness) const = 0;
 };

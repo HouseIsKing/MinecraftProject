@@ -54,7 +54,7 @@ void PlayerController::Render()
     DisplaySelectionHighlight();
 }
 
-float PlayerController::GetSelectionHighlightBrightness(const int x, const int y, const int z, const BlockFaces face)
+int PlayerController::GetSelectionHighlightBrightness(const int x, const int y, const int z, const BlockFaces face)
 {
     switch (face)
     {
@@ -77,7 +77,7 @@ float PlayerController::GetSelectionHighlightBrightness(const int x, const int y
 void PlayerController::DisplaySelectionHighlight()
 {
     //find closest face
-    const float brightness = GetSelectionHighlightBrightness(SelectionHighlight.HitPosition.x, SelectionHighlight.HitPosition.y, SelectionHighlight.HitPosition.z, SelectionHighlight.FaceHit);
+    const int brightness = GetSelectionHighlightBrightness(SelectionHighlight.HitPosition.x, SelectionHighlight.HitPosition.y, SelectionHighlight.HitPosition.z, SelectionHighlight.FaceHit);
     if (SelectionHighlight.BlockHit != nullptr)
     {
         SelectionHighlight.Render(brightness);

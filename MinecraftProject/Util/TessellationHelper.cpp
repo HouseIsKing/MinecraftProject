@@ -71,6 +71,12 @@ void TessellationHelper::Draw()
 	Draw(0, 0, TrianglesCount);
 }
 
+void TessellationHelper::FreeMemory()
+{
+	Vertices.shrink_to_fit();
+	TriangleIndices.shrink_to_fit();
+}
+
 void TessellationHelper::Draw(const size_t transformId, const size_t startPos, size_t count)
 {
 	if (Vertices.empty() && !HasInit)
@@ -87,9 +93,9 @@ void TessellationHelper::Draw(const size_t transformId, const size_t startPos, s
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, TexCoords)));
 		glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, Color)));
-		glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, IndexTexture)));
+		glVertexAttribIPointer(3, 1, GL_INT, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, IndexTexture)));
 		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, Normal)));
-		glVertexAttribPointer(5, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, Brightness)));
+		glVertexAttribIPointer(5, 1, GL_INT, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, Brightness)));
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLintptr>(TriangleIndices.size() * sizeof(GLushort)), TriangleIndices.data(), GL_STATIC_DRAW);
 		TrianglesCount = TriangleIndices.size();
@@ -107,8 +113,7 @@ void TessellationHelper::Draw(const size_t transformId, const size_t startPos, s
 	glEnableVertexAttribArray(4);
 	glEnableVertexAttribArray(5);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Ebo);
-	//glDrawRangeElements(GL_TRIANGLES, static_cast<GLuint>(startPos), static_cast<GLuint>(startPos + count), static_cast<GLsizei>(count), GL_UNSIGNED_SHORT, reinterpret_cast<void*>(startPos));
-	glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(count), GL_UNSIGNED_SHORT, reinterpret_cast<void*>(startPos * sizeof(GLushort))); // startPos * sizeof(GLushort)
+	glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(count), GL_UNSIGNED_SHORT, reinterpret_cast<void*>(startPos * sizeof(GLushort)));
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);

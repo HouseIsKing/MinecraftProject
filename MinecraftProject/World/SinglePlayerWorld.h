@@ -4,7 +4,6 @@
 #pragma once
 #include "../Entities/Entity.h"
 #include "../Entities/Player/PlayerController.h"
-#include "Blocks/Block.h"
 #include "Chunk.h"
 #include "ChunkCoords.h"
 #include "GLFW/glfw3.h"
@@ -21,6 +20,7 @@ class SinglePlayerWorld
     const uint16_t LevelWidth;
     const uint16_t LevelHeight;
     const uint16_t LevelDepth;
+    GLuint FogsBuffer;
     GLFWwindow* TheAppWindow;
     vector<uint8_t> LightLevels;
     const uint8_t MaxChunkRebuilt = 2;
@@ -29,6 +29,7 @@ class SinglePlayerWorld
     void GenerateChunks(uint16_t amountX, uint16_t amountY, uint16_t amountZ);
     void GenerateCaves();
     void Init();
+    void InitFog();
     void RecalculateLightLevels();
     int RecalculateLightLevels(int x, int z);
     void UpdateChunksNear(int x, int y, int z);
@@ -47,7 +48,7 @@ public:
     const Block* GetBlockAt(int x, int y, int z);
     EBlockType GetBlockTypeAt(int x, int y, int z);
     Chunk* GetChunkAt(int x, int y, int z);
-    [[nodiscard]] float GetBrightnessAt(int x, int y, int z) const;
+    [[nodiscard]] int GetBrightnessAt(int x, int y, int z) const;
     vector<BoundingBox> GetBlockBoxesInBoundingBox(const BoundingBox& boundingBox);
     void DrawWorld();
     [[nodiscard]] GLFWwindow* GetWindow() const;

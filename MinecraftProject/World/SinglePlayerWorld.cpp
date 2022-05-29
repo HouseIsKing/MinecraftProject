@@ -42,14 +42,14 @@ void SinglePlayerWorld::LoadWorld()
 }
 
 SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth, GLFWwindow* window) : Player(new PlayerController(0, EngineDefaults::GetNext(width), static_cast<float>(height + 3),
-    EngineDefaults::GetNext(depth))), LevelWidth(width), LevelHeight(height), LevelDepth(depth), TheAppWindow(window)
+    EngineDefaults::GetNext(depth))), LevelWidth(width), LevelHeight(height), LevelDepth(depth), FogsBuffer(0), TheAppWindow(window)
 {
     Entity::SetWorld(this);
     Chunk::SetWorld(this);
     Init();
 
     Entities.emplace(piecewise_construct, forward_as_tuple(static_cast<uint16_t>(0)), forward_as_tuple(dynamic_cast<Entity*>(Player)));
-    for (uint16_t i = 1; i <= 1000; i++)
+    for (uint16_t i = 1; i <= 100; i++)
     {
         Entities.emplace(piecewise_construct, forward_as_tuple(i), forward_as_tuple(dynamic_cast<Entity*>(new Zombie(i, EngineDefaults::GetNext(width), static_cast<float>(LevelHeight + 3), EngineDefaults::GetNext(depth)))));
     }
@@ -73,10 +73,7 @@ void SinglePlayerWorld::HandleWindowResize(const int height, const int width)
 void SinglePlayerWorld::Init()
 {
     //Shader::SetVec3(EngineDefaults::GetShader()->GetUniformInt("directionalLightDirection"), -1.0F, -1.0F, -1.0F);
-    //Shader::SetFloat(EngineDefaults::GetShader()->GetUniformInt("ambientLightIntensity"), 1.0F);
-    Shader::SetFloat(EngineDefaults::GetShader()->GetUniformInt("fogStart"), -10.0F);
-    Shader::SetFloat(EngineDefaults::GetShader()->GetUniformInt("fogEnd"), 20.0F);
-    Shader::SetVec3(EngineDefaults::GetShader()->GetUniformInt("fogColor"), 14.0F / 255.0F, 11.0F / 255.0F, 10.0F / 255.0F);
+    InitFog();
     BlockTypeList::InitBlockTypes();
     if (std::filesystem::exists("level.dat"))
     {
@@ -91,6 +88,16 @@ void SinglePlayerWorld::Init()
         GenerateCaves();
     }
     RecalculateLightLevels();
+}
+
+void SinglePlayerWorld::InitFog()
+{
+    const vector fogs{14.0F / 255.0F, 11.0F / 255.0F, 10.0F / 255.0F, 1.0F, 0.06F, 0.0F, 0.0F, 0.0F, 254.0F / 255.0F, 251.0F / 255.0F, 250.0F / 255.0F, 1.0F, 0.001F, 0.0F, 0.0F, 0.0F};
+    glGenBuffers(1, &FogsBuffer);
+    glBindBuffer(GL_UNIFORM_BUFFER, FogsBuffer);
+    glBufferData(GL_UNIFORM_BUFFER, static_cast<GLintptr>(fogs.size() * sizeof(float)), fogs.data(), GL_STATIC_COPY);
+    glBindBufferRange(GL_UNIFORM_BUFFER, 1, FogsBuffer, 0, static_cast<GLintptr>(fogs.size() * sizeof(float)));
+    glUniformBlockBinding(EngineDefaults::GetShader()->Program, EngineDefaults::GetShader()->GetUniformBlockIndex("fogBlock"), 1);
 }
 
 void SinglePlayerWorld::RecalculateLightLevels()
@@ -254,17 +261,17 @@ Chunk* SinglePlayerWorld::GetChunkAt(const int x, const int y, const int z)
     return &Chunks.at(pos);
 }
 
-float SinglePlayerWorld::GetBrightnessAt(const int x, const int y, const int z) const
+int SinglePlayerWorld::GetBrightnessAt(const int x, const int y, const int z) const
 {
     if (x < 0 || x >= LevelWidth || y < 0 || y >= LevelHeight || z < 0 || z >= LevelDepth)
     {
-        return 1.0F;
+        return 1;
     }
     if (const uint8_t lightLevel = LightLevels.at(static_cast<size_t>(x * LevelDepth + z)); y >= lightLevel)
     {
-        return 1.0F;
+        return 1;
     }
-    return 0.8F;
+    return 0;
 }
 
 bool SinglePlayerWorld::IsBlockExists(const int x, const int y, const int z)

@@ -31,7 +31,7 @@ class PlayerController final : public LivingEntity
     float PrevMouseY;
     float MouseSensitivity = 0.15F;
     PlayerSelectionHighlight SelectionHighlight;
-    static float GetSelectionHighlightBrightness(int x, int y, int z, BlockFaces face);
+    static int GetSelectionHighlightBrightness(int x, int y, int z, BlockFaces face);
     void DisplaySelectionHighlight();
     BlockFaces FindClosestFace(glm::ivec3& blockPosition, bool& foundBlock) const;
     [[nodiscard]] float CalculateMaxDistanceForHighlight(const vec3& front, bool up, bool right, bool forward) const;
