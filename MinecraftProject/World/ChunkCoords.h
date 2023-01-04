@@ -13,6 +13,7 @@ private:
     int X;
     int Y;
     int Z;
+
 public:
     [[nodiscard]] int GetX() const;
     [[nodiscard]] int GetY() const;

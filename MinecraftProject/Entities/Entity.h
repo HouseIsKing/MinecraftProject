@@ -23,11 +23,14 @@ protected:
     float VelocityY;
     float VelocityZ;
     TessellationHelper Tessellation;
-    Entity(uint16_t entityId, vec3 entitySize, float x, float y, float z);
+    vec3 PrevPos;
+    Entity(vec3 entitySize, float x, float y, float z);
     [[nodiscard]] bool IsOnGround() const;
-    void virtual Render();
+    void virtual Render(float partialTick);
     void CheckCollisionAndMove();
     virtual void Tick();
+    static SinglePlayerWorld* GetWorld();
+
 public:
     virtual ~Entity();
     Entity(const Entity&) = delete;
@@ -35,9 +38,9 @@ public:
     Entity& operator=(Entity&&) = delete;
     Entity(Entity&&) = delete;
     static void SetWorld(SinglePlayerWorld* newWorld);
-    static SinglePlayerWorld* GetWorld();
     void DoTick();
-    void DoRender();
+    void DoRender(float partialTick);
     Transform& GetTransform();
     BoundingBox GetBoundingBox();
+    uint16_t GetEntityId() const;
 };

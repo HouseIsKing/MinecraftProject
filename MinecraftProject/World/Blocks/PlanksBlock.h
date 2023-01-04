@@ -1,9 +1,9 @@
 #pragma once
 #include "Block.h"
 
-class CobblestoneBlock final : public Block
+class PlanksBlock final : public Block
 {
 public:
+    PlanksBlock();
     [[nodiscard]] size_t GetIndexTextureSide(BlockFaces face) const override;
-    CobblestoneBlock();
 };

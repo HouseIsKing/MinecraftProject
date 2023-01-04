@@ -5,9 +5,10 @@
 #pragma once
 #include "../../Util/BoundingBox.h"
 #include "../../Util/TessellationHelper.h"
-#include "BlockTypeList.h"
 #include <array>
 
+#include "Util/GuiTessellation.h"
+class SinglePlayerWorld;
 using std::array;
 using glm::floor;
 
@@ -31,6 +32,7 @@ protected:
     BoundingBox BlockBounds;
     Block();
     Block(float minX, float minY, float minZ, float maxX, float maxY, float maxZ);
+
 public:
     virtual ~Block();
     Block(const Block&) = delete;
@@ -38,5 +40,8 @@ public:
     Block(Block&&) = delete;
     Block& operator=(Block&&) = delete;
     [[nodiscard]] BoundingBox GetBoundingBox() const;
-    virtual void GenerateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face, const float& x, const float& y, const float& z, const int& brightness) const = 0;
+    virtual void GenerateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face, const float& x, const float& y, const float& z, const int& brightness) const;
+    [[nodiscard]] virtual size_t GetIndexTextureSide(BlockFaces face) const = 0;
+    virtual void GenerateTessellationData(GuiTessellation& tessellationHelper, const BlockFaces& face, mat4x4 transformationMatrix) const;
+    virtual void Tick(SinglePlayerWorld* world, int x, int y, int z) const;
 };

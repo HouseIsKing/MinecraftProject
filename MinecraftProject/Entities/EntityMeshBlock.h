@@ -12,8 +12,10 @@ public:
 	void SetRotation(float x, float y, float z, TessellationHelper& tessellationHelper) const;
 	void SetRotationRadians(float x, float y, float z, TessellationHelper& tessellationHelper) const;
 	void GenerateTessellationData(TessellationHelper& tessellationHelper, int brightness) const;
+	void GenerateTessellationData(GuiTessellation& tessellationHelper, const BlockFaces& face, mat4x4 transformationMatrix) const override;
 	void GenerateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face, const float& x, const float& y, const float& z, const int& brightness) const override;
 	void PrepareRender(const TessellationHelper& tessellationHelper);
 	[[nodiscard]] size_t GetBlockTransformId() const;
 	[[nodiscard]] size_t GetTrianglesStartPos() const;
+	[[nodiscard]] size_t GetIndexTextureSide(BlockFaces face) const override;
 };

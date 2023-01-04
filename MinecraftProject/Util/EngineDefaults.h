@@ -13,16 +13,18 @@ using std::unique_ptr;
 
 class EngineDefaults
 {
-    static unique_ptr<Shader> TheShader;
+    static array<unique_ptr<Shader>, 2> Shaders;
     static std::unordered_map<Texture*, uint16_t> TextureList;
     static GLuint UboTextures;
     static bool HasBuiltTextureUbo;
     static bool HasInit;
     static void Init();
     static CustomRandomEngine Engine;
+
 public:
     static float ConvertLightLevelToAmbient(int lightLevel);
     static Shader* GetShader();
+    static Shader* GetShader(uint8_t index);
     template <typename T>
     static T GetNext(T maxValue);
     template <typename T>

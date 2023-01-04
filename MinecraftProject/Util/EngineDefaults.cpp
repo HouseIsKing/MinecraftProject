@@ -1,7 +1,3 @@
-//
-// Created by amit on 4/22/2022.
-//
-
 #include "EngineDefaults.h"
 #include "../World/Chunk.h"
 #include <memory>
@@ -9,25 +5,32 @@
 
 bool EngineDefaults::HasInit = false;
 bool EngineDefaults::HasBuiltTextureUbo = false;
-unique_ptr<Shader> EngineDefaults::TheShader = {};
 CustomRandomEngine EngineDefaults::Engine = {};
 std::unordered_map<Texture*, uint16_t> EngineDefaults::TextureList = {};
+array<unique_ptr<Shader>, 2> EngineDefaults::Shaders = {};
 GLuint EngineDefaults::UboTextures = 0;
 
-Shader* EngineDefaults::GetShader()
+Shader* EngineDefaults::GetShader(const uint8_t index)
 {
     if (!HasInit)
     {
         Init();
-        TheShader->Use();
     }
-    return TheShader.get();
+    Shader* result = Shaders.at(index).get();
+    result->Use();
+    return result;
+}
+
+Shader* EngineDefaults::GetShader()
+{
+    return GetShader(0);
 }
 
 void EngineDefaults::Init()
 {
     HasInit = true;
-    TheShader = std::make_unique<Shader>("Shaders/VertexShader.glsl", "Shaders/FragmentShader.glsl");
+    Shaders[0] = std::make_unique<Shader>("Shaders/VertexShader.glsl", "Shaders/FragmentShader.glsl");
+    Shaders[1] = std::make_unique<Shader>("Shaders/GUIVertexShader.glsl", "Shaders/GUIFragmentShader.glsl");
     glGenBuffers(1, &UboTextures);
 }
 

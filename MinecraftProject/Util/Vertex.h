@@ -19,7 +19,4 @@ struct Vertex
 	int Brightness;
 	Vertex(float x, float y, float z, float u, float v, float r, float g, float b, float a, uint16_t indexTexture, float normalX, float normalY, float normalZ, int brightness);
 	Vertex(const vec3& pos, float u, float v, float r, float g, float b, float a, uint16_t indexTexture, float normalX, float normalY, float normalZ, int brightness);
-	[[nodiscard]] vec3 GetPosition() const;
-	[[nodiscard]] vec2 GetTexCoords() const;
-	[[nodiscard]] vec4 GetColor() const;
 };

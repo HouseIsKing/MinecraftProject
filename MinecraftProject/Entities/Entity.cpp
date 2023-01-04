@@ -8,8 +8,8 @@
 
 SinglePlayerWorld* Entity::World = nullptr;
 
-Entity::Entity(const uint16_t entityId, const vec3 entitySize, const float x, const float y, const float z) : IsGrounded(false), EntitySize(entitySize), EntityId(entityId), VelocityX(0), VelocityY(0), VelocityZ(0),
-    Tessellation(EngineDefaults::GetShader(), x + entitySize.x, y + entitySize.y, z + entitySize.z)
+Entity::Entity(const vec3 entitySize, const float x, const float y, const float z) : IsGrounded(false), EntitySize(entitySize), EntityId(GetWorld()->RegisterEntity(this)), VelocityX(0), VelocityY(0), VelocityZ(0),
+    Tessellation(x + entitySize.x, y + entitySize.y, z + entitySize.z), PrevPos(x, y, z)
 {
 }
 
@@ -59,12 +59,13 @@ void Entity::CheckCollisionAndMove()
     IsGrounded = originalY <= 0 && abs(VelocityY - originalY) > 0.001F;
 }
 
-void Entity::Render()
+void Entity::Render(float /*partialTick*/)
 {
 }
 
 void Entity::Tick()
 {
+    PrevPos = Tessellation.GetTransform(0).GetPosition();
 }
 
 void Entity::DoTick()
@@ -72,9 +73,9 @@ void Entity::DoTick()
     Tick();
 }
 
-void Entity::DoRender()
+void Entity::DoRender(const float partialTick)
 {
-    Render();
+    Render(partialTick);
 }
 
 Transform& Entity::GetTransform()
@@ -86,4 +87,9 @@ BoundingBox Entity::GetBoundingBox()
 {
     const vec3 pos = Tessellation.GetTransform(0).GetPosition();
     return {pos.x - EntitySize.x, pos.y - EntitySize.y, pos.z - EntitySize.z, pos.x + EntitySize.x, pos.y + EntitySize.y, pos.z + EntitySize.z};
+}
+
+uint16_t Entity::GetEntityId() const
+{
+    return EntityId;
 }

@@ -6,7 +6,10 @@
 #include "../../Util/EngineDefaults.h"
 #include "AirBlock.h"
 #include "CobblestoneBlock.h"
+#include "DirtBlock.h"
 #include "GrassBlock.h"
+#include "PlanksBlock.h"
+#include "StoneBlock.h"
 
 using std::piecewise_construct;
 using std::forward_as_tuple;
@@ -33,9 +36,12 @@ void BlockTypeList::InitBlockTypes()
     }
     Init = true;
     BlockTypes.clear();
-    BlockTypes.emplace(piecewise_construct, forward_as_tuple(EBlockType::Air), forward_as_tuple(new AirBlock()));
-    BlockTypes.emplace(piecewise_construct, forward_as_tuple(EBlockType::Grass), forward_as_tuple(new GrassBlock()));
-    BlockTypes.emplace(piecewise_construct, forward_as_tuple(EBlockType::Cobblestone), forward_as_tuple(new CobblestoneBlock()));
+    BlockTypes.emplace(EBlockType::Air, new AirBlock());
+    BlockTypes.emplace(EBlockType::Grass, new GrassBlock());
+    BlockTypes.emplace(EBlockType::Dirt, new DirtBlock());
+    BlockTypes.emplace(EBlockType::Cobblestone, new CobblestoneBlock());
+    BlockTypes.emplace(EBlockType::Stone, new StoneBlock());
+    BlockTypes.emplace(EBlockType::Planks, new PlanksBlock());
 }
 
 void BlockTypeList::ResetBlockTypes()

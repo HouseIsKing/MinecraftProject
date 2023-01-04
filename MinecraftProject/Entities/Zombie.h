@@ -16,8 +16,9 @@ class Zombie final : public LivingEntity
     EntityMeshBlock RightLeg;
     EntityMeshBlock LeftLeg;
     void RebuildRender(int brightness);
+
 public:
-    Zombie(uint16_t entityId, float x, float y, float z);
-    void Render() override;
+    Zombie(float x, float y, float z);
+    void Render(float partialTick) override;
     void Tick() override;
 };

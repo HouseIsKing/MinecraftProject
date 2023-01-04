@@ -163,7 +163,7 @@
         <EnableCOMDATFolding>false</EnableCOMDATFolding>
         <OptimizeReferences>true</OptimizeReferences>
         <GenerateDebugInformation>true</GenerateDebugInformation>
-        <AdditionalDependencies>glfw3.lib;OpenGL32.lib;zlibstatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+        <AdditionalDependencies>glfw3.lib;OpenGL32.lib;zlibstaticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
         <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
         <IgnoreSpecificDefaultLibraries>
         </IgnoreSpecificDefaultLibraries>
@@ -251,6 +251,9 @@
             <LinkCompiled>true</LinkCompiled>
         </ClCompile>
         <ClCompile Include="glad.c"/>
+        <ClCompile Include="GUI\CrosshairGui.cpp"/>
+        <ClCompile Include="GUI\Gui.cpp"/>
+        <ClCompile Include="GUI\SelectedBlockGui.cpp"/>
         <ClCompile Include="RunMinecraft.cpp"/>
         <ClCompile Include="Shaders\Shader.cpp"/>
         <ClCompile Include="Textures\Texture.cpp"/>
@@ -258,14 +261,20 @@
         <ClCompile Include="Util\CustomFileManager.cpp"/>
         <ClCompile Include="Util\CustomRandomEngine.cpp"/>
         <ClCompile Include="Util\EngineDefaults.cpp"/>
+        <ClCompile Include="Util\GuiTessellation.cpp"/>
+        <ClCompile Include="Util\GuiVertex.cpp"/>
         <ClCompile Include="Util\TessellationHelper.cpp"/>
+        <ClCompile Include="Util\TessellationInterface.cpp"/>
         <ClCompile Include="Util\Transform.cpp"/>
         <ClCompile Include="Util\Vertex.cpp"/>
         <ClCompile Include="World\Blocks\AirBlock.cpp"/>
         <ClCompile Include="World\Blocks\Block.cpp"/>
         <ClCompile Include="World\Blocks\BlockTypeList.cpp"/>
         <ClCompile Include="World\Blocks\CobblestoneBlock.cpp"/>
+        <ClCompile Include="World\Blocks\DirtBlock.cpp"/>
         <ClCompile Include="World\Blocks\GrassBlock.cpp"/>
+        <ClCompile Include="World\Blocks\PlanksBlock.cpp"/>
+        <ClCompile Include="World\Blocks\StoneBlock.cpp"/>
         <ClCompile Include="World\Chunk.cpp"/>
         <ClCompile Include="World\ChunkCoords.cpp"/>
         <ClCompile Include="World\SinglePlayerWorld.cpp"/>
@@ -278,20 +287,29 @@
         <ClInclude Include="Entities\Player\PlayerController.h"/>
         <ClInclude Include="Entities\Player\PlayerSelectionHighlight.h"/>
         <ClInclude Include="Entities\Zombie.h"/>
+        <ClInclude Include="GUI\CrosshairGui.h"/>
+        <ClInclude Include="GUI\Gui.h"/>
+        <ClInclude Include="GUI\SelectedBlockGui.h"/>
         <ClInclude Include="Shaders\Shader.h"/>
         <ClInclude Include="Textures\Texture.h"/>
         <ClInclude Include="Util\BoundingBox.h"/>
         <ClInclude Include="Util\CustomFileManager.h"/>
         <ClInclude Include="Util\CustomRandomEngine.h"/>
         <ClInclude Include="Util\EngineDefaults.h"/>
+        <ClInclude Include="Util\GuiTessellation.h"/>
+        <ClInclude Include="Util\GuiVertex.h"/>
         <ClInclude Include="Util\TessellationHelper.h"/>
+        <ClInclude Include="Util\TessellationInterface.h"/>
         <ClInclude Include="Util\Transform.h"/>
         <ClInclude Include="Util\Vertex.h"/>
         <ClInclude Include="World\Blocks\AirBlock.h"/>
         <ClInclude Include="World\Blocks\Block.h"/>
         <ClInclude Include="World\Blocks\BlockTypeList.h"/>
         <ClInclude Include="World\Blocks\CobblestoneBlock.h"/>
+        <ClInclude Include="World\Blocks\DirtBlock.h"/>
         <ClInclude Include="World\Blocks\GrassBlock.h"/>
+        <ClInclude Include="World\Blocks\PlanksBlock.h"/>
+        <ClInclude Include="World\Blocks\StoneBlock.h"/>
         <ClInclude Include="World\Chunk.h"/>
         <ClInclude Include="World\ChunkCoords.h"/>
         <ClInclude Include="World\SinglePlayerWorld.h"/>
@@ -327,6 +345,12 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
             <DeploymentContent>true</DeploymentContent>
         </Image>
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="Shaders\GUIFragmentShader.glsl"/>
+        <Content Include="Shaders\GUIVertexShader.glsl"/>
+        <Content Include="Textures\Blocks\Planks.png"/>
+        <Content Include="Textures\Blocks\Stone.png"/>
     </ItemGroup>
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
     <ImportGroup Label="ExtensionTargets">

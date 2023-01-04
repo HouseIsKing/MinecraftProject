@@ -7,6 +7,7 @@
 #include "Camera.h"
 #include <memory>
 
+#include "GUI/SelectedBlockGui.h"
 #include "PlayerSelectionHighlight.h"
 
 using std::unique_ptr;
@@ -30,17 +31,20 @@ class PlayerController final : public LivingEntity
     float PrevMouseX;
     float PrevMouseY;
     float MouseSensitivity = 0.15F;
+    bool IsSpawnZombieButtonPressed;
+    EBlockType CurrentSelectedBlock;
+    SelectedBlockGui* SelectedBlockGuiPtr;
     PlayerSelectionHighlight SelectionHighlight;
     static int GetSelectionHighlightBrightness(int x, int y, int z, BlockFaces face);
-    void DisplaySelectionHighlight();
     BlockFaces FindClosestFace(glm::ivec3& blockPosition, bool& foundBlock) const;
     [[nodiscard]] float CalculateMaxDistanceForHighlight(const vec3& front, bool up, bool right, bool forward) const;
     void PlaceBlock() const;
-public:
-    PlayerController(uint16_t entityId, float x, float y, float z);
     void HandleMouseInput();
     void HandleKeyboardMovementInput();
-    void Tick() override;
-    void Render() override;
+
+public:
+    void DisplaySelectionHighlight();
+    PlayerController(float x, float y, float z);
+    void Render(float partialTick) override;
     [[nodiscard]] Frustum GetCameraFrustum() const;
 };

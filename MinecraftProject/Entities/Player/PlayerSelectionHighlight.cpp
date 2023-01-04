@@ -2,9 +2,7 @@
 
 #include "Util/EngineDefaults.h"
 
-PlayerSelectionHighlight::PlayerSelectionHighlight() : Tessellation(EngineDefaults::GetShader()),
-                                                       TextureIndex(EngineDefaults::RegisterTexture(
-	                                                       Texture::LoadTexture("Textures/HighlightTexture.png"))), BlockHit(nullptr), FaceHit(BlockFaces::Bottom), HitPosition(0, 0, 0)
+PlayerSelectionHighlight::PlayerSelectionHighlight() : TextureIndex(EngineDefaults::RegisterTexture(Texture::LoadTexture("Textures/HighlightTexture.png"))), BlockHit(nullptr), FaceHit(BlockFaces::Bottom), HitPosition(0, 0, 0)
 {
 }
 
@@ -26,7 +24,7 @@ void PlayerSelectionHighlight::Render(const int& brightness)
 	uint16_t triangleIndex3 = 0;
 	uint16_t triangleIndex4 = 0;
 	const BoundingBox blockBounds = BlockHit->GetBoundingBox();
-	constexpr float offset = 0.0005F;
+	constexpr float offset = 0.005F;
 	switch (FaceHit)
 	{
 	case BlockFaces::Top:

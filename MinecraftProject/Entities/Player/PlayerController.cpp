@@ -3,9 +3,11 @@
 //
 
 #include "PlayerController.h"
+
 #include "../../Util/EngineDefaults.h"
 #include <GLFW/glfw3.h>
 
+#include "Entities/Zombie.h"
 #include "World/SinglePlayerWorld.h"
 
 using std::make_unique;
@@ -27,31 +29,33 @@ void CameraController::OnResizeWindow(const int width, const int height)
     ActiveCamera->SetAspectRatio(static_cast<float>(width) / static_cast<float>(height));
 }
 
-PlayerController::PlayerController(const uint16_t entityId, const float x, const float y, const float z) : LivingEntity(entityId, PLAYER_SIZE, x, y, z), MyCamera(CameraController::GetActiveCamera()), LeftMousePressed(false), RightMousePressed(false), PrevMouseX(0), PrevMouseY(0)
+PlayerController::PlayerController(const float x, const float y, const float z) : LivingEntity(PLAYER_SIZE, x, y, z), MyCamera(CameraController::GetActiveCamera()), LeftMousePressed(false), RightMousePressed(false), PrevMouseX(0), PrevMouseY(0), IsSpawnZombieButtonPressed(false), CurrentSelectedBlock(EBlockType::Stone), SelectedBlockGuiPtr(nullptr)
 {
     MyCamera.Position = vec3(x, y, z);
 }
 
-void PlayerController::Tick()
+void PlayerController::Render(const float partialTick)
 {
-    HandleKeyboardMovementInput();
-    LivingEntity::Tick();
-    vec3 finalCameraPosition = GetTransform().GetPosition();
+    const vec3 pos = GetTransform().GetPosition();
+    vec3 finalCameraPosition = PrevPos + (pos - PrevPos) * partialTick;
+    GetTransform().SetPosition(finalCameraPosition);
+    LivingEntity::Render(partialTick);
     finalCameraPosition.y += CAMERA_OFFSET - PLAYER_SIZE.y;
     MyCamera.Position = finalCameraPosition;
     Shader::SetMat4(EngineDefaults::GetShader()->GetUniformInt("view"), MyCamera.GetViewMatrix());
     Shader::SetMat4(EngineDefaults::GetShader()->GetUniformInt("projection"), MyCamera.GetProjectionMatrix());
-}
-
-void PlayerController::Render()
-{
+    GetTransform().SetPosition(pos);
+    if (SelectedBlockGuiPtr == nullptr)
+    {
+        SelectedBlockGuiPtr = dynamic_cast<SelectedBlockGui*>(GetWorld()->GetGuiOfType<SelectedBlockGui>());
+    }
     SelectionHighlight.Reset();
     bool found = false;
     SelectionHighlight.FaceHit = FindClosestFace(SelectionHighlight.HitPosition, found);
     SelectionHighlight.BlockHit = found ? GetWorld()->GetBlockAt(SelectionHighlight.HitPosition.x, SelectionHighlight.HitPosition.y, SelectionHighlight.HitPosition.z) : nullptr;
-    LivingEntity::Render();
     HandleMouseInput();
-    DisplaySelectionHighlight();
+    HandleKeyboardMovementInput();
+    //DisplaySelectionHighlight();
 }
 
 int PlayerController::GetSelectionHighlightBrightness(const int x, const int y, const int z, const BlockFaces face)
@@ -201,22 +205,22 @@ void PlayerController::PlaceBlock() const
         switch (SelectionHighlight.FaceHit)
         {
         case BlockFaces::Bottom:
-            GetWorld()->PlaceBlockAt(x, y - 1, z);
+            GetWorld()->PlaceBlockAt(x, y - 1, z, CurrentSelectedBlock);
             break;
         case BlockFaces::Top:
-            GetWorld()->PlaceBlockAt(x, y + 1, z);
+            GetWorld()->PlaceBlockAt(x, y + 1, z, CurrentSelectedBlock);
             break;
         case BlockFaces::North:
-            GetWorld()->PlaceBlockAt(x, y, z + 1);
+            GetWorld()->PlaceBlockAt(x, y, z + 1, CurrentSelectedBlock);
             break;
         case BlockFaces::South:
-            GetWorld()->PlaceBlockAt(x, y, z - 1);
+            GetWorld()->PlaceBlockAt(x, y, z - 1, CurrentSelectedBlock);
             break;
         case BlockFaces::East:
-            GetWorld()->PlaceBlockAt(x + 1, y, z);
+            GetWorld()->PlaceBlockAt(x + 1, y, z, CurrentSelectedBlock);
             break;
         case BlockFaces::West:
-            GetWorld()->PlaceBlockAt(x - 1, y, z);
+            GetWorld()->PlaceBlockAt(x - 1, y, z, CurrentSelectedBlock);
             break;
         }
     }
@@ -322,5 +326,45 @@ void PlayerController::HandleKeyboardMovementInput()
     if (state == GLFW_RELEASE)
     {
         JumpRequested = false;
+    }
+    state = glfwGetKey(window, GLFW_KEY_1);
+    if (state == GLFW_PRESS)
+    {
+        CurrentSelectedBlock = EBlockType::Stone;
+    }
+    state = glfwGetKey(window, GLFW_KEY_2);
+    if (state == GLFW_PRESS)
+    {
+        CurrentSelectedBlock = EBlockType::Dirt;
+    }
+    state = glfwGetKey(window, GLFW_KEY_3);
+    if (state == GLFW_PRESS)
+    {
+        CurrentSelectedBlock = EBlockType::Cobblestone;
+    }
+    state = glfwGetKey(window, GLFW_KEY_4);
+    if (state == GLFW_PRESS)
+    {
+        CurrentSelectedBlock = EBlockType::Planks;
+    }
+    if (SelectedBlockGuiPtr != nullptr)
+    {
+        SelectedBlockGuiPtr->SwitchBlockType(CurrentSelectedBlock);
+    }
+    state = glfwGetKey(window, GLFW_KEY_G);
+    if (state == GLFW_PRESS && !IsSpawnZombieButtonPressed)
+    {
+        const vec3 pos = GetTransform().GetPosition();
+        new Zombie(pos.x, pos.y, pos.z);
+        IsSpawnZombieButtonPressed = true;
+    }
+    if (state == GLFW_RELEASE)
+    {
+        IsSpawnZombieButtonPressed = false;
+    }
+    state = glfwGetKey(window, GLFW_KEY_R);
+    if (state == GLFW_PRESS)
+    {
+        GetTransform().SetPosition(EngineDefaults::GetNextFloat() * 256.0F, 67.0F, EngineDefaults::GetNextFloat() * 256.0F);
     }
 }

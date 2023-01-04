@@ -10,6 +10,9 @@
 #include <ranges>
 
 #include "Entities/Zombie.h"
+#include "GUI/CrosshairGui.h"
+#include "GUI/Gui.h"
+#include "GUI/SelectedBlockGui.h"
 
 using std::piecewise_construct;
 using std::forward_as_tuple;
@@ -41,33 +44,69 @@ void SinglePlayerWorld::LoadWorld()
     }
 }
 
-SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth, GLFWwindow* window) : Player(new PlayerController(0, EngineDefaults::GetNext(width), static_cast<float>(height + 3),
-    EngineDefaults::GetNext(depth))), LevelWidth(width), LevelHeight(height), LevelDepth(depth), FogsBuffer(0), TheAppWindow(window)
+SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth, GLFWwindow* window) : Player(nullptr), LevelWidth(width), LevelHeight(height), LevelDepth(depth), FogsBuffer(0), TheAppWindow(window)
 {
     Entity::SetWorld(this);
     Chunk::SetWorld(this);
-    Init();
-
-    Entities.emplace(piecewise_construct, forward_as_tuple(static_cast<uint16_t>(0)), forward_as_tuple(dynamic_cast<Entity*>(Player)));
-    for (uint16_t i = 1; i <= 100; i++)
+    Gui::SetWorld(this);
+    for (uint16_t i = 0xFFFF; i != 0; i--)
     {
-        Entities.emplace(piecewise_construct, forward_as_tuple(i), forward_as_tuple(dynamic_cast<Entity*>(new Zombie(i, EngineDefaults::GetNext(width), static_cast<float>(LevelHeight + 3), EngineDefaults::GetNext(depth)))));
+        EntityAvailableIDs.push(i);
+    }
+    EntityAvailableIDs.push(0);
+    Guis.emplace_back(new CrosshairGui());
+    Guis[0]->Active = true;
+    Guis.emplace_back(new SelectedBlockGui());
+    Guis[1]->Active = true;
+    Player = new PlayerController(EngineDefaults::GetNext(width), static_cast<float>(height + 3), EngineDefaults::GetNext(depth));
+    Init();
+    for (uint16_t i = 1; i <= 1; i++)
+    {
+        new Zombie(EngineDefaults::GetNext(width), static_cast<float>(LevelHeight + 3), EngineDefaults::GetNext(depth));
     }
     EngineDefaults::BuildTextureUbo();
 }
 
+uint16_t SinglePlayerWorld::RegisterEntity(Entity* entity)
+{
+    uint16_t index = EntityAvailableIDs.top();
+    EntityAvailableIDs.pop();
+    Entities.emplace(index, entity);
+    return index;
+}
+
+void SinglePlayerWorld::RemoveEntity(const uint16_t id)
+{
+    EntitiesToRemove.push_back(id);
+}
+
 void SinglePlayerWorld::Tick()
 {
+    for (uint16_t val : EntitiesToRemove)
+    {
+        Entities.erase(val);
+        EntityAvailableIDs.push(val);
+    }
+    EntitiesToRemove.clear();
     for (const auto& val : Entities | std::views::values)
     {
         val->DoTick();
     }
+    const int numTilesToTick = LevelWidth * LevelHeight * LevelDepth / 400;
+    for (int i = 0; i < numTilesToTick; i++)
+    {
+        const int x = EngineDefaults::GetNext(LevelWidth);
+        const int y = EngineDefaults::GetNext(LevelHeight);
+        const int z = EngineDefaults::GetNext(LevelDepth);
+        GetBlockAt(x, y, z)->Tick(this, x, y, z);
+    }
 }
 
-void SinglePlayerWorld::HandleWindowResize(const int height, const int width)
+void SinglePlayerWorld::HandleWindowResize(const int height, const int width) const
 {
     glViewport(0, 0, width, height);
     CameraController::OnResizeWindow(width, height);
+    RebuildGui();
 }
 
 void SinglePlayerWorld::Init()
@@ -92,7 +131,7 @@ void SinglePlayerWorld::Init()
 
 void SinglePlayerWorld::InitFog()
 {
-    const vector fogs{14.0F / 255.0F, 11.0F / 255.0F, 10.0F / 255.0F, 1.0F, 0.06F, 0.0F, 0.0F, 0.0F, 254.0F / 255.0F, 251.0F / 255.0F, 250.0F / 255.0F, 1.0F, 0.001F, 0.0F, 0.0F, 0.0F};
+    const array fogs{14.0F / 255.0F, 11.0F / 255.0F, 10.0F / 255.0F, 1.0F, 0.06F, 0.0F, 0.0F, 0.0F, 254.0F / 255.0F, 251.0F / 255.0F, 250.0F / 255.0F, 1.0F, 0.001F, 0.0F, 0.0F, 0.0F};
     glGenBuffers(1, &FogsBuffer);
     glBindBuffer(GL_UNIFORM_BUFFER, FogsBuffer);
     glBufferData(GL_UNIFORM_BUFFER, static_cast<GLintptr>(fogs.size() * sizeof(float)), fogs.data(), GL_STATIC_COPY);
@@ -136,32 +175,40 @@ void SinglePlayerWorld::UpdateChunksNear(const int x, const int y, const int z)
     Chunk* chunk = GetChunkAt(x, y + 1, z);
     if (chunk != nullptr)
     {
-        chunk->IsDirty = true;
+        AddChunkAsDirty(chunk);
     }
     chunk = GetChunkAt(x, y - 1, z);
     if (chunk != nullptr)
     {
-        chunk->IsDirty = true;
+        AddChunkAsDirty(chunk);
     }
     chunk = GetChunkAt(x, y, z + 1);
     if (chunk != nullptr)
     {
-        chunk->IsDirty = true;
+        AddChunkAsDirty(chunk);
     }
     chunk = GetChunkAt(x, y, z - 1);
     if (chunk != nullptr)
     {
-        chunk->IsDirty = true;
+        AddChunkAsDirty(chunk);
     }
     chunk = GetChunkAt(x + 1, y, z);
     if (chunk != nullptr)
     {
-        chunk->IsDirty = true;
+        AddChunkAsDirty(chunk);
     }
     chunk = GetChunkAt(x - 1, y, z);
     if (chunk != nullptr)
     {
-        chunk->IsDirty = true;
+        AddChunkAsDirty(chunk);
+    }
+}
+
+void SinglePlayerWorld::DrawGui() const
+{
+    for (const auto& gui : Guis)
+    {
+        gui->Render();
     }
 }
 
@@ -279,28 +326,21 @@ bool SinglePlayerWorld::IsBlockExists(const int x, const int y, const int z)
     return GetBlockTypeAt(x, y, z) != EBlockType::Air;
 }
 
-void SinglePlayerWorld::PlaceBlockAt(const int x, const int y, const int z)
+void SinglePlayerWorld::PlaceBlockAt(const int x, const int y, const int z, const EBlockType blockType)
 {
     Chunk* chunk = GetChunkAt(x, y, z);
     if (chunk == nullptr)
     {
         return;
     }
-    if (y >= LevelHeight - 7)
-    {
-        chunk->SetBlockTypeAt(x, y, z, EBlockType::Grass);
-    }
-    else
-    {
-        chunk->SetBlockTypeAt(x, y, z, EBlockType::Cobblestone);
-    }
+    chunk->SetBlockTypeAt(x, y, z, blockType);
     UpdateChunksNear(x, y, z);
     const int lightLevelsChange = RecalculateLightLevels(x, z);
     for (int i = 0; i <= abs(lightLevelsChange); i++)
     {
         if (Chunk* chunkLight = GetChunkAt(x, y + i * (lightLevelsChange > 0 ? -1 : 1), z); chunkLight != nullptr)
         {
-            chunkLight->IsDirty = true;
+            AddChunkAsDirty(chunkLight);
         }
     }
 }
@@ -319,35 +359,65 @@ void SinglePlayerWorld::RemoveBlockAt(const int x, const int y, const int z)
     {
         if (Chunk* chunkLight = GetChunkAt(x, y + i * (lightLevelsChange > 0 ? 1 : -1), z); chunkLight != nullptr)
         {
-            chunkLight->IsDirty = true;
+            AddChunkAsDirty(chunkLight);
         }
     }
 }
 
-void SinglePlayerWorld::DrawWorld()
+void SinglePlayerWorld::AddChunkAsDirty(Chunk* chunk)
+{
+    if (DirtyChunksDuplicatorCheck.insert(chunk).second)
+    {
+        DirtyChunks.push_back(chunk);
+    }
+}
+
+Entity* SinglePlayerWorld::GetEntity(const uint16_t id) const
+{
+    return Entities.at(id).get();
+}
+
+PlayerController* SinglePlayerWorld::GetPlayer() const
+{
+    return Player;
+}
+
+void SinglePlayerWorld::DrawWorld(const float partialTick)
 {
     glEnable(GL_CULL_FACE);
-    uint8_t chunksRebuilt = 0;
+    Player->Render(partialTick);
+    for (const auto& entity : Entities | std::views::values)
+    {
+        if (entity.get() != Player && Player->GetCameraFrustum().CubeInFrustum(entity->GetBoundingBox()))
+        {
+            entity->DoRender(partialTick);
+        }
+    }
+    std::ranges::sort(DirtyChunks, DirtyChunkComparator());
+    for (int i = 0; i < MaxChunkRebuilt && !DirtyChunks.empty(); i++)
+    {
+        DirtyChunks[0]->GenerateTessellationData();
+        DirtyChunksDuplicatorCheck.erase(DirtyChunks[0]);
+        DirtyChunks.erase(DirtyChunks.begin());
+    }
     for (auto& [fst, snd] : Chunks)
     {
-        if (chunksRebuilt < MaxChunkRebuilt && snd.IsDirty)
-        {
-            chunksRebuilt++;
-            snd.GenerateTessellationData();
-        }
         if (ChunkCoords pos = fst; Player->GetCameraFrustum().CubeInFrustum(static_cast<float>(pos.GetX() * Chunk::CHUNK_WIDTH), static_cast<float>(pos.GetY() * Chunk::CHUNK_HEIGHT), static_cast<float>(pos.GetZ() * Chunk::CHUNK_DEPTH), static_cast<float>(pos.GetX() * Chunk::CHUNK_WIDTH + Chunk::CHUNK_WIDTH), static_cast<float>(pos.GetY() * Chunk::CHUNK_HEIGHT + Chunk::CHUNK_HEIGHT), static_cast<float>(pos.GetZ() * Chunk::CHUNK_DEPTH + Chunk::CHUNK_DEPTH)))
         {
             snd.Draw();
         }
     }
-    for (const auto& entity : Entities | std::views::values)
-    {
-        if (Player->GetCameraFrustum().CubeInFrustum(entity->GetBoundingBox()))
-        {
-            entity->DoRender();
-        }
-    }
+    Player->DisplaySelectionHighlight();
+    DrawGui();
     glDisable(GL_CULL_FACE);
+}
+
+void SinglePlayerWorld::RebuildGui() const
+{
+    for (const auto& gui : Guis)
+    {
+        gui->Rebuild();
+    }
 }
 
 GLFWwindow* SinglePlayerWorld::GetWindow() const

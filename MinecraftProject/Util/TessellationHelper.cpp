@@ -3,29 +3,13 @@
 //
 
 #include "TessellationHelper.h"
-#include "../Entities/Player/PlayerController.h"
-#include <ranges>
+#include "EngineDefaults.h"
 
-TessellationHelper::~TessellationHelper()
+TessellationHelper::TessellationHelper()
 {
-    glDeleteBuffers(1, &Vbo);
-    glDeleteBuffers(1, &Ebo);
-    glDeleteVertexArrays(1, &Vao);
-}
-
-bool TessellationHelper::HasInitialized() const
-{
-	return HasInit;
-}
-
-TessellationHelper::TessellationHelper(Shader* shader) : Vbo(0), Vao(0), Ebo(0), TheShader(shader), HasInit(false), TrianglesCount(0)
-{
-    glGenVertexArrays(1, &Vao);
-    glGenBuffers(1, &Vbo);
-    glGenBuffers(1, &Ebo);
-    TheShader->Use();
-    PositionUniform = TheShader->GetUniformInt("transformationMatrix");
-    TessellationTransforms.emplace_back();
+	TheShader = EngineDefaults::GetShader();
+	PositionUniform = TheShader->GetUniformInt("transformationMatrix");
+	TessellationTransforms.emplace_back();
 }
 
 Transform& TessellationHelper::GetTransform(const size_t id)
@@ -54,18 +38,6 @@ mat4x4 TessellationHelper::GetTransformationMatrix(const size_t id)
 	return helper * TessellationTransforms.at(id).GetTransformMatrix();
 }
 
-size_t TessellationHelper::GetCurrentTriangleCount() const
-{
-	return TriangleIndices.size();
-}
-
-/*
-void TessellationHelper::changeVertex(uint16_t vertexID, Vertex vertex) {
-    vertices.at(vertexID) = vertex;
-    glBindBuffer(GL_ARRAY_BUFFER, Vbo);
-    glBufferSubData(GL_ARRAY_BUFFER, (GLintptr)(vertexID * sizeof(Vertex)), sizeof(Vertex), &vertices[vertexID]);
-}
-*/
 void TessellationHelper::Draw()
 {
 	Draw(0, 0, TrianglesCount);
@@ -83,6 +55,7 @@ void TessellationHelper::Draw(const size_t transformId, const size_t startPos, s
 	{
 		return;
 	}
+	TheShader->Use();
 	Shader::SetMat4(PositionUniform, GetTransformationMatrix(transformId));
 	glBindVertexArray(Vao);
 	if (!HasInit)
@@ -141,7 +114,7 @@ void TessellationHelper::Reset()
     HasInit = false;
 }
 
-TessellationHelper::TessellationHelper(Shader* shader, const float x, const float y, const float z) : TessellationHelper(shader)
+TessellationHelper::TessellationHelper(const float x, const float y, const float z) : TessellationHelper()
 {
 	GetTransform(0).SetPosition(x, y, z);
 }

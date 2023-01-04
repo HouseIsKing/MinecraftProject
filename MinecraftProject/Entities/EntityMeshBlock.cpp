@@ -28,6 +28,10 @@ void EntityMeshBlock::GenerateTessellationData(TessellationHelper& tessellationH
 	GenerateTessellationData(tessellationHelper, BlockFaces::West, 0, 0, 0, brightness);
 }
 
+void EntityMeshBlock::GenerateTessellationData(GuiTessellation& /*tessellationHelper*/, const BlockFaces& /*face*/, mat4x4 /*transformationMatrix*/) const
+{
+}
+
 void EntityMeshBlock::GenerateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face,
                                                const float& /*x*/, const float& /*y*/, const float& /*z*/, const int& brightness) const
 {
@@ -110,4 +114,9 @@ size_t EntityMeshBlock::GetBlockTransformId() const
 size_t EntityMeshBlock::GetTrianglesStartPos() const
 {
 	return TrianglesStartPos;
+}
+
+size_t EntityMeshBlock::GetIndexTextureSide(BlockFaces /*face*/) const
+{
+	return 0;
 }

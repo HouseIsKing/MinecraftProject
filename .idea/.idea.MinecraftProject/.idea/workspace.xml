@@ -8,22 +8,48 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4f885148-8e28-4ab6-9a1d-8675988ae9cb" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/GUI/CrosshairGui.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/GUI/CrosshairGui.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/GUI/Gui.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/GUI/Gui.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/GUI/SelectedBlockGui.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/GUI/SelectedBlockGui.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/Shaders/GUIFragmentShader.glsl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/Shaders/GUIVertexShader.glsl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/Textures/Blocks/Planks.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/Textures/Blocks/Stone.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/Util/GuiTessellation.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/Util/GuiTessellation.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/Util/GuiVertex.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/Util/GuiVertex.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/Util/TessellationInterface.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/Util/TessellationInterface.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/DirtBlock.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/DirtBlock.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/PlanksBlock.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/PlanksBlock.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/StoneBlock.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/StoneBlock.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MinecraftProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MinecraftProject/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject.sln.DotSettings.user" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Entity.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Entity.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Entity.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Entity.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/EntityMeshBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/EntityMeshBlock.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/EntityMeshBlock.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/EntityMeshBlock.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Player/Camera.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Player/Camera.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Player/Camera.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Player/Camera.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/LivingEntity.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/LivingEntity.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/LivingEntity.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/LivingEntity.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerController.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerController.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerController.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerSelectionHighlight.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerSelectionHighlight.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerSelectionHighlight.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerSelectionHighlight.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Zombie.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Zombie.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Zombie.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Zombie.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/MinecraftProejct.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/MinecraftProejct.vcxproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/RunMinecraft.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/RunMinecraft.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/Shaders/FragmentShader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Shaders/FragmentShader.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Shaders/VertexShader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Shaders/VertexShader.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/CustomFileManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/CustomFileManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Textures/Blocks/Cobblestone.png" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Textures/Blocks/Cobblestone.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Textures/Blocks/Dirt.png" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Textures/Blocks/Dirt.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Textures/Blocks/GrassSide.png" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Textures/Blocks/GrassSide.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Textures/Blocks/GrassTop.png" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Textures/Blocks/GrassTop.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/EngineDefaults.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/EngineDefaults.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/EngineDefaults.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/EngineDefaults.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/TessellationHelper.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/TessellationHelper.cpp" afterDir="false" />
@@ -34,16 +60,19 @@
       <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/Vertex.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/Vertex.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/AirBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/AirBlock.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/AirBlock.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/AirBlock.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/Block.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/Block.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/Block.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/Block.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/BlockTypeList.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/BlockTypeList.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/BlockTypeList.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/BlockTypeList.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/CobblestoneBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/CobblestoneBlock.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/CobblestoneBlock.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/CobblestoneBlock.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/GrassBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/GrassBlock.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/GrassBlock.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/GrassBlock.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Chunk.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Chunk.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Chunk.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Chunk.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/ChunkCoords.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/ChunkCoords.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/World/SinglePlayerWorld.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/SinglePlayerWorld.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/World/SinglePlayerWorld.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/SinglePlayerWorld.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/x64/Release/MinecraftProejct.vcxproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/x64/Release/MinecraftProejct.vcxproj.FileListAbsolute.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,16 +89,12 @@
     <option name="SIGN_OFF_COMMIT" value="true" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.32.31326/include/array" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.32.31326/include/memory" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.32.31326/include/unordered_map" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.32.31326/include/vector" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.32.31326/include/xhash" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.32.31326/include/xmemory" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.32.31326/include/xstring" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$USER_HOME$/Downloads/glfw-3.3.7/src/context.c" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$USER_HOME$/Downloads/glfw-3.3.7/src/wgl_context.c" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$USER_HOME$/Downloads/glfw-3.3.7/src/win32_init.c" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files (x86)/Windows Kits/10/Include/10.0.19041.0/um/WinBase.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/list" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/memory" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/utility" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/vector" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Include/GLFW/glfw3.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glad/glad.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glm/detail/type_mat4x4.inl" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glm/detail/type_quat.hpp" root0="SKIP_HIGHLIGHTING" />
@@ -115,6 +140,13 @@
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;C:\\Users\\amitz\\AppData\\Local\\JetBrains\\Shared\\vAny\\DecompilerCache&quot;,
+      &quot;C:\\Users\\amitz\\AppData\\Local\\JetBrains\\Shared\\vAny\\SourcesCache&quot;,
+      &quot;C:\\Users\\amitz\\AppData\\Local\\Symbols\\src&quot;
+    ]
   }
 }</component>
   <component name="RunManager">
@@ -236,7 +268,19 @@
       <workItem from="1653714246867" duration="4436000" />
       <workItem from="1653748340888" duration="85000" />
       <workItem from="1653753725063" duration="1459000" />
-      <workItem from="1653815303805" duration="18448000" />
+      <workItem from="1653815303805" duration="18799000" />
+      <workItem from="1653888326731" duration="3693000" />
+      <workItem from="1653906415435" duration="3413000" />
+      <workItem from="1653987277512" duration="7829000" />
+      <workItem from="1654061773036" duration="1326000" />
+      <workItem from="1654145736654" duration="51000" />
+      <workItem from="1654145801708" duration="10806000" />
+      <workItem from="1654254682642" duration="5754000" />
+      <workItem from="1654343254030" duration="3802000" />
+      <workItem from="1654431020861" duration="2107000" />
+      <workItem from="1666255341439" duration="6952000" />
+      <workItem from="1672831381976" duration="1171000" />
+      <workItem from="1672837316727" duration="19586000" />
     </task>
     <task id="LOCAL-00001" summary="AAAAAAAAAAAAAAAAAAAAAA finally got the bindless textures to work">
       <created>1652106111120</created>
@@ -308,7 +352,14 @@
       <option name="project" value="LOCAL" />
       <updated>1653664005170</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Made shades for characters, and implemented support for multiple fogs.">
+      <created>1653851420218</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1653851420218</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -352,7 +403,8 @@
     <MESSAGE value="Added Highlight and cleaned up more code." />
     <MESSAGE value="BreakableAndPlaceableBlocks&#10;&#10;Finished Minecraft rd-132211" />
     <MESSAGE value="Added frustum culling and improved performance by 5 times faster! from 200fps average to over 1000." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added frustum culling and improved performance by 5 times faster! from 200fps average to over 1000." />
+    <MESSAGE value="Made shades for characters, and implemented support for multiple fogs." />
+    <option name="LAST_COMMIT_MESSAGE" value="Made shades for characters, and implemented support for multiple fogs." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
@@ -360,7 +412,7 @@
   <component name="XDebuggerManager">
     <watches-manager>
       <configuration name="CppProject">
-        <watch expression="CameraFrustum.Planes[5]" language="C++" />
+        <watch expression="orthoMatrix.value[0]" />
       </configuration>
     </watches-manager>
   </component>

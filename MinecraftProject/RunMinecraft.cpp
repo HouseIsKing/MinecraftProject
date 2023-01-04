@@ -10,7 +10,7 @@ using std::cout;
 using std::endl;
 
 unique_ptr<SinglePlayerWorld> helper{};
-constexpr float TICK_RATE = 0.01666667F;
+constexpr float TICK_RATE = 0.05F;
 
 void ErrorCallback(const int error, const char* description)
 {
@@ -51,12 +51,12 @@ void MainLoop(GLFWwindow* window)
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         int i;
-        for (i = 0; static_cast<float>(i) < ticksTimer / TICK_RATE; i++)
+        for (i = 0; i < static_cast<int>(ticksTimer / TICK_RATE); i++)
         {
             helper->Tick();
         }
         ticksTimer -= static_cast<float>(i) * TICK_RATE;
-        helper->DrawWorld();
+        helper->DrawWorld(ticksTimer / TICK_RATE);
         end = glfwGetTime();
         if (!firstTick)
         {
