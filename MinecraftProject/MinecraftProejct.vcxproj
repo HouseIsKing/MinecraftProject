@@ -263,6 +263,7 @@
         <ClCompile Include="Util\EngineDefaults.cpp"/>
         <ClCompile Include="Util\GuiTessellation.cpp"/>
         <ClCompile Include="Util\GuiVertex.cpp"/>
+        <ClCompile Include="Util\PerlinNoise.cpp"/>
         <ClCompile Include="Util\TessellationHelper.cpp"/>
         <ClCompile Include="Util\TessellationInterface.cpp"/>
         <ClCompile Include="Util\Transform.cpp"/>
@@ -298,6 +299,7 @@
         <ClInclude Include="Util\EngineDefaults.h"/>
         <ClInclude Include="Util\GuiTessellation.h"/>
         <ClInclude Include="Util\GuiVertex.h"/>
+        <ClInclude Include="Util\PerlinNoise.h"/>
         <ClInclude Include="Util\TessellationHelper.h"/>
         <ClInclude Include="Util\TessellationInterface.h"/>
         <ClInclude Include="Util\Transform.h"/>

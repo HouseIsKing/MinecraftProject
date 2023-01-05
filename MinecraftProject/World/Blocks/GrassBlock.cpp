@@ -80,7 +80,7 @@ void GrassBlock::Tick(SinglePlayerWorld* world, const int x, const int y, const 
         {
             const int targetX = x + EngineDefaults::GetNext<int>(-1, 2);
             const int targetY = y + EngineDefaults::GetNext<int>(-3, 2);
-            if (const int targetZ = z + EngineDefaults::GetNext<int>(-1, 2); world->GetBlockTypeAt(targetX, targetY, targetZ) == EBlockType::Dirt && world->GetBrightnessAt(targetX, targetY + 1, targetZ) == 1)
+            if (const int targetZ = z + EngineDefaults::GetNext<int>(-1, 2); world->GetBlockTypeAt(targetX, targetY, targetZ) == EBlockType::Dirt && world->GetBrightnessAt(targetX, targetY, targetZ) == 1)
             {
                 world->PlaceBlockAt(targetX, targetY, targetZ, EBlockType::Grass);
             }

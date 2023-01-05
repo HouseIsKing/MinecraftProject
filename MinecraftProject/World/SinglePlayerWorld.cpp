@@ -13,6 +13,7 @@
 #include "GUI/CrosshairGui.h"
 #include "GUI/Gui.h"
 #include "GUI/SelectedBlockGui.h"
+#include "Util/PerlinNoise.h"
 
 using std::piecewise_construct;
 using std::forward_as_tuple;
@@ -120,11 +121,7 @@ void SinglePlayerWorld::Init()
     }
     else
     {
-        const auto amountX = static_cast<uint16_t>(std::ceil(static_cast<float>(LevelWidth) / static_cast<float>(Chunk::CHUNK_WIDTH)));
-        const auto amountY = static_cast<uint16_t>(std::ceil(static_cast<float>(LevelHeight) / static_cast<float>(Chunk::CHUNK_HEIGHT)));
-        const auto amountZ = static_cast<uint16_t>(std::ceil(static_cast<float>(LevelDepth) / static_cast<float>(Chunk::CHUNK_DEPTH)));
-        GenerateChunks(amountX, amountY, amountZ);
-        GenerateCaves();
+        GenerateLevel();
     }
     RecalculateLightLevels();
 }
@@ -254,30 +251,60 @@ void SinglePlayerWorld::GenerateChunks(const uint16_t amountX, const uint16_t am
     }
 }
 
-void SinglePlayerWorld::GenerateCaves()
+void SinglePlayerWorld::GenerateLevel()
 {
-    for (int i = 0; i < 10000; i++)
+    const auto amountX = static_cast<uint16_t>(std::ceil(static_cast<float>(LevelWidth) / static_cast<float>(Chunk::CHUNK_WIDTH)));
+    const auto amountY = static_cast<uint16_t>(std::ceil(static_cast<float>(LevelHeight) / static_cast<float>(Chunk::CHUNK_HEIGHT)));
+    const auto amountZ = static_cast<uint16_t>(std::ceil(static_cast<float>(LevelDepth) / static_cast<float>(Chunk::CHUNK_DEPTH)));
+    GenerateChunks(amountX, amountY, amountZ);
+    const vector<int> firstHeightMap = PerlinNoise(0).Generate(LevelWidth, LevelDepth);
+    const vector<int> secondHeightMap = PerlinNoise(0).Generate(LevelWidth, LevelDepth);
+    const vector<int> cliffMap = PerlinNoise(1).Generate(LevelWidth, LevelDepth);
+    const vector<int> rockMap = PerlinNoise(1).Generate(LevelWidth, LevelDepth);
+
+    for (int x = 0; x < LevelWidth; x++)
     {
-        const auto caveSize = EngineDefaults::GetNext<uint_fast8_t>(1, 8);
-        const uint_fast16_t caveX = EngineDefaults::GetNext<uint16_t>(LevelWidth);
-        const uint_fast16_t caveY = EngineDefaults::GetNext<uint16_t>(LevelHeight);
-        const uint_fast16_t caveZ = EngineDefaults::GetNext<uint16_t>(LevelDepth);
-        for (uint_fast32_t radius = 1; radius < caveSize; radius++)
+        for (int y = 0; y < LevelHeight; y++)
         {
-            for (uint_fast16_t sphere = 0; sphere < 1000; sphere++)
+            for (int z = 0; z < LevelDepth; z++)
             {
-                const int offsetX = static_cast<int>(EngineDefaults::GetNext<uint_fast16_t>(radius * 2) - radius);
-                const int offsetY = static_cast<int>(EngineDefaults::GetNext<uint_fast16_t>(radius * 2) - radius);
-                const int offsetZ = static_cast<int>(EngineDefaults::GetNext<uint_fast16_t>(radius * 2) - radius);
-                if (const auto distance = static_cast<uint_fast32_t>(offsetX * offsetX + offsetY * offsetY + offsetZ * offsetZ); distance <= radius * radius)
+                int firstHeightValue = firstHeightMap[static_cast<size_t>(x + z * LevelWidth)];
+                int secondHeightValue = secondHeightMap[static_cast<size_t>(x + z * LevelWidth)];
+
+                if (cliffMap[static_cast<size_t>(x + z * LevelWidth)] < 128)
                 {
-                    const int tileX = static_cast<int>(caveX) + offsetX;
-                    const int tileY = static_cast<int>(caveY) + offsetY;
-                    if (const int tileZ = static_cast<int>(caveZ) + offsetZ; tileX >= 0 && tileX < LevelWidth && tileY >= 0 && tileY < LevelHeight && tileZ >= 0 && tileZ < LevelDepth)
-                    {
-                        GetChunkAt(tileX, tileY, tileZ)->SetBlockTypeAt(tileX, tileY, tileZ, EBlockType::Air);
-                    }
+                    secondHeightValue = firstHeightValue;
                 }
+
+                const int maxLevelHeight = std::max(secondHeightValue, firstHeightValue) / 8 + LevelHeight / 3;
+                int maxRockHeight = rockMap[static_cast<size_t>(x + z * LevelWidth)] / 8 + LevelHeight / 3;
+
+                // Keep it below the max height of the level
+                if (maxRockHeight > maxLevelHeight - 2)
+                {
+                    maxRockHeight = maxLevelHeight - 2;
+                }
+
+                auto blockType = EBlockType::Air;
+                // Grass layer
+                if (y == maxLevelHeight)
+                {
+                    blockType = EBlockType::Grass;
+                }
+
+                // Dirt layer
+                if (y < maxLevelHeight)
+                {
+                    blockType = EBlockType::Dirt;
+                }
+
+                // Rock layer
+                if (y <= maxRockHeight)
+                {
+                    blockType = EBlockType::Stone;
+                }
+
+                GetChunkAt(x, y, z)->SetBlockTypeAt(x, y, z, blockType);
             }
         }
     }
@@ -368,6 +395,7 @@ void SinglePlayerWorld::AddChunkAsDirty(Chunk* chunk)
 {
     if (DirtyChunksDuplicatorCheck.insert(chunk).second)
     {
+        chunk->GotDirty();
         DirtyChunks.push_back(chunk);
     }
 }
@@ -393,18 +421,19 @@ void SinglePlayerWorld::DrawWorld(const float partialTick)
             entity->DoRender(partialTick);
         }
     }
-    std::ranges::sort(DirtyChunks, DirtyChunkComparator());
+    const Frustum frustum = Player->GetCameraFrustum();
+    std::ranges::sort(DirtyChunks, DirtyChunkComparator{frustum});
     for (int i = 0; i < MaxChunkRebuilt && !DirtyChunks.empty(); i++)
     {
         DirtyChunks[0]->GenerateTessellationData();
         DirtyChunksDuplicatorCheck.erase(DirtyChunks[0]);
         DirtyChunks.erase(DirtyChunks.begin());
     }
-    for (auto& [fst, snd] : Chunks)
+    for (auto& chunk : Chunks | std::views::values)
     {
-        if (ChunkCoords pos = fst; Player->GetCameraFrustum().CubeInFrustum(static_cast<float>(pos.GetX() * Chunk::CHUNK_WIDTH), static_cast<float>(pos.GetY() * Chunk::CHUNK_HEIGHT), static_cast<float>(pos.GetZ() * Chunk::CHUNK_DEPTH), static_cast<float>(pos.GetX() * Chunk::CHUNK_WIDTH + Chunk::CHUNK_WIDTH), static_cast<float>(pos.GetY() * Chunk::CHUNK_HEIGHT + Chunk::CHUNK_HEIGHT), static_cast<float>(pos.GetZ() * Chunk::CHUNK_DEPTH + Chunk::CHUNK_DEPTH)))
+        if (chunk.ChunkInFrustum(frustum))
         {
-            snd.Draw();
+            chunk.Draw();
         }
     }
     Player->DisplaySelectionHighlight();

@@ -36,7 +36,7 @@ class SinglePlayerWorld
     void SaveWorld();
     void LoadWorld();
     void GenerateChunks(uint16_t amountX, uint16_t amountY, uint16_t amountZ);
-    void GenerateCaves();
+    void GenerateLevel();
     void Init();
     void InitFog();
     void RecalculateLightLevels();

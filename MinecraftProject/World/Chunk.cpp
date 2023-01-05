@@ -117,9 +117,15 @@ float Chunk::GetDistanceFromPlayer() const
 {
     PlayerController* player = GetWorld()->GetPlayer();
     if (player == nullptr)
+    {
         return 0.0F;
+    }
     const vec3 temp = player->GetTransform().GetPosition() - vec3(static_cast<float>(ChunkPosition.GetX() * CHUNK_WIDTH) + CHUNK_WIDTH / 2.0F, static_cast<float>(ChunkPosition.GetY() * CHUNK_HEIGHT) + CHUNK_HEIGHT / 2.0F, static_cast<float>(ChunkPosition.GetZ() * CHUNK_DEPTH) + CHUNK_DEPTH / 2.0F);
     return dot(temp, temp);
+}
+
+DirtyChunkComparator::DirtyChunkComparator(const Frustum& cameraFrustum) : CameraFrustum(cameraFrustum)
+{
 }
 
 const Block* Chunk::GetBlockAt(const int x, const int y, const int z) const
@@ -185,7 +191,26 @@ void Chunk::SetBlockTypeAt(const int x, const int y, const int z, const EBlockTy
 
 bool Chunk::operator<(const Chunk& other) const
 {
+    if (other.TimeGotDirty - TimeGotDirty > 2.0)
+    {
+        return true;
+    }
     return GetDistanceFromPlayer() < other.GetDistanceFromPlayer();
+}
+
+bool Chunk::ChunkInFrustum(const Frustum& frustum) const
+{
+    return frustum.CubeInFrustum(static_cast<float>(ChunkPosition.GetX() * CHUNK_WIDTH),
+                                 static_cast<float>(ChunkPosition.GetY() * CHUNK_HEIGHT),
+                                 static_cast<float>(ChunkPosition.GetZ() * CHUNK_DEPTH),
+                                 static_cast<float>(ChunkPosition.GetX() * CHUNK_WIDTH + CHUNK_WIDTH),
+                                 static_cast<float>(ChunkPosition.GetY() * CHUNK_HEIGHT + CHUNK_HEIGHT),
+                                 static_cast<float>(ChunkPosition.GetZ() * CHUNK_DEPTH + CHUNK_DEPTH));
+}
+
+void Chunk::GotDirty()
+{
+    TimeGotDirty = glfwGetTime();
 }
 
 CustomFileManager& operator<<(CustomFileManager& fileManager, const Chunk& chunk)

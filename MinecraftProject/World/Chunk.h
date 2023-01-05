@@ -1,4 +1,5 @@
 #pragma once
+#include "../Entities/Player/Camera.h"
 #include "../Util/TessellationHelper.h"
 #include "ChunkCoords.h"
 #include <array>
@@ -27,10 +28,13 @@ public:
     friend CustomFileManager& operator<<(CustomFileManager& fileManager, const Chunk& chunk);
     friend CustomFileManager& operator>>(CustomFileManager& fileManager, Chunk& chunk);
     bool operator<(const Chunk& other) const;
+    [[nodiscard]] bool ChunkInFrustum(const Frustum& frustum) const;
+    void GotDirty();
 
 private:
     ChunkCoords ChunkPosition;
     TessellationHelper Tessellation;
+    double TimeGotDirty = 0.0;
     static SinglePlayerWorld* World;
     std::array<EBlockType, static_cast<size_t>(CHUNK_HEIGHT * CHUNK_DEPTH * CHUNK_WIDTH)> Blocks{EBlockType::Air};
     void DrawBlock(EBlockType blockType, int x, int y, int z);
@@ -39,8 +43,15 @@ private:
 
 struct DirtyChunkComparator
 {
+    Frustum CameraFrustum;
+    explicit DirtyChunkComparator(const Frustum& cameraFrustum);
+
     bool operator()(const Chunk* a, const Chunk* b) const
     {
+        if (const bool isInFrustum = a->ChunkInFrustum(CameraFrustum); isInFrustum != b->ChunkInFrustum(CameraFrustum))
+        {
+            return isInFrustum;
+        }
         return *a < *b;
     }
 };
