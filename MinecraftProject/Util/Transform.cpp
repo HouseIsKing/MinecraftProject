@@ -1,10 +1,10 @@
-//
-// Created by amit on 4/22/2022.
-//
-
 #include "Transform.h"
 
-Transform::Transform() : Position(vec3(0.0F)), Rotation(vec3(0.0F)), Scale(vec3(1.0F)), TransformMatrix(1.0F), IsDirty(true)
+Transform::Transform() : Transform(nullptr)
+{
+}
+
+Transform::Transform(Transform* parent) : Position(vec3(0.0F)), Rotation(vec3(0.0F)), Scale(vec3(1.0F)), TransformMatrix(1.0F), IsDirty(true), Parent(parent)
 {
 }
 
@@ -89,4 +89,9 @@ mat4x4 Transform::GetTransformMatrix()
         CalculateTransformMatrix();
     }
     return TransformMatrix;
+}
+
+Transform* Transform::GetParent() const
+{
+    return Parent;
 }

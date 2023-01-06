@@ -44,4 +44,6 @@ public:
     [[nodiscard]] virtual size_t GetIndexTextureSide(BlockFaces face) const = 0;
     virtual void GenerateTessellationData(GuiTessellation& tessellationHelper, const BlockFaces& face, mat4x4 transformationMatrix) const;
     virtual void Tick(SinglePlayerWorld* world, int x, int y, int z) const;
+    virtual void OnBreak(SinglePlayerWorld* world, int x, int y, int z) const;
+    [[nodiscard]] uint16_t GetTextureFromIndex(const size_t& index) const;
 };

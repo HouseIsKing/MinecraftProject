@@ -173,6 +173,7 @@
         <ClCompile Include="Entities\Entity.cpp"/>
         <ClCompile Include="Entities\EntityMeshBlock.cpp"/>
         <ClCompile Include="Entities\LivingEntity.cpp"/>
+        <ClCompile Include="Entities\ParticleEntity.cpp"/>
         <ClCompile Include="Entities\Player\Camera.cpp"/>
         <ClCompile Include="Entities\Player\PlayerController.cpp"/>
         <ClCompile Include="Entities\Player\PlayerSelectionHighlight.cpp"/>
@@ -284,6 +285,7 @@
         <ClInclude Include="Entities\Entity.h"/>
         <ClInclude Include="Entities\EntityMeshBlock.h"/>
         <ClInclude Include="Entities\LivingEntity.h"/>
+        <ClInclude Include="Entities\ParticleEntity.h"/>
         <ClInclude Include="Entities\Player\Camera.h"/>
         <ClInclude Include="Entities\Player\PlayerController.h"/>
         <ClInclude Include="Entities\Player\PlayerSelectionHighlight.h"/>

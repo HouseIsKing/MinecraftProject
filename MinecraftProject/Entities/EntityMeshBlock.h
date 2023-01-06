@@ -7,6 +7,7 @@ class EntityMeshBlock final : Block
 	size_t TrianglesStartPos;
 	std::array<float, 24> BlockUVs;
 	std::array<vec3, 8> BlockVerticesPositions;
+
 public:
 	EntityMeshBlock(const string& meshTexture, float anchorPosX, float anchorPosY, float anchorPosZ, float minX, float minY, float minZ, float maxX, float maxY, float maxZ, const std::array<float, 24>& uvs, TessellationHelper& tessellationHelper);
 	void SetRotation(float x, float y, float z, TessellationHelper& tessellationHelper) const;

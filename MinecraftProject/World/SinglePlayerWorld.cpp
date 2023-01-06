@@ -61,7 +61,7 @@ SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height
     Guis[1]->Active = true;
     Player = new PlayerController(EngineDefaults::GetNext(width), static_cast<float>(height + 3), EngineDefaults::GetNext(depth));
     Init();
-    for (uint16_t i = 1; i <= 1; i++)
+    for (uint16_t i = 1; i <= 100; i++)
     {
         new Zombie(EngineDefaults::GetNext(width), static_cast<float>(LevelHeight + 3), EngineDefaults::GetNext(depth));
     }
@@ -335,6 +335,16 @@ Chunk* SinglePlayerWorld::GetChunkAt(const int x, const int y, const int z)
     return &Chunks.at(pos);
 }
 
+/**
+ * \brief Rounds the float vector to integer
+ * \param pos position to round
+ * \return 
+ */
+int SinglePlayerWorld::GetBrightnessAt(const vec3 pos) const
+{
+    return GetBrightnessAt(static_cast<int>(pos.x + 0.5F - static_cast<float>((pos.x < 0))), static_cast<int>(pos.y + 0.5F - static_cast<float>((pos.y < 0))), static_cast<int>(pos.z + 0.5F - static_cast<float>((pos.z < 0))));
+}
+
 int SinglePlayerWorld::GetBrightnessAt(const int x, const int y, const int z) const
 {
     if (x < 0 || x >= LevelWidth || y < 0 || y >= LevelHeight || z < 0 || z >= LevelDepth)
@@ -379,6 +389,7 @@ void SinglePlayerWorld::RemoveBlockAt(const int x, const int y, const int z)
     {
         return;
     }
+    chunk->GetBlockAt(x, y, z)->OnBreak(this, x, y, z);
     chunk->SetBlockTypeAt(x, y, z, EBlockType::Air);
     UpdateChunksNear(x, y, z);
     const int lightLevelsChange = RecalculateLightLevels(x, z);
@@ -414,14 +425,14 @@ void SinglePlayerWorld::DrawWorld(const float partialTick)
 {
     glEnable(GL_CULL_FACE);
     Player->Render(partialTick);
+    const Frustum frustum = Player->GetCameraFrustum();
     for (const auto& entity : Entities | std::views::values)
     {
-        if (entity.get() != Player && Player->GetCameraFrustum().CubeInFrustum(entity->GetBoundingBox()))
+        if (entity.get() != Player && frustum.CubeInFrustum(entity->GetBoundingBox()))
         {
             entity->DoRender(partialTick);
         }
     }
-    const Frustum frustum = Player->GetCameraFrustum();
     std::ranges::sort(DirtyChunks, DirtyChunkComparator{frustum});
     for (int i = 0; i < MaxChunkRebuilt && !DirtyChunks.empty(); i++)
     {

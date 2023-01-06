@@ -66,6 +66,7 @@ public:
     EBlockType GetBlockTypeAt(int x, int y, int z);
     Chunk* GetChunkAt(int x, int y, int z);
     [[nodiscard]] int GetBrightnessAt(int x, int y, int z) const;
+    [[nodiscard]] int GetBrightnessAt(vec3 pos) const;
     vector<BoundingBox> GetBlockBoxesInBoundingBox(const BoundingBox& boundingBox);
     void DrawWorld(float partialTick);
     [[nodiscard]] GLFWwindow* GetWindow() const;

@@ -93,7 +93,7 @@ void Zombie::Render(const float partialTick)
     LivingEntity::Render(partialTick);
     const vec3 pos = GetTransform().GetPosition();
     GetTransform().SetPosition(PrevPos + (pos - PrevPos) * partialTick);
-    if (const int brightness = GetWorld()->GetBrightnessAt(static_cast<int>(pos.x), static_cast<int>(pos.y), static_cast<int>(pos.z)); PreviousLightLevel != brightness)
+    if (const int brightness = GetWorld()->GetBrightnessAt(pos); PreviousLightLevel != brightness)
     {
         RebuildRender(brightness);
     }

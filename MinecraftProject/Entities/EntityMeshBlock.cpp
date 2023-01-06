@@ -2,20 +2,20 @@
 #include "Util/EngineDefaults.h"
 
 EntityMeshBlock::EntityMeshBlock(const string& meshTexture, const float anchorPosX, const float anchorPosY, const float anchorPosZ, const float minX, const float minY, const float minZ, const float maxX, const float maxY, const float maxZ, const std::array<float, 24>& uvs, TessellationHelper& tessellationHelper) : Block(minX, minY, minZ, maxX, maxY, maxZ),
-	BlockTransformId(tessellationHelper.AddTransform(Transform())), TrianglesStartPos(0), BlockUVs(uvs), BlockVerticesPositions()
+	BlockTransformId(tessellationHelper.AddTransform(new Transform(tessellationHelper.GetTransform(0)))), TrianglesStartPos(0), BlockUVs(uvs), BlockVerticesPositions()
 {
-	tessellationHelper.GetTransform(BlockTransformId).SetPosition(anchorPosX, anchorPosY, anchorPosZ);
+	tessellationHelper.GetTransform(BlockTransformId)->SetPosition(anchorPosX, anchorPosY, anchorPosZ);
 	IndexTextures.push_back(EngineDefaults::RegisterTexture(Texture::LoadTexture(meshTexture)));
 }
 
 void EntityMeshBlock::SetRotation(const float x, const float y, const float z, TessellationHelper& tessellationHelper) const
 {
-	tessellationHelper.GetTransform(BlockTransformId).SetRotation(x, y, z);
+	tessellationHelper.GetTransform(BlockTransformId)->SetRotation(x, y, z);
 }
 
 void EntityMeshBlock::SetRotationRadians(const float x, const float y, const float z, TessellationHelper& tessellationHelper) const
 {
-	tessellationHelper.GetTransform(BlockTransformId).SetRotation(glm::degrees(x), glm::degrees(y), glm::degrees(z));
+	tessellationHelper.GetTransform(BlockTransformId)->SetRotation(glm::degrees(x), glm::degrees(y), glm::degrees(z));
 }
 
 void EntityMeshBlock::GenerateTessellationData(TessellationHelper& tessellationHelper, const int brightness) const

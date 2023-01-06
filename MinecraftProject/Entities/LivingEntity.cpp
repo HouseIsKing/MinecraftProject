@@ -21,7 +21,7 @@ void LivingEntity::CalculateVelocity()
         speedModifier *= 0.2F;
     }
     VelocityY -= 0.08F;
-    const vec3 rotation = Tessellation.GetTransform(0).GetRotation();
+    const vec3 rotation = GetTransform().GetRotation();
     if (const float d = sqrt(HorizontalInput * HorizontalInput + VerticalInput * VerticalInput); d > 0.001F)
     {
         speedModifier /= d;

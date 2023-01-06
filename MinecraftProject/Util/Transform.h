@@ -1,7 +1,3 @@
-//
-// Created by amit on 4/22/2022.
-//
-
 #pragma once
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
@@ -18,8 +14,11 @@ class Transform
     mat4x4 TransformMatrix;
     bool IsDirty;
     void CalculateTransformMatrix();
+    Transform* Parent;
+
 public:
     Transform();
+    explicit Transform(Transform* parent);
     [[nodiscard]] vec3 GetPosition() const;
     [[nodiscard]] vec3 GetRotation() const;
     void Rotate(float x, float y, float z);
@@ -30,4 +29,5 @@ public:
     void Grow(float x, float y, float z);
     void SetScale(float x, float y, float z);
     mat4x4 GetTransformMatrix();
+    [[nodiscard]] Transform* GetParent() const;
 };

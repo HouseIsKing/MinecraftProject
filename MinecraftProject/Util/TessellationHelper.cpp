@@ -1,7 +1,3 @@
-//
-// Created by amit on 4/21/2022.
-//
-
 #include "TessellationHelper.h"
 #include "EngineDefaults.h"
 
@@ -9,12 +5,12 @@ TessellationHelper::TessellationHelper()
 {
 	TheShader = EngineDefaults::GetShader();
 	PositionUniform = TheShader->GetUniformInt("transformationMatrix");
-	TessellationTransforms.emplace_back();
+	TessellationTransforms.emplace_back(new Transform());
 }
 
-Transform& TessellationHelper::GetTransform(const size_t id)
+Transform* TessellationHelper::GetTransform(const size_t id) const
 {
-	return TessellationTransforms.at(id);
+	return TessellationTransforms[id].get();
 }
 
 uint16_t TessellationHelper::AddVertex(const Vertex& vertex)
@@ -28,14 +24,16 @@ void TessellationHelper::AddTriangle(const uint16_t triangle)
 	TriangleIndices.push_back(triangle);
 }
 
-mat4x4 TessellationHelper::GetTransformationMatrix(const size_t id)
+mat4x4 TessellationHelper::GetTransformationMatrix(const size_t id) const
 {
-	const mat4x4 helper = TessellationTransforms.at(0).GetTransformMatrix();
-	if (id == 0)
+	Transform* transform = GetTransform(id);
+	mat4x4 helper = TessellationTransforms.at(id)->GetTransformMatrix();
+	while (transform->GetParent() != nullptr)
 	{
-		return helper;
+		transform = transform->GetParent();
+		helper = transform->GetTransformMatrix() * helper;
 	}
-	return helper * TessellationTransforms.at(id).GetTransformMatrix();
+	return helper;
 }
 
 void TessellationHelper::Draw()
@@ -95,9 +93,9 @@ void TessellationHelper::Draw(const size_t transformId, const size_t startPos, s
 	glDisableVertexAttribArray(5);
 }
 
-size_t TessellationHelper::AddTransform(const Transform transform)
+size_t TessellationHelper::AddTransform(Transform* transform)
 {
-	TessellationTransforms.push_back(transform);
+	TessellationTransforms.emplace_back(transform);
 	return TessellationTransforms.size() - 1;
 }
 
@@ -116,5 +114,5 @@ void TessellationHelper::Reset()
 
 TessellationHelper::TessellationHelper(const float x, const float y, const float z) : TessellationHelper()
 {
-	GetTransform(0).SetPosition(x, y, z);
+	GetTransform(0)->SetPosition(x, y, z);
 }
