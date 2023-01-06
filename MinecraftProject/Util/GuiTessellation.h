@@ -5,6 +5,7 @@
 class GuiTessellation final : public TessellationInterface
 {
     std::vector<GuiVertex> Vertices{};
+
 public:
     GuiTessellation();
     uint16_t AddVertex(const GuiVertex& vertex);

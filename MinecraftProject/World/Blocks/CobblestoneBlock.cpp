@@ -2,7 +2,7 @@
 
 #include "Util/EngineDefaults.h"
 
-size_t CobblestoneBlock::GetIndexTextureSide(BlockFaces face) const
+size_t CobblestoneBlock::GetIndexTextureSide(BlockFaces /*face*/) const
 {
 	return 0;
 }

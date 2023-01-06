@@ -6,6 +6,7 @@ class PlayerSelectionHighlight
 {
     TessellationHelper Tessellation;
     uint16_t TextureIndex;
+
 public:
     PlayerSelectionHighlight();
     void Reset();

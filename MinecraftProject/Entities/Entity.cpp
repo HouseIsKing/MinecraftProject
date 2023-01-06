@@ -1,7 +1,3 @@
-//
-// Created by amit on 4/22/2022.
-//
-
 #include "Entity.h"
 #include "../Util/EngineDefaults.h"
 #include "../World/SinglePlayerWorld.h"
@@ -78,12 +74,12 @@ void Entity::DoRender(const float partialTick)
     Render(partialTick);
 }
 
-Transform& Entity::GetTransform()
+Transform& Entity::GetTransform() const
 {
     return *Tessellation.GetTransform(0);
 }
 
-BoundingBox Entity::GetBoundingBox()
+BoundingBox Entity::GetBoundingBox() const
 {
     const vec3 pos = GetTransform().GetPosition();
     return {pos.x - EntitySize.x, pos.y - EntitySize.y, pos.z - EntitySize.z, pos.x + EntitySize.x, pos.y + EntitySize.y, pos.z + EntitySize.z};

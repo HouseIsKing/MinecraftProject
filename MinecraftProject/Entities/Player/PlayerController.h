@@ -11,6 +11,7 @@ using std::unique_ptr;
 class CameraController
 {
     static unique_ptr<Camera> ActiveCamera;
+
 public:
     static void SetActiveCamera(Camera& camera);
     static Camera& GetActiveCamera();

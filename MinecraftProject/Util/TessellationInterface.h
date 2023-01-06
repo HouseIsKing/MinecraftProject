@@ -12,6 +12,7 @@ protected:
     Shader* TheShader;
     bool HasInit;
     size_t TrianglesCount;
+
 public:
     virtual ~TessellationInterface();
     TessellationInterface();

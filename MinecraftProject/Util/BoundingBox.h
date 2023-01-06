@@ -12,6 +12,7 @@ struct BoundingBox
 private:
     float MinX, MinY, MinZ;
     float MaxX, MaxY, MaxZ;
+
 public:
     BoundingBox(float minX, float minY, float minZ, float maxX, float maxY, float maxZ);
     BoundingBox(const BoundingBox& other) = default;

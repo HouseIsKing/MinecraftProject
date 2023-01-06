@@ -6,10 +6,12 @@ class SinglePlayerWorld;
 class Gui
 {
     static SinglePlayerWorld* World;
+
 protected:
     GuiTessellation Tessellation;
     Gui() = default;
     static SinglePlayerWorld* GetWorld();
+
 public:
     bool Active = false;
     static void SetWorld(SinglePlayerWorld* newWorld);

@@ -1,7 +1,3 @@
-//
-// Created by amit on 4/22/2022.
-//
-
 #pragma once
 #include "glad/glad.h"
 #include <glm/glm.hpp>
@@ -22,6 +18,7 @@ class Shader
     unordered_map<string, int> Uniforms;
     static void CompileShader(GLuint shader);
     static void LinkProgram(GLuint program);
+
 public:
     ~Shader();
     Shader(Shader&& other) noexcept = default;

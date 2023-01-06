@@ -338,7 +338,7 @@ Chunk* SinglePlayerWorld::GetChunkAt(const int x, const int y, const int z)
 /**
  * \brief Rounds the float vector to integer
  * \param pos position to round
- * \return 
+ * \return returns brightness at the rounded position
  */
 int SinglePlayerWorld::GetBrightnessAt(const vec3 pos) const
 {

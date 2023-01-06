@@ -54,7 +54,7 @@ void ParticleEntity::Tick()
     }
 }
 
-void ParticleEntity::Render(float partialTick)
+void ParticleEntity::Render(const float partialTick)
 {
     Entity::Render(partialTick);
     const vec3 pos = GetTransform().GetPosition();

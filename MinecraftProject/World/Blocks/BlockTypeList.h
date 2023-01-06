@@ -1,7 +1,3 @@
-//
-// Created by amit on 4/22/2022.
-//
-
 #pragma once
 #include "../../Textures/Texture.h"
 #include <memory>
@@ -38,6 +34,7 @@ class BlockTypeList
 {
     static unordered_map<EBlockType, unique_ptr<Block>> BlockTypes;
     static bool Init;
+
 public:
     static const Block* GetBlockTypeData(EBlockType type);
     static void InitBlockTypes();

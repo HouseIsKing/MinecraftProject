@@ -1,7 +1,3 @@
-//
-// Created by amit on 4/22/2022.
-//
-
 #pragma once
 #include <array>
 #include <glm/glm.hpp>
@@ -44,6 +40,7 @@ class Camera
     float ZFar;
     float PrevPitch;
     void UpdateVectors();
+
 public:
     vec3 Position;
     float Pitch;

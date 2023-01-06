@@ -5,6 +5,7 @@
 class CustomFileManager
 {
     gzFile FileStream;
+
 public:
     explicit CustomFileManager(const std::string& file, const std::string& mode);
     ~CustomFileManager();

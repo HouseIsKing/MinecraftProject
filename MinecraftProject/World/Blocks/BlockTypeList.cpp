@@ -1,7 +1,3 @@
-//
-// Created by amit on 4/22/2022.
-//
-
 #include "BlockTypeList.h"
 #include "../../Util/EngineDefaults.h"
 #include "AirBlock.h"
@@ -10,9 +6,6 @@
 #include "GrassBlock.h"
 #include "PlanksBlock.h"
 #include "StoneBlock.h"
-
-using std::piecewise_construct;
-using std::forward_as_tuple;
 
 std::istream& operator>>(std::istream& is, EBlockType& blockType)
 {

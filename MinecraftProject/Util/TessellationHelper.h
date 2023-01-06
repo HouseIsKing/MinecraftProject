@@ -11,7 +11,7 @@ class TessellationHelper final : public TessellationInterface
     vector<Vertex> Vertices{};
     vector<unique_ptr<Transform>> TessellationTransforms{};
     int PositionUniform;
-    mat4x4 GetTransformationMatrix(size_t id) const;
+    [[nodiscard]] mat4x4 GetTransformationMatrix(size_t id) const;
 
 public:
     TessellationHelper();

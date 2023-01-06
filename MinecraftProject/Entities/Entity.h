@@ -40,7 +40,7 @@ public:
     static void SetWorld(SinglePlayerWorld* newWorld);
     void DoTick();
     void DoRender(float partialTick);
-    Transform& GetTransform();
-    BoundingBox GetBoundingBox();
-    uint16_t GetEntityId() const;
+    [[nodiscard]] Transform& GetTransform() const;
+    [[nodiscard]] BoundingBox GetBoundingBox() const;
+    [[nodiscard]] uint16_t GetEntityId() const;
 };

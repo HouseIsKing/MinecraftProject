@@ -7,6 +7,7 @@
 #include <string>
 #include <unordered_map>
 
+struct TextureHasher;
 using std::string;
 using std::unordered_map;
 using std::unique_ptr;
@@ -16,6 +17,7 @@ class Texture
     static unordered_map<string, unique_ptr<Texture>> TexturesCache;
     GLuint64 Handle;
     GLuint TextureId;
+
 public:
     Texture(GLuint64 handle, GLuint textureId);
     static Texture* LoadTexture(const string& path);
@@ -30,8 +32,7 @@ public:
     Texture& operator =(Texture&& other) = default;
 };
 
-template <>
-struct std::hash<Texture*>
+struct TextureHasher
 {
     size_t operator()(const Texture* texture) const noexcept
     {

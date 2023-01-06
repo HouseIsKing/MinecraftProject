@@ -14,7 +14,7 @@ using std::unique_ptr;
 class EngineDefaults
 {
     static array<unique_ptr<Shader>, 2> Shaders;
-    static std::unordered_map<Texture*, uint16_t> TextureList;
+    static std::unordered_map<Texture*, uint16_t, TextureHasher> TextureList;
     static GLuint UboTextures;
     static bool HasBuiltTextureUbo;
     static bool HasInit;

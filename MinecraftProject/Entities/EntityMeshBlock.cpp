@@ -8,12 +8,12 @@ EntityMeshBlock::EntityMeshBlock(const string& meshTexture, const float anchorPo
 	IndexTextures.push_back(EngineDefaults::RegisterTexture(Texture::LoadTexture(meshTexture)));
 }
 
-void EntityMeshBlock::SetRotation(const float x, const float y, const float z, TessellationHelper& tessellationHelper) const
+void EntityMeshBlock::SetRotation(const float x, const float y, const float z, const TessellationHelper& tessellationHelper) const
 {
 	tessellationHelper.GetTransform(BlockTransformId)->SetRotation(x, y, z);
 }
 
-void EntityMeshBlock::SetRotationRadians(const float x, const float y, const float z, TessellationHelper& tessellationHelper) const
+void EntityMeshBlock::SetRotationRadians(const float x, const float y, const float z, const TessellationHelper& tessellationHelper) const
 {
 	tessellationHelper.GetTransform(BlockTransformId)->SetRotation(glm::degrees(x), glm::degrees(y), glm::degrees(z));
 }

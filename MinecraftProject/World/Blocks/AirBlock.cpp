@@ -6,12 +6,12 @@ void AirBlock::GenerateTessellationData(TessellationHelper& /*tessellationHelper
 {
 }
 
-size_t AirBlock::GetIndexTextureSide(BlockFaces face) const
+size_t AirBlock::GetIndexTextureSide(BlockFaces /*face*/) const
 {
     return 0;
 }
 
-void AirBlock::GenerateTessellationData(GuiTessellation& tessellationHelper, const BlockFaces& face,
-                                        mat4x4 transformationMatrix) const
+void AirBlock::GenerateTessellationData(GuiTessellation& /*tessellationHelper*/, const BlockFaces& /*face*/,
+                                        mat4x4 /*transformationMatrix*/) const
 {
 }

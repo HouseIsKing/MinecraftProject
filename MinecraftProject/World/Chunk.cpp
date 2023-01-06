@@ -1,7 +1,3 @@
-//
-// Created by amit on 4/21/2022.
-//
-
 #include "Chunk.h"
 #include "../Util/EngineDefaults.h"
 #include "SinglePlayerWorld.h"
@@ -115,7 +111,7 @@ void Chunk::DrawBlock(const EBlockType blockType, const int x, const int y, cons
 
 float Chunk::GetDistanceFromPlayer() const
 {
-    PlayerController* player = GetWorld()->GetPlayer();
+    const PlayerController* player = GetWorld()->GetPlayer();
     if (player == nullptr)
     {
         return 0.0F;

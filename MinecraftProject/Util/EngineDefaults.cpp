@@ -6,7 +6,7 @@
 bool EngineDefaults::HasInit = false;
 bool EngineDefaults::HasBuiltTextureUbo = false;
 CustomRandomEngine EngineDefaults::Engine = {};
-std::unordered_map<Texture*, uint16_t> EngineDefaults::TextureList = {};
+std::unordered_map<Texture*, uint16_t, TextureHasher> EngineDefaults::TextureList = {};
 array<unique_ptr<Shader>, 2> EngineDefaults::Shaders = {};
 GLuint EngineDefaults::UboTextures = 0;
 
