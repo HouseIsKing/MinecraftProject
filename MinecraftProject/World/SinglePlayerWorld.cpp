@@ -8,6 +8,7 @@
 #include "Entities/Zombie.h"
 #include "GUI/CrosshairGui.h"
 #include "GUI/Gui.h"
+#include "GUI/PerformanceGui.h"
 #include "GUI/SelectedBlockGui.h"
 #include "Util/PerlinNoise.h"
 
@@ -41,7 +42,7 @@ void SinglePlayerWorld::LoadWorld()
     }
 }
 
-SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth, GLFWwindow* window) : Player(nullptr), WorldTime(0), LevelWidth(width), LevelHeight(height), LevelDepth(depth), FogsBuffer(0), TheAppWindow(window)
+SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth, GLFWwindow* window) : Player(nullptr), WorldTime(0), LevelWidth(width), LevelHeight(height), LevelDepth(depth), FogsBuffer(0), TheAppWindow(window), LastTimeFrame(0.0F), DeltaTime(0.0F), Frames(0), Fps(0)
 {
     Entity::SetWorld(this);
     Chunk::SetWorld(this);
@@ -55,9 +56,11 @@ SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height
     Guis[0]->Active = true;
     Guis.emplace_back(new SelectedBlockGui());
     Guis[1]->Active = true;
+    Guis.emplace_back(new PerformanceGui());
+    Guis[2]->Active = true;
     Player = new PlayerController(EngineDefaults::GetNext(width), static_cast<float>(height + 3), EngineDefaults::GetNext(depth));
     Init();
-    for (uint16_t i = 1; i <= 100; i++)
+    for (uint16_t i = 1; i <= 10; i++)
     {
         new Zombie(EngineDefaults::GetNext(width), static_cast<float>(LevelHeight + 3), EngineDefaults::GetNext(depth));
     }
@@ -416,6 +419,15 @@ PlayerController* SinglePlayerWorld::GetPlayer() const
 
 void SinglePlayerWorld::DrawWorld(const float partialTick)
 {
+    const auto time = static_cast<float>(glfwGetTime());
+    DeltaTime += time - LastTimeFrame;
+    LastTimeFrame = time;
+    if (DeltaTime > 1.0F)
+    {
+        DeltaTime -= 1.0F;
+        Fps = Frames;
+        Frames = 0;
+    }
     glEnable(GL_CULL_FACE);
     Player->Render(partialTick);
     const Frustum frustum = Player->GetCameraFrustum();
@@ -443,6 +455,7 @@ void SinglePlayerWorld::DrawWorld(const float partialTick)
     Player->DisplaySelectionHighlight();
     DrawGui();
     glDisable(GL_CULL_FACE);
+    Frames++;
 }
 
 void SinglePlayerWorld::RebuildGui() const
@@ -456,6 +469,11 @@ void SinglePlayerWorld::RebuildGui() const
 GLFWwindow* SinglePlayerWorld::GetWindow() const
 {
     return TheAppWindow;
+}
+
+int SinglePlayerWorld::GetFps() const
+{
+    return Fps;
 }
 
 vector<BoundingBox> SinglePlayerWorld::GetBlockBoxesInBoundingBox(const BoundingBox& boundingBox)

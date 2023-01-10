@@ -27,12 +27,15 @@ void KeyCallback(GLFWwindow* window, const int key, int /*scancode*/, const int 
 
 void WindowsResizeCallback(GLFWwindow* /*window*/, const int width, const int height)
 {
-    helper->HandleWindowResize(height, width);
+    if (width != 0 && height != 0)
+    {
+        helper->HandleWindowResize(height, width);
+    }
 }
 
 void MainLoop(GLFWwindow* window)
 {
-    auto cam = Camera(vec3(0.0F, 0.0F, 0.0F), 1280 / 720.0F);
+    auto cam = Camera(vec3(0.0F, 0.0F, 0.0F), 1920.0F / 1080.0F);
     CameraController::SetActiveCamera(cam);
     double start = glfwGetTime();
     helper = std::make_unique<SinglePlayerWorld>(static_cast<uint16_t>(256), static_cast<uint16_t>(64), static_cast<uint16_t>(256), window);
@@ -97,7 +100,7 @@ GLFWwindow* InitGlfw()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    GLFWwindow* window = glfwCreateWindow(1920, 1080, "Minecraft C++ Project", glfwGetPrimaryMonitor(), nullptr);
+    GLFWwindow* window = glfwCreateWindow(1920, 1080, "Minecraft C++ Project", nullptr, nullptr);
     if (window == nullptr)
     {
         cout << "Failed to create GLFW window" << endl;

@@ -254,6 +254,7 @@
         <ClCompile Include="glad.c"/>
         <ClCompile Include="GUI\CrosshairGui.cpp"/>
         <ClCompile Include="GUI\Gui.cpp"/>
+        <ClCompile Include="GUI\PerformanceGui.cpp"/>
         <ClCompile Include="GUI\SelectedBlockGui.cpp"/>
         <ClCompile Include="RunMinecraft.cpp"/>
         <ClCompile Include="Shaders\Shader.cpp"/>
@@ -262,6 +263,7 @@
         <ClCompile Include="Util\CustomFileManager.cpp"/>
         <ClCompile Include="Util\CustomRandomEngine.cpp"/>
         <ClCompile Include="Util\EngineDefaults.cpp"/>
+        <ClCompile Include="Util\FontManager.cpp"/>
         <ClCompile Include="Util\GuiTessellation.cpp"/>
         <ClCompile Include="Util\GuiVertex.cpp"/>
         <ClCompile Include="Util\PerlinNoise.cpp"/>
@@ -293,6 +295,7 @@
         <ClInclude Include="Entities\Zombie.h"/>
         <ClInclude Include="GUI\CrosshairGui.h"/>
         <ClInclude Include="GUI\Gui.h"/>
+        <ClInclude Include="GUI\PerformanceGui.h"/>
         <ClInclude Include="GUI\SelectedBlockGui.h"/>
         <ClInclude Include="Shaders\Shader.h"/>
         <ClInclude Include="Textures\Texture.h"/>
@@ -300,6 +303,7 @@
         <ClInclude Include="Util\CustomFileManager.h"/>
         <ClInclude Include="Util\CustomRandomEngine.h"/>
         <ClInclude Include="Util\EngineDefaults.h"/>
+        <ClInclude Include="Util\FontManager.h"/>
         <ClInclude Include="Util\GuiTessellation.h"/>
         <ClInclude Include="Util\GuiVertex.h"/>
         <ClInclude Include="Util\PerlinNoise.h"/>
@@ -321,12 +325,14 @@
         <ClInclude Include="World\SinglePlayerWorld.h"/>
     </ItemGroup>
     <ItemGroup>
-        <None Include="Shaders\FragmentShader.glsl">
+        <Content Include="Shaders\FragmentShader.glsl">
             <DeploymentContent>true</DeploymentContent>
-        </None>
-        <None Include="Shaders\VertexShader.glsl">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Shaders\VertexShader.glsl">
             <DeploymentContent>true</DeploymentContent>
-        </None>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
     <ItemGroup>
         <Image Include="Textures\Blocks\Cobblestone.png">
@@ -353,13 +359,24 @@
         </Image>
     </ItemGroup>
     <ItemGroup>
-        <Content Include="Shaders\GUIFragmentShader.glsl"/>
-        <Content Include="Shaders\GUIVertexShader.glsl"/>
-        <Content Include="Textures\Blocks\Planks.png"/>
+        <Content Include="Shaders\GUIFragmentShader.glsl">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Shaders\GUIVertexShader.glsl">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Textures\Blocks\Planks.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         <Content Include="Textures\Blocks\Sapling.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="Textures\Blocks\Stone.png"/>
+        <Content Include="Textures\Blocks\Stone.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Textures\Font\default.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
     <ImportGroup Label="ExtensionTargets">

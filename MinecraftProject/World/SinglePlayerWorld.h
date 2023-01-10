@@ -34,6 +34,10 @@ class SinglePlayerWorld
     GLFWwindow* TheAppWindow;
     vector<uint8_t> LightLevels;
     const uint8_t MaxChunkRebuilt = 8;
+    float LastTimeFrame;
+    float DeltaTime;
+    int Frames;
+    int Fps;
     void SaveWorld();
     void LoadWorld();
     void GenerateChunks(uint16_t amountX, uint16_t amountY, uint16_t amountZ);
@@ -74,6 +78,7 @@ public:
     [[nodiscard]] GLFWwindow* GetWindow() const;
     template <typename T>
     [[nodiscard]] Gui* GetGuiOfType() const;
+    [[nodiscard]] int GetFps() const;
 };
 
 template <typename T>

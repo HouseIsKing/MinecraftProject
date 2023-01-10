@@ -7,13 +7,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4f885148-8e28-4ab6-9a1d-8675988ae9cb" name="Changes" comment="rd-161348 completed!">
+    <list default="true" id="4f885148-8e28-4ab6-9a1d-8675988ae9cb" name="Changes" comment="mc-161807 completed">
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/GUI/PerformanceGui.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/GUI/PerformanceGui.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/Textures/Font/default.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/Util/FontManager.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/Util/FontManager.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MinecraftProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MinecraftProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Entity.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Entity.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Entity.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Entity.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/ParticleEntity.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/ParticleEntity.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/ParticleEntity.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/ParticleEntity.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/GUI/CrosshairGui.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/GUI/CrosshairGui.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/GUI/CrosshairGui.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/GUI/CrosshairGui.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/MinecraftProejct.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/MinecraftProejct.vcxproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/RunMinecraft.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/RunMinecraft.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/EngineDefaults.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/EngineDefaults.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/EngineDefaults.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/EngineDefaults.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/SinglePlayerWorld.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/SinglePlayerWorld.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/World/SinglePlayerWorld.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/SinglePlayerWorld.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -40,6 +47,7 @@
     <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/vector" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/xhash" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/xmemory" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/xstring" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/GLFW/glfw3.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glad/glad.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glm/detail/func_geometric.inl" root0="SKIP_HIGHLIGHTING" />
@@ -51,6 +59,8 @@
     <setting file="file://$PROJECT_DIR$/Include/glm/detail/type_vec4.inl" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glm/fwd.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glm/gtx/transform.inl" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Include/stb_image.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftProject/Entities/Entity.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftProject/Entities/Entity.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftProject/Entities/EntityMeshBlock.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftProject/Entities/EntityMeshBlock.h" root0="FORCE_HIGHLIGHTING" />
@@ -237,7 +247,7 @@
       <workItem from="1672837316727" duration="30911000" />
       <workItem from="1672986482474" duration="12425000" />
       <workItem from="1673019954613" duration="1637000" />
-      <workItem from="1673023358522" duration="43017000" />
+      <workItem from="1673023358522" duration="60564000" />
     </task>
     <task id="LOCAL-00001" summary="AAAAAAAAAAAAAAAAAAAAAA finally got the bindless textures to work">
       <created>1652106111120</created>
@@ -344,7 +354,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673338326755</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="mc-161807 completed">
+      <created>1673348517141</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1673348517141</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -393,10 +410,22 @@
     <MESSAGE value="rd-20090515 completed" />
     <MESSAGE value="rd-160052 completed" />
     <MESSAGE value="rd-161348 completed!" />
-    <option name="LAST_COMMIT_MESSAGE" value="rd-161348 completed!" />
+    <MESSAGE value="mc-161807 completed" />
+    <option name="LAST_COMMIT_MESSAGE" value="mc-161807 completed" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/MinecraftProject/Util/FontManager.cpp</url>
+          <line>38</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

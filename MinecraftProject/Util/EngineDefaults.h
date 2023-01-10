@@ -6,6 +6,7 @@
 #include "CustomRandomEngine.h"
 #include <array>
 
+#include "FontManager.h"
 #include "Textures/Texture.h"
 
 using std::array;
@@ -20,6 +21,7 @@ class EngineDefaults
     static bool HasInit;
     static void Init();
     static CustomRandomEngine Engine;
+    static FontManager MainFont;
 
 public:
     static float ConvertLightLevelToAmbient(int lightLevel);
@@ -34,6 +36,7 @@ public:
     static uint16_t RegisterTexture(Texture* texture);
     static void BuildTextureUbo();
     static void ResetTextures();
+    static const FontManager& GetFontManager();
 };
 
 template <typename T>

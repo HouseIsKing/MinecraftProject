@@ -9,6 +9,7 @@ CustomRandomEngine EngineDefaults::Engine = {};
 std::unordered_map<Texture*, uint16_t, TextureHasher> EngineDefaults::TextureList = {};
 array<unique_ptr<Shader>, 2> EngineDefaults::Shaders = {};
 GLuint EngineDefaults::UboTextures = 0;
+FontManager EngineDefaults::MainFont{"Textures/Font/default.png"};
 
 Shader* EngineDefaults::GetShader(const uint8_t index)
 {
@@ -93,4 +94,9 @@ void EngineDefaults::ResetTextures()
     }
     TextureList.clear();
     HasBuiltTextureUbo = false;
+}
+
+const FontManager& EngineDefaults::GetFontManager()
+{
+    return MainFont;
 }
