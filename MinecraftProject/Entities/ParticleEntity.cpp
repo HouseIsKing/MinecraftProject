@@ -38,7 +38,7 @@ ParticleEntity::ParticleEntity(const float x, const float y, const float z, floa
 void ParticleEntity::Tick()
 {
     Entity::Tick();
-    if (EngineDefaults::GetNextFloat() < 0.1F)
+    if (EngineDefaults::GetNextFloat() < 0.001F)
     {
         GetWorld()->RemoveEntity(GetEntityId());
     }
@@ -59,7 +59,8 @@ void ParticleEntity::Render(const float partialTick)
     Entity::Render(partialTick);
     const vec3 pos = GetTransform().GetPosition();
     GetTransform().SetPosition(PrevPos + (pos - PrevPos) * partialTick);
-    GetTransform().SetRotation(0.0F, GetWorld()->GetPlayer()->GetTransform().GetRotation().y + 90.0F, 0.0F);
+    const auto playerRot = vec3(GetWorld()->GetPlayer()->GetCameraPitch(), GetWorld()->GetPlayer()->GetTransform().GetRotation().y, 0.0F);
+    GetTransform().SetRotation(playerRot.x, playerRot.y + 90.0F, playerRot.z);
     if (const int brightness = GetWorld()->GetBrightnessAt(pos); PreviousLightLevel != brightness)
     {
         GenerateTextureTessellation(brightness);

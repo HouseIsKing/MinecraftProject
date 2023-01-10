@@ -4,6 +4,8 @@
 #include "ChunkCoords.h"
 #include <array>
 
+#include "Blocks/Block.h"
+
 class SinglePlayerWorld;
 
 using std::array;
@@ -38,6 +40,9 @@ private:
     static SinglePlayerWorld* World;
     std::array<EBlockType, static_cast<size_t>(CHUNK_HEIGHT * CHUNK_DEPTH * CHUNK_WIDTH)> Blocks{EBlockType::Air};
     void DrawBlock(EBlockType blockType, int x, int y, int z);
+    void DrawSaplingBlock(const Block* block, int x, int y, int z);
+    [[nodiscard]] bool IsSideNeedToBeDrawn(const BlockFaces& face, int x, int y, int z) const;
+    void DrawDefaultBlock(const Block* block, int x, int y, int z);
     [[nodiscard]] float GetDistanceFromPlayer() const;
 };
 

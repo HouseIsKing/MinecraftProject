@@ -11,9 +11,9 @@ Transform::Transform(Transform* parent) : Position(vec3(0.0F)), Rotation(vec3(0.
 void Transform::CalculateTransformMatrix()
 {
     TransformMatrix = translate(Position);
-    TransformMatrix = rotate(TransformMatrix, glm::radians(Rotation.x), vec3(1.0F, 0.0F, 0.0F));
-    TransformMatrix = rotate(TransformMatrix, glm::radians(Rotation.y), vec3(0.0F, -1.0F, 0.0F));
     TransformMatrix = rotate(TransformMatrix, glm::radians(Rotation.z), vec3(0.0F, 0.0F, 1.0F));
+    TransformMatrix = rotate(TransformMatrix, glm::radians(Rotation.y), vec3(0.0F, -1.0F, 0.0F));
+    TransformMatrix = rotate(TransformMatrix, glm::radians(Rotation.x), vec3(1.0F, 0.0F, 0.0F));
     TransformMatrix = scale(TransformMatrix, Scale);
     IsDirty = false;
 }

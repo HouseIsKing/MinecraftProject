@@ -118,14 +118,14 @@ float BoundingBox::ClipCollisionX(const BoundingBox& other, float x) const
     {
         if (x < 0 && MinX >= other.GetMaxX())
         {
-            if (const float max = other.GetMaxX() - MinX + 0.001F; max > x)
+            if (const float max = other.GetMaxX() - MinX + 0.00001F; max > x)
             {
                 x = max;
             }
         }
         else if (x > 0 && MaxX <= other.GetMinX())
         {
-            if (const float min = other.GetMinX() - MaxX - 0.001F; min < x)
+            if (const float min = other.GetMinX() - MaxX - 0.00001F; min < x)
             {
                 x = min;
             }
@@ -140,14 +140,14 @@ float BoundingBox::ClipCollisionY(const BoundingBox& other, float y) const
     {
         if (y < 0 && MinY >= other.GetMaxY())
         {
-            if (const float max = other.GetMaxY() - MinY + 0.001F; max > y)
+            if (const float max = other.GetMaxY() - MinY + 0.00001F; max > y)
             {
                 y = max;
             }
         }
         else if (y > 0 && MaxY <= other.GetMinY())
         {
-            if (const float min = other.GetMinY() - MaxY - 0.001F; min < y)
+            if (const float min = other.GetMinY() - MaxY - 0.00001F; min < y)
             {
                 y = min;
             }
@@ -162,14 +162,14 @@ float BoundingBox::ClipCollisionZ(const BoundingBox& other, float z) const
     {
         if (z < 0 && MinZ >= other.GetMaxZ())
         {
-            if (const float max = other.GetMaxZ() - MinZ + 0.001F; max > z)
+            if (const float max = other.GetMaxZ() - MinZ + 0.00001F; max > z)
             {
                 z = max;
             }
         }
         else if (z > 0 && MaxZ <= other.GetMinZ())
         {
-            if (const float min = other.GetMinZ() - MaxZ - 0.001F; min < z)
+            if (const float min = other.GetMinZ() - MaxZ - 0.00001F; min < z)
             {
                 z = min;
             }

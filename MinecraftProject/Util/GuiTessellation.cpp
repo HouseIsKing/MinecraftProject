@@ -55,6 +55,7 @@ void GuiTessellation::Draw()
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(GuiVertex), reinterpret_cast<void*>(offsetof(GuiVertex, TexCoords)));
         glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(GuiVertex), reinterpret_cast<void*>(offsetof(GuiVertex, Color)));
         glVertexAttribIPointer(3, 1, GL_INT, sizeof(GuiVertex), reinterpret_cast<void*>(offsetof(GuiVertex, IndexTexture)));
+        glVertexAttribIPointer(4, 1, GL_UNSIGNED_INT, sizeof(GuiVertex), reinterpret_cast<void*>(offsetof(GuiVertex, SpecialFactor)));
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Ebo);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLintptr>(TriangleIndices.size() * sizeof(GLushort)), TriangleIndices.data(), GL_STATIC_DRAW);
         TrianglesCount = TriangleIndices.size();
@@ -65,10 +66,12 @@ void GuiTessellation::Draw()
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
     glEnableVertexAttribArray(3);
+    glEnableVertexAttribArray(4);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Ebo);
     glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(TrianglesCount), GL_UNSIGNED_SHORT, nullptr);
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(2);
     glDisableVertexAttribArray(3);
+    glDisableVertexAttribArray(4);
 }

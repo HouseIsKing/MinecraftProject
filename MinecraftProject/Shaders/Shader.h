@@ -15,7 +15,7 @@ using std::stringstream;
 
 class Shader
 {
-    unordered_map<string, int> Uniforms;
+    unordered_map<string, GLint> Uniforms;
     static void CompileShader(GLuint shader);
     static void LinkProgram(GLuint program);
 
@@ -28,10 +28,10 @@ public:
     const GLuint Program;
     Shader(const string& vertPath, const string& fragPath);
     void Use() const;
-    [[nodiscard]] GLuint GetAttribLocation(const string& name) const;
     [[nodiscard]] GLuint GetUniformBlockIndex(const string& name) const;
     [[nodiscard]] int GetUniformInt(const string& name) const;
     static void SetInt(int posUniform, int value);
+    static void SetUnsignedInt(int posUniform, GLuint value);
     static void SetFloat(int posUniform, float value);
     static void SetVec3(int posUniform, float x, float y, float z);
     static void SetMat4(int posUniform, mat4x4 value);

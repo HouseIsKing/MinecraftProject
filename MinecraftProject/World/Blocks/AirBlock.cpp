@@ -15,3 +15,13 @@ void AirBlock::GenerateTessellationData(GuiTessellation& /*tessellationHelper*/,
                                         mat4x4 /*transformationMatrix*/) const
 {
 }
+
+bool AirBlock::IsSolidBlock() const
+{
+    return false;
+}
+
+bool AirBlock::IsBlockingLight() const
+{
+    return false;
+}

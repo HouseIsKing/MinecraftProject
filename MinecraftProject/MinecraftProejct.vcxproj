@@ -276,6 +276,7 @@
         <ClCompile Include="World\Blocks\DirtBlock.cpp"/>
         <ClCompile Include="World\Blocks\GrassBlock.cpp"/>
         <ClCompile Include="World\Blocks\PlanksBlock.cpp"/>
+        <ClCompile Include="World\Blocks\SaplingBlock.cpp"/>
         <ClCompile Include="World\Blocks\StoneBlock.cpp"/>
         <ClCompile Include="World\Chunk.cpp"/>
         <ClCompile Include="World\ChunkCoords.cpp"/>
@@ -313,6 +314,7 @@
         <ClInclude Include="World\Blocks\DirtBlock.h"/>
         <ClInclude Include="World\Blocks\GrassBlock.h"/>
         <ClInclude Include="World\Blocks\PlanksBlock.h"/>
+        <ClInclude Include="World\Blocks\SaplingBlock.h"/>
         <ClInclude Include="World\Blocks\StoneBlock.h"/>
         <ClInclude Include="World\Chunk.h"/>
         <ClInclude Include="World\ChunkCoords.h"/>
@@ -354,6 +356,9 @@
         <Content Include="Shaders\GUIFragmentShader.glsl"/>
         <Content Include="Shaders\GUIVertexShader.glsl"/>
         <Content Include="Textures\Blocks\Planks.png"/>
+        <Content Include="Textures\Blocks\Sapling.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         <Content Include="Textures\Blocks\Stone.png"/>
     </ItemGroup>
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>

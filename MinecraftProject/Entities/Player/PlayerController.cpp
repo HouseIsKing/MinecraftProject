@@ -51,7 +51,6 @@ void PlayerController::Render(const float partialTick)
     SelectionHighlight.BlockHit = found ? GetWorld()->GetBlockAt(SelectionHighlight.HitPosition.x, SelectionHighlight.HitPosition.y, SelectionHighlight.HitPosition.z) : nullptr;
     HandleMouseInput();
     HandleKeyboardMovementInput();
-    //DisplaySelectionHighlight();
 }
 
 int PlayerController::GetSelectionHighlightBrightness(const int x, const int y, const int z, const BlockFaces face)
@@ -227,6 +226,11 @@ Frustum PlayerController::GetCameraFrustum() const
     return MyCamera.GetFrustum();
 }
 
+float PlayerController::GetCameraPitch() const
+{
+    return MyCamera.Pitch;
+}
+
 void PlayerController::HandleMouseInput()
 {
     double x;
@@ -342,6 +346,11 @@ void PlayerController::HandleKeyboardMovementInput()
     if (state == GLFW_PRESS)
     {
         CurrentSelectedBlock = EBlockType::Planks;
+    }
+    state = glfwGetKey(window, GLFW_KEY_5);
+    if (state == GLFW_PRESS)
+    {
+        CurrentSelectedBlock = EBlockType::Sapling;
     }
     if (SelectedBlockGuiPtr != nullptr)
     {

@@ -7,38 +7,45 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4f885148-8e28-4ab6-9a1d-8675988ae9cb" name="Changes" comment="rd-160052 completed">
+    <list default="true" id="4f885148-8e28-4ab6-9a1d-8675988ae9cb" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/Textures/Blocks/Sapling.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/SaplingBlock.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/SaplingBlock.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MinecraftProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MinecraftProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Entity.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Entity.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Entity.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Entity.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/EntityMeshBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/EntityMeshBlock.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/EntityMeshBlock.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/EntityMeshBlock.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/ParticleEntity.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/ParticleEntity.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Player/Camera.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Player/Camera.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerController.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerController.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerController.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerSelectionHighlight.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerSelectionHighlight.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/GUI/Gui.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/GUI/Gui.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerSelectionHighlight.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerSelectionHighlight.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Zombie.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Zombie.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/GUI/CrosshairGui.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/GUI/CrosshairGui.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/GUI/SelectedBlockGui.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/GUI/SelectedBlockGui.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/MinecraftProejct.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/MinecraftProejct.vcxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Shaders/FragmentShader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Shaders/FragmentShader.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Shaders/GUIFragmentShader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Shaders/GUIFragmentShader.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Shaders/GUIVertexShader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Shaders/GUIVertexShader.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Shaders/Shader.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Shaders/Shader.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/Shaders/Shader.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Shaders/Shader.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Textures/Texture.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Textures/Texture.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/BoundingBox.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/BoundingBox.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/CustomFileManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/CustomFileManager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/CustomRandomEngine.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/CustomRandomEngine.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/EngineDefaults.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/EngineDefaults.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/EngineDefaults.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/EngineDefaults.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/GuiTessellation.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/GuiTessellation.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Shaders/VertexShader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Shaders/VertexShader.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/BoundingBox.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/BoundingBox.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/GuiTessellation.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/GuiTessellation.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/GuiVertex.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/GuiVertex.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/PerlinNoise.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/PerlinNoise.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/TessellationHelper.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/TessellationHelper.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/TessellationInterface.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/TessellationInterface.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/GuiVertex.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/GuiVertex.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/TessellationHelper.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/TessellationHelper.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/Transform.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/Transform.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/Vertex.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/Vertex.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Util/Vertex.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Util/Vertex.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/AirBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/AirBlock.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/AirBlock.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/AirBlock.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/Block.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/Block.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/Block.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/Block.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/BlockTypeList.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/BlockTypeList.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/BlockTypeList.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/BlockTypeList.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/CobblestoneBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/CobblestoneBlock.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/DirtBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/DirtBlock.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/PlanksBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/PlanksBlock.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/StoneBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/StoneBlock.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/GrassBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/GrassBlock.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Chunk.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Chunk.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Chunk.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Chunk.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/World/SinglePlayerWorld.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/SinglePlayerWorld.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/SinglePlayerWorld.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/SinglePlayerWorld.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +63,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/../../../../Program Files (x86)/Windows Kits/10/Include/10.0.19041.0/um/WinBase.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files (x86)/Windows Kits/10/Include/10.0.22000.0/um/gl/GL.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/list" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/memory" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/type_traits" root0="SKIP_HIGHLIGHTING" />
@@ -66,11 +74,13 @@
     <setting file="file://$PROJECT_DIR$/Include/GLFW/glfw3.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glad/glad.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glm/detail/func_geometric.inl" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Include/glm/detail/qualifier.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glm/detail/type_mat4x4.inl" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glm/detail/type_quat.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glm/detail/type_vec3.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glm/detail/type_vec3.inl" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glm/detail/type_vec4.inl" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Include/glm/fwd.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glm/gtx/transform.inl" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftProject/Entities/Entity.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftProject/Entities/EntityMeshBlock.cpp" root0="FORCE_HIGHLIGHTING" />
@@ -80,7 +90,6 @@
     <setting file="file://$PROJECT_DIR$/MinecraftProject/Entities/Zombie.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftProject/Entities/Zombie.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftProject/Util/Transform.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftProject/World/Blocks/Block.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftProject/World/Blocks/GrassBlock.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftProject/World/SinglePlayerWorld.cpp" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -99,30 +108,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.49346018&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "XThreadsFramesViewSplitterKey": "0.49346018",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;rider.external.source.directories&quot;: [
-      &quot;C:\\Users\\amitz\\AppData\\Local\\JetBrains\\Shared\\vAny\\DecompilerCache&quot;,
-      &quot;C:\\Users\\amitz\\AppData\\Local\\JetBrains\\Shared\\vAny\\SourcesCache&quot;,
-      &quot;C:\\Users\\amitz\\AppData\\Local\\Symbols\\src&quot;
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "C:\\Users\\amitz\\AppData\\Local\\JetBrains\\Shared\\vAny\\DecompilerCache",
+      "C:\\Users\\amitz\\AppData\\Local\\JetBrains\\Shared\\vAny\\SourcesCache",
+      "C:\\Users\\amitz\\AppData\\Local\\Symbols\\src"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="MinecraftProejct" type="CppProject" factoryName="C++ Project">
       <configuration_1>
@@ -257,6 +267,7 @@
       <workItem from="1672837316727" duration="30911000" />
       <workItem from="1672986482474" duration="12425000" />
       <workItem from="1673019954613" duration="1637000" />
+      <workItem from="1673023358522" duration="38450000" />
     </task>
     <task id="LOCAL-00001" summary="AAAAAAAAAAAAAAAAAAAAAA finally got the bindless textures to work">
       <created>1652106111120</created>

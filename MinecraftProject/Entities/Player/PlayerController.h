@@ -44,4 +44,5 @@ public:
     PlayerController(float x, float y, float z);
     void Render(float partialTick) override;
     [[nodiscard]] Frustum GetCameraFrustum() const;
+    [[nodiscard]] float GetCameraPitch() const;
 };

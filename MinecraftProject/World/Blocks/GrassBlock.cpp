@@ -1,7 +1,3 @@
-//
-// Created by amit on 4/22/2022.
-//
-
 #include "GrassBlock.h"
 
 #include "Util/EngineDefaults.h"

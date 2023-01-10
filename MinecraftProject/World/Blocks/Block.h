@@ -22,6 +22,12 @@ enum class BlockFaces
     South
 };
 
+enum class DrawType
+{
+    Default,
+    Sapling
+};
+
 class Block
 {
 protected:
@@ -46,4 +52,7 @@ public:
     virtual void Tick(SinglePlayerWorld* world, int x, int y, int z) const;
     virtual void OnBreak(SinglePlayerWorld* world, int x, int y, int z) const;
     [[nodiscard]] uint16_t GetTextureFromIndex(const size_t& index) const;
+    [[nodiscard]] virtual DrawType GetDrawType() const;
+    [[nodiscard]] virtual bool IsSolidBlock() const;
+    [[nodiscard]] virtual bool IsBlockingLight() const;
 };

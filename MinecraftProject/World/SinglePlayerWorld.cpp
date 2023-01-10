@@ -1,7 +1,3 @@
-//
-// Created by amit on 4/21/2022.
-//
-
 #include "SinglePlayerWorld.h"
 #include "../Util/CustomFileManager.h"
 #include "../Util/EngineDefaults.h"
@@ -45,7 +41,7 @@ void SinglePlayerWorld::LoadWorld()
     }
 }
 
-SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth, GLFWwindow* window) : Player(nullptr), LevelWidth(width), LevelHeight(height), LevelDepth(depth), FogsBuffer(0), TheAppWindow(window)
+SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth, GLFWwindow* window) : Player(nullptr), WorldTime(0), LevelWidth(width), LevelHeight(height), LevelDepth(depth), FogsBuffer(0), TheAppWindow(window)
 {
     Entity::SetWorld(this);
     Chunk::SetWorld(this);
@@ -83,6 +79,8 @@ void SinglePlayerWorld::RemoveEntity(const uint16_t id)
 
 void SinglePlayerWorld::Tick()
 {
+    WorldTime++;
+    Shader::SetUnsignedInt(EngineDefaults::GetShader()->GetUniformInt("worldTime"), static_cast<GLuint>(WorldTime % 24000L));
     for (uint16_t val : EntitiesToRemove)
     {
         Entities.erase(val);
@@ -113,6 +111,7 @@ void SinglePlayerWorld::HandleWindowResize(const int height, const int width) co
 void SinglePlayerWorld::Init()
 {
     //Shader::SetVec3(EngineDefaults::GetShader()->GetUniformInt("directionalLightDirection"), -1.0F, -1.0F, -1.0F);
+    Shader::SetUnsignedInt(EngineDefaults::GetShader()->GetUniformInt("worldTime"), static_cast<GLuint>(WorldTime % 24000L));
     InitFog();
     BlockTypeList::InitBlockTypes();
     if (std::filesystem::exists("level.dat"))
@@ -158,7 +157,7 @@ int SinglePlayerWorld::RecalculateLightLevels(const int x, const int z)
     const int previousLightLevel = LightLevels[static_cast<size_t>(x * LevelDepth + z)];
     for (int y = LevelHeight - 1; y >= 0; y--)
     {
-        if (GetBlockTypeAt(x, y, z) != EBlockType::Air || y == 0)
+        if (GetBlockAt(x, y, z)->IsBlockingLight() || y == 0)
         {
             LightLevels.at(static_cast<size_t>(x * LevelDepth + z)) = static_cast<uint8_t>(y);
             return y - previousLightLevel;
@@ -203,6 +202,7 @@ void SinglePlayerWorld::UpdateChunksNear(const int x, const int y, const int z)
 
 void SinglePlayerWorld::DrawGui() const
 {
+    Shader::SetUnsignedInt(EngineDefaults::GetShader(1)->GetUniformInt("worldTime"), static_cast<GLuint>(WorldTime % 24000L));
     for (const auto& gui : Guis)
     {
         gui->Render();
@@ -219,33 +219,6 @@ void SinglePlayerWorld::GenerateChunks(const uint16_t amountX, const uint16_t am
             for (int z = 0; z < amountZ; z++)
             {
                 Chunks.emplace(piecewise_construct, forward_as_tuple(x * Chunk::CHUNK_WIDTH, y * Chunk::CHUNK_HEIGHT, z * Chunk::CHUNK_DEPTH), forward_as_tuple(x * Chunk::CHUNK_WIDTH, y * Chunk::CHUNK_HEIGHT, z * Chunk::CHUNK_DEPTH));
-            }
-        }
-    }
-    for (int i = 0; i < amountX; i++)
-    {
-        for (int j = 0; j < amountY; j++)
-        {
-            for (int k = 0; k < amountZ; k++)
-            {
-                Chunk* chunk = GetChunkAt(i * Chunk::CHUNK_WIDTH, j * Chunk::CHUNK_HEIGHT, k * Chunk::CHUNK_DEPTH);
-                for (int x = 0; x < Chunk::CHUNK_WIDTH; x++)
-                {
-                    for (int y = 0; y < Chunk::CHUNK_HEIGHT; y++)
-                    {
-                        for (int z = 0; z < Chunk::CHUNK_DEPTH; z++)
-                        {
-                            if (y + j * Chunk::CHUNK_HEIGHT >= LevelHeight - 7)
-                            {
-                                chunk->SetBlockTypeAt(x, y, z, EBlockType::Grass);
-                            }
-                            else
-                            {
-                                chunk->SetBlockTypeAt(x, y, z, EBlockType::Cobblestone);
-                            }
-                        }
-                    }
-                }
             }
         }
     }
@@ -342,7 +315,7 @@ Chunk* SinglePlayerWorld::GetChunkAt(const int x, const int y, const int z)
  */
 int SinglePlayerWorld::GetBrightnessAt(const vec3 pos) const
 {
-    return GetBrightnessAt(static_cast<int>(pos.x + 0.5F - static_cast<float>((pos.x < 0))), static_cast<int>(pos.y + 0.5F - static_cast<float>((pos.y < 0))), static_cast<int>(pos.z + 0.5F - static_cast<float>((pos.z < 0))));
+    return GetBrightnessAt(static_cast<int>(pos.x), static_cast<int>(pos.y), static_cast<int>(pos.z));
 }
 
 int SinglePlayerWorld::GetBrightnessAt(const int x, const int y, const int z) const
@@ -351,11 +324,16 @@ int SinglePlayerWorld::GetBrightnessAt(const int x, const int y, const int z) co
     {
         return 1;
     }
-    if (const uint8_t lightLevel = LightLevels.at(static_cast<size_t>(x * LevelDepth + z)); y >= lightLevel)
+    if (const uint8_t lightLevel = LightLevels.at(static_cast<size_t>(x * LevelDepth + z)); y > lightLevel)
     {
         return 1;
     }
     return 0;
+}
+
+bool SinglePlayerWorld::IsBlockSolid(const int x, const int y, const int z)
+{
+    return GetBlockAt(x, y, z)->IsSolidBlock();
 }
 
 bool SinglePlayerWorld::IsBlockExists(const int x, const int y, const int z)
@@ -370,14 +348,22 @@ void SinglePlayerWorld::PlaceBlockAt(const int x, const int y, const int z, cons
     {
         return;
     }
+    const Block* previousBlock = chunk->GetBlockAt(x, y, z);
+    const Block* block = BlockTypeList::GetBlockTypeData(blockType);
     chunk->SetBlockTypeAt(x, y, z, blockType);
-    UpdateChunksNear(x, y, z);
-    const int lightLevelsChange = RecalculateLightLevels(x, z);
-    for (int i = 0; i <= abs(lightLevelsChange); i++)
+    if (block->IsSolidBlock() != previousBlock->IsSolidBlock())
     {
-        if (Chunk* chunkLight = GetChunkAt(x, y + i * (lightLevelsChange > 0 ? -1 : 1), z); chunkLight != nullptr)
+        UpdateChunksNear(x, y, z);
+    }
+    if (block->IsBlockingLight() != previousBlock->IsBlockingLight())
+    {
+        const int lightLevelsChange = RecalculateLightLevels(x, z);
+        for (int i = 0; i <= abs(lightLevelsChange); i++)
         {
-            AddChunkAsDirty(chunkLight);
+            if (Chunk* chunkLight = GetChunkAt(x, y + i * (lightLevelsChange > 0 ? -1 : 1), z); chunkLight != nullptr)
+            {
+                AddChunkAsDirty(chunkLight);
+            }
         }
     }
 }
@@ -389,15 +375,22 @@ void SinglePlayerWorld::RemoveBlockAt(const int x, const int y, const int z)
     {
         return;
     }
-    chunk->GetBlockAt(x, y, z)->OnBreak(this, x, y, z);
+    const Block* block = chunk->GetBlockAt(x, y, z);
+    block->OnBreak(this, x, y, z);
     chunk->SetBlockTypeAt(x, y, z, EBlockType::Air);
-    UpdateChunksNear(x, y, z);
-    const int lightLevelsChange = RecalculateLightLevels(x, z);
-    for (int i = 0; i <= abs(lightLevelsChange); i++)
+    if (block->IsSolidBlock())
     {
-        if (Chunk* chunkLight = GetChunkAt(x, y + i * (lightLevelsChange > 0 ? 1 : -1), z); chunkLight != nullptr)
+        UpdateChunksNear(x, y, z);
+    }
+    if (block->IsBlockingLight())
+    {
+        const int lightLevelsChange = RecalculateLightLevels(x, z);
+        for (int i = 0; i <= abs(lightLevelsChange); i++)
         {
-            AddChunkAsDirty(chunkLight);
+            if (Chunk* chunkLight = GetChunkAt(x, y + i * (lightLevelsChange > 0 ? 1 : -1), z); chunkLight != nullptr)
+            {
+                AddChunkAsDirty(chunkLight);
+            }
         }
     }
 }
@@ -474,14 +467,12 @@ vector<BoundingBox> SinglePlayerWorld::GetBlockBoxesInBoundingBox(const Bounding
         {
             for (int z = static_cast<int>(boundingBox.GetMinZ()); static_cast<float>(z) <= boundingBox.GetMaxZ(); z++)
             {
-                const EBlockType block = GetBlockTypeAt(x, y, z);
-                if (block == EBlockType::Air)
+                if (const Block* block = GetBlockAt(x, y, z); block->IsSolidBlock())
                 {
-                    continue;
+                    BoundingBox helper = block->GetBoundingBox();
+                    helper.Move(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z));
+                    result.push_back(helper);
                 }
-                BoundingBox helper = BlockTypeList::GetBlockTypeData(block)->GetBoundingBox();
-                helper.Move(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z));
-                result.push_back(helper);
             }
         }
     }
@@ -498,4 +489,5 @@ SinglePlayerWorld::~SinglePlayerWorld()
     {
         std::cout << "Error while saving world" << std::endl;
     }
+    glDeleteBuffers(1, &FogsBuffer);
 }

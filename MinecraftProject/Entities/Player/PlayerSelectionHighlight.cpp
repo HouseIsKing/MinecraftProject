@@ -17,7 +17,7 @@ void PlayerSelectionHighlight::Render(const int& brightness)
 	const auto y = static_cast<float>(HitPosition.y);
 	const auto z = static_cast<float>(HitPosition.z);
 	const auto helper = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
-	const float alpha = static_cast<float>(sin(static_cast<double>(helper.count()) / 100.0)) * 0.2F + 0.4F;
+	const float alpha = (static_cast<float>(sin(static_cast<double>(helper.count()) / 100.0)) * 0.2F + 0.4F) * 0.5F;
 	Tessellation.Reset();
 	uint16_t triangleIndex1 = 0;
 	uint16_t triangleIndex2 = 0;

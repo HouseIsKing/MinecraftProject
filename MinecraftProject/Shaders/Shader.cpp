@@ -104,11 +104,6 @@ void Shader::Use() const
     glUseProgram(Program);
 }
 
-GLuint Shader::GetAttribLocation(const string& name) const
-{
-    return glGetAttribLocation(Program, name.c_str());
-}
-
 GLuint Shader::GetUniformBlockIndex(const string& name) const
 {
     return glGetUniformBlockIndex(Program, name.c_str());
@@ -122,6 +117,11 @@ int Shader::GetUniformInt(const string& name) const
 void Shader::SetInt(const int posUniform, const int value)
 {
     glUniform1i(posUniform, value);
+}
+
+void Shader::SetUnsignedInt(const int posUniform, const GLuint value)
+{
+    glUniform1ui(posUniform, value);
 }
 
 void Shader::SetFloat(const int posUniform, const float value)

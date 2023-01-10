@@ -1,7 +1,3 @@
-//
-// Created by amit on 4/22/2022.
-//
-
 #include "Block.h"
 
 #include "Entities/ParticleEntity.h"
@@ -157,4 +153,19 @@ void Block::OnBreak(SinglePlayerWorld* /*world*/, const int x, const int y, cons
 uint16_t Block::GetTextureFromIndex(const size_t& index) const
 {
 	return IndexTextures[index];
+}
+
+DrawType Block::GetDrawType() const
+{
+	return DrawType::Default;
+}
+
+bool Block::IsSolidBlock() const
+{
+	return true;
+}
+
+bool Block::IsBlockingLight() const
+{
+	return true;
 }

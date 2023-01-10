@@ -26,6 +26,7 @@ class SinglePlayerWorld
     std::vector<uint16_t> EntitiesToRemove{};
     vector<unique_ptr<Gui>> Guis;
     PlayerController* Player;
+    long WorldTime; //symbolises world time in ticks
     const uint16_t LevelWidth;
     const uint16_t LevelHeight;
     const uint16_t LevelDepth;
@@ -66,6 +67,7 @@ public:
     EBlockType GetBlockTypeAt(int x, int y, int z);
     Chunk* GetChunkAt(int x, int y, int z);
     [[nodiscard]] int GetBrightnessAt(int x, int y, int z) const;
+    bool IsBlockSolid(int x, int y, int z);
     [[nodiscard]] int GetBrightnessAt(vec3 pos) const;
     vector<BoundingBox> GetBlockBoxesInBoundingBox(const BoundingBox& boundingBox);
     void DrawWorld(float partialTick);

@@ -67,6 +67,7 @@ void TessellationHelper::Draw(const size_t transformId, const size_t startPos, s
 		glVertexAttribIPointer(3, 1, GL_INT, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, IndexTexture)));
 		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, Normal)));
 		glVertexAttribIPointer(5, 1, GL_INT, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, Brightness)));
+		glVertexAttribIPointer(6, 1, GL_UNSIGNED_INT, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, SpecialFactors)));
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLintptr>(TriangleIndices.size() * sizeof(GLushort)), TriangleIndices.data(), GL_STATIC_DRAW);
 		TrianglesCount = TriangleIndices.size();
@@ -83,6 +84,7 @@ void TessellationHelper::Draw(const size_t transformId, const size_t startPos, s
 	glEnableVertexAttribArray(3);
 	glEnableVertexAttribArray(4);
 	glEnableVertexAttribArray(5);
+	glEnableVertexAttribArray(6);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Ebo);
 	glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(count), GL_UNSIGNED_SHORT, reinterpret_cast<void*>(startPos * sizeof(GLushort)));
 	glDisableVertexAttribArray(0);
@@ -91,6 +93,7 @@ void TessellationHelper::Draw(const size_t transformId, const size_t startPos, s
 	glDisableVertexAttribArray(3);
 	glDisableVertexAttribArray(4);
 	glDisableVertexAttribArray(5);
+	glDisableVertexAttribArray(6);
 }
 
 size_t TessellationHelper::AddTransform(Transform* transform)

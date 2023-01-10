@@ -17,6 +17,8 @@ struct Vertex
 	int IndexTexture;
 	vec3 Normal;
 	int Brightness;
+	unsigned int SpecialFactors;
 	Vertex(float x, float y, float z, float u, float v, float r, float g, float b, float a, uint16_t indexTexture, float normalX, float normalY, float normalZ, int brightness);
 	Vertex(const vec3& pos, float u, float v, float r, float g, float b, float a, uint16_t indexTexture, float normalX, float normalY, float normalZ, int brightness);
+	Vertex(float x, float y, float z, float u, float v, float r, float g, float b, float a, uint16_t indexTexture, float normalX, float normalY, float normalZ, int brightness, unsigned int specialFactors);
 };

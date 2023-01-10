@@ -12,5 +12,8 @@ out vec4 FragColor;
 
 void main()
 {
-	FragColor = color*texture(sampler2D(samplers[samplerHandle]) , outTexture);
+    vec4 textureColor = texture(sampler2D(samplers[samplerHandle]) , outTexture);
+    if(textureColor.a < 0.5)
+        discard;
+	FragColor = color*textureColor;
 }

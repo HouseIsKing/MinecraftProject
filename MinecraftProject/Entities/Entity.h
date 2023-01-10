@@ -1,7 +1,3 @@
-//
-// Created by amit on 4/22/2022.
-//
-
 #pragma once
 #include "../Util/TessellationHelper.h"
 #include <glm/glm.hpp>
@@ -17,7 +13,8 @@ class Entity
     static SinglePlayerWorld* World;
     bool IsGrounded;
     vec3 EntitySize;
-    const uint16_t EntityId; // NOLINT(clang-diagnostic-unused-private-field)
+    const uint16_t EntityId;
+
 protected:
     float VelocityX;
     float VelocityY;

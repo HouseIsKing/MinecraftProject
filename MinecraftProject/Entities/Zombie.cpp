@@ -97,7 +97,7 @@ void Zombie::Render(const float partialTick)
     {
         RebuildRender(brightness);
     }
-    const double time = static_cast<double>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch()).count()) / 1.0E9 * 10.0 + static_cast<double>(TimeOffset);
+    const double time = glfwGetTime() * 10.0 + static_cast<double>(TimeOffset);
     Head.SetRotationRadians(0.0F, static_cast<float>(sin(time * 0.83)), static_cast<float>(sin(time)) * 0.8F, Tessellation);
     Tessellation.Draw(Head.GetBlockTransformId(), Head.GetTrianglesStartPos(), 36);
     Tessellation.Draw(Body.GetBlockTransformId(), Body.GetTrianglesStartPos(), 36);

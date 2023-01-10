@@ -5,6 +5,7 @@
 #include "DirtBlock.h"
 #include "GrassBlock.h"
 #include "PlanksBlock.h"
+#include "SaplingBlock.h"
 #include "StoneBlock.h"
 
 std::istream& operator>>(std::istream& is, EBlockType& blockType)
@@ -35,6 +36,7 @@ void BlockTypeList::InitBlockTypes()
     BlockTypes.emplace(EBlockType::Cobblestone, new CobblestoneBlock());
     BlockTypes.emplace(EBlockType::Stone, new StoneBlock());
     BlockTypes.emplace(EBlockType::Planks, new PlanksBlock());
+    BlockTypes.emplace(EBlockType::Sapling, new SaplingBlock());
 }
 
 void BlockTypeList::ResetBlockTypes()

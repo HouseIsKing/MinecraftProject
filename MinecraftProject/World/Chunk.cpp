@@ -25,87 +25,106 @@ Chunk::Chunk(const int x, const int y, const int z) : ChunkPosition(x, y, z)
 
 void Chunk::DrawBlock(const EBlockType blockType, const int x, const int y, const int z)
 {
-    const Block* myBlock = BlockTypeList::GetBlockTypeData(blockType);
+    const Block* block = BlockTypeList::GetBlockTypeData(blockType);
     const int finalX = x + ChunkPosition.GetX() * CHUNK_WIDTH;
     const int finalY = y + ChunkPosition.GetY() * CHUNK_HEIGHT;
     const int finalZ = z + ChunkPosition.GetZ() * CHUNK_DEPTH;
-    if (IsCoordsInsideChunk(finalX, finalY + 1, finalZ))
+    switch (block->GetDrawType())
     {
-        const int brightness = World->GetBrightnessAt(finalX, finalY + 1, finalZ);
-        if (Blocks[static_cast<size_t>(EngineDefaults::GetChunkLocalIndex(finalX, finalY + 1, finalZ))] == EBlockType::Air)
+    case DrawType::Default:
+        DrawDefaultBlock(block, finalX, finalY, finalZ);
+        break;
+    case DrawType::Sapling:
+        DrawSaplingBlock(block, finalX, finalY, finalZ);
+        break;
+    }
+}
+
+void Chunk::DrawSaplingBlock(const Block* block, const int x, int y, const int z)
+{
+    if (IsSideNeedToBeDrawn(BlockFaces::Top, x, y, z) || IsSideNeedToBeDrawn(BlockFaces::Bottom, x, y, z) || IsSideNeedToBeDrawn(BlockFaces::North, x, y, z) || IsSideNeedToBeDrawn(BlockFaces::South, x, y, z) || IsSideNeedToBeDrawn(BlockFaces::East, x, y, z) || IsSideNeedToBeDrawn(BlockFaces::West, x, y, z))
+    {
+        const int brightness = World->GetBrightnessAt(x, y + 1, z);
+        block->GenerateTessellationData(Tessellation, BlockFaces::Top, static_cast<float>(x), static_cast<float>(y), static_cast<float>(z), brightness);
+    }
+}
+
+bool Chunk::IsSideNeedToBeDrawn(const BlockFaces& face, const int x, const int y, const int z) const
+{
+    switch (face)
+    {
+    case BlockFaces::Top:
         {
-            myBlock->GenerateTessellationData(Tessellation, BlockFaces::Top, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
+            if (IsCoordsInsideChunk(x, y + 1, z))
+            {
+                return !BlockTypeList::GetBlockTypeData(Blocks[static_cast<size_t>(EngineDefaults::GetChunkLocalIndex(x, y + 1, z))])->IsSolidBlock();
+            }
+            return !GetWorld()->IsBlockSolid(x, y + 1, z);
         }
-    }
-    else if (!GetWorld()->IsBlockExists(finalX, finalY + 1, finalZ))
-    {
-        const int brightness = World->GetBrightnessAt(finalX, finalY + 1, finalZ);
-        myBlock->GenerateTessellationData(Tessellation, BlockFaces::Top, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
-    }
-    if (IsCoordsInsideChunk(finalX, finalY - 1, finalZ))
-    {
-        const int brightness = World->GetBrightnessAt(finalX, finalY - 1, finalZ);
-        if (Blocks[static_cast<size_t>(EngineDefaults::GetChunkLocalIndex(finalX, finalY - 1, finalZ))] == EBlockType::Air)
+    case BlockFaces::Bottom:
+        if (IsCoordsInsideChunk(x, y - 1, z))
         {
-            myBlock->GenerateTessellationData(Tessellation, BlockFaces::Bottom, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
+            return !BlockTypeList::GetBlockTypeData(Blocks[static_cast<size_t>(EngineDefaults::GetChunkLocalIndex(x, y - 1, z))])->IsSolidBlock();
         }
-    }
-    else if (!GetWorld()->IsBlockExists(finalX, finalY - 1, finalZ))
-    {
-        const int brightness = World->GetBrightnessAt(finalX, finalY - 1, finalZ);
-        myBlock->GenerateTessellationData(Tessellation, BlockFaces::Bottom, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
-    }
-    if (IsCoordsInsideChunk(finalX, finalY, finalZ + 1))
-    {
-        const int brightness = World->GetBrightnessAt(finalX, finalY, finalZ + 1);
-        if (Blocks[static_cast<size_t>(EngineDefaults::GetChunkLocalIndex(finalX, finalY, finalZ + 1))] == EBlockType::Air)
+        return !GetWorld()->IsBlockSolid(x, y - 1, z);
+    case BlockFaces::North:
+        if (IsCoordsInsideChunk(x, y, z + 1))
         {
-            myBlock->GenerateTessellationData(Tessellation, BlockFaces::North, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
+            return !BlockTypeList::GetBlockTypeData(Blocks[static_cast<size_t>(EngineDefaults::GetChunkLocalIndex(x, y, z + 1))])->IsSolidBlock();
         }
-    }
-    else if (!GetWorld()->IsBlockExists(finalX, finalY, finalZ + 1))
-    {
-        const int brightness = World->GetBrightnessAt(finalX, finalY, finalZ + 1);
-        myBlock->GenerateTessellationData(Tessellation, BlockFaces::North, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
-    }
-    if (IsCoordsInsideChunk(finalX, finalY, finalZ - 1))
-    {
-        const int brightness = World->GetBrightnessAt(finalX, finalY, finalZ - 1);
-        if (Blocks[static_cast<size_t>(EngineDefaults::GetChunkLocalIndex(finalX, finalY, finalZ - 1))] == EBlockType::Air)
+        return !GetWorld()->IsBlockSolid(x, y, z + 1);
+    case BlockFaces::South:
+        if (IsCoordsInsideChunk(x, y, z - 1))
         {
-            myBlock->GenerateTessellationData(Tessellation, BlockFaces::South, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
+            return !BlockTypeList::GetBlockTypeData(Blocks[static_cast<size_t>(EngineDefaults::GetChunkLocalIndex(x, y, z - 1))])->IsSolidBlock();
         }
-    }
-    else if (!GetWorld()->IsBlockExists(finalX, finalY, finalZ - 1))
-    {
-        const int brightness = World->GetBrightnessAt(finalX, finalY, finalZ - 1);
-        myBlock->GenerateTessellationData(Tessellation, BlockFaces::South, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
-    }
-    if (IsCoordsInsideChunk(finalX + 1, finalY, finalZ))
-    {
-        const int brightness = World->GetBrightnessAt(finalX + 1, finalY, finalZ);
-        if (Blocks[static_cast<size_t>(EngineDefaults::GetChunkLocalIndex(finalX + 1, finalY, finalZ))] == EBlockType::Air)
+        return !GetWorld()->IsBlockSolid(x, y, z - 1);
+    case BlockFaces::East:
+        if (IsCoordsInsideChunk(x + 1, y, z))
         {
-            myBlock->GenerateTessellationData(Tessellation, BlockFaces::East, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
+            return !BlockTypeList::GetBlockTypeData(Blocks[static_cast<size_t>(EngineDefaults::GetChunkLocalIndex(x + 1, y, z))])->IsSolidBlock();
         }
-    }
-    else if (!GetWorld()->IsBlockExists(finalX + 1, finalY, finalZ))
-    {
-        const int brightness = World->GetBrightnessAt(finalX + 1, finalY, finalZ);
-        myBlock->GenerateTessellationData(Tessellation, BlockFaces::East, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
-    }
-    if (IsCoordsInsideChunk(finalX - 1, finalY, finalZ))
-    {
-        const int brightness = World->GetBrightnessAt(finalX - 1, finalY, finalZ);
-        if (Blocks[static_cast<size_t>(EngineDefaults::GetChunkLocalIndex(finalX - 1, finalY, finalZ))] == EBlockType::Air)
+        return !GetWorld()->IsBlockSolid(x + 1, y, z);
+    case BlockFaces::West:
+        if (IsCoordsInsideChunk(x - 1, y, z))
         {
-            myBlock->GenerateTessellationData(Tessellation, BlockFaces::West, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
+            return !BlockTypeList::GetBlockTypeData(Blocks[static_cast<size_t>(EngineDefaults::GetChunkLocalIndex(x - 1, y, z))])->IsSolidBlock();
         }
+        return !GetWorld()->IsBlockSolid(x - 1, y, z);
     }
-    else if (!GetWorld()->IsBlockExists(finalX - 1, finalY, finalZ))
+    return false;
+}
+
+void Chunk::DrawDefaultBlock(const Block* block, const int x, const int y, const int z)
+{
+    for (int face = static_cast<int>(BlockFaces::Top); face <= static_cast<int>(BlockFaces::South); face++)
     {
-        const int brightness = World->GetBrightnessAt(finalX - 1, finalY, finalZ);
-        myBlock->GenerateTessellationData(Tessellation, BlockFaces::West, static_cast<float>(finalX), static_cast<float>(finalY), static_cast<float>(finalZ), brightness);
+        int brightness;
+        switch (static_cast<BlockFaces>(face))
+        {
+        case BlockFaces::Bottom:
+            brightness = World->GetBrightnessAt(x, y - 1, z);
+            break;
+        case BlockFaces::North:
+            brightness = World->GetBrightnessAt(x, y, z + 1);
+            break;
+        case BlockFaces::South:
+            brightness = World->GetBrightnessAt(x, y, z - 1);
+            break;
+        case BlockFaces::East:
+            brightness = World->GetBrightnessAt(x + 1, y, z);
+            break;
+        case BlockFaces::West:
+            brightness = World->GetBrightnessAt(x - 1, y, z);
+            break;
+        case BlockFaces::Top:
+            brightness = World->GetBrightnessAt(x, y + 1, z);
+            break;
+        }
+        if (IsSideNeedToBeDrawn(static_cast<BlockFaces>(face), x, y, z))
+        {
+            block->GenerateTessellationData(Tessellation, static_cast<BlockFaces>(face), static_cast<float>(x), static_cast<float>(y), static_cast<float>(z), brightness);
+        }
     }
 }
 

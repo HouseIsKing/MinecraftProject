@@ -16,7 +16,8 @@ enum class EBlockType : uint8_t
     Grass = 2,
     Dirt = 3,
     Cobblestone = 4,
-    Planks = 5
+    Planks = 5,
+    Sapling = 6
 };
 
 template <>
