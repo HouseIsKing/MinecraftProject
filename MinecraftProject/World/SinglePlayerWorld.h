@@ -33,7 +33,7 @@ class SinglePlayerWorld
     GLuint FogsBuffer;
     GLFWwindow* TheAppWindow;
     vector<uint8_t> LightLevels;
-    const uint8_t MaxChunkRebuilt = 2;
+    const uint8_t MaxChunkRebuilt = 8;
     void SaveWorld();
     void LoadWorld();
     void GenerateChunks(uint16_t amountX, uint16_t amountY, uint16_t amountZ);

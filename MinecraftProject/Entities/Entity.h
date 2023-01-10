@@ -40,4 +40,5 @@ public:
     [[nodiscard]] Transform& GetTransform() const;
     [[nodiscard]] BoundingBox GetBoundingBox() const;
     [[nodiscard]] uint16_t GetEntityId() const;
+    [[nodiscard]] vec3 GetEntitySize() const;
 };

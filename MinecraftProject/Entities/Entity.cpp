@@ -89,3 +89,8 @@ uint16_t Entity::GetEntityId() const
 {
     return EntityId;
 }
+
+vec3 Entity::GetEntitySize() const
+{
+    return EntitySize;
+}

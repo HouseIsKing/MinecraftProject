@@ -10,7 +10,7 @@ using std::cout;
 using std::endl;
 
 unique_ptr<SinglePlayerWorld> helper{};
-constexpr float TICK_RATE = 0.05F;
+constexpr float TICK_RATE = 1.0F / 20.0F;
 
 void ErrorCallback(const int error, const char* description)
 {
@@ -97,7 +97,7 @@ GLFWwindow* InitGlfw()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    GLFWwindow* window = glfwCreateWindow(1280, 720, "Minecraft C++ Project", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(1920, 1080, "Minecraft C++ Project", glfwGetPrimaryMonitor(), nullptr);
     if (window == nullptr)
     {
         cout << "Failed to create GLFW window" << endl;

@@ -8,6 +8,8 @@ class ParticleEntity final : Entity
     float V0;
     const Block* BlockType;
     int PreviousLightLevel;
+    const int LifeTime;
+    int Age;
     void GenerateTextureTessellation(int lightLevel);
 
 public:

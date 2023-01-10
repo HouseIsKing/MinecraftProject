@@ -9,10 +9,11 @@ void ParticleEntity::GenerateTextureTessellation(const int lightLevel)
     PreviousLightLevel = lightLevel;
     const float ambientColor = EngineDefaults::ConvertLightLevelToAmbient(lightLevel);
     const uint16_t texture = BlockType->GetTextureFromIndex(BlockType->GetIndexTextureSide(BlockFaces::North));
-    const uint16_t vert1 = Tessellation.AddVertex(Vertex{-PARTICLE_SIZE.x, -PARTICLE_SIZE.y, 0.0F, U0, V0, ambientColor, ambientColor, ambientColor, 1.0F, texture, 0.0F, 0.0F, 0.0F, lightLevel});
-    const uint16_t vert2 = Tessellation.AddVertex(Vertex{PARTICLE_SIZE.x, -PARTICLE_SIZE.y, 0.0F, U0 + 0.25F, V0, ambientColor, ambientColor, ambientColor, 1.0F, texture, 0.0F, 0.0F, 0.0F, lightLevel});
-    const uint16_t vert3 = Tessellation.AddVertex(Vertex{PARTICLE_SIZE.x, PARTICLE_SIZE.y, 0.0F, U0 + 0.25F, V0 + 0.25F, ambientColor, ambientColor, ambientColor, 1.0F, texture, 0.0F, 0.0F, 0.0F, lightLevel});
-    const uint16_t vert4 = Tessellation.AddVertex(Vertex{-PARTICLE_SIZE.x, PARTICLE_SIZE.y, 0.0F, U0, V0 + 0.25F, ambientColor, ambientColor, ambientColor, 1.0F, texture, 0.0F, 0.0F, 0.0F, lightLevel});
+    const vec3 size = GetEntitySize();
+    const uint16_t vert1 = Tessellation.AddVertex(Vertex{-size.x, -size.y, 0.0F, U0, V0, ambientColor, ambientColor, ambientColor, 1.0F, texture, 0.0F, 0.0F, 0.0F, lightLevel});
+    const uint16_t vert2 = Tessellation.AddVertex(Vertex{size.x, -size.y, 0.0F, U0 + 0.25F, V0, ambientColor, ambientColor, ambientColor, 1.0F, texture, 0.0F, 0.0F, 0.0F, lightLevel});
+    const uint16_t vert3 = Tessellation.AddVertex(Vertex{size.x, size.y, 0.0F, U0 + 0.25F, V0 + 0.25F, ambientColor, ambientColor, ambientColor, 1.0F, texture, 0.0F, 0.0F, 0.0F, lightLevel});
+    const uint16_t vert4 = Tessellation.AddVertex(Vertex{-size.x, size.y, 0.0F, U0, V0 + 0.25F, ambientColor, ambientColor, ambientColor, 1.0F, texture, 0.0F, 0.0F, 0.0F, lightLevel});
     Tessellation.AddTriangle(vert1);
     Tessellation.AddTriangle(vert2);
     Tessellation.AddTriangle(vert3);
@@ -21,8 +22,8 @@ void ParticleEntity::GenerateTextureTessellation(const int lightLevel)
     Tessellation.AddTriangle(vert4);
 }
 
-ParticleEntity::ParticleEntity(const float x, const float y, const float z, float xSpeed, float ySpeed, float zSpeed, const Block* blockType) : Entity(PARTICLE_SIZE, x + PARTICLE_SIZE.x / 2, y + PARTICLE_SIZE.y / 2, z + PARTICLE_SIZE.z / 2),
-    U0(EngineDefaults::GetNextFloat() * 0.75F), V0(EngineDefaults::GetNextFloat() * 0.75F), BlockType(blockType), PreviousLightLevel(GetWorld()->GetBrightnessAt(GetTransform().GetPosition()))
+ParticleEntity::ParticleEntity(const float x, const float y, const float z, float xSpeed, float ySpeed, float zSpeed, const Block* blockType) : Entity(PARTICLE_SIZE * (EngineDefaults::GetNextFloat() * 0.5F + 0.5F), x, y, z),
+    U0(EngineDefaults::GetNextFloat() * 0.75F), V0(EngineDefaults::GetNextFloat() * 0.75F), BlockType(blockType), PreviousLightLevel(GetWorld()->GetBrightnessAt(GetTransform().GetPosition())), LifeTime(static_cast<int>(4.0F / (EngineDefaults::GetNextFloat() * 0.9F + 0.1F))), Age(0)
 {
     xSpeed = xSpeed + (EngineDefaults::GetNextFloat() * 2.0F - 1.0F) * 0.4F;
     ySpeed = ySpeed + (EngineDefaults::GetNextFloat() * 2.0F - 1.0F) * 0.4F;
@@ -38,7 +39,7 @@ ParticleEntity::ParticleEntity(const float x, const float y, const float z, floa
 void ParticleEntity::Tick()
 {
     Entity::Tick();
-    if (EngineDefaults::GetNextFloat() < 0.001F)
+    if (Age++ >= LifeTime)
     {
         GetWorld()->RemoveEntity(GetEntityId());
     }
