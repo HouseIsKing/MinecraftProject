@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>C:\Users\amitz\RiderProjects\MinecraftProject\x64\Release\MinecraftClient.exe</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>C:\Users\amitz\RiderProjects\MinecraftProject\MinecraftClient\Textures\Blocks\Cobblestone.png</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\amitz\RiderProjects\MinecraftProject\MinecraftClient\Textures\Blocks\Dirt.png</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\amitz\RiderProjects\MinecraftProject\MinecraftClient\Textures\Blocks\GrassSide.png</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\amitz\RiderProjects\MinecraftProject\MinecraftClient\Textures\Blocks\GrassTop.png</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\amitz\RiderProjects\MinecraftProject\MinecraftClient\Textures\HighlightTexture.png</FullPath>
+    </ContentFile>
+  </ContentFiles>
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>
