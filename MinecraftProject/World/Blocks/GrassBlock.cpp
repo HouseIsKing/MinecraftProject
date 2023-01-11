@@ -17,7 +17,7 @@ size_t GrassBlock::GetIndexTextureSide(const BlockFaces face) const
 }
 
 void GrassBlock::GenerateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face,
-                                          const float& x, const float& y, const float& z, const int& brightness) const
+                                          const float& x, const float& y, const float& z, const int& brightness, const float r, const float g, const float b, const float a) const
 {
     if (face == BlockFaces::Top)
     {
@@ -25,27 +25,27 @@ void GrassBlock::GenerateTessellationData(TessellationHelper& tessellationHelper
         const size_t index = GetIndexTextureSide(face);
         const uint16_t triangleIndex1 = tessellationHelper.AddVertex(Vertex(x + BlockBounds.GetMinX(), y + BlockBounds.GetMaxY(),
                                                                             z + BlockBounds.GetMinZ(), 0, 0,
-                                                                            94.0F / 255.0F * Y_SIDE_SHADE * ambientLightFactor,
-                                                                            157.0F / 255.0F * Y_SIDE_SHADE * ambientLightFactor,
-                                                                            52.0F / 255.0F * Y_SIDE_SHADE * ambientLightFactor, 1.0F,
+                                                                            r * 94.0F / 255.0F * Y_SIDE_SHADE * ambientLightFactor,
+                                                                            g * 157.0F / 255.0F * Y_SIDE_SHADE * ambientLightFactor,
+                                                                            b * 52.0F / 255.0F * Y_SIDE_SHADE * ambientLightFactor, a,
                                                                             IndexTextures[index], 0.0F, 1.0F, 0.0F, brightness));
         const uint16_t triangleIndex2 = tessellationHelper.AddVertex(Vertex(x + BlockBounds.GetMinX(), y + BlockBounds.GetMaxY(),
                                                                             z + BlockBounds.GetMaxZ(), 0, 1,
-                                                                            94.0F / 255.0F * Y_SIDE_SHADE * ambientLightFactor,
-                                                                            157.0F / 255.0F * Y_SIDE_SHADE * ambientLightFactor,
-                                                                            52.0F / 255.0F * Y_SIDE_SHADE * ambientLightFactor, 1.0F,
+                                                                            r * 94.0F / 255.0F * Y_SIDE_SHADE * ambientLightFactor,
+                                                                            g * 157.0F / 255.0F * Y_SIDE_SHADE * ambientLightFactor,
+                                                                            b * 52.0F / 255.0F * Y_SIDE_SHADE * ambientLightFactor, a,
                                                                             IndexTextures[index], 0.0F, 1.0F, 0.0F, brightness));
         const uint16_t triangleIndex3 = tessellationHelper.AddVertex(Vertex(x + BlockBounds.GetMaxX(), y + BlockBounds.GetMaxY(),
                                                                             z + BlockBounds.GetMinZ(), 1, 0,
                                                                             94.0F / 255.0F * Y_SIDE_SHADE * ambientLightFactor,
                                                                             157.0F / 255.0F * Y_SIDE_SHADE * ambientLightFactor,
-                                                                            52.0F / 255.0F * Y_SIDE_SHADE * ambientLightFactor, 1.0F,
+                                                                            52.0F / 255.0F * Y_SIDE_SHADE * ambientLightFactor, a,
                                                                             IndexTextures[index], 0.0F, 1.0F, 0.0F, brightness));
         const uint16_t triangleIndex4 = tessellationHelper.AddVertex(Vertex(x + BlockBounds.GetMaxX(), y + BlockBounds.GetMaxY(),
                                                                             z + BlockBounds.GetMaxZ(), 1, 1,
-                                                                            94.0F / 255.0F * Y_SIDE_SHADE * ambientLightFactor,
-                                                                            157.0F / 255.0F * Y_SIDE_SHADE * ambientLightFactor,
-                                                                            52.0F / 255.0F * Y_SIDE_SHADE * ambientLightFactor, 1.0F,
+                                                                            r * 94.0F / 255.0F * Y_SIDE_SHADE * ambientLightFactor,
+                                                                            g * 157.0F / 255.0F * Y_SIDE_SHADE * ambientLightFactor,
+                                                                            b * 52.0F / 255.0F * Y_SIDE_SHADE * ambientLightFactor, a,
                                                                             IndexTextures[index], 0.0F, 1.0F, 0.0F, brightness));
         tessellationHelper.AddTriangle(triangleIndex1);
         tessellationHelper.AddTriangle(triangleIndex2);
@@ -56,7 +56,7 @@ void GrassBlock::GenerateTessellationData(TessellationHelper& tessellationHelper
     }
     else
     {
-        Block::GenerateTessellationData(tessellationHelper, face, x, y, z, brightness);
+        Block::GenerateTessellationData(tessellationHelper, face, x, y, z, brightness, r, g, b, a);
     }
 }
 

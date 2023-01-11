@@ -2,13 +2,16 @@
 #include "Util/TessellationHelper.h"
 #include "World/Blocks/Block.h"
 
+class PlayerController;
+
 class PlayerSelectionHighlight
 {
     TessellationHelper Tessellation;
     uint16_t TextureIndex;
+    PlayerController* Player;
 
 public:
-    PlayerSelectionHighlight();
+    explicit PlayerSelectionHighlight(PlayerController* player);
     void Reset();
     const Block* BlockHit;
     BlockFaces FaceHit;

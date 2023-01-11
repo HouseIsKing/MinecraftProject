@@ -2,7 +2,7 @@
 
 AirBlock::AirBlock() = default;
 
-void AirBlock::GenerateTessellationData(TessellationHelper& /*tessellationHelper*/, const BlockFaces& /*face*/, const float& /*x*/, const float& /*y*/, const float& /*z*/, const int& /*brightness*/) const
+void AirBlock::GenerateTessellationData(TessellationHelper& /*tessellationHelper*/, const BlockFaces& /*face*/, const float& /*x*/, const float& /*y*/, const float& /*z*/, const int& /*brightness*/, const float /*r*/, const float /*g*/, const float /*b*/, const float /*a*/) const
 {
 }
 

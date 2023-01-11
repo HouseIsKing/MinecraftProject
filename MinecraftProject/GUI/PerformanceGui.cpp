@@ -44,9 +44,11 @@ void PerformanceGui::Rebuild()
     {
         Tessellation.Reset();
     }
-    const string text = Version + std::to_string(GetWorld()->GetFps()) + " FPS";
-    DrawStringAt(text, 3.0F, 3.0F, 0.0F, 0.25F, 0.25F, 0.25F, 1.0F);
-    DrawStringAt(text, 2.0F, 2.0F, 0.0F, 1.0F, 1.0F, 1.0F, 1.0F);
+    const string text = std::to_string(GetWorld()->GetFps()) + " FPS";
+    DrawStringAt(Version, 3.0F, 3.0F, 0.0F, 0.25F, 0.25F, 0.25F, 1.0F);
+    DrawStringAt(Version, 2.0F, 2.0F, 0.0F, 1.0F, 1.0F, 1.0F, 1.0F);
+    DrawStringAt(text, 3.0F, 13.0F, 0.0F, 0.25F, 0.25F, 0.25F, 1.0F);
+    DrawStringAt(text, 2.0F, 12.0F, 0.0F, 1.0F, 1.0F, 1.0F, 1.0F);
 }
 
 void PerformanceGui::Render()

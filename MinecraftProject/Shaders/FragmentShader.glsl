@@ -21,8 +21,8 @@ void main()
     //vec3 lightDirection = normalize(-directionalLightDirection);
     //float diff = max(dot(norm, lightDirection), 0.0);
     vec4 textureColor = texture(sampler2D(samplers[samplerHandle]) , outTexture);
-	FragColor = color*textureColor;
-	if(textureColor.a < 0.5)
+    if(textureColor.a < 0.5)
         discard;
+	FragColor = color * textureColor;
 	FragColor = mix(FragColor, fogColor, fogFactor);
 }

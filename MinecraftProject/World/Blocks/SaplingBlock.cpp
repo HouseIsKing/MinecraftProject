@@ -13,8 +13,14 @@ size_t SaplingBlock::GetIndexTextureSide(BlockFaces /*face*/) const
     return 0;
 }
 
+void SaplingBlock::GenerateTessellationDataForAllFaces(TessellationHelper& tessellationHelper, const float& x,
+                                                       const float& y, const float& z, const int& brightness, const float r, const float g, const float b, const float a) const
+{
+    GenerateTessellationData(tessellationHelper, BlockFaces::Top, x, y, z, brightness, r, g, b, a);
+}
+
 void SaplingBlock::GenerateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face,
-                                            const float& x, const float& y, const float& z, const int& brightness) const
+                                            const float& x, const float& y, const float& z, const int& brightness, const float r, const float g, const float b, const float a) const
 {
     const float ambientLightFactor = EngineDefaults::ConvertLightLevelToAmbient(brightness);
     const uint16_t textureIndex = IndexTextures[GetIndexTextureSide(face)];
@@ -29,17 +35,17 @@ void SaplingBlock::GenerateTessellationData(TessellationHelper& tessellationHelp
         const float z1 = z + 0.5F + za;
         const float y0 = y;
         const float y1 = y + 1.0F;
-        const uint16_t triangleIndex1 = tessellationHelper.AddVertex(Vertex(x0, y1, z0, 0.0F, 1.0F, ambientLightFactor,
-                                                                            ambientLightFactor, ambientLightFactor, 1.0F,
+        const uint16_t triangleIndex1 = tessellationHelper.AddVertex(Vertex(x0, y1, z0, 0.0F, 1.0F, r * ambientLightFactor,
+                                                                            g * ambientLightFactor, b * ambientLightFactor, a,
                                                                             textureIndex, 0.0F, 0.0F, 0.0F, brightness, 1));
-        const uint16_t triangleIndex2 = tessellationHelper.AddVertex(Vertex(x1, y1, z1, 1.0F, 1.0F, ambientLightFactor,
-                                                                            ambientLightFactor, ambientLightFactor, 1.0F,
+        const uint16_t triangleIndex2 = tessellationHelper.AddVertex(Vertex(x1, y1, z1, 1.0F, 1.0F, r * ambientLightFactor,
+                                                                            g * ambientLightFactor, b * ambientLightFactor, a,
                                                                             textureIndex, 0.0F, 0.0F, 0.0F, brightness, 1));
-        const uint16_t triangleIndex3 = tessellationHelper.AddVertex(Vertex(x1, y0, z1, 1.0F, 0.0F, ambientLightFactor,
-                                                                            ambientLightFactor, ambientLightFactor, 1.0F,
+        const uint16_t triangleIndex3 = tessellationHelper.AddVertex(Vertex(x1, y0, z1, 1.0F, 0.0F, r * ambientLightFactor,
+                                                                            g * ambientLightFactor, b * ambientLightFactor, a,
                                                                             textureIndex, 0.0F, 0.0F, 0.0F, brightness, 0));
-        const uint16_t triangleIndex4 = tessellationHelper.AddVertex(Vertex(x0, y0, z0, 0.0F, 0.0F, ambientLightFactor,
-                                                                            ambientLightFactor, ambientLightFactor, 1.0F,
+        const uint16_t triangleIndex4 = tessellationHelper.AddVertex(Vertex(x0, y0, z0, 0.0F, 0.0F, r * ambientLightFactor,
+                                                                            g * ambientLightFactor, b * ambientLightFactor, a,
                                                                             textureIndex, 0.0F, 0.0F, 0.0F, brightness, 0));
         tessellationHelper.AddTriangle(triangleIndex1);
         tessellationHelper.AddTriangle(triangleIndex2);

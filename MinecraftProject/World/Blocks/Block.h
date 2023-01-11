@@ -46,7 +46,9 @@ public:
     Block(Block&&) = delete;
     Block& operator=(Block&&) = delete;
     [[nodiscard]] BoundingBox GetBoundingBox() const;
-    virtual void GenerateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face, const float& x, const float& y, const float& z, const int& brightness) const;
+    void GenerateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face, const float& x, const float& y, const float& z, const int& brightness) const;
+    virtual void GenerateTessellationDataForAllFaces(TessellationHelper& tessellationHelper, const float& x, const float& y, const float& z, const int& brightness, float r, float g, float b, float a) const;
+    virtual void GenerateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face, const float& x, const float& y, const float& z, const int& brightness, float r, float g, float b, float a) const;
     [[nodiscard]] virtual size_t GetIndexTextureSide(BlockFaces face) const = 0;
     virtual void GenerateTessellationData(GuiTessellation& tessellationHelper, const BlockFaces& face, mat4x4 transformationMatrix) const;
     virtual void Tick(SinglePlayerWorld* world, int x, int y, int z) const;

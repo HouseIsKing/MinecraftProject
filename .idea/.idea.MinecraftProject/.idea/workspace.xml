@@ -7,10 +7,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4f885148-8e28-4ab6-9a1d-8675988ae9cb" name="Changes" comment="Version 0.02a Completed">
+    <list default="true" id="4f885148-8e28-4ab6-9a1d-8675988ae9cb" name="Changes" comment="Version 0.03a completed">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MinecraftProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MinecraftProject/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/EntityMeshBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/EntityMeshBlock.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/EntityMeshBlock.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/EntityMeshBlock.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerController.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerController.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerController.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerSelectionHighlight.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerSelectionHighlight.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerSelectionHighlight.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Entities/Player/PlayerSelectionHighlight.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/GUI/PerformanceGui.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/GUI/PerformanceGui.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject/GUI/PerformanceGui.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/GUI/PerformanceGui.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/SinglePlayerWorld.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/SinglePlayerWorld.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/Shaders/FragmentShader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/Shaders/FragmentShader.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/AirBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/AirBlock.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/AirBlock.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/AirBlock.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/Block.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/Block.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/Block.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/Block.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/GrassBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/GrassBlock.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/GrassBlock.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/GrassBlock.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/SaplingBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/SaplingBlock.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject/World/Blocks/SaplingBlock.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject/World/Blocks/SaplingBlock.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,6 +73,7 @@
     <setting file="file://$PROJECT_DIR$/MinecraftProject/Entities/Zombie.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftProject/Entities/Zombie.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftProject/GUI/CrosshairGui.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftProject/GUI/PerformanceGui.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftProject/Util/Transform.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftProject/World/Blocks/AirBlock.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftProject/World/Blocks/GrassBlock.cpp" root0="FORCE_HIGHLIGHTING" />
@@ -237,7 +253,7 @@
       <workItem from="1672837316727" duration="30911000" />
       <workItem from="1672986482474" duration="12425000" />
       <workItem from="1673019954613" duration="1637000" />
-      <workItem from="1673023358522" duration="63351000" />
+      <workItem from="1673023358522" duration="74010000" />
     </task>
     <task id="LOCAL-00001" summary="AAAAAAAAAAAAAAAAAAAAAA finally got the bindless textures to work">
       <created>1652106111120</created>
@@ -358,7 +374,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673377221684</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Version 0.03a completed">
+      <created>1673417917268</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1673417917268</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -409,7 +432,8 @@
     <MESSAGE value="rd-161348 completed!" />
     <MESSAGE value="mc-161807 completed" />
     <MESSAGE value="Version 0.02a Completed" />
-    <option name="LAST_COMMIT_MESSAGE" value="Version 0.02a Completed" />
+    <MESSAGE value="Version 0.03a completed" />
+    <option name="LAST_COMMIT_MESSAGE" value="Version 0.03a completed" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />

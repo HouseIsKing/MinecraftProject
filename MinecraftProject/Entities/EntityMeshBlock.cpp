@@ -20,12 +20,12 @@ void EntityMeshBlock::SetRotationRadians(const float x, const float y, const flo
 
 void EntityMeshBlock::GenerateTessellationData(TessellationHelper& tessellationHelper, const int brightness) const
 {
-	GenerateTessellationData(tessellationHelper, BlockFaces::Top, 0, 0, 0, brightness);
-	GenerateTessellationData(tessellationHelper, BlockFaces::Bottom, 0, 0, 0, brightness);
-	GenerateTessellationData(tessellationHelper, BlockFaces::South, 0, 0, 0, brightness);
-	GenerateTessellationData(tessellationHelper, BlockFaces::North, 0, 0, 0, brightness);
-	GenerateTessellationData(tessellationHelper, BlockFaces::East, 0, 0, 0, brightness);
-	GenerateTessellationData(tessellationHelper, BlockFaces::West, 0, 0, 0, brightness);
+	GenerateTessellationData(tessellationHelper, BlockFaces::Top, 0, 0, 0, brightness, 1.0F, 1.0F, 1.0F, 1.0F);
+	GenerateTessellationData(tessellationHelper, BlockFaces::Bottom, 0, 0, 0, brightness, 1.0F, 1.0F, 1.0F, 1.0F);
+	GenerateTessellationData(tessellationHelper, BlockFaces::South, 0, 0, 0, brightness, 1.0F, 1.0F, 1.0F, 1.0F);
+	GenerateTessellationData(tessellationHelper, BlockFaces::North, 0, 0, 0, brightness, 1.0F, 1.0F, 1.0F, 1.0F);
+	GenerateTessellationData(tessellationHelper, BlockFaces::East, 0, 0, 0, brightness, 1.0F, 1.0F, 1.0F, 1.0F);
+	GenerateTessellationData(tessellationHelper, BlockFaces::West, 0, 0, 0, brightness, 1.0F, 1.0F, 1.0F, 1.0F);
 }
 
 void EntityMeshBlock::GenerateTessellationData(GuiTessellation& /*tessellationHelper*/, const BlockFaces& /*face*/, mat4x4 /*transformationMatrix*/) const
@@ -33,7 +33,7 @@ void EntityMeshBlock::GenerateTessellationData(GuiTessellation& /*tessellationHe
 }
 
 void EntityMeshBlock::GenerateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face,
-                                               const float& /*x*/, const float& /*y*/, const float& /*z*/, const int& brightness) const
+                                               const float& /*x*/, const float& /*y*/, const float& /*z*/, const int& brightness, const float r, const float g, const float b, const float a) const
 {
 	uint16_t triangleIndex1 = 0;
 	uint16_t triangleIndex2 = 0;
@@ -43,40 +43,40 @@ void EntityMeshBlock::GenerateTessellationData(TessellationHelper& tessellationH
 	switch (face)
 	{
 	case BlockFaces::Top:
-		triangleIndex1 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[2], BlockUVs[0], BlockUVs[3], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], 0.0F, 1.0F, 0.0F, brightness));
-		triangleIndex2 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[3], BlockUVs[2], BlockUVs[3], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], 0.0F, 1.0F, 0.0F, brightness));
-		triangleIndex3 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[6], BlockUVs[0], BlockUVs[1], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], 0.0F, 1.0F, 0.0F, brightness));
-		triangleIndex4 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[7], BlockUVs[2], BlockUVs[1], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], 0.0F, 1.0F, 0.0F, brightness));
+		triangleIndex1 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[2], BlockUVs[0], BlockUVs[3], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], 0.0F, 1.0F, 0.0F, brightness));
+		triangleIndex2 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[3], BlockUVs[2], BlockUVs[3], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], 0.0F, 1.0F, 0.0F, brightness));
+		triangleIndex3 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[6], BlockUVs[0], BlockUVs[1], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], 0.0F, 1.0F, 0.0F, brightness));
+		triangleIndex4 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[7], BlockUVs[2], BlockUVs[1], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], 0.0F, 1.0F, 0.0F, brightness));
 		break;
 	case BlockFaces::Bottom:
-		triangleIndex1 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[0], BlockUVs[4], BlockUVs[5], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], 0.0F, -1.0F, 0.0F, brightness));
-		triangleIndex2 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[4], BlockUVs[4], BlockUVs[7], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], 0.0F, -1.0F, 0.0F, brightness));
-		triangleIndex3 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[1], BlockUVs[6], BlockUVs[5], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], 0.0F, -1.0F, 0.0F, brightness));
-		triangleIndex4 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[5], BlockUVs[6], BlockUVs[7], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], 0.0F, -1.0F, 0.0F, brightness));
+		triangleIndex1 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[0], BlockUVs[4], BlockUVs[5], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], 0.0F, -1.0F, 0.0F, brightness));
+		triangleIndex2 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[4], BlockUVs[4], BlockUVs[7], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], 0.0F, -1.0F, 0.0F, brightness));
+		triangleIndex3 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[1], BlockUVs[6], BlockUVs[5], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], 0.0F, -1.0F, 0.0F, brightness));
+		triangleIndex4 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[5], BlockUVs[6], BlockUVs[7], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], 0.0F, -1.0F, 0.0F, brightness));
 		break;
 	case BlockFaces::South:
-		triangleIndex1 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[0], BlockUVs[20], BlockUVs[21], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], 0.0F, 0.0F, -1.0F, brightness));
-		triangleIndex2 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[2], BlockUVs[20], BlockUVs[23], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], 0.0F, 0.0F, -1.0F, brightness));
-		triangleIndex3 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[4], BlockUVs[22], BlockUVs[21], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], 0.0F, 0.0F, -1.0F, brightness));
-		triangleIndex4 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[6], BlockUVs[22], BlockUVs[23], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], 0.0F, 0.0F, -1.0F, brightness));
+		triangleIndex1 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[0], BlockUVs[20], BlockUVs[21], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], 0.0F, 0.0F, -1.0F, brightness));
+		triangleIndex2 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[2], BlockUVs[20], BlockUVs[23], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], 0.0F, 0.0F, -1.0F, brightness));
+		triangleIndex3 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[4], BlockUVs[22], BlockUVs[21], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], 0.0F, 0.0F, -1.0F, brightness));
+		triangleIndex4 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[6], BlockUVs[22], BlockUVs[23], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], 0.0F, 0.0F, -1.0F, brightness));
 		break;
 	case BlockFaces::North:
-		triangleIndex1 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[1], BlockUVs[18], BlockUVs[17], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], 0.0F, 0.0F, 1.0F, brightness));
-		triangleIndex2 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[5], BlockUVs[16], BlockUVs[17], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], 0.0F, 0.0F, 1.0F, brightness));
-		triangleIndex3 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[3], BlockUVs[18], BlockUVs[19], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], 0.0F, 0.0F, 1.0F, brightness));
-		triangleIndex4 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[7], BlockUVs[16], BlockUVs[19], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], 0.0F, 0.0F, 1.0F, brightness));
+		triangleIndex1 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[1], BlockUVs[18], BlockUVs[17], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], 0.0F, 0.0F, 1.0F, brightness));
+		triangleIndex2 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[5], BlockUVs[16], BlockUVs[17], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], 0.0F, 0.0F, 1.0F, brightness));
+		triangleIndex3 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[3], BlockUVs[18], BlockUVs[19], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], 0.0F, 0.0F, 1.0F, brightness));
+		triangleIndex4 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[7], BlockUVs[16], BlockUVs[19], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], 0.0F, 0.0F, 1.0F, brightness));
 		break;
 	case BlockFaces::East:
-		triangleIndex1 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[4], BlockUVs[12], BlockUVs[13], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], 1.0F, 0.0F, 0.0F, brightness));
-		triangleIndex2 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[6], BlockUVs[12], BlockUVs[15], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], 1.0F, 0.0F, 0.0F, brightness));
-		triangleIndex3 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[5], BlockUVs[14], BlockUVs[13], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], 1.0F, 0.0F, 0.0F, brightness));
-		triangleIndex4 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[7], BlockUVs[14], BlockUVs[15], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], 1.0F, 0.0F, 0.0F, brightness));
+		triangleIndex1 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[4], BlockUVs[12], BlockUVs[13], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], 1.0F, 0.0F, 0.0F, brightness));
+		triangleIndex2 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[6], BlockUVs[12], BlockUVs[15], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], 1.0F, 0.0F, 0.0F, brightness));
+		triangleIndex3 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[5], BlockUVs[14], BlockUVs[13], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], 1.0F, 0.0F, 0.0F, brightness));
+		triangleIndex4 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[7], BlockUVs[14], BlockUVs[15], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], 1.0F, 0.0F, 0.0F, brightness));
 		break;
 	case BlockFaces::West:
-		triangleIndex1 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[0], BlockUVs[8], BlockUVs[9], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], -1.0F, 0.0F, 0.0F, brightness));
-		triangleIndex2 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[1], BlockUVs[10], BlockUVs[9], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], -1.0F, 0.0F, 0.0F, brightness));
-		triangleIndex3 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[2], BlockUVs[8], BlockUVs[11], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], -1.0F, 0.0F, 0.0F, brightness));
-		triangleIndex4 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[3], BlockUVs[10], BlockUVs[11], ambientLightFactor, ambientLightFactor, ambientLightFactor, 1.0F, IndexTextures[0], -1.0F, 0.0F, 0.0F, brightness));
+		triangleIndex1 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[0], BlockUVs[8], BlockUVs[9], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], -1.0F, 0.0F, 0.0F, brightness));
+		triangleIndex2 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[1], BlockUVs[10], BlockUVs[9], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], -1.0F, 0.0F, 0.0F, brightness));
+		triangleIndex3 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[2], BlockUVs[8], BlockUVs[11], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], -1.0F, 0.0F, 0.0F, brightness));
+		triangleIndex4 = tessellationHelper.AddVertex(Vertex(BlockVerticesPositions[3], BlockUVs[10], BlockUVs[11], r * ambientLightFactor, g * ambientLightFactor, b * ambientLightFactor, a, IndexTextures[0], -1.0F, 0.0F, 0.0F, brightness));
 		break;
 	}
 	tessellationHelper.AddTriangle(triangleIndex1);

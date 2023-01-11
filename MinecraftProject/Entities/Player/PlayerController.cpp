@@ -25,7 +25,7 @@ void CameraController::OnResizeWindow(const int width, const int height)
     ActiveCamera->SetAspectRatio(static_cast<float>(width) / static_cast<float>(height));
 }
 
-PlayerController::PlayerController(const float x, const float y, const float z) : LivingEntity(PLAYER_SIZE, x, y, z), MyCamera(CameraController::GetActiveCamera()), LeftMousePressed(false), RightMousePressed(false), PrevMouseX(0), PrevMouseY(0), IsSpawnZombieButtonPressed(false), CurrentSelectedBlock(EBlockType::Stone), SelectedBlockGuiPtr(nullptr)
+PlayerController::PlayerController(const float x, const float y, const float z) : LivingEntity(PLAYER_SIZE, x, y, z), MyCamera(CameraController::GetActiveCamera()), LeftMousePressed(false), RightMousePressed(false), PrevMouseX(0), PrevMouseY(0), IsSpawnZombieButtonPressed(false), CurrentSelectedBlock(EBlockType::Stone), SelectedBlockGuiPtr(nullptr), SelectionHighlight(this)
 {
     MyCamera.Position = vec3(x, y, z);
 }
@@ -197,24 +197,56 @@ void PlayerController::PlaceBlock() const
         const int x = SelectionHighlight.HitPosition.x;
         const int y = SelectionHighlight.HitPosition.y;
         const int z = SelectionHighlight.HitPosition.z;
+        const Block* blockToPlace = BlockTypeList::GetBlockTypeData(CurrentSelectedBlock);
+        BoundingBox box = blockToPlace->GetBoundingBox();
         switch (SelectionHighlight.FaceHit)
         {
         case BlockFaces::Bottom:
+            box.Move(static_cast<float>(x), static_cast<float>(y - 1), static_cast<float>(z));
+            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
+            {
+                break;
+            }
             GetWorld()->PlaceBlockAt(x, y - 1, z, CurrentSelectedBlock);
             break;
         case BlockFaces::Top:
+            box.Move(static_cast<float>(x), static_cast<float>(y + 1), static_cast<float>(z));
+            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
+            {
+                break;
+            }
             GetWorld()->PlaceBlockAt(x, y + 1, z, CurrentSelectedBlock);
             break;
         case BlockFaces::North:
+            box.Move(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z + 1));
+            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
+            {
+                break;
+            }
             GetWorld()->PlaceBlockAt(x, y, z + 1, CurrentSelectedBlock);
             break;
         case BlockFaces::South:
+            box.Move(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z - 1));
+            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
+            {
+                break;
+            }
             GetWorld()->PlaceBlockAt(x, y, z - 1, CurrentSelectedBlock);
             break;
         case BlockFaces::East:
+            box.Move(static_cast<float>(x + 1), static_cast<float>(y), static_cast<float>(z));
+            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
+            {
+                break;
+            }
             GetWorld()->PlaceBlockAt(x + 1, y, z, CurrentSelectedBlock);
             break;
         case BlockFaces::West:
+            box.Move(static_cast<float>(x - 1), static_cast<float>(y), static_cast<float>(z));
+            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
+            {
+                break;
+            }
             GetWorld()->PlaceBlockAt(x - 1, y, z, CurrentSelectedBlock);
             break;
         }
@@ -229,6 +261,16 @@ Frustum PlayerController::GetCameraFrustum() const
 float PlayerController::GetCameraPitch() const
 {
     return MyCamera.Pitch;
+}
+
+bool PlayerController::GetMode() const
+{
+    return Mode;
+}
+
+EBlockType PlayerController::GetCurrentSelectedBlock() const
+{
+    return CurrentSelectedBlock;
 }
 
 void PlayerController::HandleMouseInput()
@@ -255,9 +297,16 @@ void PlayerController::HandleMouseInput()
     if (state == GLFW_PRESS && !LeftMousePressed)
     {
         LeftMousePressed = true;
-        if (SelectionHighlight.BlockHit != nullptr)
+        if (Mode)
         {
-            GetWorld()->RemoveBlockAt(SelectionHighlight.HitPosition.x, SelectionHighlight.HitPosition.y, SelectionHighlight.HitPosition.z);
+            PlaceBlock();
+        }
+        else
+        {
+            if (SelectionHighlight.BlockHit != nullptr)
+            {
+                GetWorld()->RemoveBlockAt(SelectionHighlight.HitPosition.x, SelectionHighlight.HitPosition.y, SelectionHighlight.HitPosition.z);
+            }
         }
     }
     else if (state == GLFW_RELEASE)
@@ -267,8 +316,8 @@ void PlayerController::HandleMouseInput()
     state = glfwGetMouseButton(GetWorld()->GetWindow(), GLFW_MOUSE_BUTTON_RIGHT);
     if (state == GLFW_PRESS && !RightMousePressed)
     {
+        Mode = !Mode;
         RightMousePressed = true;
-        PlaceBlock();
     }
     else if (state == GLFW_RELEASE)
     {

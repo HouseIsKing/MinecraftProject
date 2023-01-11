@@ -29,6 +29,7 @@ class PlayerController final : public LivingEntity
     float PrevMouseY;
     float MouseSensitivity = 0.15F;
     bool IsSpawnZombieButtonPressed;
+    bool Mode = false;
     EBlockType CurrentSelectedBlock;
     SelectedBlockGui* SelectedBlockGuiPtr;
     PlayerSelectionHighlight SelectionHighlight;
@@ -45,4 +46,6 @@ public:
     void Render(float partialTick) override;
     [[nodiscard]] Frustum GetCameraFrustum() const;
     [[nodiscard]] float GetCameraPitch() const;
+    [[nodiscard]] bool GetMode() const;
+    [[nodiscard]] EBlockType GetCurrentSelectedBlock() const;
 };
