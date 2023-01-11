@@ -284,6 +284,51 @@ void SinglePlayerWorld::GenerateLevel()
             }
         }
     }
+    const int count = LevelWidth * LevelHeight * LevelDepth / 256 / 64;
+    for (int i = 0; i < count; i++)
+    {
+        float x = EngineDefaults::GetNextFloat() * static_cast<float>(LevelWidth);
+        float y = EngineDefaults::GetNextFloat() * static_cast<float>(LevelHeight);
+        float z = EngineDefaults::GetNextFloat() * static_cast<float>(LevelDepth);
+        const int length = static_cast<int>(EngineDefaults::GetNextFloat() + EngineDefaults::GetNextFloat() * 150.0F);
+        float dir1 = EngineDefaults::GetNextFloat() * glm::pi<float>() * 2.0F;
+        float dir1Change = 0.0F;
+        float dir2 = EngineDefaults::GetNextFloat() * glm::pi<float>() * 2.0F;
+        float dir2Change = 0.0F;
+        for (int l = 0; l < length; l++)
+        {
+            x += sin(dir1) * cos(dir2);
+            z += cos(dir1) * cos(dir2);
+            y += sin(dir2);
+            dir1 += dir1Change * 0.2F;
+            dir1Change *= 0.9F;
+            dir1Change += EngineDefaults::GetNextFloat() - EngineDefaults::GetNextFloat();
+            dir2 += dir2Change * 0.5F;
+            dir2 *= 0.5F;
+            dir2Change *= 0.9F;
+            dir2Change += EngineDefaults::GetNextFloat() - EngineDefaults::GetNextFloat();
+            const float size = sin(static_cast<float>(l) * glm::pi<float>() / static_cast<float>(length)) * 2.5F + 1.0F;
+            for (int xx = static_cast<int>(x - size); xx <= static_cast<int>(x + size); xx++)
+            {
+                for (int yy = static_cast<int>(y - size); yy <= static_cast<int>(y + size); yy++)
+                {
+                    for (int zz = static_cast<int>(z - size); zz <= static_cast<int>(z + size); zz++)
+                    {
+                        const float deltaX = static_cast<float>(xx) - x;
+                        const float deltaY = static_cast<float>(yy) - y;
+                        const float deltaZ = static_cast<float>(zz) - z;
+                        if (const float distance = deltaX * deltaX + deltaY * deltaY * 2.0F + deltaZ * deltaZ; distance < size * size && xx >= 1 && yy >= 1 && zz >= 1 && xx < LevelWidth - 1 && yy < LevelHeight - 1 && zz < LevelDepth - 1)
+                        {
+                            if (Chunk* chunk = GetChunkAt(xx, yy, zz); chunk->GetBlockTypeAt(xx, yy, zz) == EBlockType::Stone)
+                            {
+                                chunk->SetBlockTypeAt(xx, yy, zz, EBlockType::Air);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 const Block* SinglePlayerWorld::GetBlockAt(const int x, const int y, const int z)
