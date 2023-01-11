@@ -32,6 +32,7 @@
 *.app
 /.vs/MinecraftProject/v17
 /MinecraftClient/x64
+/MinecraftServer/x64
 /Include
 /Lib
 /x64/Debug
