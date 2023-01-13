@@ -1,9 +1,8 @@
 #pragma once
+#include "Util/BoundingBox.h"
 #include <array>
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
-
-#include "Util/BoundingBox.h"
 
 using glm::vec3;
 using glm::mat4x4;

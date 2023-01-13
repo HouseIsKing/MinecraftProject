@@ -1,8 +1,5 @@
 #include "Zombie.h"
-
 #include "Util/EngineDefaults.h"
-#include <chrono>
-
 #include "World/SinglePlayerWorld.h"
 
 void Zombie::RebuildRender(const int brightness)

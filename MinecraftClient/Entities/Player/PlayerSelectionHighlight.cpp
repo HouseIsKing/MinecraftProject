@@ -1,5 +1,4 @@
 #include "PlayerSelectionHighlight.h"
-
 #include "PlayerController.h"
 #include "Util/EngineDefaults.h"
 

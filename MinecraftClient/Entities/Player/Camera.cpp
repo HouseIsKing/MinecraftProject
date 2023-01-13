@@ -1,7 +1,3 @@
-//
-// Created by amit on 4/22/2022.
-//
-
 #include "Camera.h"
 
 bool Frustum::CubeInFrustum(const float minX, const float minY, const float minZ, const float maxX, const float maxY,

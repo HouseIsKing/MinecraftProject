@@ -3,6 +3,7 @@
 #include "../Util/EngineDefaults.h"
 #include <cmath>
 #include <filesystem>
+#include <iostream>
 #include <ranges>
 
 #include "Entities/Zombie.h"

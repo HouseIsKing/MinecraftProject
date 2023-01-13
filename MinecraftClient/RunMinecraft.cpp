@@ -1,7 +1,6 @@
-#include "World/SinglePlayerWorld.h"
+#include "Network/ClientNetworkManager.h"
 #include "Entities/Player/PlayerController.h"
-#include <GLFW/glfw3.h>
-#include <glad/glad.h>
+#include "World/SinglePlayerWorld.h"
 #include <iostream>
 #include <memory>
 
@@ -119,15 +118,23 @@ GLFWwindow* InitGlfw()
     return window;
 }
 
-int main(int /*argc*/, char* /*argv*/[])
+int main(const int argc, char* argv[])
 {
-    GLFWwindow* window = InitGlfw();
-    if (window == nullptr)
+    if (argc > 2 && std::string(argv[1]) == "Server")
     {
-        return -1;
+        ClientNetworkManager manager;
+        manager.Start("127.0.0.1", argv[2]);
     }
-    MainLoop(window);
-    glfwDestroyWindow(window);
-    glfwTerminate();
+    else
+    {
+        GLFWwindow* window = InitGlfw();
+        if (window == nullptr)
+        {
+            return -1;
+        }
+        MainLoop(window);
+        glfwDestroyWindow(window);
+        glfwTerminate();
+    }
     return 0;
 }

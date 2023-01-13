@@ -5,19 +5,8 @@ class Player
 {
     std::string Name;
 
-    constexpr bool operator==(const Player& other) const
-    {
-        return Name == other.Name;
-    }
-
 public:
+    explicit Player(std::string name);
+    Player() = default;
     const std::string& GetName() const;
-};
-
-struct PlayerHasher
-{
-    std::size_t operator()(const Player& player) const
-    {
-        return std::hash<std::string>{}(player.GetName());
-    }
 };

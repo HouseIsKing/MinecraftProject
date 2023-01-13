@@ -1,5 +1,4 @@
 #include "ParticleEntity.h"
-
 #include "Util/EngineDefaults.h"
 #include "World/SinglePlayerWorld.h"
 

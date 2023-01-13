@@ -1,7 +1,4 @@
 #include "PerformanceGui.h"
-
-#include <GLFW/glfw3.h>
-
 #include "Util/EngineDefaults.h"
 #include "World/SinglePlayerWorld.h"
 

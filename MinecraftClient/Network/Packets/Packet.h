@@ -15,5 +15,5 @@ public:
     Packet& operator>>(std::string& data);
     Packet& operator<<(const std::string& data);
     std::vector<uint8_t>& GetData();
-    const PacketHeader& GetHeader() const;
+    [[nodiscard]] const PacketHeader& GetHeader() const;
 };

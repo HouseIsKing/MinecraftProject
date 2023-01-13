@@ -1,6 +1,6 @@
 #pragma once
-#include <array>
 #include <cstdint>
+#include <vector>
 
 enum class EPacketType : uint8_t
 {
@@ -15,5 +15,5 @@ struct PacketHeader
 
     explicit PacketHeader(EPacketType packetType);
     PacketHeader(EPacketType packetType, uint16_t packetSize);
-    std::array<uint8_t, 4> Serialize() const;
+    [[nodiscard]] std::array<uint8_t, 4> Serialize() const;
 };

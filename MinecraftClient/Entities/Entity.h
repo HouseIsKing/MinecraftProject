@@ -1,12 +1,8 @@
 #pragma once
 #include "../Util/TessellationHelper.h"
-#include <glm/glm.hpp>
-
 #include "Util/BoundingBox.h"
 
 class SinglePlayerWorld;
-
-using glm::vec3;
 
 class Entity
 {

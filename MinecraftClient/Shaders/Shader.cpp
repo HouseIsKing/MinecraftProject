@@ -1,11 +1,7 @@
-//
-// Created by amit on 4/22/2022.
-//
-
 #include "Shader.h"
-
 #include <array>
 #include <fstream>
+#include <iostream>
 #include <sstream>
 
 void Shader::CompileShader(const GLuint shader)
@@ -18,7 +14,7 @@ void Shader::CompileShader(const GLuint shader)
     {
         std::array<GLchar, 512> infoLog{0};
         glGetShaderInfoLog(shader, 512, nullptr, infoLog.data());
-        cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog.data() << endl;
+        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog.data() << std::endl;
     }
 }
 
@@ -32,26 +28,26 @@ void Shader::LinkProgram(const GLuint program)
     {
         std::array<GLchar, 512> infoLog{0};
         glGetProgramInfoLog(program, 512, nullptr, infoLog.data());
-        cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog.data() << endl;
+        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog.data() << std::endl;
     }
 }
 
-Shader::Shader(const string& vertPath, const string& fragPath) : Program(glCreateProgram())
+Shader::Shader(const std::string& vertPath, const std::string& fragPath) : Program(glCreateProgram())
 {
-    string vertCode;
-    string fragCode;
-    ifstream vertFile;
-    ifstream fragFile;
+    std::string vertCode;
+    std::string fragCode;
+    std::ifstream vertFile;
+    std::ifstream fragFile;
 
-    vertFile.exceptions(ifstream::badbit);
-    fragFile.exceptions(ifstream::badbit);
+    vertFile.exceptions(std::ifstream::badbit);
+    fragFile.exceptions(std::ifstream::badbit);
 
     try
     {
         vertFile.open(vertPath);
         fragFile.open(fragPath);
-        stringstream vertStream;
-        stringstream fragStream;
+        std::stringstream vertStream;
+        std::stringstream fragStream;
 
         vertStream << vertFile.rdbuf();
         fragStream << fragFile.rdbuf();
@@ -62,9 +58,9 @@ Shader::Shader(const string& vertPath, const string& fragPath) : Program(glCreat
         vertCode = vertStream.str();
         fragCode = fragStream.str();
     }
-    catch (ifstream::failure& /*e*/)
+    catch (std::ifstream::failure& /*e*/)
     {
-        cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ" << endl;
+        std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ" << std::endl;
     }
 
     const char* vertShaderCode = vertCode.c_str();
@@ -104,12 +100,12 @@ void Shader::Use() const
     glUseProgram(Program);
 }
 
-GLuint Shader::GetUniformBlockIndex(const string& name) const
+GLuint Shader::GetUniformBlockIndex(const std::string& name) const
 {
     return glGetUniformBlockIndex(Program, name.c_str());
 }
 
-int Shader::GetUniformInt(const string& name) const
+int Shader::GetUniformInt(const std::string& name) const
 {
     return Uniforms.at(name);
 }
@@ -134,7 +130,7 @@ void Shader::SetVec3(const int posUniform, const float x, const float y, const f
     glUniform3f(posUniform, x, y, z);
 }
 
-void Shader::SetMat4(const int posUniform, mat4x4 value)
+void Shader::SetMat4(const int posUniform, glm::mat4x4 value)
 {
     glUniformMatrix4fv(posUniform, 1, GL_FALSE, &value[0][0]);
 }

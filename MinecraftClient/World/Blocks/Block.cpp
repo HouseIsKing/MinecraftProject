@@ -18,12 +18,6 @@ BoundingBox Block::GetBoundingBox() const
 	return BlockBounds;
 }
 
-void Block::GenerateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face, const float& x,
-                                     const float& y, const float& z, const int& brightness) const
-{
-	GenerateTessellationData(tessellationHelper, face, x, y, z, brightness, 1.0F, 1.0F, 1.0F, 1.0F);
-}
-
 void Block::GenerateTessellationDataForAllFaces(TessellationHelper& tessellationHelper, const float& x, const float& y, const float& z, const int& brightness, float r, float g, float b, float a) const
 {
 	GenerateTessellationData(tessellationHelper, BlockFaces::Top, x, y, z, brightness, r, g, b, a);

@@ -1,5 +1,8 @@
 #include "PacketHeader.h"
 
+#include <array>
+#include <iostream>
+
 PacketHeader::PacketHeader(const EPacketType packetType) : PacketHeader(packetType, 0)
 {
 }

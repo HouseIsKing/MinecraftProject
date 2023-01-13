@@ -1,8 +1,4 @@
 #include "SelectedBlockGui.h"
-
-#include <GLFW/glfw3.h>
-
-#include "Util/Transform.h"
 #include "World/SinglePlayerWorld.h"
 
 void SelectedBlockGui::SwitchBlockType(const EBlockType blockType)

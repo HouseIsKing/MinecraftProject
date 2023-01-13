@@ -1,5 +1,4 @@
 #include "Entity.h"
-#include "../Util/EngineDefaults.h"
 #include "../World/SinglePlayerWorld.h"
 
 SinglePlayerWorld* Entity::World = nullptr;

@@ -1,13 +1,5 @@
-//
-// Created by amit on 4/22/2022.
-//
-
 #pragma once
 #include "Entity.h"
-
-using glm::sin;
-using glm::cos;
-using glm::radians;
 
 class LivingEntity : public Entity
 {

@@ -1,10 +1,8 @@
 #include "PlayerController.h"
-
 #include "../../Util/EngineDefaults.h"
-#include <GLFW/glfw3.h>
-
 #include "Entities/Zombie.h"
 #include "World/SinglePlayerWorld.h"
+#include <GLFW/glfw3.h>
 
 using std::make_unique;
 

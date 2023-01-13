@@ -1,7 +1,3 @@
-//
-// Created by amit on 4/22/2022.
-//
-
 #include "LivingEntity.h"
 
 LivingEntity::LivingEntity(const vec3 entitySize, const float x, const float y, const float z) : Entity(entitySize,
@@ -25,8 +21,8 @@ void LivingEntity::CalculateVelocity()
     if (const float d = sqrt(HorizontalInput * HorizontalInput + VerticalInput * VerticalInput); d > 0.001F)
     {
         speedModifier /= d;
-        VelocityX += speedModifier * (VerticalInput * cos(radians(rotation.y)) - HorizontalInput * sin(radians(rotation.y)));
-        VelocityZ += speedModifier * (HorizontalInput * cos(radians(rotation.y)) + VerticalInput * sin(radians(rotation.y)));
+        VelocityX += speedModifier * (VerticalInput * cos(glm::radians(rotation.y)) - HorizontalInput * sin(glm::radians(rotation.y)));
+        VelocityZ += speedModifier * (HorizontalInput * cos(glm::radians(rotation.y)) + VerticalInput * sin(glm::radians(rotation.y)));
     }
     CheckCollisionAndMove();
     VelocityX *= 0.91F;
