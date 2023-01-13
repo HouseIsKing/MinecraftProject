@@ -2,15 +2,12 @@
 #include "../../Util/EngineDefaults.h"
 #include "Entities/Zombie.h"
 #include "World/SinglePlayerWorld.h"
-#include <GLFW/glfw3.h>
 
-using std::make_unique;
-
-unique_ptr<Camera> CameraController::ActiveCamera = {};
+std::unique_ptr<Camera> CameraController::ActiveCamera = {};
 
 void CameraController::SetActiveCamera(Camera& camera)
 {
-    ActiveCamera = make_unique<Camera>(camera);
+    ActiveCamera = std::make_unique<Camera>(camera);
 }
 
 Camera& CameraController::GetActiveCamera()
@@ -25,13 +22,13 @@ void CameraController::OnResizeWindow(const int width, const int height)
 
 PlayerController::PlayerController(const float x, const float y, const float z) : LivingEntity(PLAYER_SIZE, x, y, z), MyCamera(CameraController::GetActiveCamera()), LeftMousePressed(false), RightMousePressed(false), PrevMouseX(0), PrevMouseY(0), IsSpawnZombieButtonPressed(false), CurrentSelectedBlock(EBlockType::Stone), SelectedBlockGuiPtr(nullptr), SelectionHighlight(this)
 {
-    MyCamera.Position = vec3(x, y, z);
+    MyCamera.Position = glm::vec3(x, y, z);
 }
 
 void PlayerController::Render(const float partialTick)
 {
-    const vec3 pos = GetTransform().GetPosition();
-    vec3 finalCameraPosition = PrevPos + (pos - PrevPos) * partialTick;
+    const glm::vec3 pos = GetTransform().GetPosition();
+    glm::vec3 finalCameraPosition = PrevPos + (pos - PrevPos) * partialTick;
     GetTransform().SetPosition(finalCameraPosition);
     LivingEntity::Render(partialTick);
     finalCameraPosition.y += CAMERA_OFFSET - PLAYER_SIZE.y;
@@ -83,8 +80,8 @@ void PlayerController::DisplaySelectionHighlight()
 
 BlockFaces PlayerController::FindClosestFace(glm::ivec3& blockPosition, bool& foundBlock) const
 {
-    const vec3 frontVector = MyCamera.GetFrontVector();
-    const vec3 cameraPos = MyCamera.Position;
+    const glm::vec3 frontVector = MyCamera.GetFrontVector();
+    const glm::vec3 cameraPos = MyCamera.Position;
     const bool right = frontVector.x > 0.0F;
     const bool up = frontVector.y > 0.0F;
     const bool forward = frontVector.z > 0.0F;
@@ -138,7 +135,7 @@ BlockFaces PlayerController::FindClosestFace(glm::ivec3& blockPosition, bool& fo
             xDistance += frontVector.x * minDistance;
             yDistance += frontVector.y * minDistance;
             zDistance += frontVector.z * minDistance;
-            blockPosition = vec3(static_cast<int>(floor(xDistance)) - (!right && xyzChoice == 0 ? 1 : 0), static_cast<int>(floor(yDistance)) - (!up && xyzChoice == 1 ? 1 : 0), static_cast<int>(floor(zDistance)) - (!forward && xyzChoice == 2 ? 1 : 0));
+            blockPosition = glm::vec3(static_cast<int>(floor(xDistance)) - (!right && xyzChoice == 0 ? 1 : 0), static_cast<int>(floor(yDistance)) - (!up && xyzChoice == 1 ? 1 : 0), static_cast<int>(floor(zDistance)) - (!forward && xyzChoice == 2 ? 1 : 0));
             if (GetWorld()->IsBlockExists(blockPosition.x, blockPosition.y, blockPosition.z))
             {
                 foundBlock = true;
@@ -174,7 +171,7 @@ BlockFaces PlayerController::FindClosestFace(glm::ivec3& blockPosition, bool& fo
     return BlockFaces::Bottom;
 }
 
-float PlayerController::CalculateMaxDistanceForHighlight(const vec3& front, const bool up, const bool right, const bool forward) const
+float PlayerController::CalculateMaxDistanceForHighlight(const glm::vec3& front, const bool up, const bool right, const bool forward) const
 {
     float xDistance = right ? 4.0F + PLAYER_SIZE.x : 3.0F + PLAYER_SIZE.x;
     float yDistance = up ? 4.0F + 2 * PLAYER_SIZE.y - CAMERA_OFFSET : 3.0F + CAMERA_OFFSET;
@@ -406,7 +403,7 @@ void PlayerController::HandleKeyboardMovementInput()
     state = glfwGetKey(window, GLFW_KEY_G);
     if (state == GLFW_PRESS && !IsSpawnZombieButtonPressed)
     {
-        const vec3 pos = GetTransform().GetPosition();
+        const glm::vec3 pos = GetTransform().GetPosition();
         new Zombie(pos.x, pos.y, pos.z);
         IsSpawnZombieButtonPressed = true;
     }

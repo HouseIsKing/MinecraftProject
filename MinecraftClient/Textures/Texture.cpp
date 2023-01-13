@@ -1,17 +1,9 @@
-//
-// Created by amit on 4/22/2022.
-//
-
 #include "Texture.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 #include <stdexcept>
 
-using std::runtime_error;
-using std::piecewise_construct;
-using std::forward_as_tuple;
-
-Texture* Texture::LoadTexture(const string& path)
+Texture* Texture::LoadTexture(const std::string& path)
 {
     if (TexturesCache.contains(path))
     {
@@ -24,7 +16,7 @@ Texture* Texture::LoadTexture(const string& path)
     unsigned char* pixels = stbi_load(path.c_str(), &width, &height, &nrChannels, 4);
     if (pixels == nullptr)
     {
-        throw runtime_error("Failed to load texture");
+        throw std::runtime_error("Failed to load texture");
     }
     GLuint textureId = 0;
     glCreateTextures(GL_TEXTURE_2D, 1, &textureId);
@@ -37,8 +29,7 @@ Texture* Texture::LoadTexture(const string& path)
     glTextureParameteri(textureId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glGenerateTextureMipmap(textureId);
     stbi_image_free(pixels);
-    TexturesCache.emplace(piecewise_construct, forward_as_tuple(path),
-                          forward_as_tuple(new Texture(glGetTextureHandleARB(textureId), textureId)));
+    TexturesCache.emplace(path, new Texture(glGetTextureHandleARB(textureId), textureId));
     return TexturesCache.at(path).get();
 }
 
@@ -46,7 +37,7 @@ Texture::Texture(const GLuint64 handle, const GLuint textureId) : Handle(handle)
 {
 }
 
-unordered_map<string, unique_ptr<Texture>> Texture::TexturesCache;
+std::unordered_map<std::string, std::unique_ptr<Texture>> Texture::TexturesCache;
 
 GLuint64 Texture::GetHandle() const
 {

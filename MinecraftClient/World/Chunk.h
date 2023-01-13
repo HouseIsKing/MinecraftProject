@@ -1,15 +1,9 @@
 #pragma once
-#include "../Entities/Player/Camera.h"
-#include "../Util/TessellationHelper.h"
-#include "ChunkCoords.h"
-#include <array>
-
 #include "Blocks/Block.h"
+#include "ChunkCoords.h"
+#include "Entities/Player/Camera.h"
 
 class SinglePlayerWorld;
-
-using std::array;
-using std::unique_ptr;
 
 class Chunk
 {

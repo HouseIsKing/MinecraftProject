@@ -1,6 +1,5 @@
 #pragma once
 #include "Shaders/Shader.h"
-#include "World/Blocks/BlockTypeList.h"
 
 class TessellationInterface
 {

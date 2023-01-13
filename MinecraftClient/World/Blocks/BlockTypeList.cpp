@@ -1,5 +1,4 @@
 #include "BlockTypeList.h"
-#include "../../Util/EngineDefaults.h"
 #include "AirBlock.h"
 #include "CobblestoneBlock.h"
 #include "DirtBlock.h"
@@ -46,4 +45,4 @@ void BlockTypeList::ResetBlockTypes()
 }
 
 bool BlockTypeList::Init = false;
-unordered_map<EBlockType, unique_ptr<Block>> BlockTypeList::BlockTypes{};
+std::unordered_map<EBlockType, std::unique_ptr<Block>> BlockTypeList::BlockTypes{};

@@ -2,7 +2,7 @@
 #include "Util/EngineDefaults.h"
 #include "World/SinglePlayerWorld.h"
 
-void PerformanceGui::DrawStringAt(const string& text, float x, float y, const float z, const float r, const float g, const float b, const float a)
+void PerformanceGui::DrawStringAt(const std::string& text, float x, float y, const float z, const float r, const float g, const float b, const float a)
 {
     int width = 0;
     int height = 0;
@@ -41,7 +41,7 @@ void PerformanceGui::Rebuild()
     {
         Tessellation.Reset();
     }
-    const string text = std::to_string(GetWorld()->GetFps()) + " FPS";
+    const std::string text = std::to_string(GetWorld()->GetFps()) + " FPS";
     DrawStringAt(Version, 3.0F, 3.0F, 0.0F, 0.25F, 0.25F, 0.25F, 1.0F);
     DrawStringAt(Version, 2.0F, 2.0F, 0.0F, 1.0F, 1.0F, 1.0F, 1.0F);
     DrawStringAt(text, 3.0F, 13.0F, 0.0F, 0.25F, 0.25F, 0.25F, 1.0F);

@@ -1,7 +1,4 @@
 #pragma once
-#include <limits>
-
-using std::numeric_limits;
 
 struct BoundingBox
 {

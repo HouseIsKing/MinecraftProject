@@ -1,20 +1,12 @@
-//
-// Created by amit on 4/22/2022.
-//
 #pragma once
 #include "../Shaders/Shader.h"
 #include "CustomRandomEngine.h"
-#include <array>
-
 #include "FontManager.h"
 #include "Textures/Texture.h"
 
-using std::array;
-using std::unique_ptr;
-
 class EngineDefaults
 {
-    static array<unique_ptr<Shader>, 2> Shaders;
+    static std::array<std::unique_ptr<Shader>, 2> Shaders;
     static std::unordered_map<Texture*, uint16_t, TextureHasher> TextureList;
     static GLuint UboTextures;
     static bool HasBuiltTextureUbo;

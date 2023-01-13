@@ -1,7 +1,6 @@
 #pragma once
-#include <stdexcept>
-
 #include "PacketHeader.h"
+#include <string>
 #include <vector>
 
 class Packet

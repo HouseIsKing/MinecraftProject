@@ -59,11 +59,11 @@ bool Frustum::CubeInFrustum(const BoundingBox& box) const
     return CubeInFrustum(box.GetMinX(), box.GetMinY(), box.GetMinZ(), box.GetMaxX(), box.GetMaxY(), box.GetMaxZ());
 }
 
-Frustum::Frustum(const mat4x4& viewMatrix, const mat4x4& projectionMatrix) : Planes()
+Frustum::Frustum(const glm::mat4x4& viewMatrix, const glm::mat4x4& projectionMatrix) : Planes()
 {
-    const mat4x4& v = viewMatrix;
-    const mat4x4& p = projectionMatrix;
-    mat4x4 clipMatrix;
+    const glm::mat4x4& v = viewMatrix;
+    const glm::mat4x4& p = projectionMatrix;
+    glm::mat4x4 clipMatrix;
     clipMatrix[0][0] = v[0][0] * p[0][0] + v[0][1] * p[1][0] + v[0][2] * p[2][0] + v[0][3] * p[3][0];
     clipMatrix[1][0] = v[0][0] * p[0][1] + v[0][1] * p[1][1] + v[0][2] * p[2][1] + v[0][3] * p[3][1];
     clipMatrix[2][0] = v[0][0] * p[0][2] + v[0][1] * p[1][2] + v[0][2] * p[2][2] + v[0][3] * p[3][2];
@@ -101,11 +101,11 @@ Frustum::Frustum(const mat4x4& viewMatrix, const mat4x4& projectionMatrix) : Pla
 
 void Camera::UpdateVectors()
 {
-    Front.x = cos(radians(Pitch)) * cos(radians(Yaw));
-    Front.y = sin(radians(Pitch));
-    Front.z = cos(radians(Pitch)) * sin(radians(Yaw));
+    Front.x = cos(glm::radians(Pitch)) * cos(glm::radians(Yaw));
+    Front.y = sin(glm::radians(Pitch));
+    Front.z = cos(glm::radians(Pitch)) * sin(glm::radians(Yaw));
     Front = normalize(Front);
-    Right = normalize(cross(Front, vec3(0, 1, 0)));
+    Right = glm::normalize(cross(Front, glm::vec3(0, 1, 0)));
     Up = normalize(cross(Right, Front));
 }
 
@@ -114,12 +114,12 @@ Frustum Camera::GetFrustum()
     return {ViewMatrix, ProjectionMatrix};
 }
 
-Camera::Camera(const vec3 position, const float aspectRatio) : Front(0, 0, -1), Up(0, 1, 0), Right(1, 0, 0),
-                                                               Fov(70), AspectRatio(aspectRatio), ViewMatrix(),
-                                                               ProjectionMatrix(),
-                                                               IsDirtyProjectionMatrix(true),
-                                                               PrevYaw(0), ZNear(0.05F), ZFar(1000.0F), PrevPitch(0),
-                                                               Position(position), Pitch(0), Yaw(0)
+Camera::Camera(const glm::vec3 position, const float aspectRatio) : Front(0, 0, -1), Up(0, 1, 0), Right(1, 0, 0),
+                                                                    Fov(70), AspectRatio(aspectRatio), ViewMatrix(),
+                                                                    ProjectionMatrix(),
+                                                                    IsDirtyProjectionMatrix(true),
+                                                                    PrevYaw(0), ZNear(0.05F), ZFar(1000.0F), PrevPitch(0),
+                                                                    Position(position), Pitch(0), Yaw(0)
 {
     UpdateVectors();
 }
@@ -131,18 +131,18 @@ void Camera::SetFov(const float newFov)
     IsDirtyProjectionMatrix = true;
 }
 
-vec3 Camera::GetFrontVector() const
+glm::vec3 Camera::GetFrontVector() const
 {
     return Front;
 }
 
-mat4x4 Camera::GetViewMatrix()
+glm::mat4x4 Camera::GetViewMatrix()
 {
     RecalculateViewMatrix();
     return ViewMatrix;
 }
 
-mat4x4 Camera::GetProjectionMatrix()
+glm::mat4x4 Camera::GetProjectionMatrix()
 {
     if (IsDirtyProjectionMatrix)
     {
@@ -153,7 +153,7 @@ mat4x4 Camera::GetProjectionMatrix()
 
 void Camera::RecalculateProjectionMatrix()
 {
-    ProjectionMatrix = perspective(radians(Fov), AspectRatio, ZNear, ZFar);
+    ProjectionMatrix = glm::perspective(glm::radians(Fov), AspectRatio, ZNear, ZFar);
     IsDirtyProjectionMatrix = false;
 }
 

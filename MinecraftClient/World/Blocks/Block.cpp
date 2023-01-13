@@ -1,5 +1,4 @@
 #include "Block.h"
-
 #include "Entities/ParticleEntity.h"
 #include "Util/EngineDefaults.h"
 
@@ -85,7 +84,7 @@ void Block::GenerateTessellationData(TessellationHelper& tessellationHelper, con
 }
 
 void Block::GenerateTessellationData(GuiTessellation& tessellationHelper, const BlockFaces& face,
-                                     const mat4x4 transformationMatrix) const
+                                     const glm::mat4x4 transformationMatrix) const
 {
 	uint16_t triangleIndex1 = 0;
 	uint16_t triangleIndex2 = 0;
@@ -95,40 +94,40 @@ void Block::GenerateTessellationData(GuiTessellation& tessellationHelper, const 
 	switch (face)
 	{
 	case BlockFaces::Top:
-		triangleIndex1 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMinZ(), 1.0F)), 0, 0, Y_SIDE_SHADE, Y_SIDE_SHADE, Y_SIDE_SHADE, 1.0F, IndexTextures[index]));
-		triangleIndex2 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMaxZ(), 1.0F)), 0, 1, Y_SIDE_SHADE, Y_SIDE_SHADE, Y_SIDE_SHADE, 1.0F, IndexTextures[index]));
-		triangleIndex3 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMinZ(), 1.0F)), 1, 0, Y_SIDE_SHADE, Y_SIDE_SHADE, Y_SIDE_SHADE, 1.0F, IndexTextures[index]));
-		triangleIndex4 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMaxZ(), 1.0F)), 1, 1, Y_SIDE_SHADE, Y_SIDE_SHADE, Y_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex1 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMinZ(), 1.0F)), 0, 0, Y_SIDE_SHADE, Y_SIDE_SHADE, Y_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex2 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMaxZ(), 1.0F)), 0, 1, Y_SIDE_SHADE, Y_SIDE_SHADE, Y_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex3 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMinZ(), 1.0F)), 1, 0, Y_SIDE_SHADE, Y_SIDE_SHADE, Y_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex4 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMaxZ(), 1.0F)), 1, 1, Y_SIDE_SHADE, Y_SIDE_SHADE, Y_SIDE_SHADE, 1.0F, IndexTextures[index]));
 		break;
 	case BlockFaces::Bottom:
-		triangleIndex1 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMinZ(), 1.0F)), 0, 0, Y_SIDE_SHADE, Y_SIDE_SHADE, Y_SIDE_SHADE, 1.0F, IndexTextures[index]));
-		triangleIndex2 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMinZ(), 1.0F)), 1, 0, Y_SIDE_SHADE, Y_SIDE_SHADE, Y_SIDE_SHADE, 1.0F, IndexTextures[index]));
-		triangleIndex3 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMaxZ(), 1.0F)), 0, 1, Y_SIDE_SHADE, Y_SIDE_SHADE, Y_SIDE_SHADE, 1.0F, IndexTextures[index]));
-		triangleIndex4 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMaxZ(), 1.0F)), 1, 1, Y_SIDE_SHADE, Y_SIDE_SHADE, Y_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex1 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMinZ(), 1.0F)), 0, 0, Y_SIDE_SHADE, Y_SIDE_SHADE, Y_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex2 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMinZ(), 1.0F)), 1, 0, Y_SIDE_SHADE, Y_SIDE_SHADE, Y_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex3 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMaxZ(), 1.0F)), 0, 1, Y_SIDE_SHADE, Y_SIDE_SHADE, Y_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex4 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMaxZ(), 1.0F)), 1, 1, Y_SIDE_SHADE, Y_SIDE_SHADE, Y_SIDE_SHADE, 1.0F, IndexTextures[index]));
 		break;
 	case BlockFaces::South:
-		triangleIndex1 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMinZ(), 1.0F)), 0, 0, Z_SIDE_SHADE, Z_SIDE_SHADE, Z_SIDE_SHADE, 1.0F, IndexTextures[index]));
-		triangleIndex2 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMinZ(), 1.0F)), 0, 1, Z_SIDE_SHADE, Z_SIDE_SHADE, Z_SIDE_SHADE, 1.0F, IndexTextures[index]));
-		triangleIndex3 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMinZ(), 1.0F)), 1, 0, Z_SIDE_SHADE, Z_SIDE_SHADE, Z_SIDE_SHADE, 1.0F, IndexTextures[index]));
-		triangleIndex4 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMinZ(), 1.0F)), 1, 1, Z_SIDE_SHADE, Z_SIDE_SHADE, Z_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex1 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMinZ(), 1.0F)), 0, 0, Z_SIDE_SHADE, Z_SIDE_SHADE, Z_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex2 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMinZ(), 1.0F)), 0, 1, Z_SIDE_SHADE, Z_SIDE_SHADE, Z_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex3 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMinZ(), 1.0F)), 1, 0, Z_SIDE_SHADE, Z_SIDE_SHADE, Z_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex4 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMinZ(), 1.0F)), 1, 1, Z_SIDE_SHADE, Z_SIDE_SHADE, Z_SIDE_SHADE, 1.0F, IndexTextures[index]));
 		break;
 	case BlockFaces::North:
-		triangleIndex1 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMaxZ(), 1.0F)), 0, 0, Z_SIDE_SHADE, Z_SIDE_SHADE, Z_SIDE_SHADE, 1.0F, IndexTextures[index]));
-		triangleIndex2 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMaxZ(), 1.0F)), 1, 0, Z_SIDE_SHADE, Z_SIDE_SHADE, Z_SIDE_SHADE, 1.0F, IndexTextures[index]));
-		triangleIndex3 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMaxZ(), 1.0F)), 0, 1, Z_SIDE_SHADE, Z_SIDE_SHADE, Z_SIDE_SHADE, 1.0F, IndexTextures[index]));
-		triangleIndex4 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMaxZ(), 1.0F)), 1, 1, Z_SIDE_SHADE, Z_SIDE_SHADE, Z_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex1 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMaxZ(), 1.0F)), 0, 0, Z_SIDE_SHADE, Z_SIDE_SHADE, Z_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex2 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMaxZ(), 1.0F)), 1, 0, Z_SIDE_SHADE, Z_SIDE_SHADE, Z_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex3 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMaxZ(), 1.0F)), 0, 1, Z_SIDE_SHADE, Z_SIDE_SHADE, Z_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex4 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMaxZ(), 1.0F)), 1, 1, Z_SIDE_SHADE, Z_SIDE_SHADE, Z_SIDE_SHADE, 1.0F, IndexTextures[index]));
 		break;
 	case BlockFaces::East:
-		triangleIndex1 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMinZ(), 1.0F)), 0, 0, X_SIDE_SHADE, X_SIDE_SHADE, X_SIDE_SHADE, 1.0F, IndexTextures[index]));
-		triangleIndex2 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMinZ(), 1.0F)), 0, 1, X_SIDE_SHADE, X_SIDE_SHADE, X_SIDE_SHADE, 1.0F, IndexTextures[index]));
-		triangleIndex3 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMaxZ(), 1.0F)), 1, 0, X_SIDE_SHADE, X_SIDE_SHADE, X_SIDE_SHADE, 1.0F, IndexTextures[index]));
-		triangleIndex4 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMaxZ(), 1.0F)), 1, 1, X_SIDE_SHADE, X_SIDE_SHADE, X_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex1 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMinZ(), 1.0F)), 0, 0, X_SIDE_SHADE, X_SIDE_SHADE, X_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex2 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMinZ(), 1.0F)), 0, 1, X_SIDE_SHADE, X_SIDE_SHADE, X_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex3 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMaxZ(), 1.0F)), 1, 0, X_SIDE_SHADE, X_SIDE_SHADE, X_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex4 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMaxX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMaxZ(), 1.0F)), 1, 1, X_SIDE_SHADE, X_SIDE_SHADE, X_SIDE_SHADE, 1.0F, IndexTextures[index]));
 		break;
 	case BlockFaces::West:
-		triangleIndex1 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMinZ(), 1.0F)), 0, 0, X_SIDE_SHADE, X_SIDE_SHADE, X_SIDE_SHADE, 1.0F, IndexTextures[index]));
-		triangleIndex2 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMaxZ(), 1.0F)), 1, 0, X_SIDE_SHADE, X_SIDE_SHADE, X_SIDE_SHADE, 1.0F, IndexTextures[index]));
-		triangleIndex3 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMinZ(), 1.0F)), 0, 1, X_SIDE_SHADE, X_SIDE_SHADE, X_SIDE_SHADE, 1.0F, IndexTextures[index]));
-		triangleIndex4 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMaxZ(), 1.0F)), 1, 1, X_SIDE_SHADE, X_SIDE_SHADE, X_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex1 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMinZ(), 1.0F)), 0, 0, X_SIDE_SHADE, X_SIDE_SHADE, X_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex2 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMinY(), BlockBounds.GetMaxZ(), 1.0F)), 1, 0, X_SIDE_SHADE, X_SIDE_SHADE, X_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex3 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMinZ(), 1.0F)), 0, 1, X_SIDE_SHADE, X_SIDE_SHADE, X_SIDE_SHADE, 1.0F, IndexTextures[index]));
+		triangleIndex4 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(BlockBounds.GetMinX() - 2, BlockBounds.GetMaxY(), BlockBounds.GetMaxZ(), 1.0F)), 1, 1, X_SIDE_SHADE, X_SIDE_SHADE, X_SIDE_SHADE, 1.0F, IndexTextures[index]));
 		break;
 	}
 	tessellationHelper.AddTriangle(triangleIndex1);

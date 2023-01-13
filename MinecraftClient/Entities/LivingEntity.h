@@ -9,6 +9,6 @@ protected:
     bool JumpRequested;
     float HorizontalInput;
     float VerticalInput;
-    LivingEntity(vec3 entitySize, float x, float y, float z);
+    LivingEntity(glm::vec3 entitySize, float x, float y, float z);
     void Tick() override;
 };

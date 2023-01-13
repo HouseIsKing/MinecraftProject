@@ -8,7 +8,7 @@ class Entity
 {
     static SinglePlayerWorld* World;
     bool IsGrounded;
-    vec3 EntitySize;
+    glm::vec3 EntitySize;
     const uint16_t EntityId;
 
 protected:
@@ -16,8 +16,8 @@ protected:
     float VelocityY;
     float VelocityZ;
     TessellationHelper Tessellation;
-    vec3 PrevPos;
-    Entity(vec3 entitySize, float x, float y, float z);
+    glm::vec3 PrevPos;
+    Entity(glm::vec3 entitySize, float x, float y, float z);
     [[nodiscard]] bool IsOnGround() const;
     void virtual Render(float partialTick);
     void CheckCollisionAndMove();
@@ -36,5 +36,5 @@ public:
     [[nodiscard]] Transform& GetTransform() const;
     [[nodiscard]] BoundingBox GetBoundingBox() const;
     [[nodiscard]] uint16_t GetEntityId() const;
-    [[nodiscard]] vec3 GetEntitySize() const;
+    [[nodiscard]] glm::vec3 GetEntitySize() const;
 };

@@ -1,6 +1,3 @@
-//
-// Created by amit on 4/22/2022.
-//
 #pragma once
 #include <glad/glad.h>
 #include <memory>
@@ -8,19 +5,16 @@
 #include <unordered_map>
 
 struct TextureHasher;
-using std::string;
-using std::unordered_map;
-using std::unique_ptr;
 
 class Texture
 {
-    static unordered_map<string, unique_ptr<Texture>> TexturesCache;
+    static std::unordered_map<std::string, std::unique_ptr<Texture>> TexturesCache;
     GLuint64 Handle;
     GLuint TextureId;
 
 public:
     Texture(GLuint64 handle, GLuint textureId);
-    static Texture* LoadTexture(const string& path);
+    static Texture* LoadTexture(const std::string& path);
     [[nodiscard]] GLuint64 GetHandle() const;
     void Resident() const;
     void NonResident() const;

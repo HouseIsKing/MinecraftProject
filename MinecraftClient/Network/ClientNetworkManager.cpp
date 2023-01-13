@@ -1,8 +1,4 @@
 #include "ClientNetworkManager.h"
-
-#include <iostream>
-#include <utility>
-
 #include "Packets/ConnectionInitPacket.h"
 
 ServerNetworkManager::ServerNetworkManager() : Socket(Context)

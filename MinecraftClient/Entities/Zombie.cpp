@@ -68,7 +68,7 @@ Zombie::Zombie(const float x, const float y, const float z) :
             }, Tessellation)
 {
     GetTransform().SetRotation(0.0F, EngineDefaults::GetNextFloat() * 360.0F, 0.0F);
-    const vec3 pos = GetTransform().GetPosition();
+    const glm::vec3 pos = GetTransform().GetPosition();
     const int brightness = GetWorld()->GetBrightnessAt(static_cast<int>(pos.x), static_cast<int>(pos.y), static_cast<int>(pos.z));
     PreviousLightLevel = brightness;
     Head.PrepareRender(Tessellation);
@@ -88,7 +88,7 @@ Zombie::Zombie(const float x, const float y, const float z) :
 void Zombie::Render(const float partialTick)
 {
     LivingEntity::Render(partialTick);
-    const vec3 pos = GetTransform().GetPosition();
+    const glm::vec3 pos = GetTransform().GetPosition();
     GetTransform().SetPosition(PrevPos + (pos - PrevPos) * partialTick);
     if (const int brightness = GetWorld()->GetBrightnessAt(pos); PreviousLightLevel != brightness)
     {

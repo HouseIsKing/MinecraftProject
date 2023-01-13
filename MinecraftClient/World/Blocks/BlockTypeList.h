@@ -1,13 +1,10 @@
 #pragma once
-#include "../../Textures/Texture.h"
-#include <memory>
+#include <cstdint>
+#include <istream>
 #include <unordered_map>
 
 class GrassBlock;
 class Block;
-
-using std::unique_ptr;
-using std::unordered_map;
 
 enum class EBlockType : uint8_t
 {
@@ -33,7 +30,7 @@ std::istream& operator>>(std::istream& is, EBlockType& blockType);
 
 class BlockTypeList
 {
-    static unordered_map<EBlockType, unique_ptr<Block>> BlockTypes;
+    static std::unordered_map<EBlockType, std::unique_ptr<Block>> BlockTypes;
     static bool Init;
 
 public:

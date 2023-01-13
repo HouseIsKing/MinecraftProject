@@ -1,13 +1,12 @@
 #include "EngineDefaults.h"
 #include "../World/Chunk.h"
-#include <memory>
 #include <ranges>
 
 bool EngineDefaults::HasInit = false;
 bool EngineDefaults::HasBuiltTextureUbo = false;
 CustomRandomEngine EngineDefaults::Engine = {};
 std::unordered_map<Texture*, uint16_t, TextureHasher> EngineDefaults::TextureList = {};
-array<unique_ptr<Shader>, 2> EngineDefaults::Shaders = {};
+std::array<std::unique_ptr<Shader>, 2> EngineDefaults::Shaders = {};
 GLuint EngineDefaults::UboTextures = 0;
 FontManager EngineDefaults::MainFont{"Textures/Font/default.png"};
 
@@ -75,7 +74,7 @@ void EngineDefaults::BuildTextureUbo()
         return;
     }
     HasBuiltTextureUbo = true;
-    vector<GLuint64> helper;
+    std::vector<GLuint64> helper;
     helper.reserve(TextureList.size());
     for (const Texture* texture : TextureList | std::ranges::views::keys)
     {

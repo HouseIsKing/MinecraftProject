@@ -63,7 +63,7 @@ void SaplingBlock::GenerateTessellationData(TessellationHelper& tessellationHelp
 }
 
 void SaplingBlock::GenerateTessellationData(GuiTessellation& tessellationHelper, const BlockFaces& face,
-                                            const mat4x4 transformationMatrix) const
+                                            const glm::mat4x4 transformationMatrix) const
 {
     const uint16_t index = IndexTextures[GetIndexTextureSide(face)];
     for (int i = 0; i < 2; i++)
@@ -77,13 +77,13 @@ void SaplingBlock::GenerateTessellationData(GuiTessellation& tessellationHelper,
         const float z1 = 0.5F + za;
         constexpr float y0 = 0.0F;
         constexpr float y1 = 1.0F;
-        const uint16_t triangleIndex1 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(x0, y1, z0, 1.0F)), 0.0F, 1.0F, 1.0F,
+        const uint16_t triangleIndex1 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(x0, y1, z0, 1.0F)), 0.0F, 1.0F, 1.0F,
                                                                                1.0F, 1.0F, 1.0F, index, 1));
-        const uint16_t triangleIndex2 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(x1, y1, z1, 1.0F)), 1.0F, 1.0F, 1.0F,
+        const uint16_t triangleIndex2 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(x1, y1, z1, 1.0F)), 1.0F, 1.0F, 1.0F,
                                                                                1.0F, 1.0F, 1.0F, index, 1));
-        const uint16_t triangleIndex3 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(x1, y0, z1, 1.0F)), 1.0F, 0.0F, 1.0F,
+        const uint16_t triangleIndex3 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(x1, y0, z1, 1.0F)), 1.0F, 0.0F, 1.0F,
                                                                                1.0F, 1.0F, 1.0F, index, 0));
-        const uint16_t triangleIndex4 = tessellationHelper.AddVertex(GuiVertex(vec3(transformationMatrix * vec4(x0, y0, z0, 1.0F)), 0.0F, 0.0F, 1.0F,
+        const uint16_t triangleIndex4 = tessellationHelper.AddVertex(GuiVertex(glm::vec3(transformationMatrix * glm::vec4(x0, y0, z0, 1.0F)), 0.0F, 0.0F, 1.0F,
                                                                                1.0F, 1.0F, 1.0F, index, 0));
         tessellationHelper.AddTriangle(triangleIndex1);
         tessellationHelper.AddTriangle(triangleIndex2);

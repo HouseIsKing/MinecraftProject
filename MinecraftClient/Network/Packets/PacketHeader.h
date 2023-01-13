@@ -1,6 +1,5 @@
 #pragma once
-#include <cstdint>
-#include <vector>
+#include <array>
 
 enum class EPacketType : uint8_t
 {

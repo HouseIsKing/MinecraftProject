@@ -1,5 +1,6 @@
 #pragma once
 #include "Gui.h"
+#include "World/Blocks/BlockTypeList.h"
 
 class SelectedBlockGui final : public Gui
 {

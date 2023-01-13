@@ -24,10 +24,10 @@ void TessellationHelper::AddTriangle(const uint16_t triangle)
 	TriangleIndices.push_back(triangle);
 }
 
-mat4x4 TessellationHelper::GetTransformationMatrix(const size_t id) const
+glm::mat4x4 TessellationHelper::GetTransformationMatrix(const size_t id) const
 {
 	Transform* transform = GetTransform(id);
-	mat4x4 helper = TessellationTransforms.at(id)->GetTransformMatrix();
+	glm::mat4x4 helper = TessellationTransforms.at(id)->GetTransformMatrix();
 	while (transform->GetParent() != nullptr)
 	{
 		transform = transform->GetParent();

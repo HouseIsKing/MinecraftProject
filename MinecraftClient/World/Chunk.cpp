@@ -1,5 +1,5 @@
 #include "Chunk.h"
-#include "../Util/EngineDefaults.h"
+#include "Util/EngineDefaults.h"
 #include "SinglePlayerWorld.h"
 
 SinglePlayerWorld* Chunk::World = nullptr;
@@ -135,7 +135,7 @@ float Chunk::GetDistanceFromPlayer() const
     {
         return 0.0F;
     }
-    const vec3 temp = player->GetTransform().GetPosition() - vec3(static_cast<float>(ChunkPosition.GetX() * CHUNK_WIDTH) + CHUNK_WIDTH / 2.0F, static_cast<float>(ChunkPosition.GetY() * CHUNK_HEIGHT) + CHUNK_HEIGHT / 2.0F, static_cast<float>(ChunkPosition.GetZ() * CHUNK_DEPTH) + CHUNK_DEPTH / 2.0F);
+    const glm::vec3 temp = player->GetTransform().GetPosition() - glm::vec3(static_cast<float>(ChunkPosition.GetX() * CHUNK_WIDTH) + CHUNK_WIDTH / 2.0F, static_cast<float>(ChunkPosition.GetY() * CHUNK_HEIGHT) + CHUNK_HEIGHT / 2.0F, static_cast<float>(ChunkPosition.GetZ() * CHUNK_DEPTH) + CHUNK_DEPTH / 2.0F);
     return dot(temp, temp);
 }
 

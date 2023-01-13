@@ -1,5 +1,4 @@
 #include "GuiTessellation.h"
-
 #include "EngineDefaults.h"
 
 GuiTessellation::GuiTessellation()

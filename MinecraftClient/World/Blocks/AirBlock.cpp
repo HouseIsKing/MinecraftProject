@@ -12,7 +12,7 @@ size_t AirBlock::GetIndexTextureSide(BlockFaces /*face*/) const
 }
 
 void AirBlock::GenerateTessellationData(GuiTessellation& /*tessellationHelper*/, const BlockFaces& /*face*/,
-                                        mat4x4 /*transformationMatrix*/) const
+                                        glm::mat4x4 /*transformationMatrix*/) const
 {
 }
 

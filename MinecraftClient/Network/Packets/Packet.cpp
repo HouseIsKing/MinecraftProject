@@ -1,4 +1,5 @@
 #include "Packet.h"
+#include <stdexcept>
 
 Packet::Packet(const PacketHeader& header) : Header(header), DataPos(0)
 {

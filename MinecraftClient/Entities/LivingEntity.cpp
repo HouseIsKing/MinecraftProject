@@ -1,6 +1,6 @@
 #include "LivingEntity.h"
 
-LivingEntity::LivingEntity(const vec3 entitySize, const float x, const float y, const float z) : Entity(entitySize,
+LivingEntity::LivingEntity(const glm::vec3 entitySize, const float x, const float y, const float z) : Entity(entitySize,
     x, y, z), JumpRequested(false), HorizontalInput(0), VerticalInput(0)
 {
 }
@@ -17,7 +17,7 @@ void LivingEntity::CalculateVelocity()
         speedModifier *= 0.2F;
     }
     VelocityY -= 0.08F;
-    const vec3 rotation = GetTransform().GetRotation();
+    const glm::vec3 rotation = GetTransform().GetRotation();
     if (const float d = sqrt(HorizontalInput * HorizontalInput + VerticalInput * VerticalInput); d > 0.001F)
     {
         speedModifier /= d;

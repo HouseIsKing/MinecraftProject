@@ -1,20 +1,11 @@
 #include "SinglePlayerWorld.h"
-#include "../Util/CustomFileManager.h"
-#include "../Util/EngineDefaults.h"
-#include <cmath>
-#include <filesystem>
-#include <iostream>
-#include <ranges>
-
 #include "Entities/Zombie.h"
 #include "GUI/CrosshairGui.h"
-#include "GUI/Gui.h"
 #include "GUI/PerformanceGui.h"
-#include "GUI/SelectedBlockGui.h"
+#include "Util/EngineDefaults.h"
 #include "Util/PerlinNoise.h"
-
-using std::piecewise_construct;
-using std::forward_as_tuple;
+#include <filesystem>
+#include <iostream>
 
 
 void SinglePlayerWorld::SaveWorld()
@@ -39,7 +30,7 @@ void SinglePlayerWorld::LoadWorld()
         int x = coords.GetX() * Chunk::CHUNK_WIDTH;
         int y = coords.GetY() * Chunk::CHUNK_HEIGHT;
         int z = coords.GetZ() * Chunk::CHUNK_DEPTH;
-        fileManager >> Chunks.emplace(piecewise_construct, forward_as_tuple(x, y, z), forward_as_tuple(x, y, z)).first->second;
+        fileManager >> Chunks.emplace(std::piecewise_construct, std::forward_as_tuple(x, y, z), std::forward_as_tuple(x, y, z)).first->second;
     }
 }
 
@@ -131,7 +122,7 @@ void SinglePlayerWorld::Init()
 
 void SinglePlayerWorld::InitFog()
 {
-    const array fogs{14.0F / 255.0F, 11.0F / 255.0F, 10.0F / 255.0F, 1.0F, 0.01F, 0.0F, 0.0F, 0.0F, 254.0F / 255.0F, 251.0F / 255.0F, 250.0F / 255.0F, 1.0F, 0.001F, 0.0F, 0.0F, 0.0F};
+    const std::array fogs{14.0F / 255.0F, 11.0F / 255.0F, 10.0F / 255.0F, 1.0F, 0.01F, 0.0F, 0.0F, 0.0F, 254.0F / 255.0F, 251.0F / 255.0F, 250.0F / 255.0F, 1.0F, 0.001F, 0.0F, 0.0F, 0.0F};
     glGenBuffers(1, &FogsBuffer);
     glBindBuffer(GL_UNIFORM_BUFFER, FogsBuffer);
     glBufferData(GL_UNIFORM_BUFFER, static_cast<GLintptr>(fogs.size() * sizeof(float)), fogs.data(), GL_STATIC_COPY);
@@ -222,7 +213,7 @@ void SinglePlayerWorld::GenerateChunks(const uint16_t amountX, const uint16_t am
         {
             for (int z = 0; z < amountZ; z++)
             {
-                Chunks.emplace(piecewise_construct, forward_as_tuple(x * Chunk::CHUNK_WIDTH, y * Chunk::CHUNK_HEIGHT, z * Chunk::CHUNK_DEPTH), forward_as_tuple(x * Chunk::CHUNK_WIDTH, y * Chunk::CHUNK_HEIGHT, z * Chunk::CHUNK_DEPTH));
+                Chunks.emplace(std::piecewise_construct, std::forward_as_tuple(x * Chunk::CHUNK_WIDTH, y * Chunk::CHUNK_HEIGHT, z * Chunk::CHUNK_DEPTH), std::forward_as_tuple(x * Chunk::CHUNK_WIDTH, y * Chunk::CHUNK_HEIGHT, z * Chunk::CHUNK_DEPTH));
             }
         }
     }
@@ -234,10 +225,10 @@ void SinglePlayerWorld::GenerateLevel()
     const auto amountY = static_cast<uint16_t>(std::ceil(static_cast<float>(LevelHeight) / static_cast<float>(Chunk::CHUNK_HEIGHT)));
     const auto amountZ = static_cast<uint16_t>(std::ceil(static_cast<float>(LevelDepth) / static_cast<float>(Chunk::CHUNK_DEPTH)));
     GenerateChunks(amountX, amountY, amountZ);
-    const vector<int> firstHeightMap = PerlinNoise(0).Generate(LevelWidth, LevelDepth);
-    const vector<int> secondHeightMap = PerlinNoise(0).Generate(LevelWidth, LevelDepth);
-    const vector<int> cliffMap = PerlinNoise(1).Generate(LevelWidth, LevelDepth);
-    const vector<int> rockMap = PerlinNoise(1).Generate(LevelWidth, LevelDepth);
+    const std::vector<int> firstHeightMap = PerlinNoise(0).Generate(LevelWidth, LevelDepth);
+    const std::vector<int> secondHeightMap = PerlinNoise(0).Generate(LevelWidth, LevelDepth);
+    const std::vector<int> cliffMap = PerlinNoise(1).Generate(LevelWidth, LevelDepth);
+    const std::vector<int> rockMap = PerlinNoise(1).Generate(LevelWidth, LevelDepth);
 
     for (int x = 0; x < LevelWidth; x++)
     {
@@ -362,7 +353,7 @@ Chunk* SinglePlayerWorld::GetChunkAt(const int x, const int y, const int z)
  * \param pos position to round
  * \return returns brightness at the rounded position
  */
-int SinglePlayerWorld::GetBrightnessAt(const vec3 pos) const
+int SinglePlayerWorld::GetBrightnessAt(const glm::vec3 pos) const
 {
     return GetBrightnessAt(static_cast<int>(pos.x), static_cast<int>(pos.y), static_cast<int>(pos.z));
 }
@@ -522,9 +513,9 @@ int SinglePlayerWorld::GetFps() const
     return Fps;
 }
 
-vector<BoundingBox> SinglePlayerWorld::GetBlockBoxesInBoundingBox(const BoundingBox& boundingBox)
+std::vector<BoundingBox> SinglePlayerWorld::GetBlockBoxesInBoundingBox(const BoundingBox& boundingBox)
 {
-    vector<BoundingBox> result{};
+    std::vector<BoundingBox> result{};
     for (int x = static_cast<int>(boundingBox.GetMinX()); static_cast<float>(x) <= boundingBox.GetMaxX(); x++)
     {
         for (int y = static_cast<int>(boundingBox.GetMinY()); static_cast<float>(y) <= boundingBox.GetMaxY(); y++)

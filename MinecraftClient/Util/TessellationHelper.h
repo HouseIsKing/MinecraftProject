@@ -2,16 +2,14 @@
 #include "TessellationInterface.h"
 #include "Transform.h"
 #include "Vertex.h"
-#include <vector>
-
-using std::vector;
+#include <memory>
 
 class TessellationHelper final : public TessellationInterface
 {
-    vector<Vertex> Vertices{};
-    vector<unique_ptr<Transform>> TessellationTransforms{};
+    std::vector<Vertex> Vertices{};
+    std::vector<std::unique_ptr<Transform>> TessellationTransforms{};
     int PositionUniform;
-    [[nodiscard]] mat4x4 GetTransformationMatrix(size_t id) const;
+    [[nodiscard]] glm::mat4x4 GetTransformationMatrix(size_t id) const;
 
 public:
     TessellationHelper();

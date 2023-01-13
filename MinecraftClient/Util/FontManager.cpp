@@ -1,8 +1,6 @@
 #include "FontManager.h"
-
-#include <stb_image.h>
-
 #include "EngineDefaults.h"
+#include <stb_image.h>
 
 FontManager::FontManager(const std::string& texture) : CharacterWidths()
 {

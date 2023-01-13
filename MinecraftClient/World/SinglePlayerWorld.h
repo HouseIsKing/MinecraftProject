@@ -1,30 +1,19 @@
-//
-// Created by amit on 4/21/2022.
-//
 #pragma once
-#include "../Entities/Entity.h"
-#include "../Entities/Player/PlayerController.h"
 #include "Chunk.h"
-#include "ChunkCoords.h"
+#include "Entities/Player/PlayerController.h"
 #include "GLFW/glfw3.h"
 #include <stack>
-#include <unordered_map>
 #include <unordered_set>
-
-#include "GUI/Gui.h"
-
-using std::unordered_map;
-using std::equal_to;
 
 class SinglePlayerWorld
 {
-    unordered_map<ChunkCoords, Chunk, ChunkComparator> Chunks;
-    unordered_map<uint16_t, unique_ptr<Entity>> Entities;
+    std::unordered_map<ChunkCoords, Chunk, ChunkComparator> Chunks;
+    std::unordered_map<uint16_t, std::unique_ptr<Entity>> Entities;
     std::unordered_set<Chunk*> DirtyChunksDuplicatorCheck{};
     std::vector<Chunk*> DirtyChunks{};
     std::stack<uint16_t> EntityAvailableIDs{};
     std::vector<uint16_t> EntitiesToRemove{};
-    vector<unique_ptr<Gui>> Guis;
+    std::vector<std::unique_ptr<Gui>> Guis;
     PlayerController* Player;
     long WorldTime; //symbolises world time in ticks
     const uint16_t LevelWidth;
@@ -32,7 +21,7 @@ class SinglePlayerWorld
     const uint16_t LevelDepth;
     GLuint FogsBuffer;
     GLFWwindow* TheAppWindow;
-    vector<uint8_t> LightLevels;
+    std::vector<uint8_t> LightLevels;
     const uint8_t MaxChunkRebuilt = 8;
     float LastTimeFrame;
     float DeltaTime;
@@ -72,8 +61,8 @@ public:
     Chunk* GetChunkAt(int x, int y, int z);
     [[nodiscard]] int GetBrightnessAt(int x, int y, int z) const;
     bool IsBlockSolid(int x, int y, int z);
-    [[nodiscard]] int GetBrightnessAt(vec3 pos) const;
-    vector<BoundingBox> GetBlockBoxesInBoundingBox(const BoundingBox& boundingBox);
+    [[nodiscard]] int GetBrightnessAt(glm::vec3 pos) const;
+    std::vector<BoundingBox> GetBlockBoxesInBoundingBox(const BoundingBox& boundingBox);
     void DrawWorld(float partialTick);
     [[nodiscard]] GLFWwindow* GetWindow() const;
     template <typename T>

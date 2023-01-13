@@ -1,9 +1,10 @@
 #pragma once
 #include "Entity.h"
+#include "World/Blocks/Block.h"
 
 class ParticleEntity final : Entity
 {
-    static constexpr vec3 PARTICLE_SIZE = vec3(0.1F, 0.1F, 0.1F);
+    static constexpr glm::vec3 PARTICLE_SIZE = glm::vec3(0.1F, 0.1F, 0.1F);
     float U0;
     float V0;
     const Block* BlockType;

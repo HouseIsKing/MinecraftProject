@@ -4,20 +4,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 
-using glm::vec3;
-using glm::mat4x4;
-using glm::cos;
-using glm::sin;
-using glm::radians;
-using glm::normalize;
-using glm::lookAt;
-using glm::perspective;
-
 struct Frustum
 {
     enum Plane { PlaneBack, PlaneFront, PlaneLeft, PlaneRight, PlaneTop, PlaneBottom };
 
-    Frustum(const mat4x4& viewMatrix, const mat4x4& projectionMatrix);
+    Frustum(const glm::mat4x4& viewMatrix, const glm::mat4x4& projectionMatrix);
     [[nodiscard]] bool CubeInFrustum(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) const;
     [[nodiscard]] bool CubeInFrustum(const BoundingBox& box) const;
 
@@ -26,13 +17,13 @@ struct Frustum
 
 class Camera
 {
-    vec3 Front;
-    vec3 Up;
-    vec3 Right;
+    glm::vec3 Front;
+    glm::vec3 Up;
+    glm::vec3 Right;
     float Fov;
     float AspectRatio;
-    mat4x4 ViewMatrix;
-    mat4x4 ProjectionMatrix;
+    glm::mat4x4 ViewMatrix;
+    glm::mat4x4 ProjectionMatrix;
     bool IsDirtyProjectionMatrix;
     float PrevYaw;
     float ZNear;
@@ -41,17 +32,17 @@ class Camera
     void UpdateVectors();
 
 public:
-    vec3 Position;
+    glm::vec3 Position;
     float Pitch;
     float Yaw;
     Frustum GetFrustum();
-    Camera(vec3 position, float aspectRatio);
+    Camera(glm::vec3 position, float aspectRatio);
     void SetFov(float newFov);
-    [[nodiscard]] vec3 GetFrontVector() const;
+    [[nodiscard]] glm::vec3 GetFrontVector() const;
     void SetAspectRatio(float newAspectRatio);
     void RecalculateProjectionMatrix();
     void RecalculateViewMatrix();
-    mat4x4 GetViewMatrix();
-    mat4x4 GetProjectionMatrix();
+    glm::mat4x4 GetViewMatrix();
+    glm::mat4x4 GetProjectionMatrix();
 };
 

@@ -1,7 +1,7 @@
 #include "EntityMeshBlock.h"
 #include "Util/EngineDefaults.h"
 
-EntityMeshBlock::EntityMeshBlock(const string& meshTexture, const float anchorPosX, const float anchorPosY, const float anchorPosZ, const float minX, const float minY, const float minZ, const float maxX, const float maxY, const float maxZ, const std::array<float, 24>& uvs, TessellationHelper& tessellationHelper) : Block(minX, minY, minZ, maxX, maxY, maxZ),
+EntityMeshBlock::EntityMeshBlock(const std::string& meshTexture, const float anchorPosX, const float anchorPosY, const float anchorPosZ, const float minX, const float minY, const float minZ, const float maxX, const float maxY, const float maxZ, const std::array<float, 24>& uvs, TessellationHelper& tessellationHelper) : Block(minX, minY, minZ, maxX, maxY, maxZ),
 	BlockTransformId(tessellationHelper.AddTransform(new Transform(tessellationHelper.GetTransform(0)))), TrianglesStartPos(0), BlockUVs(uvs), BlockVerticesPositions()
 {
 	tessellationHelper.GetTransform(BlockTransformId)->SetPosition(anchorPosX, anchorPosY, anchorPosZ);
@@ -28,7 +28,7 @@ void EntityMeshBlock::GenerateTessellationData(TessellationHelper& tessellationH
 	GenerateTessellationData(tessellationHelper, BlockFaces::West, 0, 0, 0, brightness, 1.0F, 1.0F, 1.0F, 1.0F);
 }
 
-void EntityMeshBlock::GenerateTessellationData(GuiTessellation& /*tessellationHelper*/, const BlockFaces& /*face*/, mat4x4 /*transformationMatrix*/) const
+void EntityMeshBlock::GenerateTessellationData(GuiTessellation& /*tessellationHelper*/, const BlockFaces& /*face*/, glm::mat4x4 /*transformationMatrix*/) const
 {
 }
 
@@ -96,14 +96,14 @@ void EntityMeshBlock::PrepareRender(const TessellationHelper& tessellationHelper
 	const float maxX = BlockBounds.GetMaxX();
 	const float maxY = BlockBounds.GetMaxY();
 	const float maxZ = BlockBounds.GetMaxZ();
-	BlockVerticesPositions[0] = vec3(minX, minY, minZ);
-	BlockVerticesPositions[1] = vec3(minX, minY, maxZ);
-	BlockVerticesPositions[2] = vec3(minX, maxY, minZ);
-	BlockVerticesPositions[3] = vec3(minX, maxY, maxZ);
-	BlockVerticesPositions[4] = vec3(maxX, minY, minZ);
-	BlockVerticesPositions[5] = vec3(maxX, minY, maxZ);
-	BlockVerticesPositions[6] = vec3(maxX, maxY, minZ);
-	BlockVerticesPositions[7] = vec3(maxX, maxY, maxZ);
+	BlockVerticesPositions[0] = glm::vec3(minX, minY, minZ);
+	BlockVerticesPositions[1] = glm::vec3(minX, minY, maxZ);
+	BlockVerticesPositions[2] = glm::vec3(minX, maxY, minZ);
+	BlockVerticesPositions[3] = glm::vec3(minX, maxY, maxZ);
+	BlockVerticesPositions[4] = glm::vec3(maxX, minY, minZ);
+	BlockVerticesPositions[5] = glm::vec3(maxX, minY, maxZ);
+	BlockVerticesPositions[6] = glm::vec3(maxX, maxY, minZ);
+	BlockVerticesPositions[7] = glm::vec3(maxX, maxY, maxZ);
 }
 
 size_t EntityMeshBlock::GetBlockTransformId() const
