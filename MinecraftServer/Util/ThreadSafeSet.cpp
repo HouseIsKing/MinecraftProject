@@ -9,7 +9,7 @@ size_t ThreadSafeSet::GetSize()
 }
 
 std::shared_ptr<ConnectionToClient> ThreadSafeSet::Emplace(asio::io_context& context,
-                                                           ClientNetworkManager* networkManager)
+                                                           ServerNetworkManager* networkManager)
 {
     std::lock_guard<std::mutex> lock(SetMutex);
     return std::dynamic_pointer_cast<ConnectionToClient>(Clients.emplace(new ConnectionToClient(context, networkManager)).first._Ptr->_Myval);

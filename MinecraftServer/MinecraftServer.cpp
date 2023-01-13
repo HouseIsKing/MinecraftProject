@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "Network/ClientNetworkManager.h"
+#include "Network/ServerNetworkManager.h"
 #include "Util/ThreadSafeSet.h"
 
 bool run = true;
@@ -18,7 +18,7 @@ BOOL APIENTRY CtrlHandler(const DWORD fdwCtrlType)
 int main(int /*argc*/, char* /*argv*/[])
 {
     SetConsoleCtrlHandler(CtrlHandler, TRUE);
-    ClientNetworkManager networkManager;
+    ServerNetworkManager networkManager;
     networkManager.Start();
     std::unordered_set<std::shared_ptr<ConnectionToClientInterface>, ConnectionHasher, ConnectionEqual> connections;
     while (run)

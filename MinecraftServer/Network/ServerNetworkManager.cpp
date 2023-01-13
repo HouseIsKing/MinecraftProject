@@ -1,8 +1,8 @@
-#include "ClientNetworkManager.h"
+#include "ServerNetworkManager.h"
 
 #include <iostream>
 
-void ClientNetworkManager::RunAcceptor()
+void ServerNetworkManager::RunAcceptor()
 {
     NewConnection = std::make_shared<ConnectionToClient>(Context, this);
     Acceptor.async_accept(NewConnection->GetSocket(), [this](const asio::error_code& error)
@@ -14,27 +14,27 @@ void ClientNetworkManager::RunAcceptor()
     });
 }
 
-ClientNetworkManager::ClientNetworkManager() : Acceptor(Context, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), 25565))
+ServerNetworkManager::ServerNetworkManager() : Acceptor(Context, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), 25565))
 {
 }
 
-ClientNetworkManager::~ClientNetworkManager()
+ServerNetworkManager::~ServerNetworkManager()
 {
     Context.stop();
     ContextThread.join();
 }
 
-void ClientNetworkManager::AddPacket(const std::shared_ptr<PacketData>& packet)
+void ServerNetworkManager::AddPacket(const std::shared_ptr<PacketData>& packet)
 {
     Packets.Push(packet);
 }
 
-void ClientNetworkManager::Start()
+void ServerNetworkManager::Start()
 {
     RunAcceptor();
 }
 
-std::shared_ptr<PacketData> ClientNetworkManager::GetNextPacket()
+std::shared_ptr<PacketData> ServerNetworkManager::GetNextPacket()
 {
     if (Packets.GetSize() > 0)
     {
@@ -43,7 +43,7 @@ std::shared_ptr<PacketData> ClientNetworkManager::GetNextPacket()
     return nullptr;
 }
 
-std::shared_ptr<ConnectionToClient> ClientNetworkManager::GetNextNewConnection()
+std::shared_ptr<ConnectionToClient> ServerNetworkManager::GetNextNewConnection()
 {
     if (NewConnections.GetSize() > 0)
     {
@@ -52,7 +52,7 @@ std::shared_ptr<ConnectionToClient> ClientNetworkManager::GetNextNewConnection()
     return nullptr;
 }
 
-std::shared_ptr<ConnectionToClient> ClientNetworkManager::GetNextRemovedConnection()
+std::shared_ptr<ConnectionToClient> ServerNetworkManager::GetNextRemovedConnection()
 {
     if (RemovedConnections.GetSize() > 0)
     {

@@ -122,7 +122,7 @@ int main(const int argc, char* argv[])
 {
     if (argc > 2 && std::string(argv[1]) == "Server")
     {
-        ClientNetworkManager manager;
+        ServerNetworkManager manager;
         manager.Start("127.0.0.1", argv[2]);
     }
     else

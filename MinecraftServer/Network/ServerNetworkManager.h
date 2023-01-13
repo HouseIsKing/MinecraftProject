@@ -6,7 +6,7 @@
 #include <asio/ip/tcp.hpp>
 #include <thread>
 
-class ClientNetworkManager
+class ServerNetworkManager
 {
     asio::io_context Context;
     asio::io_context::work IdleWork{Context};
@@ -20,12 +20,12 @@ class ClientNetworkManager
     void RunAcceptor();
 
 public:
-    ClientNetworkManager();
-    ~ClientNetworkManager();
-    ClientNetworkManager(const ClientNetworkManager&) = delete;
-    ClientNetworkManager& operator=(const ClientNetworkManager&) = delete;
-    ClientNetworkManager(ClientNetworkManager&&) = delete;
-    ClientNetworkManager& operator=(ClientNetworkManager&&) = delete;
+    ServerNetworkManager();
+    ~ServerNetworkManager();
+    ServerNetworkManager(const ServerNetworkManager&) = delete;
+    ServerNetworkManager& operator=(const ServerNetworkManager&) = delete;
+    ServerNetworkManager(ServerNetworkManager&&) = delete;
+    ServerNetworkManager& operator=(ServerNetworkManager&&) = delete;
     void AddPacket(const std::shared_ptr<PacketData>& packet);
     void Start();
     std::shared_ptr<PacketData> GetNextPacket();

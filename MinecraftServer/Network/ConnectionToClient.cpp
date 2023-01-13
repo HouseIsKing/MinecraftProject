@@ -2,10 +2,10 @@
 
 #include <iostream>
 
-#include "ClientNetworkManager.h"
+#include "ServerNetworkManager.h"
 #include "Packets/ConnectionInitPacket.h"
 
-ConnectionToClient::ConnectionToClient(asio::io_context& ioContext, ClientNetworkManager* networkManager) : Socket(std::make_unique<asio::ip::tcp::socket>(ioContext)), NetworkManager(networkManager), CurrentPacket(this, PacketHeader(EPacketType::ConnectionInit))
+ConnectionToClient::ConnectionToClient(asio::io_context& ioContext, ServerNetworkManager* networkManager) : Socket(std::make_unique<asio::ip::tcp::socket>(ioContext)), NetworkManager(networkManager), CurrentPacket(this, PacketHeader(EPacketType::ConnectionInit))
 {
     HeaderBuffer.resize(sizeof(PacketHeader));
 }

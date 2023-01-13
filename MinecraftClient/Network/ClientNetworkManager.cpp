@@ -5,17 +5,17 @@
 
 #include "Packets/ConnectionInitPacket.h"
 
-ClientNetworkManager::ClientNetworkManager() : Socket(Context)
+ServerNetworkManager::ServerNetworkManager() : Socket(Context)
 {
 }
 
-ClientNetworkManager::~ClientNetworkManager()
+ServerNetworkManager::~ServerNetworkManager()
 {
     Context.stop();
     ContextThread.join();
 }
 
-void ClientNetworkManager::Start(const std::string ip, std::string name)
+void ServerNetworkManager::Start(const std::string ip, std::string name)
 {
     asio::error_code ec;
     Socket.connect(asio::ip::tcp::endpoint(asio::ip::address::from_string(ip), 25565), ec);
@@ -25,7 +25,7 @@ void ClientNetworkManager::Start(const std::string ip, std::string name)
     Socket.write_some(asio::buffer(packet.GetData(), packet.GetHeader().PacketSize), ec);
 }
 
-std::shared_ptr<PacketData> ClientNetworkManager::GetNextPacket()
+std::shared_ptr<PacketData> ServerNetworkManager::GetNextPacket()
 {
     if (Packets.GetSize() > 0)
     {

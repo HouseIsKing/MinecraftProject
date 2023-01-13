@@ -7,17 +7,17 @@
 #include "Packets/PacketData.h"
 #include "Packets/PacketHeader.h"
 
-class ClientNetworkManager;
+class ServerNetworkManager;
 
 class ConnectionToClient final : public ConnectionToClientInterface
 {
     std::unique_ptr<asio::ip::tcp::socket> Socket;
-    ClientNetworkManager* NetworkManager;
+    ServerNetworkManager* NetworkManager;
     ConnectionPacket CurrentPacket;
     std::vector<uint8_t> HeaderBuffer{};
 
 public:
-    ConnectionToClient(asio::io_context& ioContext, ClientNetworkManager* networkManager);
+    ConnectionToClient(asio::io_context& ioContext, ServerNetworkManager* networkManager);
     ~ConnectionToClient() override;
     ConnectionToClient(const ConnectionToClient&) = delete;
     ConnectionToClient& operator=(const ConnectionToClient&) = delete;
