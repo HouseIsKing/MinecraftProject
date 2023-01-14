@@ -16,7 +16,6 @@ MultiPlayerWorld* Chunk::GetWorld()
 
 Chunk::Chunk(const int x, const int y, const int z) : ChunkPosition(x, y, z)
 {
-    GetWorld()->AddChunkAsDirty(this);
     for (auto& block : Blocks)
     {
         block = EBlockType::Air;
@@ -36,12 +35,7 @@ EBlockType Chunk::GetBlockTypeAt(const int x, const int y, const int z) const
 void Chunk::SetBlockTypeAt(const int x, const int y, const int z, const EBlockType block)
 {
     const auto index = static_cast<size_t>(EngineDefaults::GetChunkLocalIndex(x, y, z));
-    const EBlockType check = Blocks[index];
     Blocks[index] = block;
-    if (check != block)
-    {
-        GetWorld()->AddChunkAsDirty(this);
-    }
 }
 
 CustomFileManager& operator<<(CustomFileManager& fileManager, const Chunk& chunk)

@@ -1,11 +1,10 @@
 #include "MultiPlayerWorld.h"
-#include "Entities/Zombie.h"
+//#include "Entities/Zombie.h"
 #include "Util/EngineDefaults.h"
 #include "Util/PerlinNoise.h"
 #include <filesystem>
-#include <iostream>
-#include <glad/glad.h>
 #include <glm/ext/scalar_constants.hpp>
+#include <iostream>
 
 
 void MultiPlayerWorld::SaveWorld()
@@ -34,7 +33,7 @@ void MultiPlayerWorld::LoadWorld()
     }
 }
 
-MultiPlayerWorld::MultiPlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth) : Player(nullptr), WorldTime(0), LevelWidth(width), LevelHeight(height), LevelDepth(depth), LastTimeFrame(0.0F), DeltaTime(0.0F), Frames(0), Fps(0)
+MultiPlayerWorld::MultiPlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth) : WorldTime(0), LevelWidth(width), LevelHeight(height), LevelDepth(depth)
 {
     Entity::SetWorld(this);
     Chunk::SetWorld(this);
@@ -91,9 +90,9 @@ void MultiPlayerWorld::Run()
     std::shared_ptr<ConnectionToClient> newCon = NetworkManager.GetNextNewConnection();
     while (newCon != nullptr)
     {
-        const float x = EngineDefaults::GetNext<int>(LevelWidth);
-        const float y = EngineDefaults::GetNext<int>(LevelHeight);
-        const float z = EngineDefaults::GetNext<int>(LevelDepth);
+        const auto x = static_cast<float>(EngineDefaults::GetNext<int>(LevelWidth));
+        const auto y = static_cast<float>(EngineDefaults::GetNext<int>(LevelHeight));
+        const auto z = static_cast<float>(EngineDefaults::GetNext<int>(LevelDepth));
         Connections.emplace(newCon, new Player{x, y, z, newCon.get()});
         auto packet = Packet(PacketHeader::WORLD_TIME_PACKET);
         packet << WorldTime;
@@ -104,6 +103,7 @@ void MultiPlayerWorld::Run()
     std::shared_ptr<ConnectionToClient> closedCon = NetworkManager.GetNextRemovedConnection();
     while (closedCon != nullptr)
     {
+        RemoveEntity(Connections[closedCon]->GetEntityId());
         Connections.erase(closedCon);
         closedCon = NetworkManager.GetNextRemovedConnection();
     }
@@ -153,49 +153,6 @@ int MultiPlayerWorld::RecalculateLightLevels(const int x, const int z)
         }
     }
     return 0 - previousLightLevel;
-}
-
-void MultiPlayerWorld::UpdateChunksNear(const int x, const int y, const int z)
-{
-    Chunk* chunk = GetChunkAt(x, y + 1, z);
-    if (chunk != nullptr)
-    {
-        AddChunkAsDirty(chunk);
-    }
-    chunk = GetChunkAt(x, y - 1, z);
-    if (chunk != nullptr)
-    {
-        AddChunkAsDirty(chunk);
-    }
-    chunk = GetChunkAt(x, y, z + 1);
-    if (chunk != nullptr)
-    {
-        AddChunkAsDirty(chunk);
-    }
-    chunk = GetChunkAt(x, y, z - 1);
-    if (chunk != nullptr)
-    {
-        AddChunkAsDirty(chunk);
-    }
-    chunk = GetChunkAt(x + 1, y, z);
-    if (chunk != nullptr)
-    {
-        AddChunkAsDirty(chunk);
-    }
-    chunk = GetChunkAt(x - 1, y, z);
-    if (chunk != nullptr)
-    {
-        AddChunkAsDirty(chunk);
-    }
-}
-
-void MultiPlayerWorld::DrawGui() const
-{
-    Shader::SetUnsignedInt(EngineDefaults::GetShader(1)->GetUniformInt("worldTime"), static_cast<GLuint>(WorldTime % 24000L));
-    for (const auto& gui : Guis)
-    {
-        gui->Render();
-    }
 }
 
 void MultiPlayerWorld::GenerateChunks(const uint16_t amountX, const uint16_t amountY, const uint16_t amountZ)
@@ -387,18 +344,19 @@ void MultiPlayerWorld::PlaceBlockAt(const int x, const int y, const int z, const
     chunk->SetBlockTypeAt(x, y, z, blockType);
     if (block->IsSolidBlock() != previousBlock->IsSolidBlock())
     {
-        UpdateChunksNear(x, y, z);
+        //UpdateChunksNear(x, y, z);
     }
     if (block->IsBlockingLight() != previousBlock->IsBlockingLight())
     {
-        const int lightLevelsChange = RecalculateLightLevels(x, z);
-        for (int i = 0; i <= abs(lightLevelsChange); i++)
+        RecalculateLightLevels(x, z);
+        //const int lightLevelsChange = RecalculateLightLevels(x, z);
+        /*for (int i = 0; i <= abs(lightLevelsChange); i++)
         {
             if (Chunk* chunkLight = GetChunkAt(x, y + i * (lightLevelsChange > 0 ? -1 : 1), z); chunkLight != nullptr)
             {
                 AddChunkAsDirty(chunkLight);
             }
-        }
+        }*/
     }
 }
 
@@ -414,97 +372,25 @@ void MultiPlayerWorld::RemoveBlockAt(const int x, const int y, const int z)
     chunk->SetBlockTypeAt(x, y, z, EBlockType::Air);
     if (block->IsSolidBlock())
     {
-        UpdateChunksNear(x, y, z);
+        //UpdateChunksNear(x, y, z);
     }
     if (block->IsBlockingLight())
     {
-        const int lightLevelsChange = RecalculateLightLevels(x, z);
-        for (int i = 0; i <= abs(lightLevelsChange); i++)
+        RecalculateLightLevels(x, z);
+        //const int lightLevelsChange = RecalculateLightLevels(x, z);
+        /*for (int i = 0; i <= abs(lightLevelsChange); i++)
         {
             if (Chunk* chunkLight = GetChunkAt(x, y + i * (lightLevelsChange > 0 ? 1 : -1), z); chunkLight != nullptr)
             {
                 AddChunkAsDirty(chunkLight);
             }
-        }
-    }
-}
-
-void MultiPlayerWorld::AddChunkAsDirty(Chunk* chunk)
-{
-    if (DirtyChunksDuplicatorCheck.insert(chunk).second)
-    {
-        chunk->GotDirty();
-        DirtyChunks.push_back(chunk);
+        }*/
     }
 }
 
 Entity* MultiPlayerWorld::GetEntity(const uint16_t id) const
 {
     return Entities.at(id).get();
-}
-
-PlayerController* MultiPlayerWorld::GetPlayer() const
-{
-    return Player;
-}
-
-void MultiPlayerWorld::DrawWorld(const float partialTick)
-{
-    const auto time = static_cast<float>(glfwGetTime());
-    DeltaTime += time - LastTimeFrame;
-    LastTimeFrame = time;
-    if (DeltaTime > 1.0F)
-    {
-        DeltaTime -= 1.0F;
-        Fps = Frames;
-        Frames = 0;
-    }
-    glEnable(GL_CULL_FACE);
-    Player->Render(partialTick);
-    const Frustum frustum = Player->GetCameraFrustum();
-    for (const auto& entity : Entities | std::views::values)
-    {
-        if (entity.get() != Player && frustum.CubeInFrustum(entity->GetBoundingBox()))
-        {
-            entity->DoRender(partialTick);
-        }
-    }
-    std::ranges::sort(DirtyChunks, DirtyChunkComparator{frustum});
-    for (int i = 0; i < MaxChunkRebuilt && !DirtyChunks.empty(); i++)
-    {
-        DirtyChunks[0]->GenerateTessellationData();
-        DirtyChunksDuplicatorCheck.erase(DirtyChunks[0]);
-        DirtyChunks.erase(DirtyChunks.begin());
-    }
-    for (auto& chunk : Chunks | std::views::values)
-    {
-        if (chunk.ChunkInFrustum(frustum))
-        {
-            chunk.Draw();
-        }
-    }
-    Player->DisplaySelectionHighlight();
-    DrawGui();
-    glDisable(GL_CULL_FACE);
-    Frames++;
-}
-
-void MultiPlayerWorld::RebuildGui() const
-{
-    for (const auto& gui : Guis)
-    {
-        gui->Rebuild();
-    }
-}
-
-GLFWwindow* MultiPlayerWorld::GetWindow() const
-{
-    return TheAppWindow;
-}
-
-int MultiPlayerWorld::GetFps() const
-{
-    return Fps;
 }
 
 std::vector<BoundingBox> MultiPlayerWorld::GetBlockBoxesInBoundingBox(const BoundingBox& boundingBox)
@@ -538,5 +424,4 @@ MultiPlayerWorld::~MultiPlayerWorld()
     {
         std::cout << "Error while saving world" << std::endl;
     }
-    glDeleteBuffers(1, &FogsBuffer);
 }

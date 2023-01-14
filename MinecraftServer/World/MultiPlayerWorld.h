@@ -11,7 +11,7 @@ class MultiPlayerWorld
     std::unordered_map<ChunkCoords, Chunk, ChunkComparator> Chunks;
     std::unordered_map<uint16_t, std::unique_ptr<Entity>> Entities;
     ServerNetworkManager NetworkManager;
-    std::unordered_map<std::shared_ptr<ConnectionToClientInterface>, std::unique_ptr<Player>, ConnectionHasher, ConnectionEqual> Connections;
+    std::unordered_map<std::shared_ptr<ConnectionToClientInterface>, Player*, ConnectionHasher, ConnectionEqual> Connections;
     std::stack<uint16_t> EntityAvailableIDs{};
     std::vector<uint16_t> EntitiesToRemove{};
     long WorldTime; //symbolises world time in ticks
@@ -20,10 +20,6 @@ class MultiPlayerWorld
     const uint16_t LevelDepth;
     std::vector<uint8_t> LightLevels;
     const uint8_t MaxChunkRebuilt = 8;
-    float LastTimeFrame;
-    float DeltaTime;
-    int Frames;
-    int Fps;
     void SaveWorld();
     void LoadWorld();
     void GenerateChunks(uint16_t amountX, uint16_t amountY, uint16_t amountZ);
@@ -31,9 +27,6 @@ class MultiPlayerWorld
     void Init();
     void RecalculateLightLevels();
     int RecalculateLightLevels(int x, int z);
-    void UpdateChunksNear(int x, int y, int z);
-    void DrawGui() const;
-    void RebuildGui() const;
 
 public:
     MultiPlayerWorld(uint16_t width, uint16_t height, uint16_t depth);
@@ -49,9 +42,7 @@ public:
     bool IsBlockExists(int x, int y, int z);
     void PlaceBlockAt(int x, int y, int z, EBlockType blockType);
     void RemoveBlockAt(int x, int y, int z);
-    void AddChunkAsDirty(Chunk* chunk);
     [[nodiscard]] Entity* GetEntity(uint16_t id) const;
-    [[nodiscard]] PlayerController* GetPlayer() const;
     const Block* GetBlockAt(int x, int y, int z);
     EBlockType GetBlockTypeAt(int x, int y, int z);
     Chunk* GetChunkAt(int x, int y, int z);

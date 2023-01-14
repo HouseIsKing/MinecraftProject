@@ -2,7 +2,7 @@
 #include "ServerNetworkManager.h"
 #include <iostream>
 
-ConnectionToClient::ConnectionToClient(asio::io_context& ioContext, ServerNetworkManager* networkManager) : Socket(std::make_unique<asio::ip::tcp::socket>(ioContext)), NetworkManager(networkManager), CurrentPacket(PacketHeader(EPacketType::Position))
+ConnectionToClient::ConnectionToClient(asio::io_context& ioContext, ServerNetworkManager* networkManager) : Socket(std::make_unique<asio::ip::tcp::socket>(ioContext)), NetworkManager(networkManager), CurrentPacket(PacketHeader(EPacketType::PlayerId))
 {
     HeaderBuffer.resize(sizeof(PacketHeader));
 }
@@ -40,8 +40,20 @@ void ConnectionToClient::Start()
 
 void ConnectionToClient::WritePacket(Packet& packet) const
 {
-    Socket->async_write_some(asio::buffer(packet.GetHeader().Serialize(), sizeof(PacketHeader)));
-    Socket->async_write_some(asio::buffer(packet.GetData(), packet.GetHeader().PacketSize));
+    Socket->async_write_some(asio::buffer(packet.GetHeader().Serialize(), sizeof(PacketHeader)), [this](const asio::error_code& error, std::size_t /*bytesTransferred*/)
+    {
+        if (error)
+        {
+            std::cout << "Error writing packet header to client " << ClientName << std::endl;
+        }
+    });
+    Socket->async_write_some(asio::buffer(packet.GetData(), packet.GetHeader().PacketSize), [this](const asio::error_code& error, std::size_t /*bytesTransferred*/)
+    {
+        if (error)
+        {
+            std::cout << "Error writing packet data to client " << ClientName << std::endl;
+        }
+    });
 }
 
 std::shared_ptr<ConnectionToClient> ConnectionToClient::GetSharedPtr()
@@ -83,16 +95,11 @@ void ConnectionToClient::ReadPacketHeaderAsync()
     });
 }
 
-void ConnectionToClient::WritePacketHeaderAsync(Packet)
-{
-    Socket->async_write_some(asio::buffer(packet))
-}
-
 std::shared_ptr<PacketData> ConnectionToClient::TranslatePacket()
 {
     switch (CurrentPacket.GetHeader().PacketType)
     {
-    case EPacketType::Position:
+    case EPacketType::PlayerId:
         return nullptr;
     }
     return nullptr;

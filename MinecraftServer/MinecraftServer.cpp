@@ -8,6 +8,7 @@ BOOL APIENTRY CtrlHandler(const DWORD fdwCtrlType)
     if (fdwCtrlType == CTRL_CLOSE_EVENT || fdwCtrlType == CTRL_C_EVENT)
     {
         run = false;
+        return TRUE;
     }
     return FALSE;
 }

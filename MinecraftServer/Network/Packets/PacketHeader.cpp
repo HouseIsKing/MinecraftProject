@@ -14,3 +14,8 @@ std::array<uint8_t, sizeof(PacketHeader)> PacketHeader::Serialize() const
     memcpy(result.data(), this, sizeof(PacketHeader));
     return result;
 }
+
+const PacketHeader PacketHeader::PLAYER_ROTATION_PACKET = {EPacketType::EntityPosition, sizeof(float) * 3 + sizeof(uint16_t)};
+const PacketHeader PacketHeader::PLAYER_POSITION_PACKET = {EPacketType::EntityRotation, sizeof(float) * 3 + sizeof(uint16_t)};
+const PacketHeader PacketHeader::WORLD_TIME_PACKET = {EPacketType::WorldTime, sizeof(long)};
+const PacketHeader PacketHeader::PLAYER_ID_PACKET = {EPacketType::PlayerId, sizeof(uint16_t)};

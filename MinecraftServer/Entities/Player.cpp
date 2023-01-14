@@ -1,9 +1,8 @@
 #include "Player.h"
 
 #include <GLFW/glfw3.h>
-
 #include "Util/EngineDefaults.h"
-#include "Entities/Zombie.h"
+//#include "Entities/Zombie.h"
 #include "World/MultiPlayerWorld.h"
 
 Player::Player(const float x, const float y, const float z, ConnectionToClient* client) : LivingEntity(PLAYER_SIZE, x, y, z), Client(client), LeftMousePressed(false), RightMousePressed(false), PrevMouseX(0), PrevMouseY(0), IsSpawnZombieButtonPressed(false), FaceHit(BlockFaces::Top), BlockHit(nullptr), BlockHitPosition(), CurrentSelectedBlock(EBlockType::Stone)
