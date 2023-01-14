@@ -1,7 +1,3 @@
-//
-// Created by amit on 4/22/2022.
-//
-
 #include "BoundingBox.h"
 
 float BoundingBox::GetMinX() const

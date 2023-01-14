@@ -55,7 +55,7 @@ public:
     void RemoveBlockAt(int x, int y, int z);
     void AddChunkAsDirty(Chunk* chunk);
     [[nodiscard]] Entity* GetEntity(uint16_t id) const;
-    [[nodiscard]] PlayerController* GetPlayer() const;
+    [[nodiscard]] Player* GetPlayer() const;
     const Block* GetBlockAt(int x, int y, int z);
     EBlockType GetBlockTypeAt(int x, int y, int z);
     Chunk* GetChunkAt(int x, int y, int z);

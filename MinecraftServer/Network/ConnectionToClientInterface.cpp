@@ -2,11 +2,11 @@
 
 #include <utility>
 
-ConnectionToClientInterface::ConnectionToClientInterface(std::string name) : RepresentingPlayer(std::move(name))
+ConnectionToClientInterface::ConnectionToClientInterface(std::string name) : ClientName(std::move(name))
 {
 }
 
 const std::string& ConnectionToClientInterface::GetPlayerName() const
 {
-    return RepresentingPlayer.GetName();
+    return ClientName.GetName();
 }

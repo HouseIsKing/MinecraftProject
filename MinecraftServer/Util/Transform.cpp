@@ -1,29 +1,31 @@
 #include "Transform.h"
 
+#include <glm/gtx/transform.hpp>
+
 Transform::Transform() : Transform(nullptr)
 {
 }
 
-Transform::Transform(Transform* parent) : Position(vec3(0.0F)), Rotation(vec3(0.0F)), Scale(vec3(1.0F)), TransformMatrix(1.0F), IsDirty(true), Parent(parent)
+Transform::Transform(Transform* parent) : Position(glm::vec3(0.0F)), Rotation(glm::vec3(0.0F)), Scale(glm::vec3(1.0F)), TransformMatrix(1.0F), IsDirty(true), Parent(parent)
 {
 }
 
 void Transform::CalculateTransformMatrix()
 {
     TransformMatrix = translate(Position);
-    TransformMatrix = rotate(TransformMatrix, glm::radians(Rotation.z), vec3(0.0F, 0.0F, 1.0F));
-    TransformMatrix = rotate(TransformMatrix, glm::radians(Rotation.y), vec3(0.0F, -1.0F, 0.0F));
-    TransformMatrix = rotate(TransformMatrix, glm::radians(Rotation.x), vec3(1.0F, 0.0F, 0.0F));
+    TransformMatrix = rotate(TransformMatrix, glm::radians(Rotation.z), glm::vec3(0.0F, 0.0F, 1.0F));
+    TransformMatrix = rotate(TransformMatrix, glm::radians(Rotation.y), glm::vec3(0.0F, -1.0F, 0.0F));
+    TransformMatrix = rotate(TransformMatrix, glm::radians(Rotation.x), glm::vec3(1.0F, 0.0F, 0.0F));
     TransformMatrix = scale(TransformMatrix, Scale);
     IsDirty = false;
 }
 
-vec3 Transform::GetPosition() const
+glm::vec3 Transform::GetPosition() const
 {
     return Position;
 }
 
-vec3 Transform::GetRotation() const
+glm::vec3 Transform::GetRotation() const
 {
     return Rotation;
 }
@@ -60,7 +62,7 @@ void Transform::SetPosition(const float x, const float y, const float z)
     IsDirty = true;
 }
 
-void Transform::SetPosition(const vec3& position)
+void Transform::SetPosition(const glm::vec3& position)
 {
     Position = position;
     IsDirty = true;
@@ -82,7 +84,7 @@ void Transform::SetScale(const float x, const float y, const float z)
     IsDirty = true;
 }
 
-mat4x4 Transform::GetTransformMatrix()
+glm::mat4x4 Transform::GetTransformMatrix()
 {
     if (IsDirty)
     {
@@ -94,4 +96,11 @@ mat4x4 Transform::GetTransformMatrix()
 Transform* Transform::GetParent() const
 {
     return Parent;
+}
+
+glm::vec3 Transform::GetForwardVector() const
+{
+    return {
+        glm::cos(glm::radians(Rotation.x) * glm::sin(glm::radians(Rotation.y))), -glm::sin(glm::radians(Rotation.x)), glm::cos(glm::radians(Rotation.x) * glm::cos(glm::radians(Rotation.y)))
+    };
 }

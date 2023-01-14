@@ -5,7 +5,10 @@ class ConnectionToClient;
 
 class PacketData
 {
+    std::string ClientName;
+
 protected:
+    explicit PacketData(std::string name);
     PacketData() = default;
     ~PacketData() = default;
 
@@ -14,5 +17,6 @@ public:
     PacketData& operator=(const PacketData&) = delete;
     PacketData(PacketData&&) = delete;
     PacketData& operator=(PacketData&&) = delete;
-    virtual Packet GetPacketAsSend() = 0;
+    virtual Packet GetPacketAsSend();
+    const std::string& GetClientName();
 };

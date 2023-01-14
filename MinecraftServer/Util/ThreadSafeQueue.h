@@ -12,6 +12,7 @@ public:
     size_t GetSize();
     void Push(const std::shared_ptr<T>& packet);
     std::shared_ptr<T> Pop();
+    std::shared_ptr<T> Front();
 };
 
 template <typename T>
@@ -35,4 +36,11 @@ std::shared_ptr<T> ThreadSafeQueue<T>::Pop()
     std::shared_ptr<T> packet = Queue.front();
     Queue.pop();
     return packet;
+}
+
+template <typename T>
+std::shared_ptr<T> ThreadSafeQueue<T>::Front()
+{
+    std::lock_guard<std::mutex> lock(QueueMutex);
+    return Queue.front();
 }

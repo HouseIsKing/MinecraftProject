@@ -1,7 +1,3 @@
-//
-// Created by amit on 4/21/2022.
-//
-
 #include "ChunkCoords.h"
 #include "Chunk.h"
 

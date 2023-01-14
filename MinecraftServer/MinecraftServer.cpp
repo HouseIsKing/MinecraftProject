@@ -1,16 +1,13 @@
-#include <iostream>
-
-#include "Network/ServerNetworkManager.h"
-#include "Util/ThreadSafeSet.h"
+#include "World/MultiPlayerWorld.h"
 
 bool run = true;
+constexpr float TICK_RATE = 1.0F / 20.0F;
 
 BOOL APIENTRY CtrlHandler(const DWORD fdwCtrlType)
 {
-    if (fdwCtrlType == CTRL_CLOSE_EVENT)
+    if (fdwCtrlType == CTRL_CLOSE_EVENT || fdwCtrlType == CTRL_C_EVENT)
     {
         run = false;
-        return TRUE;
     }
     return FALSE;
 }
@@ -18,25 +15,20 @@ BOOL APIENTRY CtrlHandler(const DWORD fdwCtrlType)
 int main(int /*argc*/, char* /*argv*/[])
 {
     SetConsoleCtrlHandler(CtrlHandler, TRUE);
-    ServerNetworkManager networkManager;
-    networkManager.Start();
-    std::unordered_set<std::shared_ptr<ConnectionToClientInterface>, ConnectionHasher, ConnectionEqual> connections;
+    MultiPlayerWorld world{256, 64, 256};
+    float ticksTimer = 0;
     while (run)
     {
-        std::shared_ptr<ConnectionToClient> newCon = networkManager.GetNextNewConnection();
-        while (newCon != nullptr)
+        std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
+        int i;
+        for (i = 0; i < static_cast<int>(ticksTimer / TICK_RATE); i++)
         {
-            connections.insert(newCon);
-            newCon = networkManager.GetNextNewConnection();
+            world.Tick();
         }
-        std::cout << "Number of connections: " << connections.size() << std::endl;
-        if (!connections.empty())
-        {
-            for (const auto& con : connections)
-            {
-                std::cout << con->GetPlayerName() << std::endl;
-            }
-        }
+        world.Run();
+        std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
+        ticksTimer -= static_cast<float>(i) * TICK_RATE;
+        ticksTimer += std::chrono::duration<float>(end - start).count();
     }
     return 0;
 }

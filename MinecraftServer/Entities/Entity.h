@@ -1,8 +1,7 @@
 #pragma once
-#include <glm/vec3.hpp>
-
-#include "../Util/TessellationHelper.h"
 #include "Util/BoundingBox.h"
+#include "Util/Transform.h"
+#include <glm/vec3.hpp>
 
 class MultiPlayerWorld;
 
@@ -17,7 +16,7 @@ protected:
     float VelocityX;
     float VelocityY;
     float VelocityZ;
-    glm::vec3 PrevPos;
+    Transform EntityTransform;
     Entity(glm::vec3 entitySize, float x, float y, float z);
     [[nodiscard]] bool IsOnGround() const;
     void CheckCollisionAndMove();
@@ -32,9 +31,8 @@ public:
     Entity(Entity&&) = delete;
     static void SetWorld(MultiPlayerWorld* newWorld);
     void DoTick();
-    void DoRender(float partialTick);
-    [[nodiscard]] Transform& GetTransform() const;
-    [[nodiscard]] BoundingBox GetBoundingBox() const;
+    Transform& GetTransform();
+    BoundingBox GetBoundingBox();
     [[nodiscard]] uint16_t GetEntityId() const;
-    [[nodiscard]] vec3 GetEntitySize() const;
+    [[nodiscard]] glm::vec3 GetEntitySize() const;
 };

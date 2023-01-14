@@ -1,10 +1,12 @@
 #include "PacketData.h"
 
-PacketData::PacketData(ConnectionToClient* source) : Source(source)
+#include "Network/ConnectionToClient.h"
+
+PacketData::PacketData(std::shared_ptr<ConnectionToClient> source) : Source(std::move(source))
 {
 }
 
-ConnectionToClient* PacketData::GetConnectionToClient() const
+std::shared_ptr<ConnectionToClient>& PacketData::GetConnectionToClient()
 {
     return Source;
 }

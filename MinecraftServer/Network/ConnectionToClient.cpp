@@ -1,11 +1,8 @@
 #include "ConnectionToClient.h"
-
+#include "ServerNetworkManager.h"
 #include <iostream>
 
-#include "ServerNetworkManager.h"
-#include "Packets/ConnectionInitPacket.h"
-
-ConnectionToClient::ConnectionToClient(asio::io_context& ioContext, ServerNetworkManager* networkManager) : Socket(std::make_unique<asio::ip::tcp::socket>(ioContext)), NetworkManager(networkManager), CurrentPacket(this, PacketHeader(EPacketType::ConnectionInit))
+ConnectionToClient::ConnectionToClient(asio::io_context& ioContext, ServerNetworkManager* networkManager) : Socket(std::make_unique<asio::ip::tcp::socket>(ioContext)), NetworkManager(networkManager), CurrentPacket(PacketHeader(EPacketType::Position))
 {
     HeaderBuffer.resize(sizeof(PacketHeader));
 }
@@ -26,27 +23,46 @@ asio::ip::tcp::socket& ConnectionToClient::GetSocket() const
 void ConnectionToClient::Start()
 {
     Socket->read_some(asio::buffer(HeaderBuffer, HeaderBuffer.size()));
-    PacketHeader header = *reinterpret_cast<PacketHeader*>(HeaderBuffer.data());
-    CurrentPacket = {this, header};
-    std::vector<uint8_t>& data = CurrentPacket.ThePacket.GetData();
-    data.resize(CurrentPacket.ThePacket.GetHeader().PacketSize);
-    Socket->read_some(asio::buffer(data, CurrentPacket.ThePacket.GetHeader().PacketSize));
-    const std::shared_ptr<ConnectionInitPacket> packet = std::dynamic_pointer_cast<ConnectionInitPacket>(TranslatePacket(CurrentPacket));
-    RepresentingPlayer = Player(packet->GetClientName());
+    const PacketHeader header = *reinterpret_cast<PacketHeader*>(HeaderBuffer.data());
+    CurrentPacket = Packet{header};
+    Socket->read_some(asio::buffer(CurrentPacket.GetData(), CurrentPacket.GetHeader().PacketSize));
+    CurrentPacket >> ClientName;
+    Socket->async_wait(asio::socket_base::wait_error, [this](const asio::error_code& error)
+    {
+        if (error)
+        {
+            std::cout << "Client " << ClientName << " disconnected" << std::endl;
+            NetworkManager->AddRemovedConnection(GetSharedPtr());
+        }
+    });
+    ReadPacketHeaderAsync();
+}
+
+void ConnectionToClient::WritePacket(Packet& packet) const
+{
+    Socket->async_write_some(asio::buffer(packet.GetHeader().Serialize(), sizeof(PacketHeader)));
+    Socket->async_write_some(asio::buffer(packet.GetData(), packet.GetHeader().PacketSize));
+}
+
+std::shared_ptr<ConnectionToClient> ConnectionToClient::GetSharedPtr()
+{
+    return shared_from_this();
 }
 
 void ConnectionToClient::ReadPacketBodyAsync()
 {
-    Socket->async_read_some(asio::buffer(CurrentPacket.ThePacket.GetData(), CurrentPacket.ThePacket.GetHeader().PacketSize), [this](const asio::error_code& error, std::size_t
+    Socket->async_read_some(asio::buffer(CurrentPacket.GetData(), CurrentPacket.GetHeader().PacketSize), [this](const asio::error_code& error, std::size_t
                             /*length*/)
                             {
-                                if (error)
+                                if (!error)
+                                {
+                                    NetworkManager->AddPacket(TranslatePacket());
+                                    ReadPacketHeaderAsync();
+                                }
+                                else
                                 {
                                     std::cout << "Error reading packet body: " << error.message() << std::endl;
-                                    return;
                                 }
-                                NetworkManager->AddPacket(TranslatePacket(CurrentPacket));
-                                ReadPacketHeaderAsync();
                             });
 }
 
@@ -56,8 +72,8 @@ void ConnectionToClient::ReadPacketHeaderAsync()
     {
         if (!ec)
         {
-            PacketHeader header = *reinterpret_cast<PacketHeader*>(HeaderBuffer.data());
-            CurrentPacket = {this, header};
+            const PacketHeader header = *reinterpret_cast<PacketHeader*>(HeaderBuffer.data());
+            CurrentPacket = Packet{header};
             ReadPacketBodyAsync();
         }
         else
@@ -67,12 +83,15 @@ void ConnectionToClient::ReadPacketHeaderAsync()
     });
 }
 
-std::shared_ptr<PacketData> ConnectionToClient::TranslatePacket(ConnectionPacket& packet)
+void ConnectionToClient::WritePacketHeaderAsync(Packet)
 {
-    switch (packet.ThePacket.GetHeader().PacketType)
+    Socket->async_write_some(asio::buffer(packet))
+}
+
+std::shared_ptr<PacketData> ConnectionToClient::TranslatePacket()
+{
+    switch (CurrentPacket.GetHeader().PacketType)
     {
-    case EPacketType::ConnectionInit:
-        return std::make_shared<ConnectionInitPacket>(packet);
     case EPacketType::Position:
         return nullptr;
     }

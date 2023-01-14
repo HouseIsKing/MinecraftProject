@@ -1,21 +1,21 @@
 #include "Entity.h"
-#include "../World/SinglePlayerWorld.h"
+#include "World/MultiPlayerWorld.h"
 
-SinglePlayerWorld* Entity::World = nullptr;
+MultiPlayerWorld* Entity::World = nullptr;
 
-Entity::Entity(const vec3 entitySize, const float x, const float y, const float z) : IsGrounded(false), EntitySize(entitySize), EntityId(GetWorld()->RegisterEntity(this)), VelocityX(0), VelocityY(0), VelocityZ(0),
-    Tessellation(x + entitySize.x, y + entitySize.y, z + entitySize.z), PrevPos(x, y, z)
+Entity::Entity(const glm::vec3 entitySize, const float x, const float y, const float z) : IsGrounded(false), EntitySize(entitySize), EntityId(GetWorld()->RegisterEntity(this)), VelocityX(0), VelocityY(0), VelocityZ(0)
 {
+    EntityTransform.SetPosition(x + entitySize.x, y + entitySize.y, z + entitySize.z);
 }
 
 Entity::~Entity() = default;
 
-void Entity::SetWorld(SinglePlayerWorld* newWorld)
+void Entity::SetWorld(MultiPlayerWorld* newWorld)
 {
     World = newWorld;
 }
 
-SinglePlayerWorld* Entity::GetWorld()
+MultiPlayerWorld* Entity::GetWorld()
 {
     return World;
 }
@@ -28,7 +28,7 @@ bool Entity::IsOnGround() const
 void Entity::CheckCollisionAndMove()
 {
     const float originalY = VelocityY;
-    const vec3 pos = GetTransform().GetPosition();
+    const glm::vec3 pos = GetTransform().GetPosition();
     auto myBoundingBox = BoundingBox(pos.x - EntitySize.x, pos.y - EntitySize.y, pos.z - EntitySize.z, pos.x + EntitySize.x, pos.y + EntitySize.y, pos.z + EntitySize.z);
     auto movementBox = BoundingBox(myBoundingBox);
     movementBox.Expand(VelocityX, VelocityY, VelocityZ);
@@ -54,13 +54,8 @@ void Entity::CheckCollisionAndMove()
     IsGrounded = originalY <= 0 && abs(VelocityY - originalY) > 0.001F;
 }
 
-void Entity::Render(float /*partialTick*/)
-{
-}
-
 void Entity::Tick()
 {
-    PrevPos = GetTransform().GetPosition();
 }
 
 void Entity::DoTick()
@@ -68,19 +63,14 @@ void Entity::DoTick()
     Tick();
 }
 
-void Entity::DoRender(const float partialTick)
+Transform& Entity::GetTransform()
 {
-    Render(partialTick);
+    return EntityTransform;
 }
 
-Transform& Entity::GetTransform() const
+BoundingBox Entity::GetBoundingBox()
 {
-    return *Tessellation.GetTransform(0);
-}
-
-BoundingBox Entity::GetBoundingBox() const
-{
-    const vec3 pos = GetTransform().GetPosition();
+    const glm::vec3 pos = GetTransform().GetPosition();
     return {pos.x - EntitySize.x, pos.y - EntitySize.y, pos.z - EntitySize.z, pos.x + EntitySize.x, pos.y + EntitySize.y, pos.z + EntitySize.z};
 }
 
@@ -89,7 +79,7 @@ uint16_t Entity::GetEntityId() const
     return EntityId;
 }
 
-vec3 Entity::GetEntitySize() const
+glm::vec3 Entity::GetEntitySize() const
 {
     return EntitySize;
 }

@@ -1,8 +1,5 @@
-//
-// Created by amit on 4/21/2022.
-//
-
 #include "CustomRandomEngine.h"
+#include <chrono>
 
 uint_fast64_t CustomRandomEngine::Seed{static_cast<uint_fast64_t>(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1))};
 

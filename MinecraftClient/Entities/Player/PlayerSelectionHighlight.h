@@ -10,7 +10,7 @@ class PlayerSelectionHighlight
     PlayerController* Player;
 
 public:
-    explicit PlayerSelectionHighlight(PlayerController* player);
+    explicit PlayerSelectionHighlight(Player* player);
     void Reset();
     const Block* BlockHit;
     BlockFaces FaceHit;

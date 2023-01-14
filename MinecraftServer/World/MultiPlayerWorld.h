@@ -1,31 +1,24 @@
-//
-// Created by amit on 4/21/2022.
-//
 #pragma once
-#include "../Entities/Entity.h"
 #include "Chunk.h"
-#include "ChunkCoords.h"
-#include "GLFW/glfw3.h"
+#include "Entities/Player.h"
 #include <stack>
-#include <unordered_map>
-#include <unordered_set>
 
-using std::unordered_map;
-using std::equal_to;
+#include "Network/ConnectionToClientInterface.h"
+#include "Network/ServerNetworkManager.h"
 
 class MultiPlayerWorld
 {
-    unordered_map<ChunkCoords, Chunk, ChunkComparator> Chunks;
-    unordered_map<uint16_t, unique_ptr<Entity>> Entities;
-    std::unordered_set<Chunk*> DirtyChunksDuplicatorCheck{};
-    std::vector<Chunk*> DirtyChunks{};
+    std::unordered_map<ChunkCoords, Chunk, ChunkComparator> Chunks;
+    std::unordered_map<uint16_t, std::unique_ptr<Entity>> Entities;
+    ServerNetworkManager NetworkManager;
+    std::unordered_map<std::shared_ptr<ConnectionToClientInterface>, std::unique_ptr<Player>, ConnectionHasher, ConnectionEqual> Connections;
     std::stack<uint16_t> EntityAvailableIDs{};
     std::vector<uint16_t> EntitiesToRemove{};
     long WorldTime; //symbolises world time in ticks
     const uint16_t LevelWidth;
     const uint16_t LevelHeight;
     const uint16_t LevelDepth;
-    vector<uint8_t> LightLevels;
+    std::vector<uint8_t> LightLevels;
     const uint8_t MaxChunkRebuilt = 8;
     float LastTimeFrame;
     float DeltaTime;
@@ -39,17 +32,20 @@ class MultiPlayerWorld
     void RecalculateLightLevels();
     int RecalculateLightLevels(int x, int z);
     void UpdateChunksNear(int x, int y, int z);
+    void DrawGui() const;
+    void RebuildGui() const;
 
 public:
-    MultiPlayerWorld(uint16_t width, uint16_t height, uint16_t depth, GLFWwindow* window);
+    MultiPlayerWorld(uint16_t width, uint16_t height, uint16_t depth);
     ~MultiPlayerWorld();
-    MultiPlayerWorld(const SinglePlayerWorld& other) = delete;
-    MultiPlayerWorld& operator=(const SinglePlayerWorld& other) = delete;
-    MultiPlayerWorld(SinglePlayerWorld&& other) = delete;
-    MultiPlayerWorld& operator=(SinglePlayerWorld&& other) = delete;
+    MultiPlayerWorld(const MultiPlayerWorld& other) = delete;
+    MultiPlayerWorld& operator=(const MultiPlayerWorld& other) = delete;
+    MultiPlayerWorld(MultiPlayerWorld&& other) = delete;
+    MultiPlayerWorld& operator=(MultiPlayerWorld&& other) = delete;
     uint16_t RegisterEntity(Entity* entity);
     void RemoveEntity(uint16_t id);
     void Tick();
+    void Run();
     bool IsBlockExists(int x, int y, int z);
     void PlaceBlockAt(int x, int y, int z, EBlockType blockType);
     void RemoveBlockAt(int x, int y, int z);
@@ -61,6 +57,6 @@ public:
     Chunk* GetChunkAt(int x, int y, int z);
     [[nodiscard]] int GetBrightnessAt(int x, int y, int z) const;
     bool IsBlockSolid(int x, int y, int z);
-    [[nodiscard]] int GetBrightnessAt(vec3 pos) const;
-    vector<BoundingBox> GetBlockBoxesInBoundingBox(const BoundingBox& boundingBox);
+    [[nodiscard]] int GetBrightnessAt(glm::vec3 pos) const;
+    std::vector<BoundingBox> GetBlockBoxesInBoundingBox(const BoundingBox& boundingBox);
 };

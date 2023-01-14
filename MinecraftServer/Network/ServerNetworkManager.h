@@ -27,6 +27,7 @@ public:
     ServerNetworkManager(ServerNetworkManager&&) = delete;
     ServerNetworkManager& operator=(ServerNetworkManager&&) = delete;
     void AddPacket(const std::shared_ptr<PacketData>& packet);
+    void AddRemovedConnection(const std::shared_ptr<ConnectionToClient>& connection);
     void Start();
     std::shared_ptr<PacketData> GetNextPacket();
     std::shared_ptr<ConnectionToClient> GetNextNewConnection();

@@ -50,7 +50,7 @@ SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height
     Guis[1]->Active = true;
     Guis.emplace_back(new PerformanceGui());
     Guis[2]->Active = true;
-    Player = new PlayerController(EngineDefaults::GetNext(width), static_cast<float>(height + 3), EngineDefaults::GetNext(depth));
+    Player = new Player(EngineDefaults::GetNext(width), static_cast<float>(height + 3), EngineDefaults::GetNext(depth));
     Init();
     for (uint16_t i = 1; i <= 10; i++)
     {

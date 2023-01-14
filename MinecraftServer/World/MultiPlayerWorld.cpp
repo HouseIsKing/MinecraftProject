@@ -1,16 +1,11 @@
 #include "MultiPlayerWorld.h"
-#include "../Util/CustomFileManager.h"
-#include "../Util/EngineDefaults.h"
-#include <cmath>
+#include "Entities/Zombie.h"
+#include "Util/EngineDefaults.h"
+#include "Util/PerlinNoise.h"
 #include <filesystem>
 #include <iostream>
-#include <ranges>
-
-#include "Entities/Zombie.h"
-#include "Util/PerlinNoise.h"
-
-using std::piecewise_construct;
-using std::forward_as_tuple;
+#include <glad/glad.h>
+#include <glm/ext/scalar_constants.hpp>
 
 
 void MultiPlayerWorld::SaveWorld()
@@ -35,33 +30,21 @@ void MultiPlayerWorld::LoadWorld()
         int x = coords.GetX() * Chunk::CHUNK_WIDTH;
         int y = coords.GetY() * Chunk::CHUNK_HEIGHT;
         int z = coords.GetZ() * Chunk::CHUNK_DEPTH;
-        fileManager >> Chunks.emplace(piecewise_construct, forward_as_tuple(x, y, z), forward_as_tuple(x, y, z)).first->second;
+        fileManager >> Chunks.emplace(std::piecewise_construct, std::forward_as_tuple(x, y, z), std::forward_as_tuple(x, y, z)).first->second;
     }
 }
 
-MultiPlayerWorld::MultiPlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth, GLFWwindow* window) : Player(nullptr), WorldTime(0), LevelWidth(width), LevelHeight(height), LevelDepth(depth), FogsBuffer(0), TheAppWindow(window), LastTimeFrame(0.0F), DeltaTime(0.0F), Frames(0), Fps(0)
+MultiPlayerWorld::MultiPlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth) : Player(nullptr), WorldTime(0), LevelWidth(width), LevelHeight(height), LevelDepth(depth), LastTimeFrame(0.0F), DeltaTime(0.0F), Frames(0), Fps(0)
 {
     Entity::SetWorld(this);
     Chunk::SetWorld(this);
-    Gui::SetWorld(this);
     for (uint16_t i = 0xFFFF; i != 0; i--)
     {
         EntityAvailableIDs.push(i);
     }
     EntityAvailableIDs.push(0);
-    Guis.emplace_back(new CrosshairGui());
-    Guis[0]->Active = true;
-    Guis.emplace_back(new SelectedBlockGui());
-    Guis[1]->Active = true;
-    Guis.emplace_back(new PerformanceGui());
-    Guis[2]->Active = true;
-    Player = new PlayerController(EngineDefaults::GetNext(width), static_cast<float>(height + 3), EngineDefaults::GetNext(depth));
     Init();
-    for (uint16_t i = 1; i <= 10; i++)
-    {
-        new Zombie(EngineDefaults::GetNext(width), static_cast<float>(LevelHeight + 3), EngineDefaults::GetNext(depth));
-    }
-    EngineDefaults::BuildTextureUbo();
+    NetworkManager.Start();
 }
 
 uint16_t MultiPlayerWorld::RegisterEntity(Entity* entity)
@@ -80,7 +63,6 @@ void MultiPlayerWorld::RemoveEntity(const uint16_t id)
 void MultiPlayerWorld::Tick()
 {
     WorldTime++;
-    Shader::SetUnsignedInt(EngineDefaults::GetShader()->GetUniformInt("worldTime"), static_cast<GLuint>(WorldTime % 24000L));
     for (uint16_t val : EntitiesToRemove)
     {
         Entities.erase(val);
@@ -99,13 +81,37 @@ void MultiPlayerWorld::Tick()
         const int z = EngineDefaults::GetNext(LevelDepth);
         GetBlockAt(x, y, z)->Tick(this, x, y, z);
     }
+    Packet worldTimePacket{PacketHeader::WORLD_TIME_PACKET};
+    worldTimePacket << WorldTime;
+}
+
+void MultiPlayerWorld::Run()
+{
+    //Handle newly connected clients
+    std::shared_ptr<ConnectionToClient> newCon = NetworkManager.GetNextNewConnection();
+    while (newCon != nullptr)
+    {
+        const float x = EngineDefaults::GetNext<int>(LevelWidth);
+        const float y = EngineDefaults::GetNext<int>(LevelHeight);
+        const float z = EngineDefaults::GetNext<int>(LevelDepth);
+        Connections.emplace(newCon, new Player{x, y, z, newCon.get()});
+        auto packet = Packet(PacketHeader::WORLD_TIME_PACKET);
+        packet << WorldTime;
+        newCon->WritePacket(packet);
+        newCon = NetworkManager.GetNextNewConnection();
+    }
+    //Handle disconnected clients
+    std::shared_ptr<ConnectionToClient> closedCon = NetworkManager.GetNextRemovedConnection();
+    while (closedCon != nullptr)
+    {
+        Connections.erase(closedCon);
+        closedCon = NetworkManager.GetNextRemovedConnection();
+    }
+    //Handle packets
 }
 
 void MultiPlayerWorld::Init()
 {
-    //Shader::SetVec3(EngineDefaults::GetShader()->GetUniformInt("directionalLightDirection"), -1.0F, -1.0F, -1.0F);
-    Shader::SetUnsignedInt(EngineDefaults::GetShader()->GetUniformInt("worldTime"), static_cast<GLuint>(WorldTime % 24000L));
-    InitFog();
     BlockTypeList::InitBlockTypes();
     if (std::filesystem::exists("level.dat"))
     {
@@ -201,7 +207,7 @@ void MultiPlayerWorld::GenerateChunks(const uint16_t amountX, const uint16_t amo
         {
             for (int z = 0; z < amountZ; z++)
             {
-                Chunks.emplace(piecewise_construct, forward_as_tuple(x * Chunk::CHUNK_WIDTH, y * Chunk::CHUNK_HEIGHT, z * Chunk::CHUNK_DEPTH), forward_as_tuple(x * Chunk::CHUNK_WIDTH, y * Chunk::CHUNK_HEIGHT, z * Chunk::CHUNK_DEPTH));
+                Chunks.emplace(std::piecewise_construct, std::forward_as_tuple(x * Chunk::CHUNK_WIDTH, y * Chunk::CHUNK_HEIGHT, z * Chunk::CHUNK_DEPTH), std::forward_as_tuple(x * Chunk::CHUNK_WIDTH, y * Chunk::CHUNK_HEIGHT, z * Chunk::CHUNK_DEPTH));
             }
         }
     }
@@ -213,10 +219,10 @@ void MultiPlayerWorld::GenerateLevel()
     const auto amountY = static_cast<uint16_t>(std::ceil(static_cast<float>(LevelHeight) / static_cast<float>(Chunk::CHUNK_HEIGHT)));
     const auto amountZ = static_cast<uint16_t>(std::ceil(static_cast<float>(LevelDepth) / static_cast<float>(Chunk::CHUNK_DEPTH)));
     GenerateChunks(amountX, amountY, amountZ);
-    const vector<int> firstHeightMap = PerlinNoise(0).Generate(LevelWidth, LevelDepth);
-    const vector<int> secondHeightMap = PerlinNoise(0).Generate(LevelWidth, LevelDepth);
-    const vector<int> cliffMap = PerlinNoise(1).Generate(LevelWidth, LevelDepth);
-    const vector<int> rockMap = PerlinNoise(1).Generate(LevelWidth, LevelDepth);
+    const std::vector<int> firstHeightMap = PerlinNoise(0).Generate(LevelWidth, LevelDepth);
+    const std::vector<int> secondHeightMap = PerlinNoise(0).Generate(LevelWidth, LevelDepth);
+    const std::vector<int> cliffMap = PerlinNoise(1).Generate(LevelWidth, LevelDepth);
+    const std::vector<int> rockMap = PerlinNoise(1).Generate(LevelWidth, LevelDepth);
 
     for (int x = 0; x < LevelWidth; x++)
     {
@@ -341,7 +347,7 @@ Chunk* MultiPlayerWorld::GetChunkAt(const int x, const int y, const int z)
  * \param pos position to round
  * \return returns brightness at the rounded position
  */
-int MultiPlayerWorld::GetBrightnessAt(const vec3 pos) const
+int MultiPlayerWorld::GetBrightnessAt(const glm::vec3 pos) const
 {
     return GetBrightnessAt(static_cast<int>(pos.x), static_cast<int>(pos.y), static_cast<int>(pos.z));
 }
@@ -491,9 +497,19 @@ void MultiPlayerWorld::RebuildGui() const
     }
 }
 
-vector<BoundingBox> MultiPlayerWorld::GetBlockBoxesInBoundingBox(const BoundingBox& boundingBox)
+GLFWwindow* MultiPlayerWorld::GetWindow() const
 {
-    vector<BoundingBox> result{};
+    return TheAppWindow;
+}
+
+int MultiPlayerWorld::GetFps() const
+{
+    return Fps;
+}
+
+std::vector<BoundingBox> MultiPlayerWorld::GetBlockBoxesInBoundingBox(const BoundingBox& boundingBox)
+{
+    std::vector<BoundingBox> result{};
     for (int x = static_cast<int>(boundingBox.GetMinX()); static_cast<float>(x) <= boundingBox.GetMaxX(); x++)
     {
         for (int y = static_cast<int>(boundingBox.GetMinY()); static_cast<float>(y) <= boundingBox.GetMaxY(); y++)

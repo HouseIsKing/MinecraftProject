@@ -1,17 +1,20 @@
 #pragma once
+#include <memory>
+
+#include "Packet.h"
 
 class ConnectionToClient;
 
 class PacketData
 {
-    ConnectionToClient* Source;
-
 protected:
-    explicit PacketData(ConnectionToClient* source);
+    std::shared_ptr<ConnectionToClient> Source;
+    explicit PacketData(std::shared_ptr<ConnectionToClient> source);
+    PacketData() = default;
     virtual ~PacketData() = default;
 
 public:
-    ConnectionToClient* GetConnectionToClient() const;
+    std::shared_ptr<ConnectionToClient>& GetConnectionToClient();
     PacketData(const PacketData&) = delete;
     PacketData& operator=(const PacketData&) = delete;
     PacketData(PacketData&&) = delete;

@@ -2,19 +2,23 @@
 #include <asio/ip/tcp.hpp>
 
 #include "ConnectionToClientInterface.h"
-#include "Entities/Player.h"
-#include "Packets/ConnectionPacket.h"
 #include "Packets/PacketData.h"
 #include "Packets/PacketHeader.h"
+#include "Util/ThreadSafeQueue.h"
 
 class ServerNetworkManager;
 
-class ConnectionToClient final : public ConnectionToClientInterface
+class ConnectionToClient final : public ConnectionToClientInterface, public std::enable_shared_from_this<ConnectionToClient>
 {
     std::unique_ptr<asio::ip::tcp::socket> Socket;
     ServerNetworkManager* NetworkManager;
-    ConnectionPacket CurrentPacket;
+    Packet CurrentPacket;
     std::vector<uint8_t> HeaderBuffer{};
+
+    std::shared_ptr<ConnectionToClient> GetSharedPtr();
+    std::shared_ptr<PacketData> TranslatePacket();
+    void ReadPacketBodyAsync();
+    void ReadPacketHeaderAsync();
 
 public:
     ConnectionToClient(asio::io_context& ioContext, ServerNetworkManager* networkManager);
@@ -28,12 +32,9 @@ public:
 
     bool operator==(const ConnectionToClient& other) const
     {
-        return RepresentingPlayer.GetName() == other.RepresentingPlayer.GetName();
+        return ClientName == other.ClientName;
     }
 
     void Start();
-    void ReadPacketBodyAsync();
-    void ReadPacketHeaderAsync();
-    static std::shared_ptr<PacketData> TranslatePacket(ConnectionPacket& packet);
-    //void WritePacketAsync(const PacketHeader& packet);
+    void WritePacket(Packet& packet) const;
 };

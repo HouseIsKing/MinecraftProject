@@ -29,6 +29,11 @@ void ServerNetworkManager::AddPacket(const std::shared_ptr<PacketData>& packet)
     Packets.Push(packet);
 }
 
+void ServerNetworkManager::AddRemovedConnection(const std::shared_ptr<ConnectionToClient>& connection)
+{
+    RemovedConnections.Push(connection);
+}
+
 void ServerNetworkManager::Start()
 {
     RunAcceptor();

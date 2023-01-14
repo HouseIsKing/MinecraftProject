@@ -3,7 +3,7 @@
 #include "Util/EngineDefaults.h"
 #include <chrono>
 
-PlayerSelectionHighlight::PlayerSelectionHighlight(PlayerController* player) : TextureIndex(EngineDefaults::RegisterTexture(Texture::LoadTexture("Textures/HighlightTexture.png"))),
+PlayerSelectionHighlight::PlayerSelectionHighlight(Player* player) : TextureIndex(EngineDefaults::RegisterTexture(Texture::LoadTexture("Textures/HighlightTexture.png"))),
                                                                                Player(player), BlockHit(nullptr),
                                                                                FaceHit(BlockFaces::Bottom),
                                                                                HitPosition(0, 0, 0)
