@@ -19,7 +19,6 @@ class MultiPlayerWorld
     const uint16_t LevelHeight;
     const uint16_t LevelDepth;
     std::vector<uint8_t> LightLevels;
-    const uint8_t MaxChunkRebuilt = 8;
     void SaveWorld();
     void LoadWorld();
     void GenerateChunks(uint16_t amountX, uint16_t amountY, uint16_t amountZ);
@@ -27,6 +26,7 @@ class MultiPlayerWorld
     void Init();
     void RecalculateLightLevels();
     int RecalculateLightLevels(int x, int z);
+    void SendEntireWorldToClient(ConnectionToClient* client) const;
 
 public:
     MultiPlayerWorld(uint16_t width, uint16_t height, uint16_t depth);

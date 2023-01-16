@@ -1,5 +1,5 @@
 #pragma once
-#include "World/Blocks/Block.h"
+#include "World/Generic/Blocks/Block.h"
 #include <array>
 
 class EntityMeshBlock final : Block

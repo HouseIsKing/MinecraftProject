@@ -1,8 +1,9 @@
 #pragma once
-#include "../Shaders/Shader.h"
 #include "CustomRandomEngine.h"
 #include "FontManager.h"
+#include "Shaders/Shader.h"
 #include "Textures/Texture.h"
+#include "World/Generic/Chunk.h"
 
 class EngineDefaults
 {
@@ -14,6 +15,7 @@ class EngineDefaults
     static void Init();
     static CustomRandomEngine Engine;
     static FontManager MainFont;
+    static void BuildTextureUbo();
 
 public:
     static float ConvertLightLevelToAmbient(int lightLevel);
@@ -24,9 +26,10 @@ public:
     template <typename T>
     static T GetNext(T minValue, T maxValue);
     static float GetNextFloat();
+    template <typename T>
     static int GetChunkLocalIndex(int x, int y, int z);
     static uint16_t RegisterTexture(Texture* texture);
-    static void BuildTextureUbo();
+    static void InitTextures();
     static void ResetTextures();
     static const FontManager& GetFontManager();
 };
@@ -43,4 +46,13 @@ T EngineDefaults::GetNext(T minValue, T maxValue)
     T modulo = maxValue - minValue;
     T next = Engine.GetNext() % modulo;
     return next + minValue;
+}
+
+template <typename T>
+int EngineDefaults::GetChunkLocalIndex(int x, int y, int z)
+{
+    x %= Chunk<T>::CHUNK_WIDTH;
+    y %= Chunk<T>::CHUNK_HEIGHT;
+    z %= Chunk<T>::CHUNK_DEPTH;
+    return x + z * Chunk<T>::CHUNK_WIDTH + y * Chunk<T>::CHUNK_WIDTH * Chunk<T>::CHUNK_DEPTH;
 }

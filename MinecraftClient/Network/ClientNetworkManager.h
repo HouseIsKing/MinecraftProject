@@ -5,21 +5,28 @@
 #include <asio/ip/tcp.hpp>
 #include <thread>
 
-class ServerNetworkManager
+class ClientNetworkManager
 {
     asio::io_context Context;
     asio::io_context::work IdleWork{Context};
     asio::ip::tcp::socket Socket;
+    Packet CurrentPacket;
     ThreadSafeQueue<PacketData> Packets;
-    std::thread ContextThread = std::thread([&]() { Context.run(); });
+    std::vector<uint8_t> HeaderBuffer{};
+    std::thread ContextThread = std::thread([&] { Context.run(); });
+
+    void ReadPacketBodyAsync();
+    void ReadPacketHeaderAsync();
+    std::shared_ptr<PacketData> TranslatePacket();
 
 public:
-    ServerNetworkManager();
-    ~ServerNetworkManager();
-    ServerNetworkManager(const ServerNetworkManager&) = delete;
-    ServerNetworkManager& operator=(const ServerNetworkManager&) = delete;
-    ServerNetworkManager(ServerNetworkManager&&) = delete;
-    ServerNetworkManager& operator=(ServerNetworkManager&&) = delete;
-    void Start(std::string ip, std::string name);
+    ClientNetworkManager();
+    ~ClientNetworkManager();
+    ClientNetworkManager(const ClientNetworkManager&) = delete;
+    ClientNetworkManager& operator=(const ClientNetworkManager&) = delete;
+    ClientNetworkManager(ClientNetworkManager&&) = delete;
+    ClientNetworkManager& operator=(ClientNetworkManager&&) = delete;
+    void Start(const std::string& ip, const std::string& name);
     std::shared_ptr<PacketData> GetNextPacket();
+    void WritePacket(Packet& packet);
 };

@@ -1,17 +1,18 @@
 #include "Player.h"
 
-#include <GLFW/glfw3.h>
 #include "Util/EngineDefaults.h"
+#include <GLFW/glfw3.h>
 //#include "Entities/Zombie.h"
 #include "World/MultiPlayerWorld.h"
 
-Player::Player(const float x, const float y, const float z, ConnectionToClient* client) : LivingEntity(PLAYER_SIZE, x, y, z), Client(client), LeftMousePressed(false), RightMousePressed(false), PrevMouseX(0), PrevMouseY(0), IsSpawnZombieButtonPressed(false), FaceHit(BlockFaces::Top), BlockHit(nullptr), BlockHitPosition(), CurrentSelectedBlock(EBlockType::Stone)
+Player::Player(const float x, const float y, const float z, std::shared_ptr<ConnectionToClient> client) : LivingEntity(PLAYER_SIZE, x, y, z), Client(
+    std::move(client)), LeftMousePressed(false), RightMousePressed(false), PrevMouseX(0), PrevMouseY(0), IsSpawnZombieButtonPressed(false), FaceHit(BlockFaces::Top), BlockHit(nullptr), BlockHitPosition(), CurrentSelectedBlock(EBlockType::Stone)
 {
-    auto packet = Packet(PacketHeader::PLAYER_ID_PACKET);
-    packet << GetEntityId();
+    auto packet = std::make_shared<Packet>(PacketHeader::PLAYER_ID_PACKET);
+    *packet << GetEntityId();
     Client->WritePacket(packet);
-    packet = Packet(PacketHeader::PLAYER_POSITION_PACKET);
-    packet << GetEntityId() << x << y << z;
+    packet = std::make_shared<Packet>(PacketHeader::PLAYER_POSITION_PACKET);
+    *packet << GetEntityId() << x << y << z;
     Client->WritePacket(packet);
 }
 
@@ -24,13 +25,13 @@ void Player::Tick()
     bool found = false;
     FaceHit = FindClosestFace(found);
     BlockHit = found ? GetWorld()->GetBlockAt(BlockHitPosition.x, BlockHitPosition.y, BlockHitPosition.z) : nullptr;
-    auto positionPacket = Packet(PacketHeader::PLAYER_POSITION_PACKET);
+    const auto positionPacket = std::make_shared<Packet>(PacketHeader::PLAYER_POSITION_PACKET);
     pos = GetTransform().GetPosition();
-    positionPacket << GetEntityId() << pos.x << pos.y << pos.z;
+    *positionPacket << GetEntityId() << pos.x << pos.y << pos.z;
     Client->WritePacket(positionPacket);
     const glm::vec3 rotation = CameraTransform.GetRotation();
-    auto rotationPacket = Packet(PacketHeader::PLAYER_ROTATION_PACKET);
-    rotationPacket << GetEntityId() << rotation.x << rotation.y << rotation.z;
+    const auto rotationPacket = std::make_shared<Packet>(PacketHeader::PLAYER_ROTATION_PACKET);
+    *rotationPacket << GetEntityId() << rotation.x << rotation.y << rotation.z;
     Client->WritePacket(rotationPacket);
 }
 

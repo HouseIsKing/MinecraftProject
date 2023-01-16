@@ -1,10 +1,12 @@
 #include "Network/ClientNetworkManager.h"
-#include "Entities/Player/PlayerController.h"
-#include "World/SinglePlayerWorld.h"
+#include "World/SP/SinglePlayerWorld.h"
 #include <iostream>
 #include <memory>
+#include "Entities/Generic/CameraController.h"
+#include "World/MP/MultiPlayerWorld.h"
 
-std::unique_ptr<SinglePlayerWorld> helper{};
+std::unique_ptr<World<SinglePlayerWorld, PlayerController>> spWorld{};
+std::unique_ptr<World<MultiPlayerWorld, PlayerController>> mpWorld{};
 constexpr float TICK_RATE = 1.0F / 20.0F;
 
 void ErrorCallback(const int error, const char* description)
@@ -24,7 +26,14 @@ void WindowsResizeCallback(GLFWwindow* /*window*/, const int width, const int he
 {
     if (width != 0 && height != 0)
     {
-        helper->HandleWindowResize(height, width);
+        if (spWorld)
+        {
+            spWorld->HandleWindowResize(width, height);
+        }
+        else
+        {
+            mpWorld->HandleWindowResize(width, height);
+        }
     }
 }
 
@@ -32,44 +41,18 @@ void MainLoop(GLFWwindow* window)
 {
     auto cam = Camera(glm::vec3(0.0F), 1920.0F / 1080.0F);
     CameraController::SetActiveCamera(cam);
-    double start = glfwGetTime();
-    helper = std::make_unique<SinglePlayerWorld>(static_cast<uint16_t>(256), static_cast<uint16_t>(64), static_cast<uint16_t>(256), window);
-    double end = glfwGetTime();
-    std::cout << "World creation took " << end - start << " seconds" << std::endl;
-    double counter = 0;
-    float ticksTimer = 0;
-    int framesCompleted = 0;
+    const double start = glfwGetTime();
+    spWorld = std::make_unique<SinglePlayerWorld>(static_cast<uint16_t>(256), static_cast<uint16_t>(64), static_cast<uint16_t>(256), window);
+    auto* world = dynamic_cast<SinglePlayerWorld*>(spWorld.get());
+    std::cout << "World creation took " << glfwGetTime() - start << " seconds" << std::endl;
     glClearColor(0.5F, 0.8F, 1.0F, 1.0F);
     glClearDepthf(1.0F);
     glDepthFunc(GL_LEQUAL);
     glEnable(GL_DEPTH_TEST);
-    bool firstTick = true;
-    start = glfwGetTime();
     while (glfwWindowShouldClose(window) == 0)
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        int i;
-        for (i = 0; i < static_cast<int>(ticksTimer / TICK_RATE); i++)
-        {
-            helper->Tick();
-        }
-        ticksTimer -= static_cast<float>(i) * TICK_RATE;
-        helper->DrawWorld(ticksTimer / TICK_RATE);
-        end = glfwGetTime();
-        if (!firstTick)
-        {
-            counter += end - start;
-            ticksTimer += static_cast<float>(end - start);
-            framesCompleted++;
-            if (counter > 1)
-            {
-                counter -= 1;
-                std::cout << "FPS: " << framesCompleted << std::endl;
-                framesCompleted = 0;
-            }
-        }
-        firstTick = false;
-        start = end;
+        world->Run();
         glfwPollEvents();
         glfwSwapBuffers(window);
     }
@@ -118,7 +101,7 @@ int main(const int argc, char* argv[])
 {
     if (argc > 2 && std::string(argv[1]) == "Server")
     {
-        ServerNetworkManager manager;
+        ClientNetworkManager manager;
         manager.Start("127.0.0.1", argv[2]);
     }
     else

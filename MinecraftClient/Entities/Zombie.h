@@ -1,8 +1,10 @@
 #pragma once
 #include "EntityMeshBlock.h"
-#include "LivingEntity.h"
+#include "Generic/LivingEntity.h"
 
-class Zombie final : public LivingEntity
+class SinglePlayerWorld;
+
+class Zombie final : public LivingEntity<SinglePlayerWorld>
 {
     constexpr static glm::vec3 ZOMBIE_SIZE = glm::vec3(0.3F, 0.9F, 0.3F);
     constexpr static float ZOMBIE_SCALE_FACTOR = 0.05833334F;

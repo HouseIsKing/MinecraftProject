@@ -11,7 +11,7 @@ class Player final : public LivingEntity
 {
     constexpr static glm::vec3 PLAYER_SIZE = glm::vec3(0.3F, 0.9F, 0.3F);
     constexpr static float CAMERA_OFFSET = 1.62F;
-    ConnectionToClient* Client;
+    std::shared_ptr<ConnectionToClient> Client;
     std::string Name;
     bool LeftMousePressed;
     bool RightMousePressed;
@@ -30,7 +30,7 @@ class Player final : public LivingEntity
     void PlaceBlock();
 
 public:
-    Player(float x, float y, float z, ConnectionToClient* client);
+    Player(float x, float y, float z, std::shared_ptr<ConnectionToClient> client);
     void Tick() override;
     [[nodiscard]] bool GetMode() const;
     [[nodiscard]] EBlockType GetCurrentSelectedBlock() const;

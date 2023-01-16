@@ -1,6 +1,7 @@
 #include "EngineDefaults.h"
-#include "../World/Chunk.h"
 #include <ranges>
+
+#include "World/Generic/Blocks/BlockTypeList.h"
 
 bool EngineDefaults::HasInit = false;
 bool EngineDefaults::HasBuiltTextureUbo = false;
@@ -48,14 +49,6 @@ float EngineDefaults::GetNextFloat()
     return static_cast<float>(static_cast<double>(CustomRandomEngine::GetNext()) / CustomRandomEngine::M);
 }
 
-int EngineDefaults::GetChunkLocalIndex(int x, int y, int z)
-{
-    x %= Chunk::CHUNK_WIDTH;
-    y %= Chunk::CHUNK_HEIGHT;
-    z %= Chunk::CHUNK_DEPTH;
-    return x + z * Chunk::CHUNK_WIDTH + y * Chunk::CHUNK_WIDTH * Chunk::CHUNK_DEPTH;
-}
-
 uint16_t EngineDefaults::RegisterTexture(Texture* texture)
 {
     HasBuiltTextureUbo = false;
@@ -65,6 +58,13 @@ uint16_t EngineDefaults::RegisterTexture(Texture* texture)
     }
     texture->Resident();
     return static_cast<uint16_t>(TextureList.size() - 1);
+}
+
+void EngineDefaults::InitTextures()
+{
+    BlockTypeList::InitBlockTypes();
+    RegisterTexture(Texture::LoadTexture("Textures/Entities/zombie.png"));
+    BuildTextureUbo();
 }
 
 void EngineDefaults::BuildTextureUbo()

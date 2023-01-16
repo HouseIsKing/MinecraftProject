@@ -3,6 +3,8 @@
 #include "ChunkCoords.h"
 #include <array>
 
+#include "Network/ConnectionToClient.h"
+
 class MultiPlayerWorld;
 
 class Chunk
@@ -17,6 +19,7 @@ public:
     [[nodiscard]] const Block* GetBlockAt(int x, int y, int z) const;
     [[nodiscard]] EBlockType GetBlockTypeAt(int x, int y, int z) const;
     void SetBlockTypeAt(int x, int y, int z, EBlockType block);
+    void SendChunkToClient(ConnectionToClient* client) const;
     friend CustomFileManager& operator<<(CustomFileManager& fileManager, const Chunk& chunk);
     friend CustomFileManager& operator>>(CustomFileManager& fileManager, Chunk& chunk);
 

@@ -14,11 +14,14 @@ class ConnectionToClient final : public ConnectionToClientInterface, public std:
     ServerNetworkManager* NetworkManager;
     Packet CurrentPacket;
     std::vector<uint8_t> HeaderBuffer{};
+    ThreadSafeQueue<Packet> OutgoingPackets;
 
     std::shared_ptr<ConnectionToClient> GetSharedPtr();
     std::shared_ptr<PacketData> TranslatePacket();
     void ReadPacketBodyAsync();
     void ReadPacketHeaderAsync();
+    void WritePacketHeaderAsync();
+    void WritePacketBodyAsync();
 
 public:
     ConnectionToClient(asio::io_context& ioContext, ServerNetworkManager* networkManager);
@@ -36,5 +39,5 @@ public:
     }
 
     void Start();
-    void WritePacket(Packet& packet) const;
+    void WritePacket(const std::shared_ptr<Packet>& packet);
 };

@@ -9,7 +9,7 @@ ConnectionToClient::ConnectionToClient(asio::io_context& ioContext, ServerNetwor
 
 ConnectionToClient::~ConnectionToClient()
 {
-    if (Socket != nullptr)
+    if (Socket != nullptr && Socket->is_open())
     {
         Socket->close();
     }
@@ -27,33 +27,17 @@ void ConnectionToClient::Start()
     CurrentPacket = Packet{header};
     Socket->read_some(asio::buffer(CurrentPacket.GetData(), CurrentPacket.GetHeader().PacketSize));
     CurrentPacket >> ClientName;
-    Socket->async_wait(asio::socket_base::wait_error, [this](const asio::error_code& error)
-    {
-        if (error)
-        {
-            std::cout << "Client " << ClientName << " disconnected" << std::endl;
-            NetworkManager->AddRemovedConnection(GetSharedPtr());
-        }
-    });
     ReadPacketHeaderAsync();
 }
 
-void ConnectionToClient::WritePacket(Packet& packet) const
+void ConnectionToClient::WritePacket(const std::shared_ptr<Packet>& packet)
 {
-    Socket->async_write_some(asio::buffer(packet.GetHeader().Serialize(), sizeof(PacketHeader)), [this](const asio::error_code& error, std::size_t /*bytesTransferred*/)
+    const size_t size = OutgoingPackets.GetSize();
+    OutgoingPackets.Push(packet);
+    if (size == 0)
     {
-        if (error)
-        {
-            std::cout << "Error writing packet header to client " << ClientName << std::endl;
-        }
-    });
-    Socket->async_write_some(asio::buffer(packet.GetData(), packet.GetHeader().PacketSize), [this](const asio::error_code& error, std::size_t /*bytesTransferred*/)
-    {
-        if (error)
-        {
-            std::cout << "Error writing packet data to client " << ClientName << std::endl;
-        }
-    });
+        WritePacketHeaderAsync();
+    }
 }
 
 std::shared_ptr<ConnectionToClient> ConnectionToClient::GetSharedPtr()
@@ -70,6 +54,12 @@ void ConnectionToClient::ReadPacketBodyAsync()
                                 {
                                     NetworkManager->AddPacket(TranslatePacket());
                                     ReadPacketHeaderAsync();
+                                }
+                                else if (error == asio::error::eof || error == asio::error::connection_reset)
+                                {
+                                    Socket->close();
+                                    std::cout << "Client " << ClientName << " disconnected" << std::endl;
+                                    NetworkManager->AddRemovedConnection(GetSharedPtr());
                                 }
                                 else
                                 {
@@ -88,9 +78,41 @@ void ConnectionToClient::ReadPacketHeaderAsync()
             CurrentPacket = Packet{header};
             ReadPacketBodyAsync();
         }
+        else if (ec == asio::error::eof || ec == asio::error::connection_reset)
+        {
+            Socket->close();
+            std::cout << "Client " << ClientName << " disconnected" << std::endl;
+            NetworkManager->AddRemovedConnection(GetSharedPtr());
+        }
         else
         {
             std::cout << "Error reading packet header: " << ec.message() << std::endl;
+        }
+    });
+}
+
+void ConnectionToClient::WritePacketHeaderAsync()
+{
+    Socket->async_write_some(asio::buffer(OutgoingPackets.Front()->GetHeader().Serialize(), sizeof(PacketHeader)), [this](const asio::error_code& error, std::size_t /*bytesTransferred*/)
+    {
+        if (!error)
+        {
+            WritePacketBodyAsync();
+        }
+    });
+}
+
+void ConnectionToClient::WritePacketBodyAsync()
+{
+    Socket->async_write_some(asio::buffer(OutgoingPackets.Front()->GetData(), OutgoingPackets.Front()->GetHeader().PacketSize), [this](const asio::error_code& error, std::size_t /*bytesTransferred*/)
+    {
+        if (!error)
+        {
+            OutgoingPackets.Pop();
+            if (OutgoingPackets.GetSize() > 0)
+            {
+                WritePacketHeaderAsync();
+            }
         }
     });
 }

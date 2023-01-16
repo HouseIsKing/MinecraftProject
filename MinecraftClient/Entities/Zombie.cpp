@@ -1,6 +1,6 @@
 #include "Zombie.h"
 #include "Util/EngineDefaults.h"
-#include "World/SinglePlayerWorld.h"
+#include "World/SP/SinglePlayerWorld.h"
 
 void Zombie::RebuildRender(const int brightness)
 {

@@ -38,6 +38,19 @@ void Chunk::SetBlockTypeAt(const int x, const int y, const int z, const EBlockTy
     Blocks[index] = block;
 }
 
+void Chunk::SendChunkToClient(ConnectionToClient* client) const
+{
+    const auto packetPos = std::make_shared<Packet>(PacketHeader::CHUNK_POSITION_PACKET);
+    *packetPos << ChunkPosition.GetX() << ChunkPosition.GetY() << ChunkPosition.GetZ();
+    client->WritePacket(packetPos);
+    const auto dataPacket = std::make_shared<Packet>(PacketHeader::CHUNK_DATA_PACKET);
+    for (const auto& block : Blocks)
+    {
+        *dataPacket << static_cast<uint8_t>(block);
+    }
+    client->WritePacket(dataPacket);
+}
+
 CustomFileManager& operator<<(CustomFileManager& fileManager, const Chunk& chunk)
 {
     fileManager << chunk.ChunkPosition;

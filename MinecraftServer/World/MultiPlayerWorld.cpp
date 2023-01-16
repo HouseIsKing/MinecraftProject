@@ -93,10 +93,11 @@ void MultiPlayerWorld::Run()
         const auto x = static_cast<float>(EngineDefaults::GetNext<int>(LevelWidth));
         const auto y = static_cast<float>(EngineDefaults::GetNext<int>(LevelHeight));
         const auto z = static_cast<float>(EngineDefaults::GetNext<int>(LevelDepth));
-        Connections.emplace(newCon, new Player{x, y, z, newCon.get()});
-        auto packet = Packet(PacketHeader::WORLD_TIME_PACKET);
-        packet << WorldTime;
+        Connections.emplace(newCon, new Player{x, y, z, newCon});
+        auto packet = std::make_shared<Packet>(PacketHeader::WORLD_TIME_PACKET);
+        *packet << WorldTime;
         newCon->WritePacket(packet);
+        SendEntireWorldToClient(newCon.get());
         newCon = NetworkManager.GetNextNewConnection();
     }
     //Handle disconnected clients
@@ -153,6 +154,14 @@ int MultiPlayerWorld::RecalculateLightLevels(const int x, const int z)
         }
     }
     return 0 - previousLightLevel;
+}
+
+void MultiPlayerWorld::SendEntireWorldToClient(ConnectionToClient* client) const
+{
+    for (const auto& val : Chunks | std::views::values)
+    {
+        val.SendChunkToClient(client);
+    }
 }
 
 void MultiPlayerWorld::GenerateChunks(const uint16_t amountX, const uint16_t amountY, const uint16_t amountZ)
