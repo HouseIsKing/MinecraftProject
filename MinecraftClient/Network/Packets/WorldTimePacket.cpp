@@ -1,11 +1,16 @@
 #include "WorldTimePacket.h"
 
-WorldTimePacket::WorldTimePacket(Packet& packet) : NewWorldTime(0)
+WorldTimePacket::WorldTimePacket(Packet& packet)
 {
-    packet >> NewWorldTime;
+    packet >> NewWorldTime >> TicksTimer;
 }
 
 long WorldTimePacket::GetNewWorldTime() const
 {
     return NewWorldTime;
+}
+
+float WorldTimePacket::GetTicksTimer() const
+{
+    return TicksTimer;
 }

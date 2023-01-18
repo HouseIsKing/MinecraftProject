@@ -324,7 +324,7 @@ void Player::HandleMouseClickPacket(const MouseChangePacket& packet)
 void Player::HandleMouseMovementPacket(const MousePosChangePacket& packet)
 {
     CameraTransform.Rotate(-packet.GetY(), packet.GetX(), 0.0F);
-    const glm::vec3 rotation = CameraTransform.GetRotation();
+    glm::vec3 rotation = CameraTransform.GetRotation();
     if (rotation.x > 89.0F)
     {
         CameraTransform.SetRotation(89.0F, rotation.y, rotation.z);
@@ -334,6 +334,10 @@ void Player::HandleMouseMovementPacket(const MousePosChangePacket& packet)
         CameraTransform.SetRotation(-89.0F, rotation.y, rotation.z);
     }
     GetTransform().SetRotation(0.0F, rotation.y, 0.0F);
+    const auto packetToSend = std::make_shared<Packet>(PacketHeader::PLAYER_ROTATION_CHANGE_PACKET);
+    rotation = CameraTransform.GetRotation();
+    *packetToSend << rotation.x << rotation.y << rotation.z;
+    packet.GetConnectionToClient()->WritePacket(packetToSend);
 }
 
 std::shared_ptr<Packet> Player::GetTickPacket()

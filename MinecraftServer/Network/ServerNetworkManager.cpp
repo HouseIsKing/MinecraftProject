@@ -65,3 +65,8 @@ std::shared_ptr<ConnectionToClient> ServerNetworkManager::GetNextRemovedConnecti
     }
     return nullptr;
 }
+
+asio::io_context& ServerNetworkManager::GetContext()
+{
+    return Context;
+}

@@ -102,9 +102,17 @@ void MultiPlayerWorld::Run()
         Connections.emplace(newCon, new Player{x, y, z, newCon});
         auto packet = std::make_shared<Packet>(PacketHeader::WORLD_TIME_PACKET);
         *packet << WorldTime;
+        *packet << PartialTick;
         newCon->WritePacket(packet);
         SendEntireWorldToClient(newCon.get());
         newCon = NetworkManager.GetNextNewConnection();
+    }
+    //Handle packets
+    std::shared_ptr<PacketData> nextPacket = NetworkManager.GetNextPacket();
+    while (nextPacket != nullptr)
+    {
+        HandlePacket(nextPacket.get());
+        nextPacket = NetworkManager.GetNextPacket();
     }
     //Handle disconnected clients
     std::shared_ptr<ConnectionToClient> closedCon = NetworkManager.GetNextRemovedConnection();
@@ -114,7 +122,6 @@ void MultiPlayerWorld::Run()
         Connections.erase(closedCon);
         closedCon = NetworkManager.GetNextRemovedConnection();
     }
-    //Handle packets
 }
 
 void MultiPlayerWorld::Init()
@@ -444,12 +451,29 @@ std::vector<std::shared_ptr<Packet>> MultiPlayerWorld::GetTickPackets() const
     std::vector<std::shared_ptr<Packet>> result{};
     const auto packet = std::make_shared<Packet>(PacketHeader::WORLD_TIME_PACKET);
     *packet << WorldTime;
+    *packet << PartialTick;
     result.push_back(packet);
     for (const std::unique_ptr<Entity>& entity : Entities | std::views::values)
     {
         result.push_back(entity->GetTickPacket());
     }
     return result;
+}
+
+void MultiPlayerWorld::HandlePacket(const PacketData* packet)
+{
+    if (const auto* keyboardPacket = dynamic_cast<const KeyChangePacket*>(packet); keyboardPacket != nullptr)
+    {
+        Connections[keyboardPacket->GetConnectionToClient()]->HandleKeyChangePacket(*keyboardPacket);
+    }
+    /*else if (const auto* mousePacket = dynamic_cast<const MouseChangePacket*>(packet); mousePacket != nullptr)
+    {
+        Connections[mousePacket->GetConnectionToClient()]->HandleMouseClickPacket(*mousePacket);
+    }*/
+    else if (const auto* mouseMovePacket = dynamic_cast<const MousePosChangePacket*>(packet); mouseMovePacket != nullptr)
+    {
+        Connections[mouseMovePacket->GetConnectionToClient()]->HandleMouseMovementPacket(*mouseMovePacket);
+    }
 }
 
 MultiPlayerWorld::~MultiPlayerWorld()

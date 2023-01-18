@@ -13,10 +13,13 @@ class ClientNetworkManager
     Packet CurrentPacket;
     ThreadSafeQueue<PacketData> Packets;
     std::vector<uint8_t> HeaderBuffer{};
+    ThreadSafeQueue<Packet> OutgoingPackets;
     std::thread ContextThread = std::thread([&] { Context.run(); });
 
     void ReadPacketBodyAsync();
     void ReadPacketHeaderAsync();
+    void WritePacketHeaderAsync();
+    void WritePacketBodyAsync();
     std::shared_ptr<PacketData> TranslatePacket();
 
 public:
@@ -28,5 +31,5 @@ public:
     ClientNetworkManager& operator=(ClientNetworkManager&&) = delete;
     void Start(const std::string& ip, const std::string& name);
     std::shared_ptr<PacketData> GetNextPacket();
-    void WritePacket(Packet& packet);
+    void WritePacket(const std::shared_ptr<Packet>& packet);
 };

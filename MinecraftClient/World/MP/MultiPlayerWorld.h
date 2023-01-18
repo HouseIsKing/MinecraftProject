@@ -20,4 +20,7 @@ public:
     MultiPlayerWorld(GLFWwindow* window, const std::string& name, const std::string& ip);
     uint16_t RegisterEntity(Entity<MultiPlayerWorld>* entity);
     void Run() override;
+    void HandleKeyCallback(int key, int action);
+    void HandleCursorPosCallback(float xPos, float yPos);
+    void HandleMouseButtonCallback(int button, int action);
 };

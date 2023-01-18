@@ -16,7 +16,6 @@ class ConnectionToClient final : public ConnectionToClientInterface, public std:
     Packet CurrentPacket;
     std::vector<uint8_t> HeaderBuffer{};
     ThreadSafeQueue<Packet> OutgoingPackets;
-    bool FirstPacket = true;
 
     std::shared_ptr<ConnectionToClient> GetSharedPtr();
     std::shared_ptr<PacketData> TranslatePacket();

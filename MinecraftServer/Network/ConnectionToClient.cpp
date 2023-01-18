@@ -2,6 +2,10 @@
 #include "ServerNetworkManager.h"
 #include <iostream>
 
+#include "Packets/KeyChangePacket.h"
+#include "Packets/MouseChangePacket.h"
+#include "Packets/MousePosChangePacket.h"
+
 ConnectionToClient::ConnectionToClient(asio::io_context& ioContext, ServerNetworkManager* networkManager) : Socket(std::make_unique<asio::ip::tcp::socket>(ioContext)), NetworkManager(networkManager), CurrentPacket(PacketHeader(EPacketType::EntityData))
 {
     HeaderBuffer.resize(sizeof(PacketHeader));
@@ -9,7 +13,7 @@ ConnectionToClient::ConnectionToClient(asio::io_context& ioContext, ServerNetwor
 
 ConnectionToClient::~ConnectionToClient()
 {
-    if (Socket != nullptr && Socket->is_open())
+    if (Socket != nullptr)
     {
         Socket->close();
     }
@@ -32,12 +36,15 @@ void ConnectionToClient::Start()
 
 void ConnectionToClient::WritePacket(const std::shared_ptr<Packet>& packet)
 {
-    OutgoingPackets.Push(packet);
-    if (FirstPacket)
+    post(NetworkManager->GetContext(), [this, packet]
     {
-        FirstPacket = false;
-        WritePacketHeaderAsync();
-    }
+        const bool isEmpty = OutgoingPackets.GetSize() == 0;
+        OutgoingPackets.Push(packet);
+        if (isEmpty)
+        {
+            WritePacketHeaderAsync();
+        }
+    });
 }
 
 std::shared_ptr<ConnectionToClient> ConnectionToClient::GetSharedPtr()
@@ -93,9 +100,6 @@ void ConnectionToClient::ReadPacketHeaderAsync()
 
 void ConnectionToClient::WritePacketHeaderAsync()
 {
-    while (OutgoingPackets.GetSize() == 0)
-    {
-    }
     Socket->async_write_some(asio::buffer(OutgoingPackets.Front()->GetHeader().Serialize(), sizeof(PacketHeader)), [this](const asio::error_code& error, std::size_t /*bytesTransferred*/)
     {
         if (!error)
@@ -112,12 +116,25 @@ void ConnectionToClient::WritePacketBodyAsync()
         if (!error)
         {
             OutgoingPackets.Pop();
-            WritePacketHeaderAsync();
+            if (OutgoingPackets.GetSize() > 0)
+            {
+                WritePacketHeaderAsync();
+            }
         }
     });
 }
 
 std::shared_ptr<PacketData> ConnectionToClient::TranslatePacket()
 {
-    return nullptr;
+    switch (CurrentPacket.GetHeader().PacketType)
+    {
+    case EPacketType::Keyboard:
+        return std::make_shared<KeyChangePacket>(GetSharedPtr(), CurrentPacket);
+    case EPacketType::MousePosition:
+        return std::make_shared<MousePosChangePacket>(GetSharedPtr(), CurrentPacket);
+    case EPacketType::MouseButton:
+        return std::make_shared<MouseChangePacket>(GetSharedPtr(), CurrentPacket);
+    default:
+        return nullptr;
+    }
 }

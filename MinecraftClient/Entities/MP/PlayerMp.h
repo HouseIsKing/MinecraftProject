@@ -3,7 +3,9 @@
 #include "Entities/Generic/LivingEntity.h"
 #include "Entities/Generic/PlayerSelectionHighlight.h"
 #include "GUI/SelectedBlockGui.h"
+#include "Network/ClientNetworkManager.h"
 #include "Network/Packets/EntityDataPacket.h"
+#include "Network/Packets/PlayerRotateChangePacket.h"
 #include "World/Generic/Blocks/BlockTypeList.h"
 
 class MultiPlayerWorld;
@@ -27,8 +29,6 @@ class PlayerMp final : public LivingEntity<MultiPlayerWorld>
     BlockFaces FindClosestFace(glm::ivec3& blockPosition, bool& foundBlock) const;
     [[nodiscard]] float CalculateMaxDistanceForHighlight(const glm::vec3& front, bool up, bool right, bool forward) const;
     void PlaceBlock() const;
-    void HandleMouseInput();
-    void HandleKeyboardMovementInput();
 
 public:
     void DisplaySelectionHighlight();
@@ -39,4 +39,6 @@ public:
     [[nodiscard]] bool GetMode() const;
     [[nodiscard]] EBlockType GetCurrentSelectedBlock() const;
     void HandleEntityUpdate(const EntityDataPacket& packet) override;
+    void HandleMouseMovementInput(float x, float y, ClientNetworkManager* network);
+    void HandlePlayerRotationChange(const PlayerRotateChangePacket& packet) const;
 };

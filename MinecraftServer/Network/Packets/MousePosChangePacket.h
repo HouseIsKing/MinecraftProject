@@ -2,7 +2,7 @@
 #include "Packet.h"
 #include "PacketData.h"
 
-class MousePosChangePacket final : PacketData
+class MousePosChangePacket final : public PacketData
 {
     float X;
     float Y;

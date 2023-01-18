@@ -1,13 +1,12 @@
 #include "Network/ClientNetworkManager.h"
+#include "Entities/Generic/CameraController.h"
+#include "World/MP/MultiPlayerWorld.h"
 #include "World/SP/SinglePlayerWorld.h"
 #include <iostream>
 #include <memory>
-#include "Entities/Generic/CameraController.h"
-#include "World/MP/MultiPlayerWorld.h"
 
 std::unique_ptr<SinglePlayerWorld> spWorld{};
 std::unique_ptr<MultiPlayerWorld> mpWorld{};
-constexpr float TICK_RATE = 1.0F / 20.0F;
 
 void ErrorCallback(const int error, const char* description)
 {
@@ -20,6 +19,27 @@ void KeyCallback(GLFWwindow* window, const int key, int /*scancode*/, const int 
     {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     }
+    else if (mpWorld && (action == GLFW_PRESS || action == GLFW_RELEASE))
+    {
+        std::cout << key << " " << action << std::endl;
+        mpWorld->HandleKeyCallback(key, action);
+    }
+}
+
+void CursorPosCallback(GLFWwindow* /*window*/, const double xPos, const double yPos)
+{
+    if (mpWorld)
+    {
+        mpWorld->HandleCursorPosCallback(static_cast<float>(xPos), static_cast<float>(yPos));
+    }
+}
+
+void MouseButtonCallback(GLFWwindow* /*window*/, const int button, const int action, int /*mods*/)
+{
+    if (mpWorld)
+    {
+        mpWorld->HandleMouseButtonCallback(button, action);
+    }
 }
 
 void WindowsResizeCallback(GLFWwindow* /*window*/, const int width, const int height)
@@ -28,11 +48,11 @@ void WindowsResizeCallback(GLFWwindow* /*window*/, const int width, const int he
     {
         if (spWorld)
         {
-            spWorld->HandleWindowResize(width, height);
+            spWorld->HandleWindowResize(height, width);
         }
         else
         {
-            mpWorld->HandleWindowResize(width, height);
+            mpWorld->HandleWindowResize(height, width);
         }
     }
 }
@@ -59,6 +79,7 @@ void MainLoopMulti(GLFWwindow* window, const std::string& ip, const std::string&
 
 void MainLoop(GLFWwindow* window)
 {
+    std::cout << glfwGetTimerFrequency() << std::endl;
     auto cam = Camera(glm::vec3(0.0F), 1920.0F / 1080.0F);
     CameraController::SetActiveCamera(cam);
     const double start = glfwGetTime();
@@ -108,6 +129,8 @@ GLFWwindow* InitGlfw()
     gladLoadGL();
     glfwSetErrorCallback(ErrorCallback);
     glfwSetKeyCallback(window, KeyCallback);
+    glfwSetCursorPosCallback(window, CursorPosCallback);
+    glfwSetMouseButtonCallback(window, MouseButtonCallback);
     glfwSetFramebufferSizeCallback(window, WindowsResizeCallback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glEnable(GL_DEBUG_OUTPUT);

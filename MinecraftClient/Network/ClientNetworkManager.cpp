@@ -5,6 +5,7 @@
 #include "Packets/ChunkDataPacket.h"
 #include "Packets/EntityDataPacket.h"
 #include "Packets/LightDataPacket.h"
+#include "Packets/PlayerRotateChangePacket.h"
 #include "Packets/WorldDataPacket.h"
 #include "Packets/WorldTimePacket.h"
 
@@ -42,6 +43,32 @@ void ClientNetworkManager::ReadPacketHeaderAsync()
     });
 }
 
+void ClientNetworkManager::WritePacketHeaderAsync()
+{
+    Socket.async_write_some(asio::buffer(OutgoingPackets.Front()->GetHeader().Serialize(), sizeof(PacketHeader)), [this](const asio::error_code& error, std::size_t /*bytesTransferred*/)
+    {
+        if (!error)
+        {
+            WritePacketBodyAsync();
+        }
+    });
+}
+
+void ClientNetworkManager::WritePacketBodyAsync()
+{
+    Socket.async_write_some(asio::buffer(OutgoingPackets.Front()->GetData(), OutgoingPackets.Front()->GetHeader().PacketSize), [this](const asio::error_code& error, std::size_t /*bytesTransferred*/)
+    {
+        if (!error)
+        {
+            OutgoingPackets.Pop();
+            if (OutgoingPackets.GetSize() > 0)
+            {
+                WritePacketHeaderAsync();
+            }
+        }
+    });
+}
+
 std::shared_ptr<PacketData> ClientNetworkManager::TranslatePacket()
 {
     switch (CurrentPacket.GetHeader().PacketType)
@@ -56,6 +83,8 @@ std::shared_ptr<PacketData> ClientNetworkManager::TranslatePacket()
         return std::make_shared<LightDataPacket>(CurrentPacket);
     case EPacketType::WorldData:
         return std::make_shared<WorldDataPacket>(CurrentPacket);
+    case EPacketType::PlayerRotationChange:
+        return std::make_shared<PlayerRotateChangePacket>(CurrentPacket);
     default:
         return nullptr;
     }
@@ -68,6 +97,7 @@ ClientNetworkManager::ClientNetworkManager() : Socket(Context), CurrentPacket(Pa
 
 ClientNetworkManager::~ClientNetworkManager()
 {
+    Socket.close();
     Context.stop();
     ContextThread.join();
 }
@@ -92,20 +122,15 @@ std::shared_ptr<PacketData> ClientNetworkManager::GetNextPacket()
     return nullptr;
 }
 
-void ClientNetworkManager::WritePacket(Packet& packet)
+void ClientNetworkManager::WritePacket(const std::shared_ptr<Packet>& packet)
 {
-    Socket.async_write_some(asio::buffer(packet.GetHeader().Serialize(), sizeof(PacketHeader)), [](const asio::error_code& error, std::size_t /*bytesTransferred*/)
+    post(Context, [this, packet]
     {
-        if (error)
+        const bool isEmpty = OutgoingPackets.GetSize() == 0;
+        OutgoingPackets.Push(packet);
+        if (isEmpty)
         {
-            std::cout << "Error writing packet header to server " << std::endl;
-        }
-    });
-    Socket.async_write_some(asio::buffer(packet.GetData(), packet.GetHeader().PacketSize), [](const asio::error_code& error, std::size_t /*bytesTransferred*/)
-    {
-        if (error)
-        {
-            std::cout << "Error writing packet header to server " << std::endl;
+            WritePacketHeaderAsync();
         }
     });
 }

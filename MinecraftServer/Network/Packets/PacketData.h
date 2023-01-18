@@ -8,11 +8,10 @@ class PacketData
 protected:
     std::shared_ptr<ConnectionToClient> Source;
     explicit PacketData(std::shared_ptr<ConnectionToClient> source);
-    PacketData() = default;
     virtual ~PacketData() = default;
 
 public:
-    std::shared_ptr<ConnectionToClient>& GetConnectionToClient();
+    const std::shared_ptr<ConnectionToClient>& GetConnectionToClient() const;
     PacketData(const PacketData&) = delete;
     PacketData& operator=(const PacketData&) = delete;
     PacketData(PacketData&&) = delete;

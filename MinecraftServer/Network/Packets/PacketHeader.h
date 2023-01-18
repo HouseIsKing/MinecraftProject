@@ -9,7 +9,11 @@ enum class EPacketType : uint8_t
     ChunkData,
     LightsData,
     WorldTime,
-    WorldData
+    WorldData,
+    MousePosition,
+    MouseButton,
+    Keyboard,
+    PlayerRotationChange
 };
 
 struct PacketHeader
@@ -17,6 +21,7 @@ struct PacketHeader
     EPacketType PacketType;
     uint32_t PacketSize;
     static const PacketHeader ENTITY_DATA_PACKET;
+    static const PacketHeader PLAYER_ROTATION_CHANGE_PACKET;
     static const PacketHeader WORLD_TIME_PACKET;
     static const PacketHeader PLAYER_ID_PACKET;
     static const PacketHeader CHUNK_DATA_PACKET;

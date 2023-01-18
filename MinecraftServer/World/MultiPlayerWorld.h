@@ -39,6 +39,7 @@ class MultiPlayerWorld
     void SendEntireWorldToClient(ConnectionToClient* client) const;
 
 public:
+    float PartialTick{};
     MultiPlayerWorld(uint16_t width, uint16_t height, uint16_t depth);
     ~MultiPlayerWorld();
     MultiPlayerWorld(const MultiPlayerWorld& other) = delete;
@@ -59,6 +60,7 @@ public:
     [[nodiscard]] int GetBrightnessAt(int x, int y, int z) const;
     bool IsBlockSolid(int x, int y, int z);
     [[nodiscard]] int GetBrightnessAt(glm::vec3 pos) const;
-    std::vector<std::shared_ptr<Packet>> GetTickPackets() const;
+    [[nodiscard]] std::vector<std::shared_ptr<Packet>> GetTickPackets() const;
+    void HandlePacket(const PacketData* packet);
     std::vector<BoundingBox> GetBlockBoxesInBoundingBox(const BoundingBox& boundingBox);
 };

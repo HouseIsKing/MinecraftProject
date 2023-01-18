@@ -19,7 +19,8 @@ std::array<uint8_t, sizeof(PacketHeader)> PacketHeader::Serialize() const
 }
 
 const PacketHeader PacketHeader::ENTITY_DATA_PACKET = {EPacketType::EntityData, sizeof(float) * 6 + sizeof(uint16_t)};
-const PacketHeader PacketHeader::WORLD_TIME_PACKET = {EPacketType::WorldTime, sizeof(long)};
+const PacketHeader PacketHeader::WORLD_TIME_PACKET = {EPacketType::WorldTime, sizeof(long) + sizeof(float)};
 const PacketHeader PacketHeader::PLAYER_ID_PACKET = {EPacketType::PlayerId, sizeof(uint16_t)};
 const PacketHeader PacketHeader::CHUNK_DATA_PACKET = {EPacketType::ChunkData, sizeof(int) * 3 + sizeof(EBlockType) * Chunk::CHUNK_WIDTH * Chunk::CHUNK_DEPTH * Chunk::CHUNK_HEIGHT};
 const PacketHeader PacketHeader::LIGHTS_DATA_PACKET = {EPacketType::LightsData, sizeof(int) * 2 + sizeof(uint8_t)};
+const PacketHeader PacketHeader::PLAYER_ROTATION_CHANGE_PACKET = {EPacketType::PlayerRotationChange, sizeof(float) * 3};

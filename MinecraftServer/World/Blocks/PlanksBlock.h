@@ -4,5 +4,5 @@
 class PlanksBlock final : public Block
 {
 public:
-    PlanksBlock();
+    PlanksBlock() = default;
 };

@@ -5,10 +5,10 @@
 
 void PlayerMp::Render(const float partialTick)
 {
+    LivingEntity::Render(partialTick);
     const glm::vec3 pos = GetTransform().GetPosition();
     glm::vec3 finalCameraPosition = PrevPos + (pos - PrevPos) * partialTick;
     GetTransform().SetPosition(finalCameraPosition);
-    LivingEntity::Render(partialTick);
     finalCameraPosition.y += CAMERA_OFFSET - PLAYER_SIZE.y;
     MyCamera.Position = finalCameraPosition;
     Shader::SetMat4(EngineDefaults::GetShader()->GetUniformInt("view"), MyCamera.GetViewMatrix());
@@ -261,26 +261,16 @@ void PlayerMp::HandleEntityUpdate(const EntityDataPacket& packet)
     MyCamera.Yaw = packet.GetYRot();
 }
 
-void PlayerMp::HandleMouseInput()
+void PlayerMp::HandleMouseMovementInput(const float x, const float y, ClientNetworkManager* network)
 {
-    double x;
-    double y;
-    glfwGetCursorPos(GetWorld()->GetWindow(), &x, &y);
-    const float mouseX = static_cast<float>(x) - PrevMouseX;
-    const float mouseY = static_cast<float>(y) - PrevMouseY;
-    PrevMouseX = static_cast<float>(x);
-    PrevMouseY = static_cast<float>(y);
-    MyCamera.Yaw += mouseX * MouseSensitivity;
-    MyCamera.Pitch += -mouseY * MouseSensitivity;
-    if (MyCamera.Pitch > 89.0F)
-    {
-        MyCamera.Pitch = 89.0F;
-    }
-    if (MyCamera.Pitch < -89.0F)
-    {
-        MyCamera.Pitch = -89.0F;
-    }
-    GetTransform().SetRotation(0, MyCamera.Yaw, 0);
+    const float mouseX = x - PrevMouseX;
+    const float mouseY = y - PrevMouseY;
+    PrevMouseX = x;
+    PrevMouseY = y;
+    const auto packetToSend = std::make_shared<Packet>(PacketHeader::MOUSE_POS_PACKET);
+    *packetToSend << mouseX * MouseSensitivity << mouseY * MouseSensitivity;
+    network->WritePacket(packetToSend);
+    /*
     int state = glfwGetMouseButton(GetWorld()->GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
     if (state == GLFW_PRESS && !LeftMousePressed)
     {
@@ -310,103 +300,11 @@ void PlayerMp::HandleMouseInput()
     else if (state == GLFW_RELEASE)
     {
         RightMousePressed = false;
-    }
+    }*/
 }
 
-void PlayerMp::HandleKeyboardMovementInput()
+void PlayerMp::HandlePlayerRotationChange(const PlayerRotateChangePacket& packet) const
 {
-    VerticalInput = 0;
-    HorizontalInput = 0;
-    JumpRequested = false;
-    GLFWwindow* window = GetWorld()->GetWindow();
-    int state = glfwGetKey(window, GLFW_KEY_W);
-    if (state == GLFW_PRESS)
-    {
-        VerticalInput++;
-    }
-    if (state == GLFW_RELEASE)
-    {
-        VerticalInput--;
-    }
-    state = glfwGetKey(window, GLFW_KEY_S);
-    if (state == GLFW_PRESS)
-    {
-        VerticalInput--;
-    }
-    if (state == GLFW_RELEASE)
-    {
-        VerticalInput++;
-    }
-    state = glfwGetKey(window, GLFW_KEY_A);
-    if (state == GLFW_PRESS)
-    {
-        HorizontalInput--;
-    }
-    if (state == GLFW_RELEASE)
-    {
-        HorizontalInput++;
-    }
-    state = glfwGetKey(window, GLFW_KEY_D);
-    if (state == GLFW_PRESS)
-    {
-        HorizontalInput++;
-    }
-    if (state == GLFW_RELEASE)
-    {
-        HorizontalInput--;
-    }
-    state = glfwGetKey(window, GLFW_KEY_SPACE);
-    if (state == GLFW_PRESS)
-    {
-        JumpRequested = true;
-    }
-    if (state == GLFW_RELEASE)
-    {
-        JumpRequested = false;
-    }
-    state = glfwGetKey(window, GLFW_KEY_1);
-    if (state == GLFW_PRESS)
-    {
-        CurrentSelectedBlock = EBlockType::Stone;
-    }
-    state = glfwGetKey(window, GLFW_KEY_2);
-    if (state == GLFW_PRESS)
-    {
-        CurrentSelectedBlock = EBlockType::Dirt;
-    }
-    state = glfwGetKey(window, GLFW_KEY_3);
-    if (state == GLFW_PRESS)
-    {
-        CurrentSelectedBlock = EBlockType::Cobblestone;
-    }
-    state = glfwGetKey(window, GLFW_KEY_4);
-    if (state == GLFW_PRESS)
-    {
-        CurrentSelectedBlock = EBlockType::Planks;
-    }
-    state = glfwGetKey(window, GLFW_KEY_5);
-    if (state == GLFW_PRESS)
-    {
-        CurrentSelectedBlock = EBlockType::Sapling;
-    }
-    if (SelectedBlockGuiPtr != nullptr)
-    {
-        SelectedBlockGuiPtr->SwitchBlockType(CurrentSelectedBlock);
-    }
-    state = glfwGetKey(window, GLFW_KEY_G);
-    if (state == GLFW_PRESS && !IsSpawnZombieButtonPressed)
-    {
-        const glm::vec3 pos = GetTransform().GetPosition();
-        //new Zombie(pos.x, pos.y, pos.z);
-        IsSpawnZombieButtonPressed = true;
-    }
-    if (state == GLFW_RELEASE)
-    {
-        IsSpawnZombieButtonPressed = false;
-    }
-    state = glfwGetKey(window, GLFW_KEY_R);
-    if (state == GLFW_PRESS)
-    {
-        GetTransform().SetPosition(EngineDefaults::GetNextFloat() * 256.0F, 67.0F, EngineDefaults::GetNextFloat() * 256.0F);
-    }
+    MyCamera.Pitch = packet.GetX();
+    MyCamera.Yaw = packet.GetY();
 }

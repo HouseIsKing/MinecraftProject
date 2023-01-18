@@ -1,7 +1,8 @@
 #include "World/MultiPlayerWorld.h"
+#include <GLFW/glfw3.h>
 
 bool run = true;
-constexpr float TICK_RATE = 1.0F / 20.0F;
+constexpr float TICK_RATE = 0.05F;
 
 BOOL APIENTRY CtrlHandler(const DWORD fdwCtrlType)
 {
@@ -15,21 +16,24 @@ BOOL APIENTRY CtrlHandler(const DWORD fdwCtrlType)
 
 int main(int /*argc*/, char* /*argv*/[])
 {
+    glfwInit();
     SetConsoleCtrlHandler(CtrlHandler, TRUE);
     MultiPlayerWorld world{256, 64, 256};
     float ticksTimer = 0;
+    auto start = static_cast<float>(glfwGetTime());
     while (run)
     {
-        std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
         int i;
+        world.PartialTick = ticksTimer - TICK_RATE * static_cast<float>(static_cast<int>(ticksTimer / TICK_RATE));
         for (i = 0; i < static_cast<int>(ticksTimer / TICK_RATE); i++)
         {
             world.Tick();
         }
         world.Run();
-        std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
+        const auto end = static_cast<float>(glfwGetTime());
         ticksTimer -= static_cast<float>(i) * TICK_RATE;
-        ticksTimer += std::chrono::duration<float>(end - start).count();
+        ticksTimer += end - start;
+        start = end;
     }
     return 0;
 }

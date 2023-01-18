@@ -32,4 +32,5 @@ public:
     std::shared_ptr<PacketData> GetNextPacket();
     std::shared_ptr<ConnectionToClient> GetNextNewConnection();
     std::shared_ptr<ConnectionToClient> GetNextRemovedConnection();
+    asio::io_context& GetContext();
 };

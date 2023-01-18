@@ -2,7 +2,7 @@
 #include "Packet.h"
 #include "PacketData.h"
 
-class KeyChangePacket final : PacketData
+class KeyChangePacket final : public PacketData
 {
     int Key;
     int Action;

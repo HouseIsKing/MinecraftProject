@@ -2,6 +2,7 @@
 #include "Network/Packets/ChunkDataPacket.h"
 #include "Network/Packets/EntityDataPacket.h"
 #include "Network/Packets/LightDataPacket.h"
+#include "Network/Packets/PlayerRotateChangePacket.h"
 #include "Network/Packets/WorldDataPacket.h"
 #include "Network/Packets/WorldTimePacket.h"
 
@@ -68,18 +69,34 @@ void MultiPlayerWorld::UpdateChunksNear(const int x, const int y, const int z)
 
 void MultiPlayerWorld::Run()
 {
-    if (TickTimer > 1.0F)
-    {
-        TickTimer = 1.0F;
-    }
-    DrawWorld(TickTimer);
-    //handle messages
     std::shared_ptr<PacketData> packet = NetworkManager.GetNextPacket();
     while (packet != nullptr)
     {
         HandlePacket(packet.get());
         packet = NetworkManager.GetNextPacket();
     }
+    if (TickTimer / TICK_RATE > 1)
+    {
+        TickTimer = TICK_RATE;
+    }
+    DrawWorld(TickTimer / TICK_RATE);
+    //handle messages
+}
+
+void MultiPlayerWorld::HandleKeyCallback(const int key, const int action)
+{
+    const auto packet = std::make_shared<Packet>(PacketHeader::KEYBOARD_PACKET);
+    *packet << key << action;
+    NetworkManager.WritePacket(packet);
+}
+
+void MultiPlayerWorld::HandleCursorPosCallback(const float xPos, const float yPos)
+{
+    Player->HandleMouseMovementInput(xPos, yPos, &NetworkManager);
+}
+
+void MultiPlayerWorld::HandleMouseButtonCallback(int button, int action)
+{
 }
 
 void MultiPlayerWorld::HandlePacket(const PacketData* packet)
@@ -87,11 +104,15 @@ void MultiPlayerWorld::HandlePacket(const PacketData* packet)
     if (const auto* worldTimePacket = dynamic_cast<const WorldTimePacket*>(packet); worldTimePacket != nullptr)
     {
         WorldTime = worldTimePacket->GetNewWorldTime();
-        TickTimer = 0.0F;
+        TickTimer = worldTimePacket->GetTicksTimer();
     }
     else if (const auto* entityData = dynamic_cast<const EntityDataPacket*>(packet); entityData != nullptr)
     {
         Entities[entityData->GetId()]->HandleEntityUpdate(*entityData);
+    }
+    else if (const auto* playerRotChange = dynamic_cast<const PlayerRotateChangePacket*>(packet); playerRotChange != nullptr)
+    {
+        Player->HandlePlayerRotationChange(*playerRotChange);
     }
     else if (const auto* worldData = dynamic_cast<const WorldDataPacket*>(packet); worldData != nullptr)
     {

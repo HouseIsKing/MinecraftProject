@@ -315,36 +315,20 @@ void PlayerController::HandleKeyboardMovementInput()
     {
         VerticalInput++;
     }
-    if (state == GLFW_RELEASE)
-    {
-        VerticalInput--;
-    }
     state = glfwGetKey(window, GLFW_KEY_S);
     if (state == GLFW_PRESS)
     {
         VerticalInput--;
-    }
-    if (state == GLFW_RELEASE)
-    {
-        VerticalInput++;
     }
     state = glfwGetKey(window, GLFW_KEY_A);
     if (state == GLFW_PRESS)
     {
         HorizontalInput--;
     }
-    if (state == GLFW_RELEASE)
-    {
-        HorizontalInput++;
-    }
     state = glfwGetKey(window, GLFW_KEY_D);
     if (state == GLFW_PRESS)
     {
         HorizontalInput++;
-    }
-    if (state == GLFW_RELEASE)
-    {
-        HorizontalInput--;
     }
     state = glfwGetKey(window, GLFW_KEY_SPACE);
     if (state == GLFW_PRESS)
