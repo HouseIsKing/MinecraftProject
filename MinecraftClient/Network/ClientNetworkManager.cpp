@@ -2,8 +2,10 @@
 
 #include <iostream>
 
-#include "Packets/EntityPositionPacket.h"
-#include "Packets/PlayerIdPacket.h"
+#include "Packets/ChunkDataPacket.h"
+#include "Packets/EntityDataPacket.h"
+#include "Packets/LightDataPacket.h"
+#include "Packets/WorldDataPacket.h"
 #include "Packets/WorldTimePacket.h"
 
 void ClientNetworkManager::ReadPacketBodyAsync()
@@ -46,16 +48,20 @@ std::shared_ptr<PacketData> ClientNetworkManager::TranslatePacket()
     {
     case EPacketType::WorldTime:
         return std::make_shared<WorldTimePacket>(CurrentPacket);
-    case EPacketType::PlayerId:
-        return std::make_shared<PlayerIdPacket>(CurrentPacket);
-    case EPacketType::EntityPosition:
-        return std::make_shared<EntityPositionPacket>(CurrentPacket);
+    case EPacketType::EntityData:
+        return std::make_shared<EntityDataPacket>(CurrentPacket);
+    case EPacketType::ChunkData:
+        return std::make_shared<ChunkDataPacket>(CurrentPacket);
+    case EPacketType::LightsData:
+        return std::make_shared<LightDataPacket>(CurrentPacket);
+    case EPacketType::WorldData:
+        return std::make_shared<WorldDataPacket>(CurrentPacket);
     default:
         return nullptr;
     }
 }
 
-ClientNetworkManager::ClientNetworkManager() : Socket(Context), CurrentPacket(PacketHeader::PLAYER_ID_PACKET)
+ClientNetworkManager::ClientNetworkManager() : Socket(Context), CurrentPacket(PacketHeader(EPacketType::EntityData))
 {
     HeaderBuffer.resize(sizeof(PacketHeader));
 }
@@ -74,6 +80,7 @@ void ClientNetworkManager::Start(const std::string& ip, const std::string& name)
     CurrentPacket << name;
     Socket.write_some(asio::buffer(CurrentPacket.GetHeader().Serialize(), sizeof(PacketHeader)), ec);
     Socket.write_some(asio::buffer(CurrentPacket.GetData(), CurrentPacket.GetHeader().PacketSize), ec);
+    ReadPacketHeaderAsync();
 }
 
 std::shared_ptr<PacketData> ClientNetworkManager::GetNextPacket()

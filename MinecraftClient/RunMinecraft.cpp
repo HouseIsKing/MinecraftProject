@@ -5,8 +5,8 @@
 #include "Entities/Generic/CameraController.h"
 #include "World/MP/MultiPlayerWorld.h"
 
-std::unique_ptr<World<SinglePlayerWorld, PlayerController>> spWorld{};
-std::unique_ptr<World<MultiPlayerWorld, PlayerController>> mpWorld{};
+std::unique_ptr<SinglePlayerWorld> spWorld{};
+std::unique_ptr<MultiPlayerWorld> mpWorld{};
 constexpr float TICK_RATE = 1.0F / 20.0F;
 
 void ErrorCallback(const int error, const char* description)
@@ -37,13 +37,12 @@ void WindowsResizeCallback(GLFWwindow* /*window*/, const int width, const int he
     }
 }
 
-void MainLoop(GLFWwindow* window)
+void MainLoopMulti(GLFWwindow* window, const std::string& ip, const std::string& name)
 {
     auto cam = Camera(glm::vec3(0.0F), 1920.0F / 1080.0F);
     CameraController::SetActiveCamera(cam);
     const double start = glfwGetTime();
-    spWorld = std::make_unique<SinglePlayerWorld>(static_cast<uint16_t>(256), static_cast<uint16_t>(64), static_cast<uint16_t>(256), window);
-    auto* world = dynamic_cast<SinglePlayerWorld*>(spWorld.get());
+    mpWorld = std::make_unique<MultiPlayerWorld>(window, name, ip);
     std::cout << "World creation took " << glfwGetTime() - start << " seconds" << std::endl;
     glClearColor(0.5F, 0.8F, 1.0F, 1.0F);
     glClearDepthf(1.0F);
@@ -52,7 +51,27 @@ void MainLoop(GLFWwindow* window)
     while (glfwWindowShouldClose(window) == 0)
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        world->Run();
+        mpWorld->Run();
+        glfwPollEvents();
+        glfwSwapBuffers(window);
+    }
+}
+
+void MainLoop(GLFWwindow* window)
+{
+    auto cam = Camera(glm::vec3(0.0F), 1920.0F / 1080.0F);
+    CameraController::SetActiveCamera(cam);
+    const double start = glfwGetTime();
+    spWorld = std::make_unique<SinglePlayerWorld>(static_cast<uint16_t>(256), static_cast<uint16_t>(64), static_cast<uint16_t>(256), window);
+    std::cout << "World creation took " << glfwGetTime() - start << " seconds" << std::endl;
+    glClearColor(0.5F, 0.8F, 1.0F, 1.0F);
+    glClearDepthf(1.0F);
+    glDepthFunc(GL_LEQUAL);
+    glEnable(GL_DEPTH_TEST);
+    while (glfwWindowShouldClose(window) == 0)
+    {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        spWorld->Run();
         glfwPollEvents();
         glfwSwapBuffers(window);
     }
@@ -99,21 +118,20 @@ GLFWwindow* InitGlfw()
 
 int main(const int argc, char* argv[])
 {
+    GLFWwindow* window = InitGlfw();
+    if (window == nullptr)
+    {
+        return -1;
+    }
     if (argc > 2 && std::string(argv[1]) == "Server")
     {
-        ClientNetworkManager manager;
-        manager.Start("127.0.0.1", argv[2]);
+        MainLoopMulti(window, "127.0.0.1", argv[2]);
     }
     else
     {
-        GLFWwindow* window = InitGlfw();
-        if (window == nullptr)
-        {
-            return -1;
-        }
         MainLoop(window);
-        glfwDestroyWindow(window);
-        glfwTerminate();
     }
+    glfwDestroyWindow(window);
+    glfwTerminate();
     return 0;
 }

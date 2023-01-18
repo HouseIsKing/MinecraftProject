@@ -1,4 +1,5 @@
 #pragma once
+#include "Network/Packets/EntityDataPacket.h"
 #include "Util/BoundingBox.h"
 #include "Util/TessellationHelper.h"
 
@@ -34,6 +35,7 @@ public:
     [[nodiscard]] BoundingBox GetBoundingBox() const;
     [[nodiscard]] uint16_t GetEntityId() const;
     [[nodiscard]] glm::vec3 GetEntitySize() const;
+    virtual void HandleEntityUpdate(const EntityDataPacket& packet);
 };
 
 template <typename T>
@@ -130,5 +132,13 @@ template <typename T>
 glm::vec3 Entity<T>::GetEntitySize() const
 {
     return EntitySize;
+}
+
+template <typename T>
+void Entity<T>::HandleEntityUpdate(const EntityDataPacket& packet)
+{
+    PrevPos = GetTransform().GetPosition();
+    GetTransform().SetPosition(packet.GetXPos(), packet.GetYPos(), packet.GetZPos());
+    GetTransform().SetRotation(packet.GetXRot(), packet.GetYRot(), packet.GetZRot());
 }
 

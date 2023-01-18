@@ -1,4 +1,5 @@
 #pragma once
+#include "Packet.h"
 #include "PacketData.h"
 
 class MousePosChangePacket final : PacketData
@@ -8,6 +9,6 @@ class MousePosChangePacket final : PacketData
 
 public:
     MousePosChangePacket(std::shared_ptr<ConnectionToClient> client, Packet& packetToRead);
-    float GetX() const;
-    float GetY() const;
+    [[nodiscard]] float GetX() const;
+    [[nodiscard]] float GetY() const;
 };

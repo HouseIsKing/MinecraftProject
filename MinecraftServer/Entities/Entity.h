@@ -1,7 +1,11 @@
 #pragma once
+#include <memory>
+
 #include "Util/BoundingBox.h"
 #include "Util/Transform.h"
 #include <glm/vec3.hpp>
+
+#include "Network/Packets/Packet.h"
 
 class MultiPlayerWorld;
 
@@ -35,4 +39,5 @@ public:
     BoundingBox GetBoundingBox();
     [[nodiscard]] uint16_t GetEntityId() const;
     [[nodiscard]] glm::vec3 GetEntitySize() const;
+    [[nodiscard]] virtual std::shared_ptr<Packet> GetTickPacket();
 };

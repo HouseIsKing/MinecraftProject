@@ -80,8 +80,14 @@ void MultiPlayerWorld::Tick()
         const int z = EngineDefaults::GetNext(LevelDepth);
         GetBlockAt(x, y, z)->Tick(this, x, y, z);
     }
-    Packet worldTimePacket{PacketHeader::WORLD_TIME_PACKET};
-    worldTimePacket << WorldTime;
+    for (const std::vector<std::shared_ptr<Packet>> packetsToSend = GetTickPackets(); const auto& val : packetsToSend)
+    {
+        for (const std::shared_ptr<ConnectionToClientInterface>& connection : Connections | std::views::keys)
+        {
+            auto* const client = dynamic_cast<ConnectionToClient*>(connection.get());
+            client->WritePacket(val);
+        }
+    }
 }
 
 void MultiPlayerWorld::Run()
@@ -91,7 +97,7 @@ void MultiPlayerWorld::Run()
     while (newCon != nullptr)
     {
         const auto x = static_cast<float>(EngineDefaults::GetNext<int>(LevelWidth));
-        const auto y = static_cast<float>(EngineDefaults::GetNext<int>(LevelHeight));
+        const auto y = static_cast<float>(LevelHeight + 3);
         const auto z = static_cast<float>(EngineDefaults::GetNext<int>(LevelDepth));
         Connections.emplace(newCon, new Player{x, y, z, newCon});
         auto packet = std::make_shared<Packet>(PacketHeader::WORLD_TIME_PACKET);
@@ -129,14 +135,11 @@ void MultiPlayerWorld::RecalculateLightLevels()
 {
     LightLevels.clear();
     LightLevels.reserve(static_cast<size_t>(LevelWidth * LevelDepth));
-    while (LightLevels.size() < static_cast<size_t>(LevelWidth * LevelDepth))
-    {
-        LightLevels.push_back(0);
-    }
     for (int x = 0; x < LevelWidth; x++)
     {
         for (int z = 0; z < LevelDepth; z++)
         {
+            LightLevels.emplace(glm::ivec2(x, z), static_cast<uint8_t>(0));
             RecalculateLightLevels(x, z);
         }
     }
@@ -144,24 +147,38 @@ void MultiPlayerWorld::RecalculateLightLevels()
 
 int MultiPlayerWorld::RecalculateLightLevels(const int x, const int z)
 {
-    const int previousLightLevel = LightLevels[static_cast<size_t>(x * LevelDepth + z)];
-    for (int y = LevelHeight - 1; y >= 0; y--)
+    if (const auto pos = glm::ivec2(x, z); LightLevels.contains(pos))
     {
-        if (GetBlockAt(x, y, z)->IsBlockingLight() || y == 0)
+        const int previousLightLevel = LightLevels[pos];
+        for (int y = LevelHeight - 1; y >= 0; y--)
         {
-            LightLevels.at(static_cast<size_t>(x * LevelDepth + z)) = static_cast<uint8_t>(y);
-            return y - previousLightLevel;
+            if (GetBlockAt(x, y, z)->IsBlockingLight() || y == 0)
+            {
+                LightLevels[pos] = static_cast<uint8_t>(y);
+                return y - previousLightLevel;
+            }
         }
+        return 0 - previousLightLevel;
     }
-    return 0 - previousLightLevel;
+    return 0;
 }
 
 void MultiPlayerWorld::SendEntireWorldToClient(ConnectionToClient* client) const
 {
+    const auto numChunks = static_cast<uint32_t>(Chunks.size());
+    const auto numLights = static_cast<uint32_t>(LightLevels.size());
+    const auto packet = std::make_shared<Packet>(PacketHeader(EPacketType::WorldData, numChunks * PacketHeader::CHUNK_DATA_PACKET.PacketSize +
+                                                              numLights * PacketHeader::LIGHTS_DATA_PACKET.PacketSize + sizeof(uint32_t) * 2));
+    *packet << numChunks << numLights;
     for (const auto& val : Chunks | std::views::values)
     {
-        val.SendChunkToClient(client);
+        val.SendChunkToClient(packet);
     }
+    for (const auto& [pos, level] : LightLevels)
+    {
+        *packet << pos.x << pos.y << level;
+    }
+    client->WritePacket(packet);
 }
 
 void MultiPlayerWorld::GenerateChunks(const uint16_t amountX, const uint16_t amountY, const uint16_t amountZ)
@@ -320,13 +337,12 @@ int MultiPlayerWorld::GetBrightnessAt(const glm::vec3 pos) const
 
 int MultiPlayerWorld::GetBrightnessAt(const int x, const int y, const int z) const
 {
-    if (x < 0 || x >= LevelWidth || y < 0 || y >= LevelHeight || z < 0 || z >= LevelDepth)
+    if (const auto pos = glm::ivec2(x, z); LightLevels.contains(pos))
     {
-        return 1;
-    }
-    if (const uint8_t lightLevel = LightLevels.at(static_cast<size_t>(x * LevelDepth + z)); y > lightLevel)
-    {
-        return 1;
+        if (y > LightLevels.at(pos))
+        {
+            return 1;
+        }
     }
     return 0;
 }
@@ -419,6 +435,19 @@ std::vector<BoundingBox> MultiPlayerWorld::GetBlockBoxesInBoundingBox(const Boun
                 }
             }
         }
+    }
+    return result;
+}
+
+std::vector<std::shared_ptr<Packet>> MultiPlayerWorld::GetTickPackets() const
+{
+    std::vector<std::shared_ptr<Packet>> result{};
+    const auto packet = std::make_shared<Packet>(PacketHeader::WORLD_TIME_PACKET);
+    *packet << WorldTime;
+    result.push_back(packet);
+    for (const std::unique_ptr<Entity>& entity : Entities | std::views::values)
+    {
+        result.push_back(entity->GetTickPacket());
     }
     return result;
 }

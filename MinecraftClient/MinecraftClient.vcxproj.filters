@@ -107,9 +107,6 @@
     <ClCompile Include="Util\TessellationInterface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Entities\EntityMultiPlayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Entities\Generic\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -200,6 +197,12 @@
     <ClCompile Include="World\SP\SinglePlayerWorld.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Network\Packets\ChunkDataPacket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\BlockFaces.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shaders\Shader.h">
@@ -244,7 +247,6 @@
     <ClInclude Include="Util\GuiVertex.h" />
     <ClInclude Include="Util\PerlinNoise.h" />
     <ClInclude Include="Util\TessellationInterface.h" />
-    <ClInclude Include="Entities\EntityMultiPlayer.h" />
     <ClInclude Include="Entities\Generic\Camera.h" />
     <ClInclude Include="Entities\Generic\CameraController.h" />
     <ClInclude Include="Entities\Generic\Entity.h" />
@@ -275,6 +277,8 @@
     <ClInclude Include="World\Generic\World.h" />
     <ClInclude Include="World\MP\MultiPlayerWorld.h" />
     <ClInclude Include="World\SP\SinglePlayerWorld.h" />
+    <ClInclude Include="Network\Packets\ChunkDataPacket.h" />
+    <ClInclude Include="Util\BlockFaces.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Textures\Blocks\cobblestone.png">

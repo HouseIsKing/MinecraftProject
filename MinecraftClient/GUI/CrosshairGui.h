@@ -16,6 +16,7 @@ public:
 template <typename WorldType>
 CrosshairGui<WorldType>::CrosshairGui() : TextureIndex(EngineDefaults::RegisterTexture(Texture::LoadTexture("Textures/HighlightTexture.png")))
 {
+    Rebuild();
 }
 
 template <typename WorldType>

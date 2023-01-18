@@ -60,6 +60,17 @@ Packet& Packet::operator>>(int& data)
     return *this;
 }
 
+Packet& Packet::operator>>(uint32_t& data)
+{
+    if (DataPos + sizeof(uint32_t) > Header.PacketSize)
+    {
+        throw std::runtime_error("Packet size exceeded");
+    }
+    data = *reinterpret_cast<uint32_t*>(Data.data() + DataPos);
+    DataPos += sizeof(uint32_t);
+    return *this;
+}
+
 Packet& Packet::operator>>(uint16_t& data)
 {
     if (DataPos + sizeof(uint16_t) > Header.PacketSize)
@@ -118,6 +129,16 @@ Packet& Packet::operator<<(const int& data)
         throw std::runtime_error("Packet size exceeded");
     }
     Data.insert(Data.end(), reinterpret_cast<const uint8_t*>(&data), reinterpret_cast<const uint8_t*>(&data) + sizeof(int));
+    return *this;
+}
+
+Packet& Packet::operator<<(const uint32_t& data)
+{
+    if (Data.size() + sizeof(uint32_t) > Header.PacketSize)
+    {
+        throw std::runtime_error("Packet size exceeded");
+    }
+    Data.insert(Data.end(), reinterpret_cast<const uint8_t*>(&data), reinterpret_cast<const uint8_t*>(&data) + sizeof(uint32_t));
     return *this;
 }
 

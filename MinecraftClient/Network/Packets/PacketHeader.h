@@ -5,24 +5,18 @@
 enum class EPacketType : uint8_t
 {
     PlayerId,
-    EntityPosition,
-    EntityRotation,
-    ChunkPosition,
+    EntityData,
     ChunkData,
-    WorldTime
+    LightsData,
+    WorldTime,
+    WorldData
 };
 
 struct PacketHeader
 {
     EPacketType PacketType;
-    uint16_t PacketSize;
-    static const PacketHeader PLAYER_ROTATION_PACKET;
-    static const PacketHeader PLAYER_POSITION_PACKET;
-    static const PacketHeader WORLD_TIME_PACKET;
-    static const PacketHeader PLAYER_ID_PACKET;
-    static const PacketHeader CHUNK_POSITION_PACKET;
-    static const PacketHeader CHUNK_DATA_PACKET;
+    uint32_t PacketSize;
     explicit PacketHeader(EPacketType packetType);
-    PacketHeader(EPacketType packetType, uint16_t packetSize);
-    [[nodiscard]] std::array<uint8_t, 4> Serialize() const;
+    PacketHeader(EPacketType packetType, uint32_t packetSize);
+    [[nodiscard]] std::array<uint8_t, 8> Serialize() const;
 };

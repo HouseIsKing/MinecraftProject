@@ -2,7 +2,7 @@
 #include "ServerNetworkManager.h"
 #include <iostream>
 
-ConnectionToClient::ConnectionToClient(asio::io_context& ioContext, ServerNetworkManager* networkManager) : Socket(std::make_unique<asio::ip::tcp::socket>(ioContext)), NetworkManager(networkManager), CurrentPacket(PacketHeader(EPacketType::PlayerId))
+ConnectionToClient::ConnectionToClient(asio::io_context& ioContext, ServerNetworkManager* networkManager) : Socket(std::make_unique<asio::ip::tcp::socket>(ioContext)), NetworkManager(networkManager), CurrentPacket(PacketHeader(EPacketType::EntityData))
 {
     HeaderBuffer.resize(sizeof(PacketHeader));
 }
@@ -32,10 +32,10 @@ void ConnectionToClient::Start()
 
 void ConnectionToClient::WritePacket(const std::shared_ptr<Packet>& packet)
 {
-    const size_t size = OutgoingPackets.GetSize();
     OutgoingPackets.Push(packet);
-    if (size == 0)
+    if (FirstPacket)
     {
+        FirstPacket = false;
         WritePacketHeaderAsync();
     }
 }
@@ -93,6 +93,9 @@ void ConnectionToClient::ReadPacketHeaderAsync()
 
 void ConnectionToClient::WritePacketHeaderAsync()
 {
+    while (OutgoingPackets.GetSize() == 0)
+    {
+    }
     Socket->async_write_some(asio::buffer(OutgoingPackets.Front()->GetHeader().Serialize(), sizeof(PacketHeader)), [this](const asio::error_code& error, std::size_t /*bytesTransferred*/)
     {
         if (!error)
@@ -109,20 +112,12 @@ void ConnectionToClient::WritePacketBodyAsync()
         if (!error)
         {
             OutgoingPackets.Pop();
-            if (OutgoingPackets.GetSize() > 0)
-            {
-                WritePacketHeaderAsync();
-            }
+            WritePacketHeaderAsync();
         }
     });
 }
 
 std::shared_ptr<PacketData> ConnectionToClient::TranslatePacket()
 {
-    switch (CurrentPacket.GetHeader().PacketType)
-    {
-    case EPacketType::PlayerId:
-        return nullptr;
-    }
     return nullptr;
 }

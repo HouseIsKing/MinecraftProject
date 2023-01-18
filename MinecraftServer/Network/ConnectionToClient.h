@@ -2,6 +2,7 @@
 #include <asio/ip/tcp.hpp>
 
 #include "ConnectionToClientInterface.h"
+#include "Packets/Packet.h"
 #include "Packets/PacketData.h"
 #include "Packets/PacketHeader.h"
 #include "Util/ThreadSafeQueue.h"
@@ -15,6 +16,7 @@ class ConnectionToClient final : public ConnectionToClientInterface, public std:
     Packet CurrentPacket;
     std::vector<uint8_t> HeaderBuffer{};
     ThreadSafeQueue<Packet> OutgoingPackets;
+    bool FirstPacket = true;
 
     std::shared_ptr<ConnectionToClient> GetSharedPtr();
     std::shared_ptr<PacketData> TranslatePacket();

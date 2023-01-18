@@ -1,4 +1,5 @@
 #pragma once
+#include "Packet.h"
 #include "PacketData.h"
 
 class KeyChangePacket final : PacketData
@@ -8,6 +9,6 @@ class KeyChangePacket final : PacketData
 
 public:
     KeyChangePacket(std::shared_ptr<ConnectionToClient> connection, Packet& packetToRead);
-    int GetKey() const;
-    int GetAction() const;
+    [[nodiscard]] int GetKey() const;
+    [[nodiscard]] int GetAction() const;
 };

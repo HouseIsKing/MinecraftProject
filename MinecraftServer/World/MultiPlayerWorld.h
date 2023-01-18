@@ -6,6 +6,16 @@
 #include "Network/ConnectionToClientInterface.h"
 #include "Network/ServerNetworkManager.h"
 
+struct IntegerVector2Hasher
+{
+    size_t operator()(const glm::ivec2& vector) const
+    {
+        const size_t x = vector.x >= 0 ? static_cast<unsigned long long>(2 * vector.x) : static_cast<unsigned long long>(-2 * vector.x - 1);
+        const size_t y = vector.y >= 0 ? static_cast<unsigned long long>(2 * vector.y) : static_cast<unsigned long long>(-2 * vector.y - 1);
+        return x >= y ? x * x + x + y : y * y + x;
+    }
+};
+
 class MultiPlayerWorld
 {
     std::unordered_map<ChunkCoords, Chunk, ChunkComparator> Chunks;
@@ -18,7 +28,7 @@ class MultiPlayerWorld
     const uint16_t LevelWidth;
     const uint16_t LevelHeight;
     const uint16_t LevelDepth;
-    std::vector<uint8_t> LightLevels;
+    std::unordered_map<glm::ivec2, uint8_t, IntegerVector2Hasher> LightLevels;
     void SaveWorld();
     void LoadWorld();
     void GenerateChunks(uint16_t amountX, uint16_t amountY, uint16_t amountZ);
@@ -49,5 +59,6 @@ public:
     [[nodiscard]] int GetBrightnessAt(int x, int y, int z) const;
     bool IsBlockSolid(int x, int y, int z);
     [[nodiscard]] int GetBrightnessAt(glm::vec3 pos) const;
+    std::vector<std::shared_ptr<Packet>> GetTickPackets() const;
     std::vector<BoundingBox> GetBlockBoxesInBoundingBox(const BoundingBox& boundingBox);
 };

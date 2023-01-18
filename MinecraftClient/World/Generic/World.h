@@ -1,18 +1,14 @@
 #pragma once
-#include "Entities/Generic/Entity.h"
-#include "GUI/Gui.h"
-#include <GLFW/glfw3.h>
-#include <algorithm>
-#include <iostream>
-#include <stack>
-#include <unordered_set>
-#include <typeinfo>
 #include "Entities/Generic/CameraController.h"
+#include "Entities/Generic/Entity.h"
 #include "GUI/CrosshairGui.h"
+#include "GUI/Gui.h"
 #include "GUI/PerformanceGui.h"
 #include "GUI/SelectedBlockGui.h"
 #include "Util/ChunkCoords.h"
-#include "Util/EngineDefaults.h"
+#include <algorithm>
+#include <stack>
+#include <unordered_set>
 
 struct IntegerVector2Hasher
 {
@@ -35,21 +31,21 @@ protected:
     std::vector<std::unique_ptr<Gui<WorldType>>> Guis;
     std::unordered_map<glm::ivec2, uint8_t, IntegerVector2Hasher> LightLevels;
     PlayerType* Player;
-    GLuint FogsBuffer;
+    GLuint FogsBuffer{0};
     GLFWwindow* TheAppWindow;
     const uint8_t MaxChunkRebuilt = 8;
-    long WorldTime; //symbolises world time in ticks
-    int Fps;
-    int Frames;
-    float LastTimeFrame;
-    float DeltaFrameTime;
-    float TickTimer;
+    long WorldTime{0}; //symbolises world time in ticks
+    int Fps{0};
+    int Frames{0};
+    float LastTimeFrame{0};
+    float DeltaFrameTime{0};
+    float TickTimer{0};
     virtual void Init();
     void InitFog();
     void DrawGui() const;
     void RebuildGui() const;
     void DrawWorld(float partialTick);
-    explicit World(GLFWwindow* window);
+    World(GLFWwindow* window, WorldType* world);
 
 public:
     virtual ~World() = default;
@@ -173,8 +169,11 @@ void World<WorldType, PlayerType>::DrawWorld(float partialTick)
 }
 
 template <typename WorldType, typename PlayerType>
-World<WorldType, PlayerType>::World(GLFWwindow* window) : Player(nullptr), FogsBuffer(0), TheAppWindow(window), WorldTime(0L), Fps(0), Frames(0), LastTimeFrame(0.0F), DeltaFrameTime(0.0F), TickTimer(0.0F)
+World<WorldType, PlayerType>::World(GLFWwindow* window, WorldType* world) : Player(nullptr), TheAppWindow(window)
 {
+    Entity<WorldType>::SetWorld(world);
+    Chunk<WorldType>::SetWorld(world);
+    Gui<WorldType>::SetWorld(world);
     Guis.emplace_back(new CrosshairGui<WorldType>());
     Guis[0]->Active = true;
     Guis.emplace_back(new SelectedBlockGui<WorldType>());
@@ -276,7 +275,7 @@ Chunk<WorldType>* World<WorldType, PlayerType>::GetChunkAt(int x, int y, int z)
 {
     if (const auto pos = ChunkCoords<WorldType>(x, y, z); Chunks.contains(pos))
     {
-        return &Chunks.at(pos);;
+        return &Chunks.at(pos);
     }
     return nullptr;
 }

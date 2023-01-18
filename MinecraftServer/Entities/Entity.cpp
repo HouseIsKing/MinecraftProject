@@ -83,3 +83,12 @@ glm::vec3 Entity::GetEntitySize() const
 {
     return EntitySize;
 }
+
+std::shared_ptr<Packet> Entity::GetTickPacket()
+{
+    auto packet = std::make_shared<Packet>(PacketHeader::ENTITY_DATA_PACKET);
+    const glm::vec3 pos = GetTransform().GetPosition();
+    const glm::vec3 rotation = GetTransform().GetRotation();
+    *packet << GetEntityId() << pos.x << pos.y << pos.z << rotation.x << rotation.y << rotation.z;
+    return packet;
+}

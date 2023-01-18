@@ -13,13 +13,7 @@ class Player final : public LivingEntity
     constexpr static float CAMERA_OFFSET = 1.62F;
     std::shared_ptr<ConnectionToClient> Client;
     std::string Name;
-    bool LeftMousePressed;
-    bool RightMousePressed;
-    float PrevMouseX;
-    float PrevMouseY;
     Transform CameraTransform;
-    float MouseSensitivity = 0.15F;
-    bool IsSpawnZombieButtonPressed;
     BlockFaces FaceHit;
     const Block* BlockHit;
     glm::ivec3 BlockHitPosition;
@@ -37,4 +31,5 @@ public:
     void HandleKeyChangePacket(const KeyChangePacket& packet);
     void HandleMouseClickPacket(const MouseChangePacket& packet);
     void HandleMouseMovementPacket(const MousePosChangePacket& packet);
+    [[nodiscard]] std::shared_ptr<Packet> GetTickPacket() override;
 };

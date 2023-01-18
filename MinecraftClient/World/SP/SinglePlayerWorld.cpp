@@ -34,11 +34,8 @@ void SinglePlayerWorld::LoadWorld()
     }
 }
 
-SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth, GLFWwindow* window) : World(window), LevelWidth(width), LevelHeight(height), LevelDepth(depth)
+SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth, GLFWwindow* window) : World(window, this), LevelWidth(width), LevelHeight(height), LevelDepth(depth)
 {
-    Entity<SinglePlayerWorld>::SetWorld(this);
-    Chunk<SinglePlayerWorld>::SetWorld(this);
-    Gui<SinglePlayerWorld>::SetWorld(this);
     for (uint16_t i = 0xFFFF; i != 0; i--)
     {
         EntityAvailableIDs.push(i);

@@ -135,7 +135,7 @@
             <ConformanceMode>true</ConformanceMode>
             <LanguageStandard>stdcpplatest</LanguageStandard>
             <LanguageStandard_C>stdc17</LanguageStandard_C>
-            <DisableSpecificWarnings>4100;4101</DisableSpecificWarnings>
+            <DisableSpecificWarnings>4100;4101;4005</DisableSpecificWarnings>
         </ClCompile>
         <Link>
             <SubSystem>Console</SubSystem>
@@ -770,8 +770,14 @@
             <PreprocessorDefinitions>_DEBUG;_CONSOLE;_UNICODE;UNICODE;;_WIN32_WINNT=0x0601;</PreprocessorDefinitions>
             <SDLCheck>true</SDLCheck>
             <LinkCompiled>true</LinkCompiled>
+            <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdcpplatest</LanguageStandard>
+            <LanguageStandard_C Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdc17</LanguageStandard_C>
+            <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdcpplatest</LanguageStandard>
+            <LanguageStandard_C Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdc17</LanguageStandard_C>
         </ClCompile>
-        <ClCompile Include="Network\Packets\EntityPositionPacket.cpp"/>
+        <ClCompile Include="Network\Packets\ChunkDataPacket.cpp"/>
+        <ClCompile Include="Network\Packets\EntityDataPacket.cpp"/>
+        <ClCompile Include="Network\Packets\LightDataPacket.cpp"/>
         <ClCompile Include="Network\Packets\Packet.cpp">
             <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
             <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -997,7 +1003,7 @@
             <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdcpplatest</LanguageStandard>
             <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdcpplatest</LanguageStandard>
         </ClCompile>
-        <ClCompile Include="Network\Packets\PlayerIdPacket.cpp"/>
+        <ClCompile Include="Network\Packets\WorldDataPacket.cpp"/>
         <ClCompile Include="Network\Packets\WorldTimePacket.cpp"/>
         <ClCompile Include="RunMinecraft.cpp"/>
         <ClCompile Include="Shaders\Shader.cpp"/>
@@ -1484,11 +1490,13 @@
         <ClInclude Include="GUI\PerformanceGui.h"/>
         <ClInclude Include="GUI\SelectedBlockGui.h"/>
         <ClInclude Include="Network\ClientNetworkManager.h"/>
-        <ClInclude Include="Network\Packets\EntityPositionPacket.h"/>
+        <ClInclude Include="Network\Packets\ChunkDataPacket.h"/>
+        <ClInclude Include="Network\Packets\EntityDataPacket.h"/>
+        <ClInclude Include="Network\Packets\LightDataPacket.h"/>
         <ClInclude Include="Network\Packets\Packet.h"/>
         <ClInclude Include="Network\Packets\PacketData.h"/>
         <ClInclude Include="Network\Packets\PacketHeader.h"/>
-        <ClInclude Include="Network\Packets\PlayerIdPacket.h"/>
+        <ClInclude Include="Network\Packets\WorldDataPacket.h"/>
         <ClInclude Include="Network\Packets\WorldTimePacket.h"/>
         <ClInclude Include="Shaders\Shader.h"/>
         <ClInclude Include="Textures\Texture.h"/>

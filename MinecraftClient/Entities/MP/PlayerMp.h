@@ -3,6 +3,7 @@
 #include "Entities/Generic/LivingEntity.h"
 #include "Entities/Generic/PlayerSelectionHighlight.h"
 #include "GUI/SelectedBlockGui.h"
+#include "Network/Packets/EntityDataPacket.h"
 #include "World/Generic/Blocks/BlockTypeList.h"
 
 class MultiPlayerWorld;
@@ -31,10 +32,11 @@ class PlayerMp final : public LivingEntity<MultiPlayerWorld>
 
 public:
     void DisplaySelectionHighlight();
-    PlayerMp(float x, float y, float z);
+    explicit PlayerMp(const EntityDataPacket& data);
     void Render(float partialTick) override;
     [[nodiscard]] Frustum GetCameraFrustum() const;
     [[nodiscard]] float GetCameraPitch() const;
     [[nodiscard]] bool GetMode() const;
     [[nodiscard]] EBlockType GetCurrentSelectedBlock() const;
+    void HandleEntityUpdate(const EntityDataPacket& packet) override;
 };

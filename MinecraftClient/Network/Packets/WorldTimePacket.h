@@ -3,8 +3,9 @@
 
 class WorldTimePacket final : public PacketData
 {
-    float NewWorldTime;
+    long NewWorldTime;
 
 public:
     explicit WorldTimePacket(Packet& packet);
+    [[nodiscard]] long GetNewWorldTime() const;
 };

@@ -3,11 +3,6 @@
 #include "Util/EngineDefaults.h"
 #include "World/MP/MultiPlayerWorld.h"
 
-PlayerMp::PlayerMp(const float x, const float y, const float z) : LivingEntity(PLAYER_SIZE, x, y, z), MyCamera(CameraController::GetActiveCamera()), LeftMousePressed(false), RightMousePressed(false), PrevMouseX(0), PrevMouseY(0), IsSpawnZombieButtonPressed(false), CurrentSelectedBlock(EBlockType::Stone), SelectedBlockGuiPtr(nullptr), SelectionHighlight(this)
-{
-    MyCamera.Position = glm::vec3(x, y, z);
-}
-
 void PlayerMp::Render(const float partialTick)
 {
     const glm::vec3 pos = GetTransform().GetPosition();
@@ -59,6 +54,14 @@ void PlayerMp::DisplaySelectionHighlight()
     {
         SelectionHighlight.Render(brightness);
     }
+}
+
+PlayerMp::PlayerMp(const EntityDataPacket& data) : LivingEntity(PLAYER_SIZE, data.GetXPos(), data.GetYPos(), data.GetZPos()), MyCamera(CameraController::GetActiveCamera()), LeftMousePressed(false), RightMousePressed(false), PrevMouseX(0), PrevMouseY(0), IsSpawnZombieButtonPressed(false), CurrentSelectedBlock(EBlockType::Stone), SelectedBlockGuiPtr(nullptr), SelectionHighlight(this)
+{
+    MyCamera.Position = GetTransform().GetPosition() + glm::vec3(0, CAMERA_OFFSET, 0);
+    MyCamera.Pitch = data.GetXRot();
+    MyCamera.Yaw = data.GetYRot();
+    GetTransform().SetRotation(0.0F, data.GetYRot(), 0.0F);
 }
 
 BlockFaces PlayerMp::FindClosestFace(glm::ivec3& blockPosition, bool& foundBlock) const
@@ -249,6 +252,13 @@ bool PlayerMp::GetMode() const
 EBlockType PlayerMp::GetCurrentSelectedBlock() const
 {
     return CurrentSelectedBlock;
+}
+
+void PlayerMp::HandleEntityUpdate(const EntityDataPacket& packet)
+{
+    LivingEntity::HandleEntityUpdate(packet);
+    MyCamera.Pitch = packet.GetXRot();
+    MyCamera.Yaw = packet.GetYRot();
 }
 
 void PlayerMp::HandleMouseInput()
