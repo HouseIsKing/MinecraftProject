@@ -19,6 +19,7 @@ class PlayerMp final : public LivingEntity<MultiPlayerWorld>
     bool RightMousePressed;
     float PrevMouseX;
     float PrevMouseY;
+    bool FirstMouseCheck = true;
     float MouseSensitivity = 0.15F;
     bool IsSpawnZombieButtonPressed;
     bool Mode = false;

@@ -263,6 +263,13 @@ void PlayerMp::HandleEntityUpdate(const EntityDataPacket& packet)
 
 void PlayerMp::HandleMouseMovementInput(const float x, const float y, ClientNetworkManager* network)
 {
+    if (FirstMouseCheck)
+    {
+        FirstMouseCheck = false;
+        PrevMouseX = x;
+        PrevMouseY = y;
+        return;
+    }
     const float mouseX = x - PrevMouseX;
     const float mouseY = y - PrevMouseY;
     PrevMouseX = x;
