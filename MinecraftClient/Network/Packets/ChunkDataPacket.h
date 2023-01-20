@@ -19,4 +19,5 @@ public:
     [[nodiscard]] int GetX() const;
     [[nodiscard]] int GetY() const;
     [[nodiscard]] int GetZ() const;
+    [[nodiscard]] EPacketType GetPacketType() const override;
 };

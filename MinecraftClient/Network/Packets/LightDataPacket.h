@@ -12,4 +12,5 @@ public:
     [[nodiscard]] uint8_t GetLight() const;
     [[nodiscard]] int GetX() const;
     [[nodiscard]] int GetZ() const;
+    [[nodiscard]] EPacketType GetPacketType() const override;
 };

@@ -29,3 +29,8 @@ int ChunkDataPacket::GetZ() const
 {
     return Z;
 }
+
+EPacketType ChunkDataPacket::GetPacketType() const
+{
+    return EPacketType::ChunkData;
+}

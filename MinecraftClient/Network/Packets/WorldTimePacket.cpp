@@ -14,3 +14,8 @@ float WorldTimePacket::GetTicksTimer() const
 {
     return TicksTimer;
 }
+
+EPacketType WorldTimePacket::GetPacketType() const
+{
+    return EPacketType::WorldTime;
+}

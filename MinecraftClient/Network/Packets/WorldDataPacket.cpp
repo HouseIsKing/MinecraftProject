@@ -26,3 +26,8 @@ const std::vector<std::unique_ptr<LightDataPacket>>& WorldDataPacket::GetLights(
 {
     return Lights;
 }
+
+EPacketType WorldDataPacket::GetPacketType() const
+{
+    return EPacketType::WorldData;
+}

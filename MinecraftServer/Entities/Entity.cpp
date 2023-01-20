@@ -58,11 +58,6 @@ void Entity::Tick()
 {
 }
 
-void Entity::DoTick()
-{
-    Tick();
-}
-
 Transform& Entity::GetTransform()
 {
     return EntityTransform;
@@ -90,5 +85,14 @@ std::shared_ptr<Packet> Entity::GetTickPacket()
     const glm::vec3 pos = GetTransform().GetPosition();
     const glm::vec3 rotation = GetTransform().GetRotation();
     *packet << GetEntityId() << pos.x << pos.y << pos.z << rotation.x << rotation.y << rotation.z;
+    return packet;
+}
+
+std::shared_ptr<Packet> Entity::GetSpawnPacket()
+{
+    auto packet = std::make_shared<Packet>(PacketHeader::ENTITY_ENTER_WORLD_PACKET);
+    const glm::vec3 pos = GetTransform().GetPosition();
+    const glm::vec3 rotation = GetTransform().GetRotation();
+    *packet << static_cast<uint8_t>(GetEntityType()) << GetEntityId() << pos.x << pos.y << pos.z << rotation.x << rotation.y << rotation.z;
     return packet;
 }

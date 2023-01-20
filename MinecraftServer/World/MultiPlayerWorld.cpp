@@ -1,5 +1,5 @@
 #include "MultiPlayerWorld.h"
-//#include "Entities/Zombie.h"
+#include "Entities/Zombie.h"
 #include "Util/EngineDefaults.h"
 #include "Util/PerlinNoise.h"
 #include <filesystem>
@@ -43,6 +43,10 @@ MultiPlayerWorld::MultiPlayerWorld(const uint16_t width, const uint16_t height, 
     }
     EntityAvailableIDs.push(0);
     Init();
+    for (int i = 0; i < 10; i++)
+    {
+        new Zombie(EngineDefaults::GetNext(width), static_cast<float>(LevelHeight + 3), EngineDefaults::GetNext(depth));
+    }
     NetworkManager.Start();
 }
 
@@ -51,12 +55,20 @@ uint16_t MultiPlayerWorld::RegisterEntity(Entity* entity)
     uint16_t index = EntityAvailableIDs.top();
     EntityAvailableIDs.pop();
     Entities.emplace(index, entity);
+    EntitiesAdded.push_back(entity);
     return index;
 }
 
 void MultiPlayerWorld::RemoveEntity(const uint16_t id)
 {
     EntitiesToRemove.push_back(id);
+    const auto packetToSend = std::make_shared<Packet>(PacketHeader::ENTITY_LEAVE_WORLD_PACKET);
+    *packetToSend << id;
+    for (const std::shared_ptr<ConnectionToClientInterface>& connection : Connections | std::views::keys)
+    {
+        auto* const client = dynamic_cast<ConnectionToClient*>(connection.get());
+        client->WritePacket(packetToSend);
+    }
 }
 
 void MultiPlayerWorld::Tick()
@@ -70,7 +82,7 @@ void MultiPlayerWorld::Tick()
     EntitiesToRemove.clear();
     for (const auto& val : Entities | std::views::values)
     {
-        val->DoTick();
+        val->Tick();
     }
     const int numTilesToTick = LevelWidth * LevelHeight * LevelDepth / 400;
     for (int i = 0; i < numTilesToTick; i++)
@@ -92,6 +104,19 @@ void MultiPlayerWorld::Tick()
 
 void MultiPlayerWorld::Run()
 {
+    //Send interesting packets
+    for (Entity* entity : EntitiesAdded)
+    {
+        for (const std::shared_ptr<ConnectionToClientInterface>& connection : Connections | std::views::keys)
+        {
+            auto* const client = dynamic_cast<ConnectionToClient*>(connection.get());
+            if (Connections[connection] != entity)
+            {
+                client->WritePacket(entity->GetSpawnPacket());
+            }
+        }
+    }
+    EntitiesAdded.clear();
     //Handle newly connected clients
     std::shared_ptr<ConnectionToClient> newCon = NetworkManager.GetNextNewConnection();
     while (newCon != nullptr)
@@ -186,6 +211,10 @@ void MultiPlayerWorld::SendEntireWorldToClient(ConnectionToClient* client) const
         *packet << pos.x << pos.y << level;
     }
     client->WritePacket(packet);
+    for (const auto& val : Entities | std::views::values)
+    {
+        client->WritePacket(val->GetSpawnPacket());
+    }
 }
 
 void MultiPlayerWorld::GenerateChunks(const uint16_t amountX, const uint16_t amountY, const uint16_t amountZ)

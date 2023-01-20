@@ -21,7 +21,6 @@ void KeyCallback(GLFWwindow* window, const int key, int /*scancode*/, const int 
     }
     else if (mpWorld && (action == GLFW_PRESS || action == GLFW_RELEASE))
     {
-        std::cout << key << " " << action << std::endl;
         mpWorld->HandleKeyCallback(key, action);
     }
 }
@@ -31,6 +30,10 @@ void CursorPosCallback(GLFWwindow* /*window*/, const double xPos, const double y
     if (mpWorld)
     {
         mpWorld->HandleCursorPosCallback(static_cast<float>(xPos), static_cast<float>(yPos));
+    }
+    else
+    {
+        spWorld->HandleCursorPosCallback(static_cast<float>(xPos), static_cast<float>(yPos));
     }
 }
 

@@ -13,7 +13,13 @@ enum class EPacketType : uint8_t
     MousePosition,
     MouseButton,
     Keyboard,
-    PlayerRotationChange
+    PlayerRotationChange,
+    PlaceBlock,
+    DestroyBlock,
+    ChangeSelectedBlock,
+    EntityEnterWorld,
+    EntityLeaveWorld,
+    ChangePlayerMode,
 };
 
 struct PacketHeader

@@ -172,11 +172,11 @@
         </Link>
     </ItemDefinitionGroup>
     <ItemGroup>
-        <ClCompile Include="Entities\EntityMeshBlock.cpp"/>
         <ClCompile Include="Entities\Generic\Camera.cpp"/>
         <ClCompile Include="Entities\Generic\CameraController.cpp"/>
+        <ClCompile Include="Entities\Generic\EntityMeshBlock.cpp"/>
+        <ClCompile Include="Entities\MP\OtherPlayer.cpp"/>
         <ClCompile Include="Entities\MP\PlayerMp.cpp"/>
-        <ClCompile Include="Entities\Zombie.cpp"/>
         <ClCompile Include="glad.c"/>
         <ClCompile Include="GUI\CrosshairGui.cpp"/>
         <ClCompile Include="GUI\Gui.cpp"/>
@@ -185,6 +185,8 @@
         <ClCompile Include="Network\ClientNetworkManager.cpp"/>
         <ClCompile Include="Network\Packets\ChunkDataPacket.cpp"/>
         <ClCompile Include="Network\Packets\EntityDataPacket.cpp"/>
+        <ClCompile Include="Network\Packets\EntityRemovedPacket.cpp"/>
+        <ClCompile Include="Network\Packets\EntitySpawnPacket.cpp"/>
         <ClCompile Include="Network\Packets\LightDataPacket.cpp"/>
         <ClCompile Include="Network\Packets\Packet.cpp"/>
         <ClCompile Include="Network\Packets\PacketHeader.cpp"/>
@@ -220,16 +222,17 @@
         <ClCompile Include="World\SP\SinglePlayerWorld.cpp"/>
     </ItemGroup>
     <ItemGroup>
-        <ClInclude Include="Entities\EntityMeshBlock.h"/>
         <ClInclude Include="Entities\Generic\Camera.h"/>
         <ClInclude Include="Entities\Generic\CameraController.h"/>
         <ClInclude Include="Entities\Generic\Entity.h"/>
+        <ClInclude Include="Entities\Generic\EntityMeshBlock.h"/>
         <ClInclude Include="Entities\Generic\LivingEntity.h"/>
         <ClInclude Include="Entities\Generic\ParticleEntity.h"/>
         <ClInclude Include="Entities\Generic\PlayerSelectionHighlight.h"/>
+        <ClInclude Include="Entities\Generic\Zombie.h"/>
+        <ClInclude Include="Entities\MP\OtherPlayer.h"/>
         <ClInclude Include="Entities\MP\PlayerMp.h"/>
         <ClInclude Include="Entities\SP\PlayerController.h"/>
-        <ClInclude Include="Entities\Zombie.h"/>
         <ClInclude Include="GUI\CrosshairGui.h"/>
         <ClInclude Include="GUI\Gui.h"/>
         <ClInclude Include="GUI\PerformanceGui.h"/>
@@ -237,6 +240,8 @@
         <ClInclude Include="Network\ClientNetworkManager.h"/>
         <ClInclude Include="Network\Packets\ChunkDataPacket.h"/>
         <ClInclude Include="Network\Packets\EntityDataPacket.h"/>
+        <ClInclude Include="Network\Packets\EntityRemovedPacket.h"/>
+        <ClInclude Include="Network\Packets\EntitySpawnPacket.h"/>
         <ClInclude Include="Network\Packets\LightDataPacket.h"/>
         <ClInclude Include="Network\Packets\Packet.h"/>
         <ClInclude Include="Network\Packets\PacketData.h"/>

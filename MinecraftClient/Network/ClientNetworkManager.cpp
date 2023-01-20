@@ -4,31 +4,35 @@
 
 #include "Packets/ChunkDataPacket.h"
 #include "Packets/EntityDataPacket.h"
+#include "Packets/EntityRemovedPacket.h"
+#include "Packets/EntitySpawnPacket.h"
 #include "Packets/LightDataPacket.h"
 #include "Packets/PlayerRotateChangePacket.h"
 #include "Packets/WorldDataPacket.h"
 #include "Packets/WorldTimePacket.h"
+#include <asio/read.hpp>
+#include <asio/write.hpp>
 
 void ClientNetworkManager::ReadPacketBodyAsync()
 {
-    Socket.async_read_some(asio::buffer(CurrentPacket.GetData(), CurrentPacket.GetHeader().PacketSize), [this](const asio::error_code& error, std::size_t
-                           /*length*/)
-                           {
-                               if (!error)
-                               {
-                                   Packets.Push(TranslatePacket());
-                                   ReadPacketHeaderAsync();
-                               }
-                               else
-                               {
-                                   std::cout << "Error reading packet body: " << error.message() << std::endl;
-                               }
-                           });
+    async_read(Socket, asio::buffer(CurrentPacket.GetData(), CurrentPacket.GetHeader().PacketSize), [this](const asio::error_code& error, const std::size_t
+               /*length*/)
+               {
+                   if (!error)
+                   {
+                       Packets.Push(TranslatePacket());
+                       ReadPacketHeaderAsync();
+                   }
+                   else
+                   {
+                       std::cout << "Error reading packet body: " << error.message() << std::endl;
+                   }
+               });
 }
 
 void ClientNetworkManager::ReadPacketHeaderAsync()
 {
-    Socket.async_read_some(asio::buffer(HeaderBuffer, HeaderBuffer.size()), [this](const std::error_code ec, std::size_t /*length*/)
+    async_read(Socket, asio::buffer(HeaderBuffer, HeaderBuffer.size()), [this](const std::error_code ec, const std::size_t /*length*/)
     {
         if (!ec)
         {
@@ -45,7 +49,7 @@ void ClientNetworkManager::ReadPacketHeaderAsync()
 
 void ClientNetworkManager::WritePacketHeaderAsync()
 {
-    Socket.async_write_some(asio::buffer(OutgoingPackets.Front()->GetHeader().Serialize(), sizeof(PacketHeader)), [this](const asio::error_code& error, std::size_t /*bytesTransferred*/)
+    async_write(Socket, asio::buffer(OutgoingPackets.Front()->GetHeader().Serialize(), sizeof(PacketHeader)), [this](const asio::error_code& error, std::size_t /*bytesTransferred*/)
     {
         if (!error)
         {
@@ -56,7 +60,7 @@ void ClientNetworkManager::WritePacketHeaderAsync()
 
 void ClientNetworkManager::WritePacketBodyAsync()
 {
-    Socket.async_write_some(asio::buffer(OutgoingPackets.Front()->GetData(), OutgoingPackets.Front()->GetHeader().PacketSize), [this](const asio::error_code& error, std::size_t /*bytesTransferred*/)
+    async_write(Socket, asio::buffer(OutgoingPackets.Front()->GetData(), OutgoingPackets.Front()->GetHeader().PacketSize), [this](const asio::error_code& error, std::size_t /*bytesTransferred*/)
     {
         if (!error)
         {
@@ -85,6 +89,10 @@ std::shared_ptr<PacketData> ClientNetworkManager::TranslatePacket()
         return std::make_shared<WorldDataPacket>(CurrentPacket);
     case EPacketType::PlayerRotationChange:
         return std::make_shared<PlayerRotateChangePacket>(CurrentPacket);
+    case EPacketType::EntityEnterWorld:
+        return std::make_shared<EntitySpawnPacket>(CurrentPacket);
+    case EPacketType::EntityLeaveWorld:
+        return std::make_shared<EntityRemovedPacket>(CurrentPacket);
     default:
         return nullptr;
     }

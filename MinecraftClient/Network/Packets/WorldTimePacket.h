@@ -10,4 +10,5 @@ public:
     explicit WorldTimePacket(Packet& packet);
     [[nodiscard]] long GetNewWorldTime() const;
     [[nodiscard]] float GetTicksTimer() const;
+    [[nodiscard]] EPacketType GetPacketType() const override;
 };

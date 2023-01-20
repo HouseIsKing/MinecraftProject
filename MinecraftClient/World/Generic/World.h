@@ -70,6 +70,7 @@ public:
     virtual void Run() = 0;
     template <typename T>
     [[nodiscard]] Gui<WorldType>* GetGuiOfType() const;
+    virtual void RemoveEntity(uint16_t id);
     static constexpr float TICK_RATE = 0.05F;
 };
 
@@ -85,6 +86,11 @@ Gui<WorldType>* World<WorldType, PlayerType>::GetGuiOfType() const
         }
     }
     return nullptr;
+}
+
+template <typename WorldType, typename PlayerType>
+void World<WorldType, PlayerType>::RemoveEntity(uint16_t id)
+{
 }
 
 template <typename WorldType, typename PlayerType>

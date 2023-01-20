@@ -25,5 +25,5 @@ public:
     void SetScale(float x, float y, float z);
     glm::mat4x4 GetTransformMatrix();
     [[nodiscard]] Transform* GetParent() const;
-    glm::vec3 GetForwardVector() const;
+    [[nodiscard]] glm::vec3 GetForwardVector() const;
 };

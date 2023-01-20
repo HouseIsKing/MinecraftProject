@@ -8,7 +8,7 @@
 Player::Player(const float x, const float y, const float z, std::shared_ptr<ConnectionToClient> client) : LivingEntity(PLAYER_SIZE, x, y, z), Client(
     std::move(client)), FaceHit(BlockFaces::Top), BlockHit(nullptr), BlockHitPosition(), CurrentSelectedBlock(EBlockType::Stone)
 {
-    Client->WritePacket(GetTickPacket());
+    Client->WritePacket(GetSpawnPacket());
 }
 
 void Player::Tick()
@@ -347,4 +347,18 @@ std::shared_ptr<Packet> Player::GetTickPacket()
     const glm::vec3 rotation = CameraTransform.GetRotation();
     *packet << GetEntityId() << pos.x << pos.y << pos.z << rotation.x << rotation.y << rotation.z;
     return packet;
+}
+
+std::shared_ptr<Packet> Player::GetSpawnPacket()
+{
+    auto packet = std::make_shared<Packet>(PacketHeader::ENTITY_ENTER_WORLD_PACKET);
+    const glm::vec3 pos = GetTransform().GetPosition();
+    const glm::vec3 rotation = CameraTransform.GetRotation();
+    *packet << static_cast<uint8_t>(GetEntityType()) << GetEntityId() << pos.x << pos.y << pos.z << rotation.x << rotation.y << rotation.z;
+    return packet;
+}
+
+EEntityType Player::GetEntityType() const
+{
+    return EEntityType::Player;
 }

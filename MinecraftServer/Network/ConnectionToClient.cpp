@@ -1,5 +1,7 @@
 #include "ConnectionToClient.h"
 #include "ServerNetworkManager.h"
+#include <asio/read.hpp>
+#include <asio/write.hpp>
 #include <iostream>
 
 #include "Packets/KeyChangePacket.h"
@@ -54,30 +56,30 @@ std::shared_ptr<ConnectionToClient> ConnectionToClient::GetSharedPtr()
 
 void ConnectionToClient::ReadPacketBodyAsync()
 {
-    Socket->async_read_some(asio::buffer(CurrentPacket.GetData(), CurrentPacket.GetHeader().PacketSize), [this](const asio::error_code& error, std::size_t
-                            /*length*/)
-                            {
-                                if (!error)
-                                {
-                                    NetworkManager->AddPacket(TranslatePacket());
-                                    ReadPacketHeaderAsync();
-                                }
-                                else if (error == asio::error::eof || error == asio::error::connection_reset)
-                                {
-                                    Socket->close();
-                                    std::cout << "Client " << ClientName << " disconnected" << std::endl;
-                                    NetworkManager->AddRemovedConnection(GetSharedPtr());
-                                }
-                                else
-                                {
-                                    std::cout << "Error reading packet body: " << error.message() << std::endl;
-                                }
-                            });
+    async_read(*Socket, asio::buffer(CurrentPacket.GetData(), CurrentPacket.GetHeader().PacketSize), [this](const asio::error_code& error, std::size_t
+               /*length*/)
+               {
+                   if (!error)
+                   {
+                       NetworkManager->AddPacket(TranslatePacket());
+                       ReadPacketHeaderAsync();
+                   }
+                   else if (error == asio::error::eof || error == asio::error::connection_reset)
+                   {
+                       Socket->close();
+                       std::cout << "Client " << ClientName << " disconnected" << std::endl;
+                       NetworkManager->AddRemovedConnection(GetSharedPtr());
+                   }
+                   else
+                   {
+                       std::cout << "Error reading packet body: " << error.message() << std::endl;
+                   }
+               });
 }
 
 void ConnectionToClient::ReadPacketHeaderAsync()
 {
-    Socket->async_read_some(asio::buffer(HeaderBuffer, HeaderBuffer.size()), [this](const std::error_code ec, std::size_t /*length*/)
+    async_read(*Socket, asio::buffer(HeaderBuffer, HeaderBuffer.size()), [this](const std::error_code ec, std::size_t /*length*/)
     {
         if (!ec)
         {
@@ -100,7 +102,7 @@ void ConnectionToClient::ReadPacketHeaderAsync()
 
 void ConnectionToClient::WritePacketHeaderAsync()
 {
-    Socket->async_write_some(asio::buffer(OutgoingPackets.Front()->GetHeader().Serialize(), sizeof(PacketHeader)), [this](const asio::error_code& error, std::size_t /*bytesTransferred*/)
+    async_write(*Socket, asio::buffer(OutgoingPackets.Front()->GetHeader().Serialize(), sizeof(PacketHeader)), [this](const asio::error_code& error, std::size_t /*bytesTransferred*/)
     {
         if (!error)
         {
@@ -111,7 +113,7 @@ void ConnectionToClient::WritePacketHeaderAsync()
 
 void ConnectionToClient::WritePacketBodyAsync()
 {
-    Socket->async_write_some(asio::buffer(OutgoingPackets.Front()->GetData(), OutgoingPackets.Front()->GetHeader().PacketSize), [this](const asio::error_code& error, std::size_t /*bytesTransferred*/)
+    async_write(*Socket, asio::buffer(OutgoingPackets.Front()->GetData(), OutgoingPackets.Front()->GetHeader().PacketSize), [this](const asio::error_code& error, std::size_t /*bytesTransferred*/)
     {
         if (!error)
         {

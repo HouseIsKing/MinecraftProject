@@ -3,6 +3,13 @@
 #include "Util/BoundingBox.h"
 #include "Util/TessellationHelper.h"
 
+enum class EEntityType : uint8_t
+{
+    Player,
+    BlockBreakParticle,
+    Zombie,
+};
+
 template <typename T>
 class Entity
 {
@@ -16,7 +23,7 @@ protected:
     float VelocityY;
     float VelocityZ;
     TessellationHelper Tessellation;
-    glm::vec3 PrevPos;
+    Transform PrevTransform;
     Entity(glm::vec3 entitySize, float x, float y, float z);
     [[nodiscard]] bool IsOnGround() const;
     void CheckCollisionAndMove();
@@ -35,6 +42,7 @@ public:
     [[nodiscard]] BoundingBox GetBoundingBox() const;
     [[nodiscard]] uint16_t GetEntityId() const;
     [[nodiscard]] glm::vec3 GetEntitySize() const;
+    [[nodiscard]] virtual EEntityType GetEntityType() const = 0;
     virtual void HandleEntityUpdate(const EntityDataPacket& packet);
 };
 
@@ -43,7 +51,7 @@ T* Entity<T>::World = nullptr;
 
 template <typename T>
 Entity<T>::Entity(const glm::vec3 entitySize, const float x, const float y, const float z) : IsGrounded(false), EntitySize(entitySize), EntityId(GetWorld()->RegisterEntity(this)), VelocityX(0), VelocityY(0), VelocityZ(0),
-    Tessellation(x + entitySize.x, y + entitySize.y, z + entitySize.z), PrevPos(x, y, z)
+    Tessellation(x + entitySize.x, y + entitySize.y, z + entitySize.z), PrevTransform(GetTransform())
 {
 }
 
@@ -106,7 +114,7 @@ void Entity<T>::Render(float /*partialTick*/)
 template <typename T>
 void Entity<T>::Tick()
 {
-    PrevPos = GetTransform().GetPosition();
+    PrevTransform = GetTransform();
 }
 
 template <typename T>
@@ -137,7 +145,7 @@ glm::vec3 Entity<T>::GetEntitySize() const
 template <typename T>
 void Entity<T>::HandleEntityUpdate(const EntityDataPacket& packet)
 {
-    PrevPos = GetTransform().GetPosition();
+    PrevTransform = GetTransform();
     GetTransform().SetPosition(packet.GetXPos(), packet.GetYPos(), packet.GetZPos());
     GetTransform().SetRotation(packet.GetXRot(), packet.GetYRot(), packet.GetZRot());
 }

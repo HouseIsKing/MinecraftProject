@@ -15,13 +15,10 @@ class PlayerMp final : public LivingEntity<MultiPlayerWorld>
     Camera& MyCamera;
     constexpr static glm::vec3 PLAYER_SIZE = glm::vec3(0.3F, 0.9F, 0.3F);
     constexpr static float CAMERA_OFFSET = 1.62F;
-    bool LeftMousePressed;
-    bool RightMousePressed;
     float PrevMouseX;
     float PrevMouseY;
     bool FirstMouseCheck = true;
     float MouseSensitivity = 0.15F;
-    bool IsSpawnZombieButtonPressed;
     bool Mode = false;
     EBlockType CurrentSelectedBlock;
     SelectedBlockGui<MultiPlayerWorld>* SelectedBlockGuiPtr;
@@ -42,4 +39,5 @@ public:
     void HandleEntityUpdate(const EntityDataPacket& packet) override;
     void HandleMouseMovementInput(float x, float y, ClientNetworkManager* network);
     void HandlePlayerRotationChange(const PlayerRotateChangePacket& packet) const;
+    [[nodiscard]] EEntityType GetEntityType() const override;
 };

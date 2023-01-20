@@ -15,6 +15,10 @@ class PlayerController final : public LivingEntity<SinglePlayerWorld>
     bool RightMousePressed;
     float PrevMouseX;
     float PrevMouseY;
+    float DeltaMouseX;
+    float DeltaMouseY;
+    bool FirstMouseCheck = true;
+    float PrevPitch;
     float MouseSensitivity = 0.15F;
     bool IsSpawnZombieButtonPressed;
     bool Mode = false;
@@ -32,8 +36,11 @@ public:
     void DisplaySelectionHighlight();
     PlayerController(float x, float y, float z);
     void Render(float partialTick) override;
+    void Tick() override;
     [[nodiscard]] Frustum GetCameraFrustum() const;
     [[nodiscard]] float GetCameraPitch() const;
     [[nodiscard]] bool GetMode() const;
     [[nodiscard]] EBlockType GetCurrentSelectedBlock() const;
+    void UpdateMouseMove(float x, float y);
+    [[nodiscard]] EEntityType GetEntityType() const override;
 };

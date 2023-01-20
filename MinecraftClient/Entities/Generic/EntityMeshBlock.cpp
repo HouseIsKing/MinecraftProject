@@ -2,20 +2,11 @@
 #include "Util/EngineDefaults.h"
 
 EntityMeshBlock::EntityMeshBlock(const std::string& meshTexture, const float anchorPosX, const float anchorPosY, const float anchorPosZ, const float minX, const float minY, const float minZ, const float maxX, const float maxY, const float maxZ, const std::array<float, 24>& uvs, TessellationHelper& tessellationHelper) : Block(minX, minY, minZ, maxX, maxY, maxZ),
-	BlockTransformId(tessellationHelper.AddTransform(new Transform(tessellationHelper.GetTransform(0)))), TrianglesStartPos(0), BlockUVs(uvs), BlockVerticesPositions()
+	TrianglesStartPos(0), BlockUVs(uvs), BlockVerticesPositions(), BlockTransformId(tessellationHelper.AddTransform(new Transform(tessellationHelper.GetTransform(0)))),
+	EntityBlockTransform(*tessellationHelper.GetTransform(BlockTransformId))
 {
-	tessellationHelper.GetTransform(BlockTransformId)->SetPosition(anchorPosX, anchorPosY, anchorPosZ);
+	EntityBlockTransform.SetPosition(anchorPosX, anchorPosY, anchorPosZ);
 	IndexTextures.push_back(EngineDefaults::RegisterTexture(Texture::LoadTexture(meshTexture)));
-}
-
-void EntityMeshBlock::SetRotation(const float x, const float y, const float z, const TessellationHelper& tessellationHelper) const
-{
-	tessellationHelper.GetTransform(BlockTransformId)->SetRotation(x, y, z);
-}
-
-void EntityMeshBlock::SetRotationRadians(const float x, const float y, const float z, const TessellationHelper& tessellationHelper) const
-{
-	tessellationHelper.GetTransform(BlockTransformId)->SetRotation(glm::degrees(x), glm::degrees(y), glm::degrees(z));
 }
 
 void EntityMeshBlock::GenerateTessellationData(TessellationHelper& tessellationHelper, const int brightness) const
@@ -106,6 +97,11 @@ void EntityMeshBlock::PrepareRender(const TessellationHelper& tessellationHelper
 	BlockVerticesPositions[7] = glm::vec3(maxX, maxY, maxZ);
 }
 
+void EntityMeshBlock::SetPrevTransform()
+{
+	PrevTransform = EntityBlockTransform;
+}
+
 size_t EntityMeshBlock::GetBlockTransformId() const
 {
 	return BlockTransformId;
@@ -119,4 +115,14 @@ size_t EntityMeshBlock::GetTrianglesStartPos() const
 size_t EntityMeshBlock::GetIndexTextureSide(BlockFaces /*face*/) const
 {
 	return 0;
+}
+
+Transform& EntityMeshBlock::GetTransform() const
+{
+	return EntityBlockTransform;
+}
+
+Transform& EntityMeshBlock::GetPrevTransform()
+{
+	return PrevTransform;
 }

@@ -17,3 +17,8 @@ int KeyChangePacket::GetAction() const
 {
     return Action;
 }
+
+EPacketType KeyChangePacket::GetPacketType() const
+{
+    return EPacketType::Keyboard;
+}

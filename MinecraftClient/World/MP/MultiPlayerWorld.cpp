@@ -1,6 +1,10 @@
 #include "MultiPlayerWorld.h"
+#include "Entities/Generic/Zombie.h"
+#include "Entities/MP/OtherPlayer.h"
 #include "Network/Packets/ChunkDataPacket.h"
 #include "Network/Packets/EntityDataPacket.h"
+#include "Network/Packets/EntityRemovedPacket.h"
+#include "Network/Packets/EntitySpawnPacket.h"
 #include "Network/Packets/LightDataPacket.h"
 #include "Network/Packets/PlayerRotateChangePacket.h"
 #include "Network/Packets/WorldDataPacket.h"
@@ -27,9 +31,9 @@ void MultiPlayerWorld::Init()
     {
         packet = NetworkManager.GetNextPacket();
     }
-    const auto* positionPacket = dynamic_cast<EntityDataPacket*>(packet.get());
-    Player = new PlayerMp(*positionPacket);
-    Player->GetTransform().SetRotation(0.0F, positionPacket->GetYRot(), 0.0F);
+    const auto* spawnPacket = dynamic_cast<EntitySpawnPacket*>(packet.get());
+    NextId = spawnPacket->GetEntityData().GetId();
+    Player = new PlayerMp(spawnPacket->GetEntityData());
     //Do more stuff here
 }
 
@@ -75,10 +79,6 @@ void MultiPlayerWorld::Run()
         HandlePacket(packet.get());
         packet = NetworkManager.GetNextPacket();
     }
-    if (TickTimer / TICK_RATE > 1)
-    {
-        TickTimer = TICK_RATE;
-    }
     DrawWorld(TickTimer / TICK_RATE);
     //handle messages
 }
@@ -101,45 +101,88 @@ void MultiPlayerWorld::HandleMouseButtonCallback(int button, int action)
 
 void MultiPlayerWorld::HandlePacket(const PacketData* packet)
 {
-    if (const auto* worldTimePacket = dynamic_cast<const WorldTimePacket*>(packet); worldTimePacket != nullptr)
+    switch (packet->GetPacketType())
     {
-        WorldTime = worldTimePacket->GetNewWorldTime();
-        TickTimer = worldTimePacket->GetTicksTimer();
-    }
-    else if (const auto* entityData = dynamic_cast<const EntityDataPacket*>(packet); entityData != nullptr)
-    {
-        Entities[entityData->GetId()]->HandleEntityUpdate(*entityData);
-    }
-    else if (const auto* playerRotChange = dynamic_cast<const PlayerRotateChangePacket*>(packet); playerRotChange != nullptr)
-    {
-        Player->HandlePlayerRotationChange(*playerRotChange);
-    }
-    else if (const auto* worldData = dynamic_cast<const WorldDataPacket*>(packet); worldData != nullptr)
-    {
-        for (const auto& lights = worldData->GetLights(); const auto& light : lights)
+    case EPacketType::WorldTime:
         {
-            LightLevels.emplace(glm::ivec2(light->GetX(), light->GetZ()), light->GetLight());
+            const auto* worldTimePacket = dynamic_cast<const WorldTimePacket*>(packet);
+            WorldTime = worldTimePacket->GetNewWorldTime();
+            TickTimer = worldTimePacket->GetTicksTimer();
+            break;
         }
-        for (const auto& chunks = worldData->GetChunks(); const auto& chunk : chunks)
+    case EPacketType::EntityData:
         {
-            int x = chunk->GetX() * Chunk<MultiPlayerWorld>::CHUNK_WIDTH;
-            int y = chunk->GetY() * Chunk<MultiPlayerWorld>::CHUNK_HEIGHT;
-            int z = chunk->GetZ() * Chunk<MultiPlayerWorld>::CHUNK_DEPTH;
-            Chunk<MultiPlayerWorld>& chunkCreated = Chunks.emplace(std::piecewise_construct, std::forward_as_tuple(x, y, z), std::forward_as_tuple(x, y, z)).first->second;
-            size_t counter = 0;
-            auto blocks = chunk->GetChunkData();
-            for (y = 0; y < Chunk<MultiPlayerWorld>::CHUNK_HEIGHT; y++)
+            if (const auto* entityData = dynamic_cast<const EntityDataPacket*>(packet); Entities.contains(entityData->GetId()))
             {
-                for (z = 0; z < Chunk<MultiPlayerWorld>::CHUNK_DEPTH; z++)
+                Entities[entityData->GetId()]->HandleEntityUpdate(*entityData);
+            }
+            break;
+        }
+    case EPacketType::PlayerRotationChange:
+        {
+            const auto* playerRotChange = dynamic_cast<const PlayerRotateChangePacket*>(packet);
+            Player->HandlePlayerRotationChange(*playerRotChange);
+            break;
+        }
+    case EPacketType::WorldData:
+        {
+            const auto* worldData = dynamic_cast<const WorldDataPacket*>(packet);
+            for (const auto& lights = worldData->GetLights(); const auto& light : lights)
+            {
+                LightLevels.emplace(glm::ivec2(light->GetX(), light->GetZ()), light->GetLight());
+            }
+            for (const auto& chunks = worldData->GetChunks(); const auto& chunk : chunks)
+            {
+                int x = chunk->GetX() * Chunk<MultiPlayerWorld>::CHUNK_WIDTH;
+                int y = chunk->GetY() * Chunk<MultiPlayerWorld>::CHUNK_HEIGHT;
+                int z = chunk->GetZ() * Chunk<MultiPlayerWorld>::CHUNK_DEPTH;
+                Chunk<MultiPlayerWorld>& chunkCreated = Chunks.emplace(std::piecewise_construct, std::forward_as_tuple(x, y, z), std::forward_as_tuple(x, y, z)).first->second;
+                size_t counter = 0;
+                auto blocks = chunk->GetChunkData();
+                for (y = 0; y < Chunk<MultiPlayerWorld>::CHUNK_HEIGHT; y++)
                 {
-                    for (x = 0; x < Chunk<MultiPlayerWorld>::CHUNK_WIDTH; x++)
+                    for (z = 0; z < Chunk<MultiPlayerWorld>::CHUNK_DEPTH; z++)
                     {
-                        chunkCreated.SetBlockTypeAt(x, y, z, static_cast<EBlockType>(blocks[counter]));
-                        counter++;
+                        for (x = 0; x < Chunk<MultiPlayerWorld>::CHUNK_WIDTH; x++)
+                        {
+                            chunkCreated.SetBlockTypeAt(x, y, z, static_cast<EBlockType>(blocks[counter]));
+                            counter++;
+                        }
                     }
                 }
             }
+            break;
         }
+    case EPacketType::EntityEnterWorld:
+        {
+            const auto* newEntity = dynamic_cast<const EntitySpawnPacket*>(packet);
+            NextId = newEntity->GetEntityData().GetId();
+            switch (newEntity->GetEntityType())
+            {
+            case EEntityType::Zombie:
+                new Zombie<MultiPlayerWorld>(newEntity->GetEntityData());
+                break;
+            case EEntityType::Player:
+                {
+                    const float x = newEntity->GetEntityData().GetXPos();
+                    const float y = newEntity->GetEntityData().GetYPos();
+                    const float z = newEntity->GetEntityData().GetZPos();
+                    new OtherPlayer(x, y, z);
+                    break;
+                }
+            case EEntityType::BlockBreakParticle:
+                break;
+            }
+            break;
+        }
+    case EPacketType::EntityLeaveWorld:
+        {
+            const auto* entityLeavePacket = dynamic_cast<const EntityRemovedPacket*>(packet);
+            Entities.erase(entityLeavePacket->GetId());
+            break;
+        }
+    default:
+        break;
     }
 }
 

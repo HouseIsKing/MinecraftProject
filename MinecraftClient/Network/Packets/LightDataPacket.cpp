@@ -19,3 +19,8 @@ int LightDataPacket::GetZ() const
 {
     return Z;
 }
+
+EPacketType LightDataPacket::GetPacketType() const
+{
+    return EPacketType::LightsData;
+}

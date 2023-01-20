@@ -39,3 +39,8 @@ float EntityDataPacket::GetZRot() const
 {
     return ZRot;
 }
+
+EPacketType EntityDataPacket::GetPacketType() const
+{
+    return EPacketType::EntityData;
+}

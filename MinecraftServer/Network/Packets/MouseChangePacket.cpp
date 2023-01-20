@@ -17,3 +17,8 @@ int MouseChangePacket::GetAction() const
 {
     return Action;
 }
+
+EPacketType MouseChangePacket::GetPacketType() const
+{
+    return EPacketType::MouseButton;
+}

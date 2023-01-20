@@ -12,4 +12,5 @@ public:
     explicit WorldDataPacket(Packet& packet);
     [[nodiscard]] const std::vector<std::unique_ptr<ChunkDataPacket>>& GetChunks() const;
     [[nodiscard]] const std::vector<std::unique_ptr<LightDataPacket>>& GetLights() const;
+    [[nodiscard]] EPacketType GetPacketType() const override;
 };

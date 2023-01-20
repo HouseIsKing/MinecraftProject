@@ -11,4 +11,5 @@ public:
     MousePosChangePacket(std::shared_ptr<ConnectionToClient> client, Packet& packetToRead);
     [[nodiscard]] float GetX() const;
     [[nodiscard]] float GetY() const;
+    [[nodiscard]] EPacketType GetPacketType() const override;
 };

@@ -7,7 +7,7 @@ void PlayerMp::Render(const float partialTick)
 {
     LivingEntity::Render(partialTick);
     const glm::vec3 pos = GetTransform().GetPosition();
-    glm::vec3 finalCameraPosition = PrevPos + (pos - PrevPos) * partialTick;
+    glm::vec3 finalCameraPosition = PrevTransform.GetPosition() + (pos - PrevTransform.GetPosition()) * partialTick;
     GetTransform().SetPosition(finalCameraPosition);
     finalCameraPosition.y += CAMERA_OFFSET - PLAYER_SIZE.y;
     MyCamera.Position = finalCameraPosition;
@@ -56,7 +56,7 @@ void PlayerMp::DisplaySelectionHighlight()
     }
 }
 
-PlayerMp::PlayerMp(const EntityDataPacket& data) : LivingEntity(PLAYER_SIZE, data.GetXPos(), data.GetYPos(), data.GetZPos()), MyCamera(CameraController::GetActiveCamera()), LeftMousePressed(false), RightMousePressed(false), PrevMouseX(0), PrevMouseY(0), IsSpawnZombieButtonPressed(false), CurrentSelectedBlock(EBlockType::Stone), SelectedBlockGuiPtr(nullptr), SelectionHighlight(this)
+PlayerMp::PlayerMp(const EntityDataPacket& data) : LivingEntity(PLAYER_SIZE, data.GetXPos(), data.GetYPos(), data.GetZPos()), MyCamera(CameraController::GetActiveCamera()), PrevMouseX(0), PrevMouseY(0), CurrentSelectedBlock(EBlockType::Stone), SelectedBlockGuiPtr(nullptr), SelectionHighlight(this)
 {
     MyCamera.Position = GetTransform().GetPosition() + glm::vec3(0, CAMERA_OFFSET, 0);
     MyCamera.Pitch = data.GetXRot();
@@ -314,4 +314,9 @@ void PlayerMp::HandlePlayerRotationChange(const PlayerRotateChangePacket& packet
 {
     MyCamera.Pitch = packet.GetX();
     MyCamera.Yaw = packet.GetY();
+}
+
+EEntityType PlayerMp::GetEntityType() const
+{
+    return EEntityType::Player;
 }

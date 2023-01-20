@@ -9,6 +9,13 @@
 
 class MultiPlayerWorld;
 
+enum class EEntityType : uint8_t
+{
+    Player,
+    BlockBreakParticle,
+    Zombie,
+};
+
 class Entity
 {
     static MultiPlayerWorld* World;
@@ -21,23 +28,24 @@ protected:
     float VelocityY;
     float VelocityZ;
     Transform EntityTransform;
-    Entity(glm::vec3 entitySize, float x, float y, float z);
     [[nodiscard]] bool IsOnGround() const;
     void CheckCollisionAndMove();
-    virtual void Tick();
     static MultiPlayerWorld* GetWorld();
 
 public:
+    Entity(glm::vec3 entitySize, float x, float y, float z);
     virtual ~Entity();
     Entity(const Entity&) = delete;
     Entity& operator=(const Entity&) = delete;
     Entity& operator=(Entity&&) = delete;
     Entity(Entity&&) = delete;
     static void SetWorld(MultiPlayerWorld* newWorld);
-    void DoTick();
     Transform& GetTransform();
+    virtual void Tick();
     BoundingBox GetBoundingBox();
     [[nodiscard]] uint16_t GetEntityId() const;
     [[nodiscard]] glm::vec3 GetEntitySize() const;
     [[nodiscard]] virtual std::shared_ptr<Packet> GetTickPacket();
+    [[nodiscard]] virtual std::shared_ptr<Packet> GetSpawnPacket();
+    [[nodiscard]] virtual EEntityType GetEntityType() const = 0;
 };

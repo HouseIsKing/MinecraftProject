@@ -17,3 +17,8 @@ float MousePosChangePacket::GetY() const
 {
     return Y;
 }
+
+EPacketType MousePosChangePacket::GetPacketType() const
+{
+    return EPacketType::MousePosition;
+}

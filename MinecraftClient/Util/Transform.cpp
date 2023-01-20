@@ -68,6 +68,12 @@ void Transform::SetPosition(const glm::vec3& position)
     IsDirty = true;
 }
 
+void Transform::SetRotation(const glm::vec3& rotation)
+{
+    Rotation = rotation;
+    IsDirty = true;
+}
+
 void Transform::Grow(const float x, const float y, const float z)
 {
     Scale.x += x;

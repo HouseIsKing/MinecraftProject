@@ -115,6 +115,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <DisableSpecificWarnings>4005;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -167,8 +168,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Entities\Entity.cpp"/>
+    <ClCompile Include="Entities\EntityMeshBlock.cpp"/>
     <ClCompile Include="Entities\LivingEntity.cpp"/>
     <ClCompile Include="Entities\Player.cpp"/>
+    <ClCompile Include="Entities\Zombie.cpp"/>
     <ClCompile Include="MinecraftServer.cpp"/>
     <ClCompile Include="Network\ConnectionToClient.cpp"/>
     <ClCompile Include="Network\ConnectionToClientInterface.cpp"/>
@@ -201,8 +204,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entities\Entity.h"/>
+    <ClInclude Include="Entities\EntityMeshBlock.h"/>
     <ClInclude Include="Entities\LivingEntity.h"/>
+    <ClInclude Include="Entities\ParticleEntity.h"/>
     <ClInclude Include="Entities\Player.h"/>
+    <ClInclude Include="Entities\Zombie.h"/>
     <ClInclude Include="Network\ConnectionToClient.h"/>
     <ClInclude Include="Network\ConnectionToClientInterface.h"/>
     <ClInclude Include="Network\Packets\KeyChangePacket.h"/>

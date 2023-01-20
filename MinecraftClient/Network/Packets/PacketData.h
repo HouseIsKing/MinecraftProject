@@ -14,4 +14,5 @@ public:
     PacketData& operator=(const PacketData&) = delete;
     PacketData(PacketData&&) = delete;
     PacketData& operator=(PacketData&&) = delete;
+    [[nodiscard]] virtual EPacketType GetPacketType() const = 0;
 };

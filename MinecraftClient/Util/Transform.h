@@ -18,6 +18,7 @@ public:
     [[nodiscard]] glm::vec3 GetRotation() const;
     void Rotate(float x, float y, float z);
     void SetRotation(float x, float y, float z);
+    void SetRotation(const glm::vec3& rotation);
     void Move(float x, float y, float z);
     void SetPosition(float x, float y, float z);
     void SetPosition(const glm::vec3& position);

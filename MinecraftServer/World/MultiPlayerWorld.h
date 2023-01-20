@@ -24,6 +24,7 @@ class MultiPlayerWorld
     std::unordered_map<std::shared_ptr<ConnectionToClientInterface>, Player*, ConnectionHasher, ConnectionEqual> Connections;
     std::stack<uint16_t> EntityAvailableIDs{};
     std::vector<uint16_t> EntitiesToRemove{};
+    std::vector<Entity*> EntitiesAdded{};
     long WorldTime; //symbolises world time in ticks
     const uint16_t LevelWidth;
     const uint16_t LevelHeight;

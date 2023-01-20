@@ -1,11 +1,12 @@
 #include "SinglePlayerWorld.h"
 #include "Entities/Generic/ParticleEntity.h"
-#include "Entities/Zombie.h"
 #include "Util/CustomFileManager.h"
 #include "Util/EngineDefaults.h"
 #include "Util/PerlinNoise.h"
 #include <filesystem>
 #include <iostream>
+
+#include "Entities/Generic/Zombie.h"
 
 
 void SinglePlayerWorld::SaveWorld()
@@ -45,7 +46,7 @@ SinglePlayerWorld::SinglePlayerWorld(const uint16_t width, const uint16_t height
     Init();
     for (uint16_t i = 1; i <= 10; i++)
     {
-        new Zombie(EngineDefaults::GetNext(width), static_cast<float>(LevelHeight + 3), EngineDefaults::GetNext(depth));
+        new Zombie<SinglePlayerWorld>(EngineDefaults::GetNext(width), static_cast<float>(LevelHeight + 3), EngineDefaults::GetNext(depth));
     }
 }
 
@@ -370,4 +371,9 @@ SinglePlayerWorld::~SinglePlayerWorld()
         std::cout << "Error while saving world" << std::endl;
     }
     glDeleteBuffers(1, &FogsBuffer);
+}
+
+void SinglePlayerWorld::HandleCursorPosCallback(float xPos, float yPos)
+{
+    Player->UpdateMouseMove(xPos, yPos);
 }

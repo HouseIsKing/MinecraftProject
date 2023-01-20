@@ -13,7 +13,13 @@ enum class EPacketType : uint8_t
     MousePosition,
     MouseButton,
     Keyboard,
-    PlayerRotationChange
+    PlayerRotationChange,
+    PlaceBlock,
+    DestroyBlock,
+    ChangeSelectedBlock,
+    EntityEnterWorld,
+    EntityLeaveWorld,
+    ChangePlayerMode,
 };
 
 struct PacketHeader
@@ -26,6 +32,12 @@ struct PacketHeader
     static const PacketHeader PLAYER_ID_PACKET;
     static const PacketHeader CHUNK_DATA_PACKET;
     static const PacketHeader LIGHTS_DATA_PACKET;
+    static const PacketHeader CHANGE_SELECTED_BLOCK_PACKET;
+    static const PacketHeader PLACE_BLOCK_PACKET;
+    static const PacketHeader REMOVE_BLOCK_PACKET;
+    static const PacketHeader ENTITY_ENTER_WORLD_PACKET;
+    static const PacketHeader ENTITY_LEAVE_WORLD_PACKET;
+    static const PacketHeader CHANGE_PLAYER_MODE_PACKET;
     explicit PacketHeader(EPacketType packetType);
     PacketHeader(EPacketType packetType, uint32_t packetSize);
     [[nodiscard]] std::array<uint8_t, 8> Serialize() const;

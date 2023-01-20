@@ -19,3 +19,8 @@ float PlayerRotateChangePacket::GetZ() const
 {
     return Z;
 }
+
+EPacketType PlayerRotateChangePacket::GetPacketType() const
+{
+    return EPacketType::PlayerRotationChange;
+}

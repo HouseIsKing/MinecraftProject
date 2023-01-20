@@ -1,6 +1,8 @@
 #pragma once
 #include <memory>
 
+#include "PacketHeader.h"
+
 class ConnectionToClient;
 
 class PacketData
@@ -11,9 +13,10 @@ protected:
     virtual ~PacketData() = default;
 
 public:
-    const std::shared_ptr<ConnectionToClient>& GetConnectionToClient() const;
+    [[nodiscard]] const std::shared_ptr<ConnectionToClient>& GetConnectionToClient() const;
     PacketData(const PacketData&) = delete;
     PacketData& operator=(const PacketData&) = delete;
     PacketData(PacketData&&) = delete;
     PacketData& operator=(PacketData&&) = delete;
+    [[nodiscard]] virtual EPacketType GetPacketType() const = 0;
 };

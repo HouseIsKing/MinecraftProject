@@ -21,7 +21,6 @@ public:
     ParticleEntity(float x, float y, float z, float xSpeed, float ySpeed, float zSpeed, const Block* blockType);
     void Tick() override;
     void Render(float partialTick) override;
-    [[nodiscard]] EEntityType GetEntityType() const override;
 };
 
 template <typename T>
@@ -84,7 +83,7 @@ void ParticleEntity<T>::Render(const float partialTick)
 {
     Entity<T>::Render(partialTick);
     const glm::vec3 pos = this->GetTransform().GetPosition();
-    this->GetTransform().SetPosition(this->PrevTransform.GetPosition() + (pos - this->PrevTransform.GetPosition()) * partialTick);
+    this->GetTransform().SetPosition(this->PrevPos + (pos - this->PrevPos) * partialTick);
     const auto playerRot = glm::vec3(this->GetWorld()->GetPlayer()->GetCameraPitch(), Entity<T>::GetWorld()->GetPlayer()->GetTransform().GetRotation().y, 0.0F);
     this->GetTransform().SetRotation(playerRot.x, playerRot.y + 90.0F, playerRot.z);
     if (const int brightness = this->GetWorld()->GetBrightnessAt(pos); PreviousLightLevel != brightness)
@@ -94,10 +93,4 @@ void ParticleEntity<T>::Render(const float partialTick)
     this->Tessellation.Draw();
     this->Tessellation.FreeMemory();
     this->GetTransform().SetPosition(pos);
-}
-
-template <typename T>
-EEntityType ParticleEntity<T>::GetEntityType() const
-{
-    return EEntityType::BlockBreakParticle;
 }

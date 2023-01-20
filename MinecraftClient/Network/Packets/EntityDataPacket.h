@@ -20,4 +20,5 @@ public:
     [[nodiscard]] float GetXRot() const;
     [[nodiscard]] float GetYRot() const;
     [[nodiscard]] float GetZRot() const;
+    [[nodiscard]] EPacketType GetPacketType() const override;
 };

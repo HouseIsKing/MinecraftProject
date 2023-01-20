@@ -12,4 +12,5 @@ public:
     [[nodiscard]] float GetX() const;
     [[nodiscard]] float GetY() const;
     [[nodiscard]] float GetZ() const;
+    [[nodiscard]] EPacketType GetPacketType() const override;
 };

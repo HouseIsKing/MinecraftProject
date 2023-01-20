@@ -23,12 +23,13 @@ class SinglePlayerWorld final : public World<SinglePlayerWorld, PlayerController
 public:
     SinglePlayerWorld(uint16_t width, uint16_t height, uint16_t depth, GLFWwindow* window);
     ~SinglePlayerWorld() override;
+    void HandleCursorPosCallback(float xPos, float yPos);
     SinglePlayerWorld(const SinglePlayerWorld& other) = delete;
     SinglePlayerWorld& operator=(const SinglePlayerWorld& other) = delete;
     SinglePlayerWorld(SinglePlayerWorld&& other) = delete;
     SinglePlayerWorld& operator=(SinglePlayerWorld&& other) = delete;
     uint16_t RegisterEntity(Entity<SinglePlayerWorld>* entity);
-    void RemoveEntity(uint16_t id);
+    void RemoveEntity(uint16_t id) override;
     void PlaceBlockAt(int x, int y, int z, EBlockType blockType);
     void RemoveBlockAt(int x, int y, int z);
     void Run() override;

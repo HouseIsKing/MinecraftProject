@@ -32,4 +32,6 @@ public:
     void HandleMouseClickPacket(const MouseChangePacket& packet);
     void HandleMouseMovementPacket(const MousePosChangePacket& packet);
     [[nodiscard]] std::shared_ptr<Packet> GetTickPacket() override;
+    [[nodiscard]] std::shared_ptr<Packet> GetSpawnPacket() override;
+    [[nodiscard]] EEntityType GetEntityType() const override;
 };

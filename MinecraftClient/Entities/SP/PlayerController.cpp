@@ -1,25 +1,44 @@
 #include "PlayerController.h"
 #include "Entities/Generic/CameraController.h"
-#include "Entities/Zombie.h"
+#include "Entities/Generic/Zombie.h"
 #include "Util/EngineDefaults.h"
 #include "World/SP/SinglePlayerWorld.h"
 
-PlayerController::PlayerController(const float x, const float y, const float z) : LivingEntity(PLAYER_SIZE, x, y, z), MyCamera(CameraController::GetActiveCamera()), LeftMousePressed(false), RightMousePressed(false), PrevMouseX(0), PrevMouseY(0), IsSpawnZombieButtonPressed(false), CurrentSelectedBlock(EBlockType::Stone), SelectedBlockGuiPtr(nullptr), SelectionHighlight(this)
+PlayerController::PlayerController(const float x, const float y, const float z) : LivingEntity(PLAYER_SIZE, x, y, z),
+    MyCamera(CameraController::GetActiveCamera()), LeftMousePressed(false), RightMousePressed(false), PrevMouseX(0),
+    PrevMouseY(0), DeltaMouseX(0), DeltaMouseY(0), PrevPitch(0), IsSpawnZombieButtonPressed(false),
+    CurrentSelectedBlock(EBlockType::Stone),
+    SelectedBlockGuiPtr(nullptr), SelectionHighlight(this)
 {
+    double xMouse;
+    double yMouse;
+    glfwGetCursorPos(GetWorld()->GetWindow(), &xMouse, &yMouse);
+    PrevMouseX = static_cast<float>(xMouse);
+    PrevMouseY = static_cast<float>(yMouse);
     MyCamera.Position = glm::vec3(x, y, z);
 }
 
 void PlayerController::Render(const float partialTick)
 {
     const glm::vec3 pos = GetTransform().GetPosition();
-    glm::vec3 finalCameraPosition = PrevPos + (pos - PrevPos) * partialTick;
+    const glm::vec3 rot = GetTransform().GetRotation();
+    glm::vec3 finalCameraPosition = PrevTransform.GetPosition() + (pos - PrevTransform.GetPosition()) * partialTick;
+    glm::vec3 finalCameraRotation = PrevTransform.GetRotation() + (rot - PrevTransform.GetRotation()) * partialTick;
     GetTransform().SetPosition(finalCameraPosition);
+    GetTransform().SetRotation(finalCameraRotation);
+    finalCameraRotation.x = PrevPitch + (MyCamera.Pitch - PrevPitch) * partialTick;
+    const float tempPitch = MyCamera.Pitch;
+    MyCamera.Pitch = finalCameraRotation.x;
+    MyCamera.Yaw = finalCameraRotation.y;
     LivingEntity::Render(partialTick);
     finalCameraPosition.y += CAMERA_OFFSET - PLAYER_SIZE.y;
     MyCamera.Position = finalCameraPosition;
     Shader::SetMat4(EngineDefaults::GetShader()->GetUniformInt("view"), MyCamera.GetViewMatrix());
     Shader::SetMat4(EngineDefaults::GetShader()->GetUniformInt("projection"), MyCamera.GetProjectionMatrix());
     GetTransform().SetPosition(pos);
+    GetTransform().SetRotation(rot);
+    MyCamera.Pitch = tempPitch;
+    MyCamera.Yaw = rot.y;
     if (SelectedBlockGuiPtr == nullptr)
     {
         SelectedBlockGuiPtr = dynamic_cast<SelectedBlockGui<SinglePlayerWorld>*>(GetWorld()->GetGuiOfType<SelectedBlockGui<SinglePlayerWorld>>());
@@ -28,6 +47,11 @@ void PlayerController::Render(const float partialTick)
     bool found = false;
     SelectionHighlight.FaceHit = FindClosestFace(SelectionHighlight.HitPosition, found);
     SelectionHighlight.BlockHit = found ? GetWorld()->GetBlockAt(SelectionHighlight.HitPosition.x, SelectionHighlight.HitPosition.y, SelectionHighlight.HitPosition.z) : nullptr;
+}
+
+void PlayerController::Tick()
+{
+    LivingEntity::Tick();
     HandleMouseInput();
     HandleKeyboardMovementInput();
 }
@@ -252,17 +276,26 @@ EBlockType PlayerController::GetCurrentSelectedBlock() const
     return CurrentSelectedBlock;
 }
 
+void PlayerController::UpdateMouseMove(const float x, const float y)
+{
+    DeltaMouseX += x - PrevMouseX;
+    DeltaMouseY += y - PrevMouseY;
+    PrevMouseX = x;
+    PrevMouseY = y;
+}
+
+EEntityType PlayerController::GetEntityType() const
+{
+    return EEntityType::Player;
+}
+
 void PlayerController::HandleMouseInput()
 {
-    double x;
-    double y;
-    glfwGetCursorPos(GetWorld()->GetWindow(), &x, &y);
-    const float mouseX = static_cast<float>(x) - PrevMouseX;
-    const float mouseY = static_cast<float>(y) - PrevMouseY;
-    PrevMouseX = static_cast<float>(x);
-    PrevMouseY = static_cast<float>(y);
-    MyCamera.Yaw += mouseX * MouseSensitivity;
-    MyCamera.Pitch += -mouseY * MouseSensitivity;
+    PrevPitch = MyCamera.Pitch;
+    MyCamera.Yaw += DeltaMouseX * MouseSensitivity;
+    MyCamera.Pitch += -DeltaMouseY * MouseSensitivity;
+    DeltaMouseX = 0.0F;
+    DeltaMouseY = 0.0F;
     if (MyCamera.Pitch > 89.0F)
     {
         MyCamera.Pitch = 89.0F;
@@ -372,7 +405,7 @@ void PlayerController::HandleKeyboardMovementInput()
     if (state == GLFW_PRESS && !IsSpawnZombieButtonPressed)
     {
         const glm::vec3 pos = GetTransform().GetPosition();
-        new Zombie(pos.x, pos.y, pos.z);
+        new Zombie<SinglePlayerWorld>(pos.x, pos.y, pos.z);
         IsSpawnZombieButtonPressed = true;
     }
     if (state == GLFW_RELEASE)

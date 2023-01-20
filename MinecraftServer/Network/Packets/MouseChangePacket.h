@@ -11,4 +11,5 @@ public:
     MouseChangePacket(std::shared_ptr<ConnectionToClient> client, Packet& packetToRead);
     [[nodiscard]] int GetButton() const;
     [[nodiscard]] int GetAction() const;
+    [[nodiscard]] EPacketType GetPacketType() const override;
 };
