@@ -66,3 +66,24 @@ GrassBlock::GrassBlock()
     IndexTextures.push_back(EngineDefaults::RegisterTexture(Texture::LoadTexture("Textures/Blocks/GrassSide.png")));
     IndexTextures.push_back(EngineDefaults::RegisterTexture(Texture::LoadTexture("Textures/Blocks/Dirt.png")));
 }
+
+void GrassBlock::Tick(World* world, int x, int y, int z) const
+{
+    Block::Tick(world, x, y, z);
+    if (world->GetBrightnessAt(x, y + 1, z) == 1)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            const int targetX = x + world->RandomEngineState.GetNext(-1, 2);
+            const int targetY = y + world->RandomEngineState.GetNext(-3, 2);
+            if (const int targetZ = z + world->RandomEngineState.GetNext(-1, 2); world->GetBlockTypeAt(targetX, targetY, targetZ) == EBlockType::Dirt && world->GetBrightnessAt(targetX, targetY, targetZ) == 1)
+            {
+                world->PlaceBlockAt(targetX, targetY, targetZ, EBlockType::Grass);
+            }
+        }
+    }
+    else
+    {
+        world->PlaceBlockAt(x, y, z, EBlockType::Dirt);
+    }
+}

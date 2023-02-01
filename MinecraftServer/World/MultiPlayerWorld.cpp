@@ -2,9 +2,13 @@
 #include "Entities/Zombie.h"
 #include "Util/EngineDefaults.h"
 #include "Util/PerlinNoise.h"
+#include <GLFW/glfw3.h>
 #include <filesystem>
 #include <glm/ext/scalar_constants.hpp>
 #include <iostream>
+
+#include "Network/Packets/ClientInputPacket.h"
+#include "Util/States/PlayerState.h"
 
 
 void MultiPlayerWorld::SaveWorld()
@@ -26,14 +30,15 @@ void MultiPlayerWorld::LoadWorld()
     {
         ChunkCoords coords;
         fileManager >> coords;
-        int x = coords.GetX() * Chunk::CHUNK_WIDTH;
-        int y = coords.GetY() * Chunk::CHUNK_HEIGHT;
-        int z = coords.GetZ() * Chunk::CHUNK_DEPTH;
-        fileManager >> Chunks.emplace(std::piecewise_construct, std::forward_as_tuple(x, y, z), std::forward_as_tuple(x, y, z)).first->second;
+        int x = coords.GetX() * EngineDefaults::CHUNK_WIDTH;
+        int y = coords.GetY() * EngineDefaults::CHUNK_HEIGHT;
+        int z = coords.GetZ() * EngineDefaults::CHUNK_DEPTH;
+        Chunk& chunk = Chunks.emplace(std::piecewise_construct, std::forward_as_tuple(x, y, z), std::forward_as_tuple(x, y, z)).first->second;
+        fileManager >> chunk;
     }
 }
 
-MultiPlayerWorld::MultiPlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth) : WorldTime(0), LevelWidth(width), LevelHeight(height), LevelDepth(depth)
+MultiPlayerWorld::MultiPlayerWorld(const uint16_t width, const uint16_t height, const uint16_t depth) : LevelWidth(width), LevelHeight(height), LevelDepth(depth)
 {
     Entity::SetWorld(this);
     Chunk::SetWorld(this);
@@ -43,18 +48,20 @@ MultiPlayerWorld::MultiPlayerWorld(const uint16_t width, const uint16_t height, 
     }
     EntityAvailableIDs.push(0);
     Init();
+    /*
     for (int i = 0; i < 10; i++)
     {
-        new Zombie(EngineDefaults::GetNext(width), static_cast<float>(LevelHeight + 3), EngineDefaults::GetNext(depth));
+        new Zombie(RandomEngineState.GetNext(width), static_cast<float>(LevelHeight + 3), RandomEngineState.GetNext(depth));
     }
+    */
+    BuildWorldState();
     NetworkManager.Start();
 }
 
 uint16_t MultiPlayerWorld::RegisterEntity(Entity* entity)
 {
-    uint16_t index = EntityAvailableIDs.top();
+    const uint16_t index = EntityAvailableIDs.top();
     EntityAvailableIDs.pop();
-    Entities.emplace(index, entity);
     EntitiesAdded.push_back(entity);
     return index;
 }
@@ -62,18 +69,17 @@ uint16_t MultiPlayerWorld::RegisterEntity(Entity* entity)
 void MultiPlayerWorld::RemoveEntity(const uint16_t id)
 {
     EntitiesToRemove.push_back(id);
-    const auto packetToSend = std::make_shared<Packet>(PacketHeader::ENTITY_LEAVE_WORLD_PACKET);
-    *packetToSend << id;
-    for (const std::shared_ptr<ConnectionToClientInterface>& connection : Connections | std::views::keys)
-    {
-        auto* const client = dynamic_cast<ConnectionToClient*>(connection.get());
-        client->WritePacket(packetToSend);
-    }
 }
 
 void MultiPlayerWorld::Tick()
 {
     WorldTime++;
+    MaxWorldTime = std::max(MaxWorldTime, WorldTime);
+    for (auto* val : EntitiesAdded)
+    {
+        Entities.emplace(val->GetEntityId(), val);
+    }
+    EntitiesAdded.clear();
     for (uint16_t val : EntitiesToRemove)
     {
         Entities.erase(val);
@@ -87,50 +93,38 @@ void MultiPlayerWorld::Tick()
     const int numTilesToTick = LevelWidth * LevelHeight * LevelDepth / 400;
     for (int i = 0; i < numTilesToTick; i++)
     {
-        const int x = EngineDefaults::GetNext(LevelWidth);
-        const int y = EngineDefaults::GetNext(LevelHeight);
-        const int z = EngineDefaults::GetNext(LevelDepth);
+        const int x = RandomEngineState.GetNext(LevelWidth);
+        const int y = RandomEngineState.GetNext(LevelHeight);
+        const int z = RandomEngineState.GetNext(LevelDepth);
         GetBlockAt(x, y, z)->Tick(this, x, y, z);
     }
-    for (const std::vector<std::shared_ptr<Packet>> packetsToSend = GetTickPackets(); const auto& val : packetsToSend)
-    {
-        for (const std::shared_ptr<ConnectionToClientInterface>& connection : Connections | std::views::keys)
-        {
-            auto* const client = dynamic_cast<ConnectionToClient*>(connection.get());
-            client->WritePacket(val);
-        }
-    }
+    BuildWorldState();
 }
 
 void MultiPlayerWorld::Run()
 {
-    //Send interesting packets
-    for (Entity* entity : EntitiesAdded)
-    {
-        for (const std::shared_ptr<ConnectionToClientInterface>& connection : Connections | std::views::keys)
-        {
-            auto* const client = dynamic_cast<ConnectionToClient*>(connection.get());
-            if (Connections[connection] != entity)
-            {
-                client->WritePacket(entity->GetSpawnPacket());
-            }
-        }
-    }
-    EntitiesAdded.clear();
     //Handle newly connected clients
     std::shared_ptr<ConnectionToClient> newCon = NetworkManager.GetNextNewConnection();
+    bool needRebuild = false;
     while (newCon != nullptr)
     {
-        const auto x = static_cast<float>(EngineDefaults::GetNext<int>(LevelWidth));
-        const auto y = static_cast<float>(LevelHeight + 3);
-        const auto z = static_cast<float>(EngineDefaults::GetNext<int>(LevelDepth));
-        Connections.emplace(newCon, new Player{x, y, z, newCon});
-        auto packet = std::make_shared<Packet>(PacketHeader::WORLD_TIME_PACKET);
-        *packet << WorldTime;
-        *packet << PartialTick;
+        //CustomRandomEngine random;
+        //const auto x = static_cast<float>(random.GetNext(LevelWidth));
+        //const auto y = static_cast<float>(LevelHeight + 3);
+        //const auto z = static_cast<float>(random.GetNext(LevelDepth));
+        Connections.emplace(newCon, new Player{0.0F, 70.0F, 0.0F});
+        Entities.emplace(Connections[newCon]->GetEntityId(), Connections[newCon]);
+        EntitiesAdded.pop_back();
+        uint16_t entityId = Connections[newCon]->GetEntityId();
+        auto packet = std::make_shared<Packet>(PacketHeader::PLAYER_ID_PACKET);
+        *packet << entityId;
         newCon->WritePacket(packet);
-        SendEntireWorldToClient(newCon.get());
         newCon = NetworkManager.GetNextNewConnection();
+        needRebuild = true;
+    }
+    if (needRebuild)
+    {
+        BuildWorldState();
     }
     //Handle packets
     std::shared_ptr<PacketData> nextPacket = NetworkManager.GetNextPacket();
@@ -166,7 +160,6 @@ void MultiPlayerWorld::Init()
 void MultiPlayerWorld::RecalculateLightLevels()
 {
     LightLevels.clear();
-    LightLevels.reserve(static_cast<size_t>(LevelWidth * LevelDepth));
     for (int x = 0; x < LevelWidth; x++)
     {
         for (int z = 0; z < LevelDepth; z++)
@@ -195,38 +188,156 @@ int MultiPlayerWorld::RecalculateLightLevels(const int x, const int z)
     return 0;
 }
 
-void MultiPlayerWorld::SendEntireWorldToClient(ConnectionToClient* client) const
+void MultiPlayerWorld::BuildWorldState()
 {
-    const auto numChunks = static_cast<uint32_t>(Chunks.size());
-    const auto numLights = static_cast<uint32_t>(LightLevels.size());
-    const auto packet = std::make_shared<Packet>(PacketHeader(EPacketType::WorldData, numChunks * PacketHeader::CHUNK_DATA_PACKET.PacketSize +
-                                                              numLights * PacketHeader::LIGHTS_DATA_PACKET.PacketSize + sizeof(uint32_t) * 2));
-    *packet << numChunks << numLights;
-    for (const auto& val : Chunks | std::views::values)
+    WorldState& worldState = WorldStates[WorldTime % WorldStates.size()];
+    worldState.Chunks.clear();
+    for (Chunk& chunk : Chunks | std::views::values)
     {
-        val.SendChunkToClient(packet);
+        worldState.Chunks.emplace_hint(worldState.Chunks.end(), chunk.GetChunkState().ChunkPosition, chunk.GetChunkState());
     }
+    worldState.Entities.clear();
+    for (const std::unique_ptr<Entity>& entity : Entities | std::views::values)
+    {
+        worldState.Entities.emplace_hint(worldState.Entities.end(), entity->GetEntityId(), entity->GetEntityState());
+    }
+    worldState.Lights.clear();
     for (const auto& [pos, level] : LightLevels)
     {
-        *packet << pos.x << pos.y << level;
+        worldState.Lights.emplace_hint(worldState.Lights.end(), std::piecewise_construct, std::forward_as_tuple(static_cast<uint16_t>(pos.x), static_cast<uint16_t>(pos.y)), std::forward_as_tuple(static_cast<uint16_t>(pos.x), static_cast<uint16_t>(pos.y), static_cast<uint8_t>(level)));
     }
-    client->WritePacket(packet);
-    for (const auto& val : Entities | std::views::values)
+    worldState.WorldTime = WorldTime;
+    worldState.RandomEngine = RandomEngineState;
+}
+
+bool MultiPlayerWorld::RevertWorldState(const uint64_t tick)
+{
+    if (tick <= WorldTime - WorldStates.size() || tick > WorldTime)
     {
-        client->WritePacket(val->GetSpawnPacket());
+        return false;
+    }
+    const WorldState& prevWorldState = WorldStates[tick % WorldStates.size()];
+    const WorldState& currentWorldState = WorldStates[WorldTime % WorldStates.size()];
+    const std::vector<uint8_t> changes = currentWorldState - prevWorldState;
+    ApplyChangesList(changes);
+    return true;
+}
+
+void MultiPlayerWorld::SimulateTicks(const uint8_t tickCount)
+{
+    for (uint8_t i = 0; i < tickCount; i++)
+    {
+        Tick();
+    }
+}
+
+void MultiPlayerWorld::ApplyChangesList(const std::vector<uint8_t>& changes)
+{
+    size_t pos = 0;
+    while (pos < changes.size())
+    {
+        const auto changeType = static_cast<EChangeType>(changes[pos]);
+        pos += sizeof(EChangeType);
+        switch (changeType)
+        {
+        case EChangeType::ChunkState:
+            {
+                const ChunkCoords coords = *reinterpret_cast<const ChunkCoords*>(&changes[pos]);
+                pos += sizeof(ChunkCoords);
+                Chunks.at(coords).ApplyChunkChanges(changes, pos);
+                break;
+            }
+        case EChangeType::EntityState:
+            {
+                const uint16_t entityId = *reinterpret_cast<const uint16_t*>(&changes[pos]);
+                pos += sizeof(uint16_t);
+                Entities.at(entityId)->ApplyEntityChanges(changes, pos);
+                break;
+            }
+        case EChangeType::LightState:
+            {
+                const LightState lightState = *reinterpret_cast<const LightState*>(&changes[pos]);
+                pos += sizeof(LightState);
+                LightLevels[glm::ivec2(lightState.X, lightState.Y)] = lightState.LightValue;
+                break;
+            }
+        case EChangeType::RandomState:
+            {
+                RandomEngineState.Seed = *reinterpret_cast<const uint64_t*>(&changes[pos]);
+                pos += sizeof(uint64_t);
+                break;
+            }
+        case EChangeType::WorldTime:
+            {
+                WorldTime = *reinterpret_cast<const uint64_t*>(&changes[pos]);
+                pos += sizeof(uint64_t);
+                break;
+            }
+        case EChangeType::ChunkEnterWorld:
+            {
+                const ChunkState& chunkState = *reinterpret_cast<const ChunkState*>(&changes[pos]);
+                pos += sizeof(ChunkState);
+                Chunks.emplace(chunkState.ChunkPosition, chunkState);
+                break;
+            }
+        case EChangeType::ChunkLeaveWorld:
+            {
+                const ChunkCoords& chunkCoords = *reinterpret_cast<const ChunkCoords*>(&changes[pos]);
+                pos += sizeof(ChunkCoords);
+                Chunks.erase(chunkCoords);
+                break;
+            }
+        case EChangeType::EntityEnterWorld:
+            {
+                switch (const auto* entityState = reinterpret_cast<const EntityState*>(&changes[pos]); entityState->EntityType)
+                {
+                case EEntityType::Player:
+                    {
+                        const auto* playerState = reinterpret_cast<const PlayerState*>(entityState);
+                        pos += sizeof(PlayerState);
+                        Entities.emplace(entityState->EntityId, new Player(*playerState));
+                        break;
+                    }
+                default:
+                    break;
+                }
+                break;
+            }
+        case EChangeType::EntityLeaveWorld:
+            {
+                uint16_t entityId = *reinterpret_cast<const uint16_t*>(&changes[pos]);
+                pos += sizeof(uint16_t);
+                Entities.erase(entityId);
+                break;
+            }
+        case EChangeType::LightEnterWorld:
+            {
+                LightState lightState = *reinterpret_cast<const LightState*>(&changes[pos]);
+                pos += sizeof(LightState);
+                LightLevels.emplace(glm::ivec2(lightState.X, lightState.Y), lightState.LightValue);
+                break;
+            }
+        case EChangeType::LightLeaveWorld:
+            {
+                const uint16_t x = *reinterpret_cast<const uint16_t*>(&changes[pos]);
+                pos += sizeof(uint16_t);
+                const uint16_t y = *reinterpret_cast<const uint16_t*>(&changes[pos]);
+                pos += sizeof(uint16_t);
+                LightLevels.erase(glm::ivec2(x, y));
+            }
+        }
     }
 }
 
 void MultiPlayerWorld::GenerateChunks(const uint16_t amountX, const uint16_t amountY, const uint16_t amountZ)
 {
-    Chunks.reserve(static_cast<uint64_t>(amountX) * static_cast<uint64_t>(amountY) * static_cast<uint64_t>(amountZ));
     for (int x = 0; x < amountX; x++)
     {
         for (int y = 0; y < amountY; y++)
         {
             for (int z = 0; z < amountZ; z++)
             {
-                Chunks.emplace(std::piecewise_construct, std::forward_as_tuple(x * Chunk::CHUNK_WIDTH, y * Chunk::CHUNK_HEIGHT, z * Chunk::CHUNK_DEPTH), std::forward_as_tuple(x * Chunk::CHUNK_WIDTH, y * Chunk::CHUNK_HEIGHT, z * Chunk::CHUNK_DEPTH));
+                Chunks.emplace(std::piecewise_construct, std::forward_as_tuple(x * EngineDefaults::CHUNK_WIDTH, y * EngineDefaults::CHUNK_HEIGHT, z * EngineDefaults::CHUNK_DEPTH), std::forward_as_tuple(x * EngineDefaults::CHUNK_WIDTH, y * EngineDefaults::CHUNK_HEIGHT, z * EngineDefaults::CHUNK_DEPTH));
             }
         }
     }
@@ -234,9 +345,9 @@ void MultiPlayerWorld::GenerateChunks(const uint16_t amountX, const uint16_t amo
 
 void MultiPlayerWorld::GenerateLevel()
 {
-    const auto amountX = static_cast<uint16_t>(std::ceil(static_cast<float>(LevelWidth) / static_cast<float>(Chunk::CHUNK_WIDTH)));
-    const auto amountY = static_cast<uint16_t>(std::ceil(static_cast<float>(LevelHeight) / static_cast<float>(Chunk::CHUNK_HEIGHT)));
-    const auto amountZ = static_cast<uint16_t>(std::ceil(static_cast<float>(LevelDepth) / static_cast<float>(Chunk::CHUNK_DEPTH)));
+    const auto amountX = static_cast<uint16_t>(std::ceil(static_cast<float>(LevelWidth) / static_cast<float>(EngineDefaults::CHUNK_WIDTH)));
+    const auto amountY = static_cast<uint16_t>(std::ceil(static_cast<float>(LevelHeight) / static_cast<float>(EngineDefaults::CHUNK_HEIGHT)));
+    const auto amountZ = static_cast<uint16_t>(std::ceil(static_cast<float>(LevelDepth) / static_cast<float>(EngineDefaults::CHUNK_DEPTH)));
     GenerateChunks(amountX, amountY, amountZ);
     const std::vector<int> firstHeightMap = PerlinNoise(0).Generate(LevelWidth, LevelDepth);
     const std::vector<int> secondHeightMap = PerlinNoise(0).Generate(LevelWidth, LevelDepth);
@@ -292,13 +403,13 @@ void MultiPlayerWorld::GenerateLevel()
     const int count = LevelWidth * LevelHeight * LevelDepth / 256 / 64;
     for (int i = 0; i < count; i++)
     {
-        float x = EngineDefaults::GetNextFloat() * static_cast<float>(LevelWidth);
-        float y = EngineDefaults::GetNextFloat() * static_cast<float>(LevelHeight);
-        float z = EngineDefaults::GetNextFloat() * static_cast<float>(LevelDepth);
-        const int length = static_cast<int>(EngineDefaults::GetNextFloat() + EngineDefaults::GetNextFloat() * 150.0F);
-        float dir1 = EngineDefaults::GetNextFloat() * glm::pi<float>() * 2.0F;
+        float x = RandomEngineState.GetNextFloat() * static_cast<float>(LevelWidth);
+        float y = RandomEngineState.GetNextFloat() * static_cast<float>(LevelHeight);
+        float z = RandomEngineState.GetNextFloat() * static_cast<float>(LevelDepth);
+        const int length = static_cast<int>(RandomEngineState.GetNextFloat() + RandomEngineState.GetNextFloat() * 150.0F);
+        float dir1 = RandomEngineState.GetNextFloat() * glm::pi<float>() * 2.0F;
         float dir1Change = 0.0F;
-        float dir2 = EngineDefaults::GetNextFloat() * glm::pi<float>() * 2.0F;
+        float dir2 = RandomEngineState.GetNextFloat() * glm::pi<float>() * 2.0F;
         float dir2Change = 0.0F;
         for (int l = 0; l < length; l++)
         {
@@ -307,11 +418,11 @@ void MultiPlayerWorld::GenerateLevel()
             y += sin(dir2);
             dir1 += dir1Change * 0.2F;
             dir1Change *= 0.9F;
-            dir1Change += EngineDefaults::GetNextFloat() - EngineDefaults::GetNextFloat();
+            dir1Change += RandomEngineState.GetNextFloat() - RandomEngineState.GetNextFloat();
             dir2 += dir2Change * 0.5F;
             dir2 *= 0.5F;
             dir2Change *= 0.9F;
-            dir2Change += EngineDefaults::GetNextFloat() - EngineDefaults::GetNextFloat();
+            dir2Change += RandomEngineState.GetNextFloat() - RandomEngineState.GetNextFloat();
             const float size = sin(static_cast<float>(l) * glm::pi<float>() / static_cast<float>(length)) * 2.5F + 1.0F;
             for (int xx = static_cast<int>(x - size); xx <= static_cast<int>(x + size); xx++)
             {
@@ -403,21 +514,9 @@ void MultiPlayerWorld::PlaceBlockAt(const int x, const int y, const int z, const
     const Block* previousBlock = chunk->GetBlockAt(x, y, z);
     const Block* block = BlockTypeList::GetBlockTypeData(blockType);
     chunk->SetBlockTypeAt(x, y, z, blockType);
-    if (block->IsSolidBlock() != previousBlock->IsSolidBlock())
-    {
-        //UpdateChunksNear(x, y, z);
-    }
     if (block->IsBlockingLight() != previousBlock->IsBlockingLight())
     {
         RecalculateLightLevels(x, z);
-        //const int lightLevelsChange = RecalculateLightLevels(x, z);
-        /*for (int i = 0; i <= abs(lightLevelsChange); i++)
-        {
-            if (Chunk* chunkLight = GetChunkAt(x, y + i * (lightLevelsChange > 0 ? -1 : 1), z); chunkLight != nullptr)
-            {
-                AddChunkAsDirty(chunkLight);
-            }
-        }*/
     }
 }
 
@@ -431,21 +530,9 @@ void MultiPlayerWorld::RemoveBlockAt(const int x, const int y, const int z)
     const Block* block = chunk->GetBlockAt(x, y, z);
     block->OnBreak(this, x, y, z);
     chunk->SetBlockTypeAt(x, y, z, EBlockType::Air);
-    if (block->IsSolidBlock())
-    {
-        //UpdateChunksNear(x, y, z);
-    }
     if (block->IsBlockingLight())
     {
         RecalculateLightLevels(x, z);
-        //const int lightLevelsChange = RecalculateLightLevels(x, z);
-        /*for (int i = 0; i <= abs(lightLevelsChange); i++)
-        {
-            if (Chunk* chunkLight = GetChunkAt(x, y + i * (lightLevelsChange > 0 ? 1 : -1), z); chunkLight != nullptr)
-            {
-                AddChunkAsDirty(chunkLight);
-            }
-        }*/
     }
 }
 
@@ -475,33 +562,44 @@ std::vector<BoundingBox> MultiPlayerWorld::GetBlockBoxesInBoundingBox(const Boun
     return result;
 }
 
-std::vector<std::shared_ptr<Packet>> MultiPlayerWorld::GetTickPackets() const
+uint64_t MultiPlayerWorld::GetWorldTime() const
 {
-    std::vector<std::shared_ptr<Packet>> result{};
-    const auto packet = std::make_shared<Packet>(PacketHeader::WORLD_TIME_PACKET);
-    *packet << WorldTime;
-    *packet << PartialTick;
-    result.push_back(packet);
-    for (const std::unique_ptr<Entity>& entity : Entities | std::views::values)
-    {
-        result.push_back(entity->GetTickPacket());
-    }
-    return result;
+    return WorldTime;
+}
+
+uint64_t MultiPlayerWorld::GetMaxWorldTime() const
+{
+    return MaxWorldTime;
 }
 
 void MultiPlayerWorld::HandlePacket(const PacketData* packet)
 {
-    if (const auto* keyboardPacket = dynamic_cast<const KeyChangePacket*>(packet); keyboardPacket != nullptr)
+    if (packet->GetPacketType() == EPacketType::ClientInput)
     {
-        Connections[keyboardPacket->GetConnectionToClient()]->HandleKeyChangePacket(*keyboardPacket);
-    }
-    /*else if (const auto* mousePacket = dynamic_cast<const MouseChangePacket*>(packet); mousePacket != nullptr)
-    {
-        Connections[mousePacket->GetConnectionToClient()]->HandleMouseClickPacket(*mousePacket);
-    }*/
-    else if (const auto* mouseMovePacket = dynamic_cast<const MousePosChangePacket*>(packet); mouseMovePacket != nullptr)
-    {
-        Connections[mouseMovePacket->GetConnectionToClient()]->HandleMouseMovementPacket(*mouseMovePacket);
+        const uint64_t currentWorldTick = WorldTime;
+        if (const auto* clientInputPacket = reinterpret_cast<const ClientInputPacket*>(packet); clientInputPacket->GetWorldTickSent() == 0)
+        {
+            std::vector<uint8_t> changes = WorldState() - WorldStates[WorldTime % WorldStates.size()];
+            const auto packetToSend = std::make_shared<Packet>(PacketHeader(EPacketType::WorldData, static_cast<uint32_t>(changes.size()) + sizeof(uint64_t)), changes);
+            *packetToSend << WorldTime;
+            packet->GetConnectionToClient()->WritePacket(packetToSend);
+        }
+        else if (RevertWorldState(clientInputPacket->GetWorldTickSent() - 1))
+        {
+            Connections[packet->GetConnectionToClient()]->SetClientInputOnTick(clientInputPacket->GetWorldTickSent(), clientInputPacket->GetState());
+            const WorldState& prevWorldState = WorldStates[WorldTime % WorldStates.size()];
+            Tick();
+            const WorldState& newState = WorldStates[WorldTime % WorldStates.size()];
+            std::vector<uint8_t> changes = prevWorldState - newState;
+            const auto packetToSend = std::make_shared<Packet>(PacketHeader(EPacketType::WorldData, static_cast<uint32_t>(changes.size()) + sizeof(uint64_t)), changes);
+            *packetToSend << WorldTime;
+            packet->GetConnectionToClient()->WritePacket(packetToSend);
+            SimulateTicks(static_cast<uint8_t>(currentWorldTick - WorldTime));
+        }
+        else
+        {
+            std::cout << "Client is too far behind" << std::endl;
+        }
     }
 }
 

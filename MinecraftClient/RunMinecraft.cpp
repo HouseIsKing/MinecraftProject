@@ -19,9 +19,13 @@ void KeyCallback(GLFWwindow* window, const int key, int /*scancode*/, const int 
     {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     }
-    else if (mpWorld && (action == GLFW_PRESS || action == GLFW_RELEASE))
+    else if (mpWorld)
     {
         mpWorld->HandleKeyCallback(key, action);
+    }
+    else if (spWorld)
+    {
+        spWorld->HandleKeyCallback(key, action);
     }
 }
 
@@ -42,6 +46,10 @@ void MouseButtonCallback(GLFWwindow* /*window*/, const int button, const int act
     if (mpWorld)
     {
         mpWorld->HandleMouseButtonCallback(button, action);
+    }
+    else
+    {
+        spWorld->HandleMouseButtonCallback(button, action);
     }
 }
 
@@ -121,7 +129,7 @@ GLFWwindow* InitGlfw()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    GLFWwindow* window = glfwCreateWindow(1920, 1080, "Minecraft C++ Project", glfwGetPrimaryMonitor(), nullptr);
+    GLFWwindow* window = glfwCreateWindow(1920, 1080, "Minecraft C++ Project", nullptr, nullptr);
     if (window == nullptr)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -149,9 +157,9 @@ int main(const int argc, char* argv[])
     {
         return -1;
     }
-    if (argc > 2 && std::string(argv[1]) == "Server")
+    if (argc > 3 && std::string(argv[1]) == "Server")
     {
-        MainLoopMulti(window, "127.0.0.1", argv[2]);
+        MainLoopMulti(window, argv[3], argv[2]);
     }
     else
     {

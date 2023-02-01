@@ -1,11 +1,9 @@
 #include "EntityMeshBlock.h"
-#include "Util/EngineDefaults.h"
 
 EntityMeshBlock::EntityMeshBlock(const std::string& meshTexture, const float anchorPosX, const float anchorPosY, const float anchorPosZ, const float minX, const float minY, const float minZ, const float maxX, const float maxY, const float maxZ, const std::array<float, 24>& uvs, TessellationHelper& tessellationHelper) : Block(minX, minY, minZ, maxX, maxY, maxZ),
-	TrianglesStartPos(0), BlockUVs(uvs), BlockVerticesPositions(), BlockTransformId(tessellationHelper.AddTransform(new Transform(tessellationHelper.GetTransform(0)))),
-	EntityBlockTransform(*tessellationHelper.GetTransform(BlockTransformId))
+	TrianglesStartPos(0), BlockUVs(uvs), BlockVerticesPositions(), BlockTransformId(tessellationHelper.AddTransform(new Transform(&CurrentTransform, tessellationHelper.GetTransform(0)))),
+	CurrentTransform(glm::vec3(anchorPosX, anchorPosY, anchorPosZ)), EntityBlockTransform(*tessellationHelper.GetTransform(BlockTransformId)), PrevTransform(CurrentTransform)
 {
-	EntityBlockTransform.SetPosition(anchorPosX, anchorPosY, anchorPosZ);
 	IndexTextures.push_back(EngineDefaults::RegisterTexture(Texture::LoadTexture(meshTexture)));
 }
 
@@ -99,7 +97,7 @@ void EntityMeshBlock::PrepareRender(const TessellationHelper& tessellationHelper
 
 void EntityMeshBlock::SetPrevTransform()
 {
-	PrevTransform = EntityBlockTransform;
+	PrevTransform = CurrentTransform;
 }
 
 size_t EntityMeshBlock::GetBlockTransformId() const
@@ -117,12 +115,12 @@ size_t EntityMeshBlock::GetIndexTextureSide(BlockFaces /*face*/) const
 	return 0;
 }
 
-Transform& EntityMeshBlock::GetTransform() const
+TransformStruct& EntityMeshBlock::GetTransform()
 {
-	return EntityBlockTransform;
+	return CurrentTransform;
 }
 
-Transform& EntityMeshBlock::GetPrevTransform()
+const TransformStruct& EntityMeshBlock::GetPrevTransform() const
 {
 	return PrevTransform;
 }

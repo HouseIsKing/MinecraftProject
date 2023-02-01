@@ -15,12 +15,17 @@ MultiPlayerWorld* Chunk::GetWorld()
     return World;
 }
 
-Chunk::Chunk(const int x, const int y, const int z) : ChunkPosition(x, y, z)
+Chunk::Chunk(const int x, const int y, const int z)
 {
-    for (auto& block : Blocks)
+    State.ChunkPosition = ChunkCoords(x, y, z);
+    for (auto& block : State.Blocks)
     {
         block = EBlockType::Air;
     }
+}
+
+Chunk::Chunk(const ChunkState& state) : State(state)
+{
 }
 
 const Block* Chunk::GetBlockAt(const int x, const int y, const int z) const
@@ -30,19 +35,40 @@ const Block* Chunk::GetBlockAt(const int x, const int y, const int z) const
 
 EBlockType Chunk::GetBlockTypeAt(const int x, const int y, const int z) const
 {
-    return Blocks[static_cast<size_t>(EngineDefaults::GetChunkLocalIndex(x, y, z))];
+    return State.Blocks[static_cast<size_t>(EngineDefaults::GetChunkLocalIndex(x, y, z))];
+}
+
+const ChunkState& Chunk::GetChunkState() const
+{
+    return State;
 }
 
 void Chunk::SetBlockTypeAt(const int x, const int y, const int z, const EBlockType block)
 {
     const auto index = static_cast<size_t>(EngineDefaults::GetChunkLocalIndex(x, y, z));
-    Blocks[index] = block;
+    State.Blocks[index] = block;
+}
+
+void Chunk::ApplyChunkChanges(const std::vector<uint8_t>& changes, size_t& pos)
+{
+    const uint16_t changesCount = *reinterpret_cast<const uint16_t*>(&changes[pos]);
+    pos += sizeof(uint16_t);
+    for (int i = 0; i < changesCount; i++)
+    {
+        State.Blocks[*reinterpret_cast<const uint16_t*>(&changes[pos])] = *reinterpret_cast<const EBlockType*>(&changes[pos + sizeof(uint16_t)]);
+        pos += sizeof(uint16_t) + sizeof(EBlockType);
+    }
+}
+
+void Chunk::RevertChunkState(const ChunkState& previousChunkState)
+{
+    State = previousChunkState;
 }
 
 void Chunk::SendChunkToClient(const std::shared_ptr<Packet>& packet) const
 {
-    *packet << ChunkPosition.GetX() << ChunkPosition.GetY() << ChunkPosition.GetZ();
-    for (const auto& block : Blocks)
+    *packet << State.ChunkPosition.GetX() << State.ChunkPosition.GetY() << State.ChunkPosition.GetZ();
+    for (const auto& block : State.Blocks)
     {
         *packet << static_cast<uint8_t>(block);
     }
@@ -50,8 +76,8 @@ void Chunk::SendChunkToClient(const std::shared_ptr<Packet>& packet) const
 
 CustomFileManager& operator<<(CustomFileManager& fileManager, const Chunk& chunk)
 {
-    fileManager << chunk.ChunkPosition;
-    for (const auto& block : chunk.Blocks)
+    fileManager << chunk.State.ChunkPosition;
+    for (const auto& block : chunk.State.Blocks)
     {
         fileManager << block;
     }
@@ -60,7 +86,7 @@ CustomFileManager& operator<<(CustomFileManager& fileManager, const Chunk& chunk
 
 CustomFileManager& operator>>(CustomFileManager& fileManager, Chunk& chunk)
 {
-    for (auto& block : chunk.Blocks)
+    for (auto& block : chunk.State.Blocks)
     {
         fileManager >> block;
     }

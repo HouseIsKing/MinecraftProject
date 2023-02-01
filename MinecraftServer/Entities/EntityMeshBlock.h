@@ -2,14 +2,14 @@
 #include <array>
 
 #include "Util/BoundingBox.h"
-#include "Util/Transform.h"
+#include "Util/TransformStruct.h"
 
 class EntityMeshBlock
 {
-	Transform EntityBlockTransform;
+	TransformStruct EntityBlockTransform;
 	BoundingBox EntityBlockBoundingBox;
 
 public:
-	EntityMeshBlock(float anchorPosX, float anchorPosY, float anchorPosZ, float minX, float minY, float minZ, float maxX, float maxY, float maxZ, Transform* parent);
-	[[nodiscard]] Transform& GetTransform();
+	EntityMeshBlock(float anchorPosX, float anchorPosY, float anchorPosZ, float minX, float minY, float minZ, float maxX, float maxY, float maxZ);
+	[[nodiscard]] TransformStruct& GetTransform();
 };

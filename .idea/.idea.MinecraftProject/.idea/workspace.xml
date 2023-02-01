@@ -9,71 +9,145 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4f885148-8e28-4ab6-9a1d-8675988ae9cb" name="Changes" comment="fixed quick mouse bug">
-      <change afterPath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/Zombie.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftClient/Entities/MP/OtherPlayer.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftClient/Entities/MP/OtherPlayer.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/EntityRemovedPacket.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/EntityRemovedPacket.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/EntitySpawnPacket.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/EntitySpawnPacket.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftServer/Entities/EntityMeshBlock.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftServer/Entities/EntityMeshBlock.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftServer/Entities/ParticleEntity.h" afterDir="false" />
+    <list default="true" id="4f885148-8e28-4ab6-9a1d-8675988ae9cb" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/Entity.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/LivingEntity.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/ParticleEntity.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/PlayerSelectionHighlight.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/Zombie.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/PlayerIdPacket.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/PlayerIdPacket.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftClient/Util/States/ChunkState.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftClient/Util/States/ClientInputState.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftClient/Util/States/EntityState.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftClient/Util/States/LightState.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftClient/Util/States/LivingEntityState.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftClient/Util/States/PlayerState.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftClient/Util/States/WorldState.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftClient/Util/TransformStruct.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftClient/World/Generic/Chunk.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftClient/World/Generic/World.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftServer/Network/Packets/ClientInputPacket.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftServer/Network/Packets/ClientInputPacket.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftServer/Util/States/ChunkState.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftServer/Util/States/ClientInputState.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftServer/Util/States/EntityState.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftServer/Util/States/LightState.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftServer/Util/States/LivingEntityState.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftServer/Util/States/PlayerState.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftServer/Util/States/WorldState.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftServer/Util/TransformStruct.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MinecraftProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MinecraftProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/EntityMeshBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/EntityMeshBlock.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/EntityMeshBlock.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/EntityMeshBlock.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/Entity.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/Entity.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/EntityMeshBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/EntityMeshBlock.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/EntityMeshBlock.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/EntityMeshBlock.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/LivingEntity.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/LivingEntity.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/ParticleEntity.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/ParticleEntity.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/PlayerSelectionHighlight.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/PlayerSelectionHighlight.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/Zombie.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/Zombie.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/MP/OtherPlayer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/MP/OtherPlayer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/MP/OtherPlayer.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/MP/OtherPlayer.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/MP/PlayerMp.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/MP/PlayerMp.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/MP/PlayerMp.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/MP/PlayerMp.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/SP/PlayerController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/SP/PlayerController.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/SP/PlayerController.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/SP/PlayerController.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/Zombie.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Entities/Zombie.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/Zombie.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Entities/Zombie.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/GUI/CrosshairGui.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/GUI/CrosshairGui.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/GUI/CrosshairGui.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/GUI/CrosshairGui.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/GUI/Gui.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/GUI/Gui.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/GUI/Gui.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/GUI/Gui.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/GUI/PerformanceGui.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/GUI/PerformanceGui.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/GUI/PerformanceGui.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/GUI/PerformanceGui.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/GUI/SelectedBlockGui.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/GUI/SelectedBlockGui.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/GUI/SelectedBlockGui.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/GUI/SelectedBlockGui.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftClient/MinecraftClient.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/MinecraftClient.vcxproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/ClientNetworkManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/ClientNetworkManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/ChunkDataPacket.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/ChunkDataPacket.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/ChunkDataPacket.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/ChunkDataPacket.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/EntityDataPacket.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/EntityDataPacket.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/EntityDataPacket.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/EntityDataPacket.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/LightDataPacket.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/LightDataPacket.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/LightDataPacket.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/LightDataPacket.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/PacketData.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/PacketData.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/ChunkDataPacket.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/ChunkDataPacket.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/EntityDataPacket.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/EntityDataPacket.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/EntityRemovedPacket.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/EntityRemovedPacket.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/EntitySpawnPacket.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/EntitySpawnPacket.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/LightDataPacket.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/LightDataPacket.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/Packet.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/Packet.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/Packet.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/Packet.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/PacketHeader.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/PacketHeader.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/PacketHeader.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/PacketHeader.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/PlayerRotateChangePacket.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/PlayerRotateChangePacket.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/PlayerRotateChangePacket.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/PlayerRotateChangePacket.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/PlayerRotateChangePacket.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/PlayerRotateChangePacket.h" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/WorldDataPacket.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/WorldDataPacket.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/WorldDataPacket.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/WorldDataPacket.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/WorldTimePacket.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/WorldTimePacket.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/WorldTimePacket.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/WorldTimePacket.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/WorldTimePacket.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/WorldTimePacket.h" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftClient/RunMinecraft.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/RunMinecraft.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Util/BlockFaces.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Util/BlockFaces.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Util/ChunkCoords.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Util/ChunkCoords.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Util/CustomFileManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Util/CustomFileManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Util/CustomFileManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Util/CustomFileManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Util/CustomRandomEngine.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Util/CustomRandomEngine.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Util/CustomRandomEngine.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Util/CustomRandomEngine.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Util/EngineDefaults.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Util/EngineDefaults.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Util/EngineDefaults.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Util/EngineDefaults.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Util/PerlinNoise.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Util/PerlinNoise.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Util/TessellationHelper.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Util/TessellationHelper.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Util/TessellationHelper.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Util/TessellationHelper.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftClient/Util/Transform.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Util/Transform.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftClient/Util/Transform.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Util/Transform.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/World/Generic/Blocks/Block.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/World/Generic/Blocks/Block.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/World/Generic/Blocks/Block.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/World/Generic/Blocks/Block.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/World/Generic/Blocks/BlockTypeList.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/World/Generic/Blocks/BlockTypeList.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/World/Generic/Blocks/GrassBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/World/Generic/Blocks/GrassBlock.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/World/Generic/Blocks/GrassBlock.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/World/Generic/Blocks/GrassBlock.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/World/Generic/Chunk.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/World/Generic/Chunk.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftClient/World/Generic/World.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/World/Generic/World.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftClient/World/MP/MultiPlayerWorld.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/World/MP/MultiPlayerWorld.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/World/MP/MultiPlayerWorld.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/World/MP/MultiPlayerWorld.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftClient/World/SP/SinglePlayerWorld.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/World/SP/SinglePlayerWorld.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftClient/World/SP/SinglePlayerWorld.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/World/SP/SinglePlayerWorld.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProject.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject.sln.DotSettings.user" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftServer/Entities/Entity.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Entities/Entity.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftServer/Entities/Entity.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Entities/Entity.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Entities/EntityMeshBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Entities/EntityMeshBlock.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Entities/EntityMeshBlock.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Entities/EntityMeshBlock.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Entities/LivingEntity.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Entities/LivingEntity.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Entities/LivingEntity.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Entities/LivingEntity.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftServer/Entities/Player.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Entities/Player.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftServer/Entities/Player.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Entities/Player.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Entities/Zombie.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Entities/Zombie.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Entities/Zombie.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Entities/Zombie.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/MinecraftServer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/MinecraftServer.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftServer/MinecraftServer.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/MinecraftServer.vcxproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/ConnectionToClient.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Network/ConnectionToClient.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/Packets/KeyChangePacket.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Network/Packets/KeyChangePacket.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/Packets/KeyChangePacket.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Network/Packets/KeyChangePacket.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/Packets/MouseChangePacket.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Network/Packets/MouseChangePacket.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/Packets/MouseChangePacket.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Network/Packets/MouseChangePacket.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/Packets/MousePosChangePacket.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Network/Packets/MousePosChangePacket.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/Packets/MousePosChangePacket.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Network/Packets/MousePosChangePacket.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/Packets/PacketData.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Network/Packets/PacketData.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/Packets/KeyChangePacket.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/Packets/KeyChangePacket.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/Packets/MouseChangePacket.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/Packets/MouseChangePacket.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/Packets/MousePosChangePacket.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/Packets/MousePosChangePacket.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/Packets/Packet.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Network/Packets/Packet.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/Packets/Packet.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Network/Packets/Packet.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/Packets/PacketHeader.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Network/Packets/PacketHeader.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/Packets/PacketHeader.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Network/Packets/PacketHeader.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftServer/Util/Transform.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Util/Transform.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Util/CustomRandomEngine.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Util/CustomRandomEngine.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Util/CustomRandomEngine.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Util/CustomRandomEngine.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Util/EngineDefaults.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Util/EngineDefaults.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Util/EngineDefaults.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Util/EngineDefaults.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Util/PerlinNoise.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Util/PerlinNoise.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Util/Transform.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Util/Transform.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/World/Blocks/Block.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/World/Blocks/Block.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/World/Blocks/BlockTypeList.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/World/Blocks/BlockTypeList.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/World/Blocks/GrassBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/World/Blocks/GrassBlock.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/World/Chunk.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/World/Chunk.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/World/Chunk.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/World/Chunk.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/World/ChunkCoords.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/World/ChunkCoords.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/World/ChunkCoords.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/World/ChunkCoords.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftServer/World/MultiPlayerWorld.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/World/MultiPlayerWorld.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftServer/World/MultiPlayerWorld.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/World/MultiPlayerWorld.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftServer/level.dat" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/level.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/level.dat" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,12 +168,15 @@
     <setting file="file://$PROJECT_DIR$/../../../../Program Files (x86)/Windows Kits/10/Include/10.0.22000.0/shared/minwindef.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../Program Files (x86)/Windows Kits/10/Include/10.0.22000.0/um/consoleapi.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../Program Files (x86)/Windows Kits/10/Include/10.0.22000.0/um/gl/GL.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/algorithm" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/cmath" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/concepts" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/deque" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/functional" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/future" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/initializer_list" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/list" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/map" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/memory" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/mutex" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/queue" root0="SKIP_HIGHLIGHTING" />
@@ -110,6 +187,8 @@
     <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/xhash" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/xmemory" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/xstring" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/xthreads.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/xtree" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/xutility" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/GLFW/glfw3.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/async_result.hpp" root0="SKIP_HIGHLIGHTING" />
@@ -118,6 +197,7 @@
     <setting file="file://$PROJECT_DIR$/Include/asio/buffer.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/detail/bind_handler.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/detail/buffer_sequence_adapter.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Include/asio/detail/executor_op.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/detail/handler_invoke_helpers.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/detail/handler_work.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/detail/impl/throw_error.ipp" root0="SKIP_HIGHLIGHTING" />
@@ -132,6 +212,7 @@
     <setting file="file://$PROJECT_DIR$/Include/asio/impl/io_context.ipp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/impl/read.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glad/glad.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Include/glm/detail/compute_vector_relational.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glm/detail/func_geometric.inl" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glm/detail/qualifier.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glm/detail/type_mat4x4.inl" root0="SKIP_HIGHLIGHTING" />
@@ -139,6 +220,7 @@
     <setting file="file://$PROJECT_DIR$/Include/glm/detail/type_vec3.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glm/detail/type_vec3.inl" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glm/detail/type_vec4.inl" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Include/glm/ext/vector_float3.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glm/fwd.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glm/gtx/transform.inl" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/stb_image.h" root0="SKIP_HIGHLIGHTING" />
@@ -147,9 +229,9 @@
     <setting file="file://$PROJECT_DIR$/MinecraftClient/Entities/Generic/ParticleEntity.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftClient/Entities/Generic/Zombie.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftClient/Entities/MP/PlayerMp.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftClient/Entities/MP/PlayerMp.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/MinecraftClient/Entities/SP/PlayerController.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftClient/Network/Packets/WorldTimePacket.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/MinecraftClient/Entities/MP/PlayerMp.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/MinecraftClient/World/Generic/Blocks/Block.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/MinecraftClient/World/Generic/Chunk.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftClient/World/Generic/World.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftClient/World/MP/MultiPlayerWorld.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftServer/Entities/ParticleEntity.h" root0="FORCE_HIGHLIGHTING" />
@@ -158,7 +240,6 @@
     <setting file="file://$PROJECT_DIR$/MinecraftServer/Network/ConnectionToClient.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftServer/Network/Packets/PacketHeader.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftServer/Network/ServerNetworkManager.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/MinecraftServer/Util/Transform.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftServer/World/MultiPlayerWorld.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftServer/World/MultiPlayerWorld.h" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -185,7 +266,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.493994&quot;,
+    &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.4910448&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -255,7 +336,7 @@
         <option name="PLATFORM" value="x64" />
         <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/MinecraftClient/MinecraftClient.vcxproj" />
         <option name="EXE_PATH" value="$(TargetPath)" />
-        <option name="PROGRAM_PARAMETERS" value="Server ShiningBlack" />
+        <option name="PROGRAM_PARAMETERS" value="Server ShiningBlack 87.71.128.102" />
         <option name="WORKING_DIRECTORY" value="$(ProjectDir)" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
@@ -265,7 +346,7 @@
         <option name="PLATFORM" value="x64" />
         <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/MinecraftClient/MinecraftClient.vcxproj" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
-        <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments) Server ShiningBlack" />
+        <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments) Server ShiningBlack 192.168.1.115" />
         <option name="WORKING_DIRECTORY" value="$(LocalDebuggerWorkingDirectory)" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
@@ -281,7 +362,7 @@
         <option name="PLATFORM" value="x64" />
         <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/MinecraftClient/MinecraftClient.vcxproj" />
         <option name="EXE_PATH" value="$(TargetPath)" />
-        <option name="PROGRAM_PARAMETERS" value="Server ShiningBlack" />
+        <option name="PROGRAM_PARAMETERS" value="Server MidnightStorm 87.71.128.102" />
         <option name="WORKING_DIRECTORY" value="$(ProjectDir)" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
@@ -452,7 +533,13 @@
       <workItem from="1673958359426" duration="8755000" />
       <workItem from="1673979758633" duration="14196000" />
       <workItem from="1674050376196" duration="399000" />
-      <workItem from="1674051697949" duration="43824000" />
+      <workItem from="1674051697949" duration="44790000" />
+      <workItem from="1674223777379" duration="8699000" />
+      <workItem from="1674310482424" duration="59905000" />
+      <workItem from="1674708151955" duration="36675000" />
+      <workItem from="1674890508279" duration="40678000" />
+      <workItem from="1675029251724" duration="15695000" />
+      <workItem from="1675139651086" duration="35063000" />
     </task>
     <task id="LOCAL-00001" summary="AAAAAAAAAAAAAAAAAAAAAA finally got the bindless textures to work">
       <created>1652106111120</created>
@@ -678,7 +765,14 @@
       <option name="project" value="LOCAL" />
       <updated>1674079014942</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="fixed socket bugs and improved stability">
+      <created>1674194878518</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1674194878518</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -712,7 +806,6 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Added Highlight and cleaned up more code." />
     <MESSAGE value="BreakableAndPlaceableBlocks&#10;&#10;Finished Minecraft rd-132211" />
     <MESSAGE value="Added frustum culling and improved performance by 5 times faster! from 200fps average to over 1000." />
     <MESSAGE value="Made shades for characters, and implemented support for multiple fogs." />
@@ -737,10 +830,22 @@
     <MESSAGE value="Stage 3 of networking complete. Server sends client the world." />
     <MESSAGE value="movement and warnings" />
     <MESSAGE value="fixed quick mouse bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed quick mouse bug" />
+    <MESSAGE value="fixed socket bugs and improved stability" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed socket bugs and improved stability" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/MinecraftClient/World/MP/MultiPlayerWorld.cpp</url>
+          <line>233</line>
+          <option name="timeStamp" value="41" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

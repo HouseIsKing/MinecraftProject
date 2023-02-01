@@ -1,7 +1,4 @@
 #include "EngineDefaults.h"
-#include "World/Chunk.h"
-
-CustomRandomEngine EngineDefaults::Engine = {};
 
 float EngineDefaults::ConvertLightLevelToAmbient(const int lightLevel)
 {
@@ -12,15 +9,18 @@ float EngineDefaults::ConvertLightLevelToAmbient(const int lightLevel)
     return 1.0F;
 }
 
-float EngineDefaults::GetNextFloat()
-{
-    return static_cast<float>(static_cast<double>(CustomRandomEngine::GetNext()) / CustomRandomEngine::M);
-}
-
 int EngineDefaults::GetChunkLocalIndex(int x, int y, int z)
 {
-    x %= Chunk::CHUNK_WIDTH;
-    y %= Chunk::CHUNK_HEIGHT;
-    z %= Chunk::CHUNK_DEPTH;
-    return x + z * Chunk::CHUNK_WIDTH + y * Chunk::CHUNK_WIDTH * Chunk::CHUNK_DEPTH;
+    x %= CHUNK_WIDTH;
+    y %= CHUNK_HEIGHT;
+    z %= CHUNK_DEPTH;
+    return x + z * CHUNK_WIDTH + y * CHUNK_WIDTH * CHUNK_DEPTH;
+}
+
+void EngineDefaults::EmplaceDataInVector(std::vector<uint8_t>& vector, const uint8_t* data, const size_t size)
+{
+    for (size_t i = 0; i < size; i++)
+    {
+        vector.emplace_back(data[i]);
+    }
 }

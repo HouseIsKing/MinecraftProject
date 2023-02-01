@@ -8,8 +8,9 @@ class EntityMeshBlock final : Block
 	std::array<float, 24> BlockUVs;
 	std::array<glm::vec3, 8> BlockVerticesPositions;
 	size_t BlockTransformId;
+	TransformStruct CurrentTransform;
 	Transform& EntityBlockTransform;
-	Transform PrevTransform;
+	TransformStruct PrevTransform;
 
 public:
 	EntityMeshBlock(const std::string& meshTexture, float anchorPosX, float anchorPosY, float anchorPosZ, float minX, float minY, float minZ, float maxX, float maxY, float maxZ, const std::array<float, 24>& uvs, TessellationHelper& tessellationHelper);
@@ -21,6 +22,6 @@ public:
 	[[nodiscard]] size_t GetBlockTransformId() const;
 	[[nodiscard]] size_t GetTrianglesStartPos() const;
 	[[nodiscard]] size_t GetIndexTextureSide(BlockFaces face) const override;
-	[[nodiscard]] Transform& GetTransform() const;
-	[[nodiscard]] Transform& GetPrevTransform();
+	[[nodiscard]] TransformStruct& GetTransform();
+	[[nodiscard]] const TransformStruct& GetPrevTransform() const;
 };

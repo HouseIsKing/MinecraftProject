@@ -1,5 +1,5 @@
 #include "ChunkCoords.h"
-#include "Chunk.h"
+#include "Util/EngineDefaults.h"
 
 int ChunkCoords::GetX() const
 {
@@ -16,7 +16,28 @@ int ChunkCoords::GetZ() const
     return Z;
 }
 
-ChunkCoords::ChunkCoords(const int x, const int y, const int z) : X(x / Chunk::CHUNK_WIDTH), Y(y / Chunk::CHUNK_HEIGHT), Z(z / Chunk::CHUNK_DEPTH)
+bool ChunkCoords::operator<(const ChunkCoords& chunkCoords) const
+{
+    if (X < chunkCoords.X)
+    {
+        return true;
+    }
+    if (X > chunkCoords.X)
+    {
+        return false;
+    }
+    if (Y < chunkCoords.Y)
+    {
+        return true;
+    }
+    if (Y > chunkCoords.Y)
+    {
+        return false;
+    }
+    return Z < chunkCoords.Z;
+}
+
+ChunkCoords::ChunkCoords(const int x, const int y, const int z) : X(x / EngineDefaults::CHUNK_WIDTH), Y(y / EngineDefaults::CHUNK_HEIGHT), Z(z / EngineDefaults::CHUNK_DEPTH)
 {
     if (x < 0)
     {

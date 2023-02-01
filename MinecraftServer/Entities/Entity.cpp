@@ -3,9 +3,10 @@
 
 MultiPlayerWorld* Entity::World = nullptr;
 
-Entity::Entity(const glm::vec3 entitySize, const float x, const float y, const float z) : IsGrounded(false), EntitySize(entitySize), EntityId(GetWorld()->RegisterEntity(this)), VelocityX(0), VelocityY(0), VelocityZ(0)
+Entity::Entity(const glm::vec3 entitySize, const float x, const float y, const float z, EntityState* state) : State(state)
 {
-    EntityTransform.SetPosition(x + entitySize.x, y + entitySize.y, z + entitySize.z);
+    State->EntityTransform.Scale = entitySize;
+    State->EntityTransform.Position = glm::vec3(x, y, z);
 }
 
 Entity::~Entity() = default;
@@ -20,79 +21,112 @@ MultiPlayerWorld* Entity::GetWorld()
     return World;
 }
 
-bool Entity::IsOnGround() const
+void Entity::CheckCollisionAndMove() const
 {
-    return IsGrounded;
-}
-
-void Entity::CheckCollisionAndMove()
-{
-    const float originalY = VelocityY;
-    const glm::vec3 pos = GetTransform().GetPosition();
-    auto myBoundingBox = BoundingBox(pos.x - EntitySize.x, pos.y - EntitySize.y, pos.z - EntitySize.z, pos.x + EntitySize.x, pos.y + EntitySize.y, pos.z + EntitySize.z);
+    const float originalY = State->EntityVelocity.y;
+    auto myBoundingBox = GetBoundingBox();
     auto movementBox = BoundingBox(myBoundingBox);
-    movementBox.Expand(VelocityX, VelocityY, VelocityZ);
+    movementBox.Expand(State->EntityVelocity.x, State->EntityVelocity.y, State->EntityVelocity.z);
     movementBox.Grow(1.0F, 1.0F, 1.0F);
     std::vector<BoundingBox> collidingBoxes = World->GetBlockBoxesInBoundingBox(movementBox);
     for (BoundingBox& box : collidingBoxes)
     {
-        VelocityX = myBoundingBox.ClipCollisionX(box, VelocityX);
+        State->EntityVelocity.x = myBoundingBox.ClipCollisionX(box, State->EntityVelocity.x);
     }
-    myBoundingBox.Move(VelocityX, 0.0F, 0.0F);
-    GetTransform().Move(VelocityX, 0.0F, 0.0F);
+    myBoundingBox.Move(State->EntityVelocity.x, 0.0F, 0.0F);
+    State->EntityTransform.Position.x += State->EntityVelocity.x;
     for (BoundingBox& box : collidingBoxes)
     {
-        VelocityY = myBoundingBox.ClipCollisionY(box, VelocityY);
+        State->EntityVelocity.y = myBoundingBox.ClipCollisionY(box, State->EntityVelocity.y);
     }
-    myBoundingBox.Move(0.0F, VelocityY, 0.0F);
-    GetTransform().Move(0.0F, VelocityY, 0.0F);
+    myBoundingBox.Move(0.0F, State->EntityVelocity.y, 0.0F);
+    State->EntityTransform.Position.y += State->EntityVelocity.y;
     for (BoundingBox& box : collidingBoxes)
     {
-        VelocityZ = myBoundingBox.ClipCollisionZ(box, VelocityZ);
+        State->EntityVelocity.z = myBoundingBox.ClipCollisionZ(box, State->EntityVelocity.z);
     }
-    GetTransform().Move(0.0F, 0.0F, VelocityZ);
-    IsGrounded = originalY <= 0 && abs(VelocityY - originalY) > 0.001F;
+    State->EntityTransform.Position.z += State->EntityVelocity.z;
+    State->IsGrounded = originalY <= 0 && abs(State->EntityVelocity.y - originalY) > 0.001F;
 }
 
 void Entity::Tick()
 {
 }
 
-Transform& Entity::GetTransform()
+TransformStruct& Entity::GetTransform() const
 {
-    return EntityTransform;
+    return State->EntityTransform;
 }
 
-BoundingBox Entity::GetBoundingBox()
+BoundingBox Entity::GetBoundingBox() const
 {
-    const glm::vec3 pos = GetTransform().GetPosition();
-    return {pos.x - EntitySize.x, pos.y - EntitySize.y, pos.z - EntitySize.z, pos.x + EntitySize.x, pos.y + EntitySize.y, pos.z + EntitySize.z};
+    const glm::vec3& pos = State->EntityTransform.Position;
+    const glm::vec3& scale = State->EntityTransform.Scale;
+    return {pos.x - scale.x, pos.y - scale.y, pos.z - scale.z, pos.x + scale.x, pos.y + scale.y, pos.z + scale.z};
 }
 
 uint16_t Entity::GetEntityId() const
 {
-    return EntityId;
+    return State->EntityId;
 }
 
-glm::vec3 Entity::GetEntitySize() const
+EEntityType Entity::GetEntityType() const
 {
-    return EntitySize;
+    return State->EntityType;
 }
 
-std::shared_ptr<Packet> Entity::GetTickPacket()
+EntityState* Entity::GetEntityState() const
 {
-    auto packet = std::make_shared<Packet>(PacketHeader::ENTITY_DATA_PACKET);
-    const glm::vec3 pos = GetTransform().GetPosition();
-    const glm::vec3 rotation = GetTransform().GetRotation();
-    *packet << GetEntityId() << pos.x << pos.y << pos.z << rotation.x << rotation.y << rotation.z;
-    return packet;
+    return new EntityState(*State);
 }
 
-std::shared_ptr<Packet> Entity::GetSpawnPacket()
+void Entity::ApplyEntityChanges(const std::vector<uint8_t>& changes, size_t& pos)
 {
-    auto packet = std::make_shared<Packet>(PacketHeader::ENTITY_ENTER_WORLD_PACKET);
-    const glm::vec3 pos = GetTransform().GetPosition();
-    const glm::vec3 rotation = GetTransform().GetRotation();
-    *packet << static_cast<uint8_t>(GetEntityType()) << GetEntityId() << pos.x << pos.y << pos.z << rotation.x << rotation.y << rotation.z;
-    return packet;
+    const uint8_t changesCount = changes[pos];
+    pos += sizeof(uint8_t);
+    for (int i = 0; i < changesCount; i++)
+    {
+        const EChangeTypeEntity changeTypeEntity = *reinterpret_cast<const EChangeTypeEntity*>(&changes[pos]);
+        pos += sizeof(EChangeTypeEntity);
+        ApplyEntityChange(changes, pos, changeTypeEntity);
+    }
+}
+
+void Entity::ApplyEntityChange(const std::vector<uint8_t>& changes, size_t& pos, const EChangeTypeEntity change)
+{
+    switch (change)
+    {
+    case EChangeTypeEntity::Position:
+        {
+            State->EntityTransform.Position = *reinterpret_cast<const glm::vec3*>(&changes[pos]);
+            pos += sizeof(glm::vec3);
+            break;
+        }
+    case EChangeTypeEntity::Rotation:
+        {
+            State->EntityTransform.Rotation = *reinterpret_cast<const glm::vec3*>(&changes[pos]);
+            pos += sizeof(glm::vec3);
+            break;
+        }
+    case EChangeTypeEntity::Scale:
+        {
+            State->EntityTransform.Scale = *reinterpret_cast<const glm::vec3*>(&changes[pos]);
+            pos += sizeof(glm::vec3);
+            break;
+        }
+    case EChangeTypeEntity::Velocity:
+        {
+            State->EntityVelocity = *reinterpret_cast<const glm::vec3*>(&changes[pos]);
+            pos += sizeof(glm::vec3);
+            break;
+        }
+    case EChangeTypeEntity::IsGrounded:
+        {
+            State->IsGrounded = *reinterpret_cast<const bool*>(&changes[pos]);
+            pos += sizeof(bool);
+            break;
+        }
+    default:
+        break;
+    }
 }

@@ -3,7 +3,6 @@
 #include "FontManager.h"
 #include "Shaders/Shader.h"
 #include "Textures/Texture.h"
-#include "World/Generic/Chunk.h"
 
 class EngineDefaults
 {
@@ -13,46 +12,136 @@ class EngineDefaults
     static bool HasBuiltTextureUbo;
     static bool HasInit;
     static void Init();
-    static CustomRandomEngine Engine;
     static FontManager MainFont;
     static void BuildTextureUbo();
 
 public:
+    static constexpr uint8_t CHUNK_WIDTH = 16;
+    static constexpr uint8_t CHUNK_HEIGHT = 16;
+    static constexpr uint8_t CHUNK_DEPTH = 16;
+    static constexpr float TICK_RATE = 0.5F;
+    static constexpr size_t ROLLBACK_COUNT = 1 * static_cast<size_t>(1.0F / TICK_RATE);
     static float ConvertLightLevelToAmbient(int lightLevel);
     static Shader* GetShader();
     static Shader* GetShader(uint8_t index);
-    template <typename T>
-    static T GetNext(T maxValue);
-    template <typename T>
-    static T GetNext(T minValue, T maxValue);
-    static float GetNextFloat();
-    template <typename T>
-    static int GetChunkLocalIndex(int x, int y, int z);
+    static uint16_t GetChunkLocalIndex(int x, int y, int z);
+    static glm::ivec3 GetChunkLocalPositionFromIndex(uint16_t index);
     static uint16_t RegisterTexture(Texture* texture);
     static void InitTextures();
     static void ResetTextures();
     static const FontManager& GetFontManager();
+    static void EmplaceDataInVector(std::vector<uint8_t>& vector, const uint8_t* data, size_t size);
 };
 
-template <typename T>
-T EngineDefaults::GetNext(T maxValue)
+inline uint16_t EngineDefaults::GetChunkLocalIndex(const int x, const int y, const int z)
 {
-    return GetNext<T>(0, maxValue);
+    const auto convertedX = static_cast<uint16_t>(x % CHUNK_WIDTH);
+    const auto convertedY = static_cast<uint16_t>(y % CHUNK_HEIGHT);
+    const auto convertedZ = static_cast<uint16_t>(z % CHUNK_DEPTH);
+    return convertedX + convertedZ * CHUNK_WIDTH + convertedY * CHUNK_WIDTH * CHUNK_DEPTH;
 }
 
-template <typename T>
-T EngineDefaults::GetNext(T minValue, T maxValue)
+enum class BlockFaces : uint8_t
 {
-    T modulo = maxValue - minValue;
-    T next = Engine.GetNext() % modulo;
-    return next + minValue;
-}
+    Top,
+    Bottom,
+    West,
+    East,
+    North,
+    South
+};
 
-template <typename T>
-int EngineDefaults::GetChunkLocalIndex(int x, int y, int z)
+enum class DrawType : uint8_t
 {
-    x %= Chunk<T>::CHUNK_WIDTH;
-    y %= Chunk<T>::CHUNK_HEIGHT;
-    z %= Chunk<T>::CHUNK_DEPTH;
-    return x + z * Chunk<T>::CHUNK_WIDTH + y * Chunk<T>::CHUNK_WIDTH * Chunk<T>::CHUNK_DEPTH;
-}
+    Default,
+    Sapling
+};
+
+enum class EBlockType : uint8_t
+{
+    Air,
+    Stone,
+    Grass,
+    Dirt,
+    Cobblestone,
+    Planks,
+    Sapling
+};
+
+enum class EPacketType : uint8_t
+{
+    PlayerId,
+    WorldData,
+    ClientInput
+};
+
+enum class EChangeTypeEntity : uint8_t
+{
+    Position,
+    Rotation,
+    Scale,
+    Velocity,
+    IsGrounded,
+    JumpRequested,
+    HorizontalInput,
+    VerticalInput,
+    PlayerChange,
+};
+
+enum class EChangeTypePlayer : uint8_t
+{
+    CameraPitch,
+    MouseX,
+    MouseY,
+    LeftMouseButton,
+    RightMouseButton,
+    ForwardAxis,
+    RightAxis,
+    Jump,
+    ResetPos,
+    SpawnZombie,
+    OnePressed,
+    TwoPressed,
+    ThreePressed,
+    FourPressed,
+    FivePressed,
+};
+
+enum class EChangeType : uint8_t
+{
+    WorldTime,
+    EntityState,
+    EntityEnterWorld,
+    EntityLeaveWorld,
+    ChunkState,
+    ChunkEnterWorld,
+    ChunkLeaveWorld,
+    LightState,
+    LightEnterWorld,
+    LightLeaveWorld,
+    RandomState,
+};
+
+enum class EEntityType : uint8_t
+{
+    Player,
+    BlockBreakParticle,
+    Zombie,
+};
+
+struct IVec2Comparator
+{
+    bool operator()(const glm::ivec2& a, const glm::ivec2& b) const
+    {
+        if (a.x < b.x)
+        {
+            return true;
+        }
+        if (a.x == b.x)
+        {
+            return a.y < b.y;
+        }
+        return false;
+    }
+};
+

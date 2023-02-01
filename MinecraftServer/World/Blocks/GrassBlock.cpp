@@ -12,9 +12,9 @@ void GrassBlock::Tick(MultiPlayerWorld* world, const int x, const int y, const i
     {
         for (int i = 0; i < 4; i++)
         {
-            const int targetX = x + EngineDefaults::GetNext<int>(-1, 2);
-            const int targetY = y + EngineDefaults::GetNext<int>(-3, 2);
-            if (const int targetZ = z + EngineDefaults::GetNext<int>(-1, 2); world->GetBlockTypeAt(targetX, targetY, targetZ) == EBlockType::Dirt && world->GetBrightnessAt(targetX, targetY, targetZ) == 1)
+            const int targetX = x + world->RandomEngineState.GetNext<int>(-1, 2);
+            const int targetY = y + world->RandomEngineState.GetNext<int>(-3, 2);
+            if (const int targetZ = z + world->RandomEngineState.GetNext<int>(-1, 2); world->GetBlockTypeAt(targetX, targetY, targetZ) == EBlockType::Dirt && world->GetBrightnessAt(targetX, targetY, targetZ) == 1)
             {
                 world->PlaceBlockAt(targetX, targetY, targetZ, EBlockType::Grass);
             }

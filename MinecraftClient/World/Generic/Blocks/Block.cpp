@@ -157,3 +157,24 @@ bool Block::IsBlockingLight() const
 {
 	return true;
 }
+
+void Block::Tick(World* world, int x, int y, int z) const
+{
+}
+
+void Block::OnBreak(World* world, int x, int y, int z) const
+{
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			for (int k = 0; k < 4; k++)
+			{
+				const float posX = static_cast<float>(x) + (static_cast<float>(i) + 0.5F) / 4.0F;
+				const float posY = static_cast<float>(y) + (static_cast<float>(j) + 0.5F) / 4.0F;
+				const float posZ = static_cast<float>(z) + (static_cast<float>(k) + 0.5F) / 4.0F;
+				new ParticleEntity(posX, posY, posZ, posX - static_cast<float>(x) - 0.5F, posY - static_cast<float>(y) - 0.5F, posZ - static_cast<float>(z) - 0.5F, this);
+			}
+		}
+	}
+}

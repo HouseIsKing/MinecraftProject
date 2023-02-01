@@ -4,11 +4,9 @@
 #include <asio/write.hpp>
 #include <iostream>
 
-#include "Packets/KeyChangePacket.h"
-#include "Packets/MouseChangePacket.h"
-#include "Packets/MousePosChangePacket.h"
+#include "Packets/ClientInputPacket.h"
 
-ConnectionToClient::ConnectionToClient(asio::io_context& ioContext, ServerNetworkManager* networkManager) : Socket(std::make_unique<asio::ip::tcp::socket>(ioContext)), NetworkManager(networkManager), CurrentPacket(PacketHeader(EPacketType::EntityData))
+ConnectionToClient::ConnectionToClient(asio::io_context& ioContext, ServerNetworkManager* networkManager) : Socket(std::make_unique<asio::ip::tcp::socket>(ioContext)), NetworkManager(networkManager), CurrentPacket(PacketHeader(EPacketType::ClientInput))
 {
     HeaderBuffer.resize(sizeof(PacketHeader));
 }
@@ -61,6 +59,7 @@ void ConnectionToClient::ReadPacketBodyAsync()
                {
                    if (!error)
                    {
+                       std::cout << "Received client input" << std::chrono::system_clock::now() << std::endl;
                        NetworkManager->AddPacket(TranslatePacket());
                        ReadPacketHeaderAsync();
                    }
@@ -130,12 +129,8 @@ std::shared_ptr<PacketData> ConnectionToClient::TranslatePacket()
 {
     switch (CurrentPacket.GetHeader().PacketType)
     {
-    case EPacketType::Keyboard:
-        return std::make_shared<KeyChangePacket>(GetSharedPtr(), CurrentPacket);
-    case EPacketType::MousePosition:
-        return std::make_shared<MousePosChangePacket>(GetSharedPtr(), CurrentPacket);
-    case EPacketType::MouseButton:
-        return std::make_shared<MouseChangePacket>(GetSharedPtr(), CurrentPacket);
+    case EPacketType::ClientInput:
+        return std::make_shared<ClientInputPacket>(CurrentPacket, GetSharedPtr());
     default:
         return nullptr;
     }

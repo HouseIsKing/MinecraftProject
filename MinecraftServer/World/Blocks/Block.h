@@ -1,26 +1,6 @@
-//
-// Created by amit on 4/22/2022.
-//
-
 #pragma once
 #include "Util/BoundingBox.h"
 class MultiPlayerWorld;
-
-enum class BlockFaces
-{
-    Top,
-    Bottom,
-    West,
-    East,
-    North,
-    South
-};
-
-enum class DrawType
-{
-    Default,
-    Sapling
-};
 
 class Block
 {

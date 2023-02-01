@@ -55,24 +55,24 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
+    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform"/>
+      <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform"/>
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform"/>
+      <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform"/>
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform"/>
+      <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform"/>
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform"/>
+      <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform"/>
   </ImportGroup>
-  <PropertyGroup Label="UserMacros"/>
+    <PropertyGroup Label="UserMacros"/>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
@@ -105,18 +105,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_WIN32_WINNT=0x0601;</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <DisableSpecificWarnings>4005;</DisableSpecificWarnings>
-    </ClCompile>
+      <ClCompile>
+          <PrecompiledHeader>NotUsing</PrecompiledHeader>
+          <WarningLevel>Level4</WarningLevel>
+          <SDLCheck>true</SDLCheck>
+          <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_WIN32_WINNT=0x0601;_ITERATOR_DEBUG_LEVEL=0;</PreprocessorDefinitions>
+          <ConformanceMode>true</ConformanceMode>
+          <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+          <LanguageStandard>stdcpplatest</LanguageStandard>
+          <LanguageStandard_C>stdc17</LanguageStandard_C>
+          <DisableSpecificWarnings>4005;</DisableSpecificWarnings>
+          <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+          <MultiProcessorCompilation>true</MultiProcessorCompilation>
+          <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+          <Optimization>Full</Optimization>
+      </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -146,16 +149,18 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_WIN32_WINNT=0x0601;</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+        <Optimization>MaxSpeed</Optimization>
+        <FunctionLevelLinking>true</FunctionLevelLinking>
+        <IntrinsicFunctions>true</IntrinsicFunctions>
+        <SDLCheck>true</SDLCheck>
+        <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_WIN32_WINNT=0x0601;</PreprocessorDefinitions>
+        <ConformanceMode>true</ConformanceMode>
+        <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+        <LanguageStandard>stdcpplatest</LanguageStandard>
+        <LanguageStandard_C>stdc17</LanguageStandard_C>
+        <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+        <DisableSpecificWarnings>4005</DisableSpecificWarnings>
+        <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -166,80 +171,82 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="Entities\Entity.cpp"/>
-    <ClCompile Include="Entities\EntityMeshBlock.cpp"/>
-    <ClCompile Include="Entities\LivingEntity.cpp"/>
-    <ClCompile Include="Entities\Player.cpp"/>
-    <ClCompile Include="Entities\Zombie.cpp"/>
-    <ClCompile Include="MinecraftServer.cpp"/>
-    <ClCompile Include="Network\ConnectionToClient.cpp"/>
-    <ClCompile Include="Network\ConnectionToClientInterface.cpp"/>
-    <ClCompile Include="Network\Packets\KeyChangePacket.cpp"/>
-    <ClCompile Include="Network\Packets\MouseChangePacket.cpp"/>
-    <ClCompile Include="Network\Packets\MousePosChangePacket.cpp"/>
-    <ClCompile Include="Network\Packets\Packet.cpp"/>
-    <ClCompile Include="Network\Packets\PacketData.cpp"/>
-    <ClCompile Include="Network\Packets\PacketHeader.cpp"/>
-    <ClCompile Include="Network\ServerNetworkManager.cpp"/>
-    <ClCompile Include="Util\BoundingBox.cpp"/>
-    <ClCompile Include="Util\CustomFileManager.cpp"/>
-    <ClCompile Include="Util\CustomRandomEngine.cpp"/>
-    <ClCompile Include="Util\EngineDefaults.cpp"/>
-    <ClCompile Include="Util\PerlinNoise.cpp"/>
-    <ClCompile Include="Util\ThreadSafeQueue.cpp"/>
-    <ClCompile Include="Util\ThreadSafeSet.cpp"/>
-    <ClCompile Include="Util\Transform.cpp"/>
-    <ClCompile Include="World\Blocks\AirBlock.cpp"/>
-    <ClCompile Include="World\Blocks\Block.cpp"/>
-    <ClCompile Include="World\Blocks\BlockTypeList.cpp"/>
-    <ClCompile Include="World\Blocks\CobblestoneBlock.cpp"/>
-    <ClCompile Include="World\Blocks\DirtBlock.cpp"/>
-    <ClCompile Include="World\Blocks\GrassBlock.cpp"/>
-    <ClCompile Include="World\Blocks\SaplingBlock.cpp"/>
-    <ClCompile Include="World\Blocks\StoneBlock.cpp"/>
-    <ClCompile Include="World\Chunk.cpp"/>
-    <ClCompile Include="World\ChunkCoords.cpp"/>
-    <ClCompile Include="World\MultiPlayerWorld.cpp"/>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Entities\Entity.h"/>
-    <ClInclude Include="Entities\EntityMeshBlock.h"/>
-    <ClInclude Include="Entities\LivingEntity.h"/>
-    <ClInclude Include="Entities\ParticleEntity.h"/>
-    <ClInclude Include="Entities\Player.h"/>
-    <ClInclude Include="Entities\Zombie.h"/>
-    <ClInclude Include="Network\ConnectionToClient.h"/>
-    <ClInclude Include="Network\ConnectionToClientInterface.h"/>
-    <ClInclude Include="Network\Packets\KeyChangePacket.h"/>
-    <ClInclude Include="Network\Packets\MouseChangePacket.h"/>
-    <ClInclude Include="Network\Packets\MousePosChangePacket.h"/>
-    <ClInclude Include="Network\Packets\Packet.h"/>
-    <ClInclude Include="Network\Packets\PacketData.h"/>
-    <ClInclude Include="Network\Packets\PacketHeader.h"/>
-    <ClInclude Include="Network\ServerNetworkManager.h"/>
-    <ClInclude Include="Util\BoundingBox.h"/>
-    <ClInclude Include="Util\CustomFileManager.h"/>
-    <ClInclude Include="Util\CustomRandomEngine.h"/>
-    <ClInclude Include="Util\EngineDefaults.h"/>
-    <ClInclude Include="Util\PerlinNoise.h"/>
-    <ClInclude Include="Util\ThreadSafeQueue.h"/>
-    <ClInclude Include="Util\ThreadSafeSet.h"/>
-    <ClInclude Include="Util\Transform.h"/>
-    <ClInclude Include="World\Blocks\AirBlock.h"/>
-    <ClInclude Include="World\Blocks\Block.h"/>
-    <ClInclude Include="World\Blocks\BlockTypeList.h"/>
-    <ClInclude Include="World\Blocks\CobblestoneBlock.h"/>
-    <ClInclude Include="World\Blocks\DirtBlock.h"/>
-    <ClInclude Include="World\Blocks\GrassBlock.h"/>
-    <ClInclude Include="World\Blocks\PlanksBlock.h"/>
-    <ClInclude Include="World\Blocks\SaplingBlock.h"/>
-    <ClInclude Include="World\Blocks\StoneBlock.h"/>
-    <ClInclude Include="World\Chunk.h"/>
-    <ClInclude Include="World\ChunkCoords.h"/>
-    <ClInclude Include="World\MultiPlayerWorld.h"/>
-  </ItemGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
+    <ItemGroup>
+        <ClCompile Include="Entities\Entity.cpp"/>
+        <ClCompile Include="Entities\EntityMeshBlock.cpp"/>
+        <ClCompile Include="Entities\LivingEntity.cpp"/>
+        <ClCompile Include="Entities\Player.cpp"/>
+        <ClCompile Include="Entities\Zombie.cpp"/>
+        <ClCompile Include="MinecraftServer.cpp"/>
+        <ClCompile Include="Network\ConnectionToClient.cpp"/>
+        <ClCompile Include="Network\ConnectionToClientInterface.cpp"/>
+        <ClCompile Include="Network\Packets\ClientInputPacket.cpp"/>
+        <ClCompile Include="Network\Packets\Packet.cpp"/>
+        <ClCompile Include="Network\Packets\PacketData.cpp"/>
+        <ClCompile Include="Network\Packets\PacketHeader.cpp"/>
+        <ClCompile Include="Network\ServerNetworkManager.cpp"/>
+        <ClCompile Include="Util\BoundingBox.cpp"/>
+        <ClCompile Include="Util\CustomFileManager.cpp"/>
+        <ClCompile Include="Util\CustomRandomEngine.cpp"/>
+        <ClCompile Include="Util\EngineDefaults.cpp"/>
+        <ClCompile Include="Util\PerlinNoise.cpp"/>
+        <ClCompile Include="Util\ThreadSafeQueue.cpp"/>
+        <ClCompile Include="Util\ThreadSafeSet.cpp"/>
+        <ClCompile Include="World\Blocks\AirBlock.cpp"/>
+        <ClCompile Include="World\Blocks\Block.cpp"/>
+        <ClCompile Include="World\Blocks\BlockTypeList.cpp"/>
+        <ClCompile Include="World\Blocks\CobblestoneBlock.cpp"/>
+        <ClCompile Include="World\Blocks\DirtBlock.cpp"/>
+        <ClCompile Include="World\Blocks\GrassBlock.cpp"/>
+        <ClCompile Include="World\Blocks\SaplingBlock.cpp"/>
+        <ClCompile Include="World\Blocks\StoneBlock.cpp"/>
+        <ClCompile Include="World\Chunk.cpp"/>
+        <ClCompile Include="World\ChunkCoords.cpp"/>
+        <ClCompile Include="World\MultiPlayerWorld.cpp"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ClInclude Include="Entities\Entity.h"/>
+        <ClInclude Include="Entities\EntityMeshBlock.h"/>
+        <ClInclude Include="Entities\LivingEntity.h"/>
+        <ClInclude Include="Entities\ParticleEntity.h"/>
+        <ClInclude Include="Entities\Player.h"/>
+        <ClInclude Include="Entities\Zombie.h"/>
+        <ClInclude Include="Network\ConnectionToClient.h"/>
+        <ClInclude Include="Network\ConnectionToClientInterface.h"/>
+        <ClInclude Include="Network\Packets\ClientInputPacket.h"/>
+        <ClInclude Include="Network\Packets\Packet.h"/>
+        <ClInclude Include="Network\Packets\PacketData.h"/>
+        <ClInclude Include="Network\Packets\PacketHeader.h"/>
+        <ClInclude Include="Network\ServerNetworkManager.h"/>
+        <ClInclude Include="Util\BoundingBox.h"/>
+        <ClInclude Include="Util\CustomFileManager.h"/>
+        <ClInclude Include="Util\CustomRandomEngine.h"/>
+        <ClInclude Include="Util\EngineDefaults.h"/>
+        <ClInclude Include="Util\PerlinNoise.h"/>
+        <ClInclude Include="Util\States\ChunkState.h"/>
+        <ClInclude Include="Util\States\ClientInputState.h"/>
+        <ClInclude Include="Util\States\EntityState.h"/>
+        <ClInclude Include="Util\States\LightState.h"/>
+        <ClInclude Include="Util\States\LivingEntityState.h"/>
+        <ClInclude Include="Util\States\PlayerState.h"/>
+        <ClInclude Include="Util\States\WorldState.h"/>
+        <ClInclude Include="Util\ThreadSafeQueue.h"/>
+        <ClInclude Include="Util\ThreadSafeSet.h"/>
+        <ClInclude Include="Util\TransformStruct.h"/>
+        <ClInclude Include="World\Blocks\AirBlock.h"/>
+        <ClInclude Include="World\Blocks\Block.h"/>
+        <ClInclude Include="World\Blocks\BlockTypeList.h"/>
+        <ClInclude Include="World\Blocks\CobblestoneBlock.h"/>
+        <ClInclude Include="World\Blocks\DirtBlock.h"/>
+        <ClInclude Include="World\Blocks\GrassBlock.h"/>
+        <ClInclude Include="World\Blocks\PlanksBlock.h"/>
+        <ClInclude Include="World\Blocks\SaplingBlock.h"/>
+        <ClInclude Include="World\Blocks\StoneBlock.h"/>
+        <ClInclude Include="World\Chunk.h"/>
+        <ClInclude Include="World\ChunkCoords.h"/>
+        <ClInclude Include="World\MultiPlayerWorld.h"/>
+    </ItemGroup>
+    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>

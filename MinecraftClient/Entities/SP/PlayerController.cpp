@@ -1,31 +1,34 @@
 #include "PlayerController.h"
-#include "Entities/Generic/CameraController.h"
-#include "Entities/Generic/Zombie.h"
-#include "Util/EngineDefaults.h"
-#include "World/SP/SinglePlayerWorld.h"
 
-PlayerController::PlayerController(const float x, const float y, const float z) : LivingEntity(PLAYER_SIZE, x, y, z),
-    MyCamera(CameraController::GetActiveCamera()), LeftMousePressed(false), RightMousePressed(false), PrevMouseX(0),
-    PrevMouseY(0), DeltaMouseX(0), DeltaMouseY(0), PrevPitch(0), IsSpawnZombieButtonPressed(false),
-    CurrentSelectedBlock(EBlockType::Stone),
-    SelectedBlockGuiPtr(nullptr), SelectionHighlight(this)
+#include "World/Generic/World.h"
+
+PlayerController::PlayerController(const float x, const float y, const float z) : LivingEntity(PLAYER_SIZE, x, y, z, new PlayerState(TheWorld->RegisterEntity(this))),
+    MyCamera(CameraController::GetActiveCamera()), PrevMouseX(0), PrevMouseY(0), PrevPitch(0), CurrentSelectedBlock(EBlockType::Stone),
+    SelectedBlockGuiPtr(TheWorld->GetGuiOfType<SelectedBlockGui>()), SelectionHighlight(this)
 {
     double xMouse;
     double yMouse;
-    glfwGetCursorPos(GetWorld()->GetWindow(), &xMouse, &yMouse);
+    glfwGetCursorPos(TheWorld->GetWindow(), &xMouse, &yMouse);
     PrevMouseX = static_cast<float>(xMouse);
     PrevMouseY = static_cast<float>(yMouse);
     MyCamera.Position = glm::vec3(x, y, z);
 }
 
+
+PlayerController::PlayerController(const PlayerState& playerState) : LivingEntity(playerState.EntityTransform.Scale, playerState.EntityTransform.Position.x, playerState.EntityTransform.Position.y, playerState.EntityTransform.Position.z, new PlayerState(playerState)),
+                                                                     MyCamera(CameraController::GetActiveCamera()), PrevMouseX(0), PrevMouseY(0), PrevPitch(0), CurrentSelectedBlock(EBlockType::Stone),
+                                                                     SelectedBlockGuiPtr(TheWorld->GetGuiOfType<SelectedBlockGui>()), SelectionHighlight(this)
+{
+}
+
 void PlayerController::Render(const float partialTick)
 {
-    const glm::vec3 pos = GetTransform().GetPosition();
-    const glm::vec3 rot = GetTransform().GetRotation();
-    glm::vec3 finalCameraPosition = PrevTransform.GetPosition() + (pos - PrevTransform.GetPosition()) * partialTick;
-    glm::vec3 finalCameraRotation = PrevTransform.GetRotation() + (rot - PrevTransform.GetRotation()) * partialTick;
-    GetTransform().SetPosition(finalCameraPosition);
-    GetTransform().SetRotation(finalCameraRotation);
+    const glm::vec3 pos = this->GetTransform().Position;
+    const glm::vec3 rot = this->GetTransform().Rotation;
+    glm::vec3 finalCameraPosition = this->PrevTransform.Position + (pos - this->PrevTransform.Position) * partialTick;
+    glm::vec3 finalCameraRotation = this->PrevTransform.Rotation + (rot - this->PrevTransform.Rotation) * partialTick;
+    this->GetTransform().Position = finalCameraPosition;
+    this->GetTransform().Rotation = finalCameraRotation;
     finalCameraRotation.x = PrevPitch + (MyCamera.Pitch - PrevPitch) * partialTick;
     const float tempPitch = MyCamera.Pitch;
     MyCamera.Pitch = finalCameraRotation.x;
@@ -35,18 +38,14 @@ void PlayerController::Render(const float partialTick)
     MyCamera.Position = finalCameraPosition;
     Shader::SetMat4(EngineDefaults::GetShader()->GetUniformInt("view"), MyCamera.GetViewMatrix());
     Shader::SetMat4(EngineDefaults::GetShader()->GetUniformInt("projection"), MyCamera.GetProjectionMatrix());
-    GetTransform().SetPosition(pos);
-    GetTransform().SetRotation(rot);
+    this->GetTransform().Position = pos;
+    this->GetTransform().Rotation = rot;
     MyCamera.Pitch = tempPitch;
     MyCamera.Yaw = rot.y;
-    if (SelectedBlockGuiPtr == nullptr)
-    {
-        SelectedBlockGuiPtr = dynamic_cast<SelectedBlockGui<SinglePlayerWorld>*>(GetWorld()->GetGuiOfType<SelectedBlockGui<SinglePlayerWorld>>());
-    }
     SelectionHighlight.Reset();
     bool found = false;
     SelectionHighlight.FaceHit = FindClosestFace(SelectionHighlight.HitPosition, found);
-    SelectionHighlight.BlockHit = found ? GetWorld()->GetBlockAt(SelectionHighlight.HitPosition.x, SelectionHighlight.HitPosition.y, SelectionHighlight.HitPosition.z) : nullptr;
+    SelectionHighlight.BlockHit = found ? TheWorld->GetBlockAt(SelectionHighlight.HitPosition.x, SelectionHighlight.HitPosition.y, SelectionHighlight.HitPosition.z) : nullptr;
 }
 
 void PlayerController::Tick()
@@ -61,17 +60,17 @@ int PlayerController::GetSelectionHighlightBrightness(const int x, const int y, 
     switch (face)
     {
     case BlockFaces::Top:
-        return GetWorld()->GetBrightnessAt(x, y + 1, z);
+        return TheWorld->GetBrightnessAt(x, y + 1, z);
     case BlockFaces::Bottom:
-        return GetWorld()->GetBrightnessAt(x, y - 1, z);
+        return TheWorld->GetBrightnessAt(x, y - 1, z);
     case BlockFaces::North:
-        return GetWorld()->GetBrightnessAt(x, y, z + 1);
+        return TheWorld->GetBrightnessAt(x, y, z + 1);
     case BlockFaces::South:
-        return GetWorld()->GetBrightnessAt(x, y, z - 1);
+        return TheWorld->GetBrightnessAt(x, y, z - 1);
     case BlockFaces::East:
-        return GetWorld()->GetBrightnessAt(x + 1, y, z);
+        return TheWorld->GetBrightnessAt(x + 1, y, z);
     case BlockFaces::West:
-        return GetWorld()->GetBrightnessAt(x - 1, y, z);
+        return TheWorld->GetBrightnessAt(x - 1, y, z);
     }
     return 0;
 }
@@ -144,7 +143,7 @@ BlockFaces PlayerController::FindClosestFace(glm::ivec3& blockPosition, bool& fo
             yDistance += frontVector.y * minDistance;
             zDistance += frontVector.z * minDistance;
             blockPosition = glm::vec3(static_cast<int>(floor(xDistance)) - (!right && xyzChoice == 0 ? 1 : 0), static_cast<int>(floor(yDistance)) - (!up && xyzChoice == 1 ? 1 : 0), static_cast<int>(floor(zDistance)) - (!forward && xyzChoice == 2 ? 1 : 0));
-            if (GetWorld()->IsBlockExists(blockPosition.x, blockPosition.y, blockPosition.z))
+            if (TheWorld->IsBlockExists(blockPosition.x, blockPosition.y, blockPosition.z))
             {
                 foundBlock = true;
                 if (xyzChoice == 0 && frontVector.x > 0.0F)
@@ -206,51 +205,51 @@ void PlayerController::PlaceBlock() const
         {
         case BlockFaces::Bottom:
             box.Move(static_cast<float>(x), static_cast<float>(y - 1), static_cast<float>(z));
-            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
+            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(this->GetBoundingBox()))
             {
                 break;
             }
-            GetWorld()->PlaceBlockAt(x, y - 1, z, CurrentSelectedBlock);
+            TheWorld->PlaceBlockAt(x, y - 1, z, CurrentSelectedBlock);
             break;
         case BlockFaces::Top:
             box.Move(static_cast<float>(x), static_cast<float>(y + 1), static_cast<float>(z));
-            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
+            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(this->GetBoundingBox()))
             {
                 break;
             }
-            GetWorld()->PlaceBlockAt(x, y + 1, z, CurrentSelectedBlock);
+            TheWorld->PlaceBlockAt(x, y + 1, z, CurrentSelectedBlock);
             break;
         case BlockFaces::North:
             box.Move(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z + 1));
-            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
+            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(this->GetBoundingBox()))
             {
                 break;
             }
-            GetWorld()->PlaceBlockAt(x, y, z + 1, CurrentSelectedBlock);
+            TheWorld->PlaceBlockAt(x, y, z + 1, CurrentSelectedBlock);
             break;
         case BlockFaces::South:
             box.Move(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z - 1));
-            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
+            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(this->GetBoundingBox()))
             {
                 break;
             }
-            GetWorld()->PlaceBlockAt(x, y, z - 1, CurrentSelectedBlock);
+            TheWorld->PlaceBlockAt(x, y, z - 1, CurrentSelectedBlock);
             break;
         case BlockFaces::East:
             box.Move(static_cast<float>(x + 1), static_cast<float>(y), static_cast<float>(z));
-            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
+            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(this->GetBoundingBox()))
             {
                 break;
             }
-            GetWorld()->PlaceBlockAt(x + 1, y, z, CurrentSelectedBlock);
+            TheWorld->PlaceBlockAt(x + 1, y, z, CurrentSelectedBlock);
             break;
         case BlockFaces::West:
             box.Move(static_cast<float>(x - 1), static_cast<float>(y), static_cast<float>(z));
-            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
+            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(this->GetBoundingBox()))
             {
                 break;
             }
-            GetWorld()->PlaceBlockAt(x - 1, y, z, CurrentSelectedBlock);
+            TheWorld->PlaceBlockAt(x - 1, y, z, CurrentSelectedBlock);
             break;
         }
     }
@@ -278,24 +277,176 @@ EBlockType PlayerController::GetCurrentSelectedBlock() const
 
 void PlayerController::UpdateMouseMove(const float x, const float y)
 {
-    DeltaMouseX += x - PrevMouseX;
-    DeltaMouseY += y - PrevMouseY;
+    InputState.MouseX += (x - PrevMouseX) * MouseSensitivity;
+    InputState.MouseY += (y - PrevMouseY) * MouseSensitivity;
     PrevMouseX = x;
     PrevMouseY = y;
 }
 
-EEntityType PlayerController::GetEntityType() const
+void PlayerController::KeyboardButtonPressed(const int button, const int action)
 {
-    return EEntityType::Player;
+    switch (button)
+    {
+    case GLFW_KEY_W:
+        if (action == GLFW_PRESS)
+        {
+            InputState.ForwardAxis++;
+        }
+        else if (action == GLFW_RELEASE)
+        {
+            InputState.ForwardAxis--;
+        }
+        break;
+    case GLFW_KEY_S:
+        if (action == GLFW_PRESS)
+        {
+            InputState.ForwardAxis--;
+        }
+        else if (action == GLFW_RELEASE)
+        {
+            InputState.ForwardAxis++;
+        }
+        break;
+    case GLFW_KEY_A:
+        if (action == GLFW_PRESS)
+        {
+            InputState.RightAxis--;
+        }
+        else if (action == GLFW_RELEASE)
+        {
+            InputState.RightAxis++;
+        }
+        break;
+    case GLFW_KEY_D:
+        if (action == GLFW_PRESS)
+        {
+            InputState.RightAxis++;
+        }
+        else if (action == GLFW_RELEASE)
+        {
+            InputState.RightAxis--;
+        }
+        break;
+    case GLFW_KEY_SPACE:
+        if (action == GLFW_PRESS)
+        {
+            InputState.JumpPressed = true;
+        }
+        else if (action == GLFW_RELEASE)
+        {
+            InputState.JumpPressed = false;
+        }
+        break;
+    case GLFW_KEY_1:
+        if (action == GLFW_PRESS)
+        {
+            InputState.OnePressed = true;
+        }
+        else if (action == GLFW_RELEASE)
+        {
+            InputState.OnePressed = false;
+        }
+        break;
+    case GLFW_KEY_2:
+        if (action == GLFW_PRESS)
+        {
+            InputState.TwoPressed = true;
+        }
+        else if (action == GLFW_RELEASE)
+        {
+            InputState.TwoPressed = false;
+        }
+        break;
+    case GLFW_KEY_3:
+        if (action == GLFW_PRESS)
+        {
+            InputState.ThreePressed = true;
+        }
+        else if (action == GLFW_RELEASE)
+        {
+            InputState.ThreePressed = false;
+        }
+        break;
+    case GLFW_KEY_4:
+        if (action == GLFW_PRESS)
+        {
+            InputState.FourPressed = true;
+        }
+        else if (action == GLFW_RELEASE)
+        {
+            InputState.FourPressed = false;
+        }
+        break;
+    case GLFW_KEY_5:
+        if (action == GLFW_PRESS)
+        {
+            InputState.FivePressed = true;
+        }
+        else if (action == GLFW_RELEASE)
+        {
+            InputState.FivePressed = false;
+        }
+        break;
+    case GLFW_KEY_R:
+        if (action == GLFW_PRESS)
+        {
+            InputState.ResetPressed = true;
+        }
+        else if (action == GLFW_RELEASE)
+        {
+            InputState.ResetPressed = false;
+        }
+        break;
+    case GLFW_KEY_G:
+        if (action == GLFW_PRESS)
+        {
+            InputState.SpawnZombiePressed = true;
+        }
+        else if (action == GLFW_RELEASE)
+        {
+            InputState.SpawnZombiePressed = false;
+        }
+        break;
+    default:
+        break;
+    }
+}
+
+void PlayerController::MouseButtonPressed(const int button, const int action)
+{
+    switch (button)
+    {
+    case GLFW_MOUSE_BUTTON_LEFT:
+        if (action == GLFW_PRESS)
+        {
+            InputState.LeftMouseButtonPressed = true;
+        }
+        else if (action == GLFW_RELEASE)
+        {
+            InputState.LeftMouseButtonPressed = false;
+        }
+        break;
+    case GLFW_MOUSE_BUTTON_RIGHT:
+        if (action == GLFW_PRESS)
+        {
+            InputState.RightMouseButtonPressed = true;
+        }
+        else if (action == GLFW_RELEASE)
+        {
+            InputState.RightMouseButtonPressed = false;
+        }
+        break;
+    default:
+        break;
+    }
 }
 
 void PlayerController::HandleMouseInput()
 {
+    auto* playerState = reinterpret_cast<PlayerState*>(this->State.get());
     PrevPitch = MyCamera.Pitch;
-    MyCamera.Yaw += DeltaMouseX * MouseSensitivity;
-    MyCamera.Pitch += -DeltaMouseY * MouseSensitivity;
-    DeltaMouseX = 0.0F;
-    DeltaMouseY = 0.0F;
+    MyCamera.Yaw += InputState.MouseX;
+    MyCamera.Pitch += -InputState.MouseY;
     if (MyCamera.Pitch > 89.0F)
     {
         MyCamera.Pitch = 89.0F;
@@ -304,11 +455,10 @@ void PlayerController::HandleMouseInput()
     {
         MyCamera.Pitch = -89.0F;
     }
-    GetTransform().SetRotation(0, MyCamera.Yaw, 0);
-    int state = glfwGetMouseButton(GetWorld()->GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
-    if (state == GLFW_PRESS && !LeftMousePressed)
+    this->GetTransform().Rotation.y = MyCamera.Yaw;
+    playerState->CameraPitch = MyCamera.Pitch;
+    if (InputState.LeftMouseButtonPressed)
     {
-        LeftMousePressed = true;
         if (Mode)
         {
             PlaceBlock();
@@ -317,104 +467,66 @@ void PlayerController::HandleMouseInput()
         {
             if (SelectionHighlight.BlockHit != nullptr)
             {
-                GetWorld()->RemoveBlockAt(SelectionHighlight.HitPosition.x, SelectionHighlight.HitPosition.y, SelectionHighlight.HitPosition.z);
+                TheWorld->RemoveBlockAt(SelectionHighlight.HitPosition.x, SelectionHighlight.HitPosition.y, SelectionHighlight.HitPosition.z);
             }
         }
     }
-    else if (state == GLFW_RELEASE)
-    {
-        LeftMousePressed = false;
-    }
-    state = glfwGetMouseButton(GetWorld()->GetWindow(), GLFW_MOUSE_BUTTON_RIGHT);
-    if (state == GLFW_PRESS && !RightMousePressed)
+    if (InputState.RightMouseButtonPressed)
     {
         Mode = !Mode;
-        RightMousePressed = true;
     }
-    else if (state == GLFW_RELEASE)
-    {
-        RightMousePressed = false;
-    }
+    InputState.MouseX = 0.0F;
+    InputState.MouseY = 0.0F;
+    InputState.LeftMouseButtonPressed = false;
+    InputState.RightMouseButtonPressed = false;
 }
 
 void PlayerController::HandleKeyboardMovementInput()
 {
-    VerticalInput = 0;
-    HorizontalInput = 0;
-    JumpRequested = false;
-    GLFWwindow* window = GetWorld()->GetWindow();
-    int state = glfwGetKey(window, GLFW_KEY_W);
-    if (state == GLFW_PRESS)
-    {
-        VerticalInput++;
-    }
-    state = glfwGetKey(window, GLFW_KEY_S);
-    if (state == GLFW_PRESS)
-    {
-        VerticalInput--;
-    }
-    state = glfwGetKey(window, GLFW_KEY_A);
-    if (state == GLFW_PRESS)
-    {
-        HorizontalInput--;
-    }
-    state = glfwGetKey(window, GLFW_KEY_D);
-    if (state == GLFW_PRESS)
-    {
-        HorizontalInput++;
-    }
-    state = glfwGetKey(window, GLFW_KEY_SPACE);
-    if (state == GLFW_PRESS)
-    {
-        JumpRequested = true;
-    }
-    if (state == GLFW_RELEASE)
-    {
-        JumpRequested = false;
-    }
-    state = glfwGetKey(window, GLFW_KEY_1);
-    if (state == GLFW_PRESS)
+    auto* playerState = reinterpret_cast<PlayerState*>(this->State.get());
+    playerState->JumpRequested = InputState.JumpPressed;
+    playerState->VerticalInput = InputState.ForwardAxis;
+    playerState->HorizontalInput = InputState.RightAxis;
+    const EBlockType previousSelectedBlock = CurrentSelectedBlock;
+    if (InputState.OnePressed)
     {
         CurrentSelectedBlock = EBlockType::Stone;
     }
-    state = glfwGetKey(window, GLFW_KEY_2);
-    if (state == GLFW_PRESS)
+    if (InputState.TwoPressed)
     {
         CurrentSelectedBlock = EBlockType::Dirt;
     }
-    state = glfwGetKey(window, GLFW_KEY_3);
-    if (state == GLFW_PRESS)
+    if (InputState.ThreePressed)
     {
         CurrentSelectedBlock = EBlockType::Cobblestone;
     }
-    state = glfwGetKey(window, GLFW_KEY_4);
-    if (state == GLFW_PRESS)
+    if (InputState.FourPressed)
     {
         CurrentSelectedBlock = EBlockType::Planks;
     }
-    state = glfwGetKey(window, GLFW_KEY_5);
-    if (state == GLFW_PRESS)
+    if (InputState.FivePressed)
     {
         CurrentSelectedBlock = EBlockType::Sapling;
     }
-    if (SelectedBlockGuiPtr != nullptr)
+    if (CurrentSelectedBlock != previousSelectedBlock)
     {
         SelectedBlockGuiPtr->SwitchBlockType(CurrentSelectedBlock);
     }
-    state = glfwGetKey(window, GLFW_KEY_G);
-    if (state == GLFW_PRESS && !IsSpawnZombieButtonPressed)
+    if (InputState.SpawnZombiePressed)
     {
-        const glm::vec3 pos = GetTransform().GetPosition();
-        new Zombie<SinglePlayerWorld>(pos.x, pos.y, pos.z);
-        IsSpawnZombieButtonPressed = true;
+        const glm::vec3 pos = this->GetTransform().Position;
+        new Zombie(pos.x, pos.y, pos.z);
     }
-    if (state == GLFW_RELEASE)
+    if (InputState.ResetPressed)
     {
-        IsSpawnZombieButtonPressed = false;
+        this->GetTransform().Position = glm::vec3(TheWorld->RandomEngineState.GetNextFloat() * 256.0F, 67.0F, TheWorld->RandomEngineState.GetNextFloat() * 256.0F);
     }
-    state = glfwGetKey(window, GLFW_KEY_R);
-    if (state == GLFW_PRESS)
-    {
-        GetTransform().SetPosition(EngineDefaults::GetNextFloat() * 256.0F, 67.0F, EngineDefaults::GetNextFloat() * 256.0F);
-    }
+    InputState.JumpPressed = false;
+    InputState.SpawnZombiePressed = false;
+    InputState.FivePressed = false;
+    InputState.FourPressed = false;
+    InputState.ThreePressed = false;
+    InputState.TwoPressed = false;
+    InputState.OnePressed = false;
+    InputState.ResetPressed = false;
 }

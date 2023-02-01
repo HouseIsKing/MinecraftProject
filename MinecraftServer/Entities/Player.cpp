@@ -3,37 +3,49 @@
 #include "Util/EngineDefaults.h"
 #include <GLFW/glfw3.h>
 //#include "Entities/Zombie.h"
+#include "Util/States/PlayerState.h"
 #include "World/MultiPlayerWorld.h"
 
-Player::Player(const float x, const float y, const float z, std::shared_ptr<ConnectionToClient> client) : LivingEntity(PLAYER_SIZE, x, y, z), Client(
-    std::move(client)), FaceHit(BlockFaces::Top), BlockHit(nullptr), BlockHitPosition(), CurrentSelectedBlock(EBlockType::Stone)
+Player::Player(const float x, const float y, const float z) : LivingEntity(PLAYER_SIZE, x, y, z, new PlayerState(GetWorld()->RegisterEntity(this))), FaceHit(BlockFaces::Top), BlockHit(nullptr), BlockHitPosition(), CurrentSelectedBlock(EBlockType::Stone)
 {
-    Client->WritePacket(GetSpawnPacket());
+}
+
+Player::Player(const PlayerState& state) : LivingEntity(state.EntityTransform.Scale, state.EntityTransform.Position.x,
+                                                        state.EntityTransform.Position.y, state.EntityTransform.Position.z,
+                                                        new PlayerState(state)), FaceHit(BlockFaces::Top), BlockHit(nullptr),
+                                           BlockHitPosition(), CurrentSelectedBlock(EBlockType::Stone)
+{
 }
 
 void Player::Tick()
 {
     LivingEntity::Tick();
-    glm::vec3 pos = GetTransform().GetPosition();
-    pos.y += CAMERA_OFFSET - PLAYER_SIZE.y;
-    CameraTransform.SetPosition(pos);
+    reinterpret_cast<PlayerState*>(State.get())->InputState = InputStates[GetWorld()->GetWorldTime() % EngineDefaults::ROLLBACK_COUNT];
+    HandleClientInput(InputStates[GetWorld()->GetWorldTime() % EngineDefaults::ROLLBACK_COUNT]);
     bool found = false;
     FaceHit = FindClosestFace(found);
     BlockHit = found ? GetWorld()->GetBlockAt(BlockHitPosition.x, BlockHitPosition.y, BlockHitPosition.z) : nullptr;
+    if (GetWorld()->GetWorldTime() == GetWorld()->GetMaxWorldTime())
+    {
+        InputStates[(GetWorld()->GetMaxWorldTime() + 1) % EngineDefaults::ROLLBACK_COUNT] = {};
+    }
 }
 
 BlockFaces Player::FindClosestFace(bool& foundBlock)
 {
-    const glm::vec3 frontVector = CameraTransform.GetForwardVector();
-    const glm::vec3 cameraPos = CameraTransform.GetPosition();
+    const PlayerState* state = reinterpret_cast<PlayerState*>(State.get());
+    TransformStruct cameraTransform = GetTransform();
+    cameraTransform.Position += glm::vec3(0.0F, CAMERA_OFFSET - PLAYER_SIZE.y, 0.0F);
+    cameraTransform.Rotation.x = state->CameraPitch;
+    const glm::vec3 frontVector = cameraTransform.GetForwardVector();
     const bool right = frontVector.x > 0.0F;
     const bool up = frontVector.y > 0.0F;
     const bool forward = frontVector.z > 0.0F;
     float totalDistance = 0.0F;
     const float maxDistance = CalculateMaxDistanceForHighlight(frontVector, up, right, forward);
-    float xDistance = cameraPos.x;
-    float yDistance = cameraPos.y;
-    float zDistance = cameraPos.z;
+    float xDistance = cameraTransform.Position.x;
+    float yDistance = cameraTransform.Position.y;
+    float zDistance = cameraTransform.Position.z;
     while (totalDistance <= maxDistance)
     {
         float distanceForX = ((right ? floor(xDistance) : ceil(xDistance)) - xDistance + (right ? 1.0F : -1.0F)) / frontVector.x;
@@ -192,6 +204,121 @@ void Player::PlaceBlock()
     }
 }
 
+void Player::ApplyEntityChange(const std::vector<uint8_t>& changes, size_t& pos, const EChangeTypeEntity change)
+{
+    switch (change)
+    {
+    case EChangeTypeEntity::PlayerChange:
+        {
+            auto* state = reinterpret_cast<PlayerState*>(State.get());
+            const uint8_t changesCount = changes[pos];
+            pos += sizeof(uint8_t);
+            for (uint8_t i = 0; i < changesCount; i++)
+            {
+                const EChangeTypePlayer changeType = *reinterpret_cast<const EChangeTypePlayer*>(&changes[pos]);
+                pos += sizeof(EChangeTypePlayer);
+                switch (changeType)
+                {
+                case EChangeTypePlayer::Jump:
+                    {
+                        state->InputState.JumpPressed = *reinterpret_cast<const bool*>(&changes[pos]);
+                        pos += sizeof(bool);
+                        break;
+                    }
+                case EChangeTypePlayer::FivePressed:
+                    {
+                        state->InputState.FivePressed = *reinterpret_cast<const bool*>(&changes[pos]);
+                        pos += sizeof(bool);
+                        break;
+                    }
+                case EChangeTypePlayer::ForwardAxis:
+                    {
+                        state->InputState.ForwardAxis = *reinterpret_cast<const int8_t*>(&changes[pos]);
+                        pos += sizeof(uint8_t);
+                        break;
+                    }
+                case EChangeTypePlayer::RightAxis:
+                    {
+                        state->InputState.RightAxis = *reinterpret_cast<const int8_t*>(&changes[pos]);
+                        pos += sizeof(uint8_t);
+                        break;
+                    }
+                case EChangeTypePlayer::MouseX:
+                    {
+                        state->InputState.MouseX = *reinterpret_cast<const float*>(&changes[pos]);
+                        pos += sizeof(float);
+                        break;
+                    }
+                case EChangeTypePlayer::MouseY:
+                    {
+                        state->InputState.MouseY = *reinterpret_cast<const float*>(&changes[pos]);
+                        pos += sizeof(float);
+                        break;
+                    }
+                case EChangeTypePlayer::CameraPitch:
+                    {
+                        state->CameraPitch = *reinterpret_cast<const float*>(&changes[pos]);
+                        pos += sizeof(float);
+                        break;
+                    }
+                case EChangeTypePlayer::FourPressed:
+                    {
+                        state->InputState.FourPressed = *reinterpret_cast<const bool*>(&changes[pos]);
+                        pos += sizeof(bool);
+                        break;
+                    }
+                case EChangeTypePlayer::OnePressed:
+                    {
+                        state->InputState.OnePressed = *reinterpret_cast<const bool*>(&changes[pos]);
+                        pos += sizeof(bool);
+                        break;
+                    }
+                case EChangeTypePlayer::TwoPressed:
+                    {
+                        state->InputState.TwoPressed = *reinterpret_cast<const bool*>(&changes[pos]);
+                        pos += sizeof(bool);
+                        break;
+                    }
+                case EChangeTypePlayer::ThreePressed:
+                    {
+                        state->InputState.ThreePressed = *reinterpret_cast<const bool*>(&changes[pos]);
+                        pos += sizeof(bool);
+                        break;
+                    }
+                case EChangeTypePlayer::ResetPos:
+                    {
+                        state->InputState.ResetPressed = *reinterpret_cast<const bool*>(&changes[pos]);
+                        pos += sizeof(bool);
+                        break;
+                    }
+                case EChangeTypePlayer::SpawnZombie:
+                    {
+                        state->InputState.SpawnZombiePressed = *reinterpret_cast<const bool*>(&changes[pos]);
+                        pos += sizeof(bool);
+                        break;
+                    }
+                case EChangeTypePlayer::LeftMouseButton:
+                    {
+                        state->InputState.LeftMouseButtonPressed = *reinterpret_cast<const bool*>(&changes[pos]);
+                        pos += sizeof(bool);
+                        break;
+                    }
+                case EChangeTypePlayer::RightMouseButton:
+                    {
+                        state->InputState.RightMouseButtonPressed = *reinterpret_cast<const bool*>(&changes[pos]);
+                        pos += sizeof(bool);
+                        break;
+                    }
+                }
+            }
+            break;
+        }
+    default:
+        LivingEntity::ApplyEntityChange(changes, pos, change);
+        break;
+    }
+}
+
 bool Player::GetMode() const
 {
     return Mode;
@@ -202,61 +329,42 @@ EBlockType Player::GetCurrentSelectedBlock() const
     return CurrentSelectedBlock;
 }
 
+EntityState* Player::GetEntityState() const
+{
+    return new PlayerState(*reinterpret_cast<PlayerState*>(State.get()));
+}
+
+void Player::SetClientInputOnTick(const uint64_t tick, const ClientInputState& inputState)
+{
+    InputStates[tick % EngineDefaults::ROLLBACK_COUNT] = inputState;
+}
+
+void Player::HandleClientInput(const ClientInputState& inputState) const
+{
+    auto* state = reinterpret_cast<PlayerState*>(State.get());
+    state->VerticalInput = inputState.ForwardAxis;
+    state->HorizontalInput = inputState.RightAxis;
+    state->JumpRequested = inputState.JumpPressed;
+    state->CameraPitch += -inputState.MouseY;
+    if (state->CameraPitch > 89.0F)
+    {
+        state->CameraPitch = 89.0F;
+    }
+    else if (state->CameraPitch < -89.0F)
+    {
+        state->CameraPitch = -89.0F;
+    }
+    State->EntityTransform.Rotation.y += inputState.MouseX;
+    // Add more input handling
+}
+
+
+/*
 void Player::HandleKeyChangePacket(const KeyChangePacket& packet)
 {
     const int action = packet.GetAction();
     switch (packet.GetKey())
     {
-    case GLFW_KEY_W:
-        if (action == GLFW_PRESS)
-        {
-            VerticalInput++;
-        }
-        else if (action == GLFW_RELEASE)
-        {
-            VerticalInput--;
-        }
-        break;
-    case GLFW_KEY_S:
-        if (action == GLFW_PRESS)
-        {
-            VerticalInput--;
-        }
-        else if (action == GLFW_RELEASE)
-        {
-            VerticalInput++;
-        }
-        break;
-    case GLFW_KEY_A:
-        if (action == GLFW_PRESS)
-        {
-            HorizontalInput--;
-        }
-        else if (action == GLFW_RELEASE)
-        {
-            HorizontalInput++;
-        }
-        break;
-    case GLFW_KEY_D:
-        if (action == GLFW_PRESS)
-        {
-            HorizontalInput++;
-        }
-        else if (action == GLFW_RELEASE)
-        {
-            HorizontalInput--;
-        }
-        break;
-    case GLFW_KEY_SPACE:
-        if (action == GLFW_PRESS)
-        {
-            JumpRequested = true;
-        }
-        else if (action == GLFW_RELEASE)
-        {
-            JumpRequested = false;
-        }
-        break;
     case GLFW_KEY_1:
         if (action == GLFW_PRESS)
         {
@@ -320,45 +428,4 @@ void Player::HandleMouseClickPacket(const MouseChangePacket& packet)
         }
     }
 }
-
-void Player::HandleMouseMovementPacket(const MousePosChangePacket& packet)
-{
-    CameraTransform.Rotate(-packet.GetY(), packet.GetX(), 0.0F);
-    glm::vec3 rotation = CameraTransform.GetRotation();
-    if (rotation.x > 89.0F)
-    {
-        CameraTransform.SetRotation(89.0F, rotation.y, rotation.z);
-    }
-    else if (rotation.x < -89.0F)
-    {
-        CameraTransform.SetRotation(-89.0F, rotation.y, rotation.z);
-    }
-    GetTransform().SetRotation(0.0F, rotation.y, 0.0F);
-    const auto packetToSend = std::make_shared<Packet>(PacketHeader::PLAYER_ROTATION_CHANGE_PACKET);
-    rotation = CameraTransform.GetRotation();
-    *packetToSend << rotation.x << rotation.y << rotation.z;
-    packet.GetConnectionToClient()->WritePacket(packetToSend);
-}
-
-std::shared_ptr<Packet> Player::GetTickPacket()
-{
-    auto packet = std::make_shared<Packet>(PacketHeader::ENTITY_DATA_PACKET);
-    const glm::vec3 pos = GetTransform().GetPosition();
-    const glm::vec3 rotation = CameraTransform.GetRotation();
-    *packet << GetEntityId() << pos.x << pos.y << pos.z << rotation.x << rotation.y << rotation.z;
-    return packet;
-}
-
-std::shared_ptr<Packet> Player::GetSpawnPacket()
-{
-    auto packet = std::make_shared<Packet>(PacketHeader::ENTITY_ENTER_WORLD_PACKET);
-    const glm::vec3 pos = GetTransform().GetPosition();
-    const glm::vec3 rotation = CameraTransform.GetRotation();
-    *packet << static_cast<uint8_t>(GetEntityType()) << GetEntityId() << pos.x << pos.y << pos.z << rotation.x << rotation.y << rotation.z;
-    return packet;
-}
-
-EEntityType Player::GetEntityType() const
-{
-    return EEntityType::Player;
-}
+*/

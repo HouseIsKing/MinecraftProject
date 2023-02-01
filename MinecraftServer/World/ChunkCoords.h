@@ -12,6 +12,7 @@ public:
     [[nodiscard]] int GetX() const;
     [[nodiscard]] int GetY() const;
     [[nodiscard]] int GetZ() const;
+    bool operator<(const ChunkCoords& chunkCoords) const;
     ChunkCoords(int x, int y, int z);
     ChunkCoords();
 
@@ -22,16 +23,4 @@ public:
 
     friend CustomFileManager& operator<<(CustomFileManager& file, const ChunkCoords& coords);
     friend CustomFileManager& operator>>(CustomFileManager& file, ChunkCoords& coords);
-};
-
-struct ChunkComparator
-{
-    std::size_t operator()(const ChunkCoords& other) const
-    {
-        const size_t x = other.GetX() >= 0 ? static_cast<unsigned long long>(2 * other.GetX()) : static_cast<unsigned long long>(-2 * other.GetX() - 1);
-        const size_t y = other.GetY() >= 0 ? static_cast<unsigned long long>(2 * other.GetY()) : static_cast<unsigned long long>(-2 * other.GetY() - 1);
-        const size_t z = other.GetZ() >= 0 ? static_cast<unsigned long long>(2 * other.GetZ()) : static_cast<unsigned long long>(-2 * other.GetZ() - 1);
-        const size_t xyPair = x >= y ? x * x + x + y : y * y + x;
-        return xyPair >= z ? xyPair * xyPair + xyPair + z : z * z + xyPair;
-    }
 };

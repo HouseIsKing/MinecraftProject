@@ -1,51 +1,34 @@
 #pragma once
+#include "Util/BoundingBox.h"
+#include "Util/States/EntityState.h"
+#include "Util/TransformStruct.h"
 #include <memory>
 
-#include "Util/BoundingBox.h"
-#include "Util/Transform.h"
-#include <glm/vec3.hpp>
-
-#include "Network/Packets/Packet.h"
-
 class MultiPlayerWorld;
-
-enum class EEntityType : uint8_t
-{
-    Player,
-    BlockBreakParticle,
-    Zombie,
-};
 
 class Entity
 {
     static MultiPlayerWorld* World;
-    bool IsGrounded;
-    glm::vec3 EntitySize;
-    const uint16_t EntityId;
 
 protected:
-    float VelocityX;
-    float VelocityY;
-    float VelocityZ;
-    Transform EntityTransform;
-    [[nodiscard]] bool IsOnGround() const;
-    void CheckCollisionAndMove();
+    std::unique_ptr<EntityState> State;
+    void CheckCollisionAndMove() const;
     static MultiPlayerWorld* GetWorld();
+    virtual void ApplyEntityChange(const std::vector<uint8_t>& changes, size_t& pos, EChangeTypeEntity change);
 
 public:
-    Entity(glm::vec3 entitySize, float x, float y, float z);
+    Entity(glm::vec3 entitySize, float x, float y, float z, EntityState* state);
     virtual ~Entity();
     Entity(const Entity&) = delete;
     Entity& operator=(const Entity&) = delete;
     Entity& operator=(Entity&&) = delete;
     Entity(Entity&&) = delete;
     static void SetWorld(MultiPlayerWorld* newWorld);
-    Transform& GetTransform();
+    [[nodiscard]] TransformStruct& GetTransform() const;
     virtual void Tick();
-    BoundingBox GetBoundingBox();
+    [[nodiscard]] BoundingBox GetBoundingBox() const;
     [[nodiscard]] uint16_t GetEntityId() const;
-    [[nodiscard]] glm::vec3 GetEntitySize() const;
-    [[nodiscard]] virtual std::shared_ptr<Packet> GetTickPacket();
-    [[nodiscard]] virtual std::shared_ptr<Packet> GetSpawnPacket();
-    [[nodiscard]] virtual EEntityType GetEntityType() const = 0;
+    [[nodiscard]] EEntityType GetEntityType() const;
+    [[nodiscard]] virtual EntityState* GetEntityState() const;
+    void ApplyEntityChanges(const std::vector<uint8_t>& changes, size_t& pos);
 };

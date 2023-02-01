@@ -12,8 +12,7 @@ class TessellationHelper final : public TessellationInterface
     [[nodiscard]] glm::mat4x4 GetTransformationMatrix(size_t id) const;
 
 public:
-    TessellationHelper();
-    TessellationHelper(float x, float y, float z);
+    explicit TessellationHelper(TransformStruct* transform);
     [[nodiscard]] Transform* GetTransform(size_t id) const;
     uint16_t AddVertex(const Vertex& vertex);
     void AddTriangle(uint16_t triangle) override;

@@ -1,152 +1,35 @@
 #pragma once
-#include "Network/Packets/EntityDataPacket.h"
 #include "Util/BoundingBox.h"
+#include "Util/States/EntityState.h"
 #include "Util/TessellationHelper.h"
 
-enum class EEntityType : uint8_t
-{
-    Player,
-    BlockBreakParticle,
-    Zombie,
-};
+class World;
 
-template <typename T>
 class Entity
 {
-    static T* World;
-    bool IsGrounded;
-    glm::vec3 EntitySize;
-    const uint16_t EntityId;
-
 protected:
-    float VelocityX;
-    float VelocityY;
-    float VelocityZ;
+    std::unique_ptr<EntityState> State;
     TessellationHelper Tessellation;
-    Transform PrevTransform;
-    Entity(glm::vec3 entitySize, float x, float y, float z);
-    [[nodiscard]] bool IsOnGround() const;
-    void CheckCollisionAndMove();
-    static T* GetWorld();
+    TransformStruct PrevTransform;
+    static World* TheWorld;
+    Entity(glm::vec3 entitySize, float x, float y, float z, EntityState* state);
+    void CheckCollisionAndMove() const;
+    virtual void ApplyEntityChange(const std::vector<uint8_t>& changes, size_t& pos, EChangeTypeEntity change);
 
 public:
-    virtual ~Entity();
+    virtual ~Entity() = default;
     Entity(const Entity&) = delete;
     Entity& operator=(const Entity&) = delete;
     Entity& operator=(Entity&&) = delete;
     Entity(Entity&&) = delete;
-    static void SetWorld(T* newWorld);
+    static void SetWorld(World* newWorld);
     virtual void Tick();
     void virtual Render(float partialTick);
-    [[nodiscard]] Transform& GetTransform() const;
+    [[nodiscard]] TransformStruct& GetTransform() const;
     [[nodiscard]] BoundingBox GetBoundingBox() const;
     [[nodiscard]] uint16_t GetEntityId() const;
     [[nodiscard]] glm::vec3 GetEntitySize() const;
-    [[nodiscard]] virtual EEntityType GetEntityType() const = 0;
-    virtual void HandleEntityUpdate(const EntityDataPacket& packet);
+    [[nodiscard]] EEntityType GetEntityType() const;
+    [[nodiscard]] virtual EntityState* GetEntityState() const;
+    void ApplyEntityChanges(const std::vector<uint8_t>& changes, size_t& pos);
 };
-
-template <typename T>
-T* Entity<T>::World = nullptr;
-
-template <typename T>
-Entity<T>::Entity(const glm::vec3 entitySize, const float x, const float y, const float z) : IsGrounded(false), EntitySize(entitySize), EntityId(GetWorld()->RegisterEntity(this)), VelocityX(0), VelocityY(0), VelocityZ(0),
-    Tessellation(x + entitySize.x, y + entitySize.y, z + entitySize.z), PrevTransform(GetTransform())
-{
-}
-
-template <typename T>
-Entity<T>::~Entity() = default;
-
-template <typename T>
-void Entity<T>::SetWorld(T* newWorld)
-{
-    World = newWorld;
-}
-
-template <typename T>
-T* Entity<T>::GetWorld()
-{
-    return World;
-}
-
-template <typename T>
-bool Entity<T>::IsOnGround() const
-{
-    return IsGrounded;
-}
-
-template <typename T>
-void Entity<T>::CheckCollisionAndMove()
-{
-    const float originalY = VelocityY;
-    const glm::vec3 pos = GetTransform().GetPosition();
-    auto myBoundingBox = BoundingBox(pos.x - EntitySize.x, pos.y - EntitySize.y, pos.z - EntitySize.z, pos.x + EntitySize.x, pos.y + EntitySize.y, pos.z + EntitySize.z);
-    auto movementBox = BoundingBox(myBoundingBox);
-    movementBox.Expand(VelocityX, VelocityY, VelocityZ);
-    movementBox.Grow(1.0F, 1.0F, 1.0F);
-    std::vector<BoundingBox> collidingBoxes = World->GetBlockBoxesInBoundingBox(movementBox);
-    for (BoundingBox& box : collidingBoxes)
-    {
-        VelocityX = myBoundingBox.ClipCollisionX(box, VelocityX);
-    }
-    myBoundingBox.Move(VelocityX, 0.0F, 0.0F);
-    GetTransform().Move(VelocityX, 0.0F, 0.0F);
-    for (BoundingBox& box : collidingBoxes)
-    {
-        VelocityY = myBoundingBox.ClipCollisionY(box, VelocityY);
-    }
-    myBoundingBox.Move(0.0F, VelocityY, 0.0F);
-    GetTransform().Move(0.0F, VelocityY, 0.0F);
-    for (BoundingBox& box : collidingBoxes)
-    {
-        VelocityZ = myBoundingBox.ClipCollisionZ(box, VelocityZ);
-    }
-    GetTransform().Move(0.0F, 0.0F, VelocityZ);
-    IsGrounded = originalY <= 0 && abs(VelocityY - originalY) > 0.001F;
-}
-
-template <typename T>
-void Entity<T>::Render(float /*partialTick*/)
-{
-}
-
-template <typename T>
-void Entity<T>::Tick()
-{
-    PrevTransform = GetTransform();
-}
-
-template <typename T>
-Transform& Entity<T>::GetTransform() const
-{
-    return *Tessellation.GetTransform(0);
-}
-
-template <typename T>
-BoundingBox Entity<T>::GetBoundingBox() const
-{
-    const glm::vec3 pos = GetTransform().GetPosition();
-    return {pos.x - EntitySize.x, pos.y - EntitySize.y, pos.z - EntitySize.z, pos.x + EntitySize.x, pos.y + EntitySize.y, pos.z + EntitySize.z};
-}
-
-template <typename T>
-uint16_t Entity<T>::GetEntityId() const
-{
-    return EntityId;
-}
-
-template <typename T>
-glm::vec3 Entity<T>::GetEntitySize() const
-{
-    return EntitySize;
-}
-
-template <typename T>
-void Entity<T>::HandleEntityUpdate(const EntityDataPacket& packet)
-{
-    PrevTransform = GetTransform();
-    GetTransform().SetPosition(packet.GetXPos(), packet.GetYPos(), packet.GetZPos());
-    GetTransform().SetRotation(packet.GetXRot(), packet.GetYRot(), packet.GetZRot());
-}
-

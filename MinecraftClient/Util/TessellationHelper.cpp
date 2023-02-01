@@ -1,13 +1,6 @@
 #include "TessellationHelper.h"
 #include "EngineDefaults.h"
 
-TessellationHelper::TessellationHelper()
-{
-	TheShader = EngineDefaults::GetShader();
-	PositionUniform = TheShader->GetUniformInt("transformationMatrix");
-	TessellationTransforms.emplace_back(new Transform());
-}
-
 Transform* TessellationHelper::GetTransform(const size_t id) const
 {
 	return TessellationTransforms[id].get();
@@ -34,6 +27,13 @@ glm::mat4x4 TessellationHelper::GetTransformationMatrix(const size_t id) const
 		helper = transform->GetTransformMatrix() * helper;
 	}
 	return helper;
+}
+
+TessellationHelper::TessellationHelper(TransformStruct* transform)
+{
+	TheShader = EngineDefaults::GetShader();
+	PositionUniform = TheShader->GetUniformInt("transformationMatrix");
+	TessellationTransforms.emplace_back(new Transform(transform));
 }
 
 void TessellationHelper::Draw()
@@ -113,9 +113,4 @@ void TessellationHelper::Reset()
     Vertices.clear();
     TriangleIndices.clear();
     HasInit = false;
-}
-
-TessellationHelper::TessellationHelper(const float x, const float y, const float z) : TessellationHelper()
-{
-	GetTransform(0)->SetPosition(x, y, z);
 }

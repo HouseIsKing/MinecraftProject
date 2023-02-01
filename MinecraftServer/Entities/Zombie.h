@@ -1,7 +1,7 @@
 #pragma once
 #include "EntityMeshBlock.h"
 #include "LivingEntity.h"
-
+/*
 class SinglePlayerWorld;
 
 class Zombie final : public LivingEntity
@@ -23,3 +23,4 @@ public:
     void Tick() override;
     [[nodiscard]] EEntityType GetEntityType() const override;
 };
+*/

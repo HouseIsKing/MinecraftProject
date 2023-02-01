@@ -1,15 +1,17 @@
 #pragma once
-#include "Entities/MP/PlayerMp.h"
 #include "Network/ClientNetworkManager.h"
+#include "Util/States/WorldState.h"
 #include "World/Generic/World.h"
 
-class MultiPlayerWorld final : public World<MultiPlayerWorld, PlayerMp>
+class PlayerMp;
+
+class MultiPlayerWorld final : public World
 {
     void Init() override;
-    void UpdateChunksNear(int x, int y, int z);
     ClientNetworkManager NetworkManager;
     uint16_t NextId;
     void HandlePacket(const PacketData* packet);
+    void ApplyChangesList(const std::vector<uint8_t>& changes);
 
 public:
     ~MultiPlayerWorld() override;
@@ -17,10 +19,11 @@ public:
     MultiPlayerWorld& operator=(const MultiPlayerWorld& other) = delete;
     MultiPlayerWorld(MultiPlayerWorld&& other) = delete;
     MultiPlayerWorld& operator=(MultiPlayerWorld&& other) = delete;
+    std::array<WorldState, EngineDefaults::ROLLBACK_COUNT> WorldStates{};
     MultiPlayerWorld(GLFWwindow* window, const std::string& name, const std::string& ip);
-    uint16_t RegisterEntity(Entity<MultiPlayerWorld>* entity);
     void Run() override;
-    void HandleKeyCallback(int key, int action);
-    void HandleCursorPosCallback(float xPos, float yPos);
-    void HandleMouseButtonCallback(int button, int action);
+    bool RevertWorldState(uint64_t tick);
+    void BuildWorldState();
+    void Tick() override;
+    void SimulateTicks(uint8_t tickCount);
 };

@@ -1,19 +1,18 @@
 #pragma once
 #include "Util/GuiTessellation.h"
 
-template <typename T>
+class World;
+
 class Gui
 {
-    static T* TheWorld;
-
 protected:
     GuiTessellation Tessellation;
     Gui() = default;
-    static T* GetWorld();
+    static World* TheWorld;
 
 public:
     bool Active = false;
-    static void SetWorld(T* newWorld);
+    static void SetWorld(World* newWorld);
     virtual ~Gui() = default;
     Gui(const Gui&) = delete;
     Gui& operator=(const Gui&) = delete;
@@ -22,19 +21,4 @@ public:
     virtual void Render() = 0;
     virtual void Rebuild() = 0;
 };
-
-template <typename WorldType>
-WorldType* Gui<WorldType>::TheWorld = nullptr;
-
-template <typename WorldType>
-WorldType* Gui<WorldType>::GetWorld()
-{
-    return TheWorld;
-}
-
-template <typename WorldType>
-void Gui<WorldType>::SetWorld(WorldType* newWorld)
-{
-    TheWorld = newWorld;
-}
 

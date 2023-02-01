@@ -56,3 +56,37 @@ CustomFileManager& CustomFileManager::operator>>(std::size_t& size)
     gzread(FileStream, &size, sizeof(std::size_t));
     return *this;
 }
+
+CustomFileManager& CustomFileManager::operator<<(const ChunkCoords& coords)
+{
+    *this << coords.X << coords.Y << coords.Z;
+    return *this;
+}
+
+CustomFileManager& CustomFileManager::operator>>(ChunkCoords& coords)
+{
+    *this >> coords.X >> coords.Y >> coords.Z;
+    return *this;
+}
+
+CustomFileManager& CustomFileManager::operator<<(const Chunk& chunk)
+{
+    *this << chunk.GetChunkPos();
+    for (uint16_t i = 0; i < static_cast<uint16_t>(EngineDefaults::CHUNK_WIDTH * EngineDefaults::CHUNK_HEIGHT * EngineDefaults::CHUNK_DEPTH); i++)
+    {
+        *this << chunk.GetBlockTypeAt(i);
+    }
+    return *this;
+}
+
+CustomFileManager& CustomFileManager::operator>>(Chunk& chunk)
+{
+    for (uint16_t i = 0; i < static_cast<uint16_t>(EngineDefaults::CHUNK_WIDTH * EngineDefaults::CHUNK_HEIGHT * EngineDefaults::CHUNK_DEPTH); i++)
+    {
+        EBlockType blockType;
+        *this >> blockType;
+        chunk.SetBlockTypeAt(i, blockType);
+    }
+    return *this;
+}
+

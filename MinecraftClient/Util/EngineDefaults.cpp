@@ -5,7 +5,6 @@
 
 bool EngineDefaults::HasInit = false;
 bool EngineDefaults::HasBuiltTextureUbo = false;
-CustomRandomEngine EngineDefaults::Engine = {};
 std::unordered_map<Texture*, uint16_t, TextureHasher> EngineDefaults::TextureList = {};
 std::array<std::unique_ptr<Shader>, 2> EngineDefaults::Shaders = {};
 GLuint EngineDefaults::UboTextures = 0;
@@ -44,9 +43,12 @@ float EngineDefaults::ConvertLightLevelToAmbient(const int lightLevel)
     return 1.0F;
 }
 
-float EngineDefaults::GetNextFloat()
+glm::ivec3 EngineDefaults::GetChunkLocalPositionFromIndex(uint16_t index)
 {
-    return static_cast<float>(static_cast<double>(CustomRandomEngine::GetNext()) / CustomRandomEngine::M);
+    const uint16_t x = index % CHUNK_WIDTH;
+    const uint16_t z = (index / CHUNK_WIDTH) % CHUNK_DEPTH;
+    const uint16_t y = index / (CHUNK_WIDTH * CHUNK_DEPTH);
+    return {x, y, z};
 }
 
 uint16_t EngineDefaults::RegisterTexture(Texture* texture)
@@ -98,4 +100,12 @@ void EngineDefaults::ResetTextures()
 const FontManager& EngineDefaults::GetFontManager()
 {
     return MainFont;
+}
+
+void EngineDefaults::EmplaceDataInVector(std::vector<uint8_t>& vector, const uint8_t* data, const size_t size)
+{
+    for (size_t i = 0; i < size; i++)
+    {
+        vector.emplace_back(data[i]);
+    }
 }

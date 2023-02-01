@@ -8,6 +8,7 @@ PerlinNoise::PerlinNoise(const int octave) : Octave(octave)
 
 std::vector<int> PerlinNoise::Generate(const size_t width, const size_t height) const
 {
+    CustomRandomEngine random;
     std::vector<int> result;
     result.reserve(width * height);
     std::vector<int> table;
@@ -21,7 +22,7 @@ std::vector<int> PerlinNoise::Generate(const size_t width, const size_t height) 
     {
         for (size_t x = 0; x < width; x += step)
         {
-            table[(x + y * width)] = EngineDefaults::GetNext<int>(-128, 128) * FUZZINESS;
+            table[(x + y * width)] = random.GetNext(-128, 128) * FUZZINESS;
         }
     }
 
@@ -40,7 +41,7 @@ std::vector<int> PerlinNoise::Generate(const size_t width, const size_t height) 
                 const int stepValueY = table[(x % width + (y + step) % height * width)];
                 const int stepValueXy = table[((x + step) % width + (y + step) % height * width)];
 
-                const int mutatedValue = (value + stepValueY + stepValueX + stepValueXy) / 4 + EngineDefaults::GetNext<int>(-static_cast<int>(max), static_cast<int>(max));
+                const int mutatedValue = (value + stepValueY + stepValueX + stepValueXy) / 4 + random.GetNext(-static_cast<int>(max), static_cast<int>(max));
 
                 table[(x + halfStep + (y + halfStep) * width)] = mutatedValue;
             }
@@ -64,8 +65,8 @@ std::vector<int> PerlinNoise::Generate(const size_t width, const size_t height) 
                 const int halfStepValue = table[((x + halfStep) % width + (y + halfStep) % height * width)];
 
                 // Combine values for new value
-                const int mutatedValueX = (value + stepValueX + halfStepValue + halfStepValueXPos) / 4 + EngineDefaults::GetNext<int>(-static_cast<int>(max), static_cast<int>(max));
-                const int mutatedValueY = (value + stepValueY + halfStepValue + halfStepValueYPos) / 4 + EngineDefaults::GetNext<int>(-static_cast<int>(max), static_cast<int>(max));
+                const int mutatedValueX = (value + stepValueX + halfStepValue + halfStepValueXPos) / 4 + random.GetNext(-static_cast<int>(max), static_cast<int>(max));
+                const int mutatedValueY = (value + stepValueY + halfStepValue + halfStepValueYPos) / 4 + random.GetNext(-static_cast<int>(max), static_cast<int>(max));
 
                 // Update values in table
                 table[(x + halfStep + y * width)] = mutatedValueX;

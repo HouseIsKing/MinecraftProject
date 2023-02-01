@@ -5,42 +5,11 @@
 
 #include "Network/ConnectionToClientInterface.h"
 #include "Network/ServerNetworkManager.h"
-
-struct IntegerVector2Hasher
-{
-    size_t operator()(const glm::ivec2& vector) const
-    {
-        const size_t x = vector.x >= 0 ? static_cast<unsigned long long>(2 * vector.x) : static_cast<unsigned long long>(-2 * vector.x - 1);
-        const size_t y = vector.y >= 0 ? static_cast<unsigned long long>(2 * vector.y) : static_cast<unsigned long long>(-2 * vector.y - 1);
-        return x >= y ? x * x + x + y : y * y + x;
-    }
-};
+#include "Util/States/WorldState.h"
 
 class MultiPlayerWorld
 {
-    std::unordered_map<ChunkCoords, Chunk, ChunkComparator> Chunks;
-    std::unordered_map<uint16_t, std::unique_ptr<Entity>> Entities;
-    ServerNetworkManager NetworkManager;
-    std::unordered_map<std::shared_ptr<ConnectionToClientInterface>, Player*, ConnectionHasher, ConnectionEqual> Connections;
-    std::stack<uint16_t> EntityAvailableIDs{};
-    std::vector<uint16_t> EntitiesToRemove{};
-    std::vector<Entity*> EntitiesAdded{};
-    long WorldTime; //symbolises world time in ticks
-    const uint16_t LevelWidth;
-    const uint16_t LevelHeight;
-    const uint16_t LevelDepth;
-    std::unordered_map<glm::ivec2, uint8_t, IntegerVector2Hasher> LightLevels;
-    void SaveWorld();
-    void LoadWorld();
-    void GenerateChunks(uint16_t amountX, uint16_t amountY, uint16_t amountZ);
-    void GenerateLevel();
-    void Init();
-    void RecalculateLightLevels();
-    int RecalculateLightLevels(int x, int z);
-    void SendEntireWorldToClient(ConnectionToClient* client) const;
-
 public:
-    float PartialTick{};
     MultiPlayerWorld(uint16_t width, uint16_t height, uint16_t depth);
     ~MultiPlayerWorld();
     MultiPlayerWorld(const MultiPlayerWorld& other) = delete;
@@ -61,7 +30,36 @@ public:
     [[nodiscard]] int GetBrightnessAt(int x, int y, int z) const;
     bool IsBlockSolid(int x, int y, int z);
     [[nodiscard]] int GetBrightnessAt(glm::vec3 pos) const;
-    [[nodiscard]] std::vector<std::shared_ptr<Packet>> GetTickPackets() const;
+    [[nodiscard]] uint64_t GetWorldTime() const;
+    [[nodiscard]] uint64_t GetMaxWorldTime() const;
     void HandlePacket(const PacketData* packet);
     std::vector<BoundingBox> GetBlockBoxesInBoundingBox(const BoundingBox& boundingBox);
+    CustomRandomEngine RandomEngineState;
+
+private:
+    std::map<ChunkCoords, Chunk> Chunks;
+    std::map<uint16_t, std::unique_ptr<Entity>> Entities;
+    std::map<glm::ivec2, uint8_t, IVec2Comparator> LightLevels;
+    uint64_t WorldTime = 0;
+    uint64_t MaxWorldTime = 0;
+    std::array<WorldState, EngineDefaults::ROLLBACK_COUNT> WorldStates{};
+    ServerNetworkManager NetworkManager;
+    std::unordered_map<std::shared_ptr<ConnectionToClientInterface>, Player*, ConnectionHasher, ConnectionEqual> Connections;
+    std::stack<uint16_t> EntityAvailableIDs{};
+    std::vector<uint16_t> EntitiesToRemove{};
+    std::vector<Entity*> EntitiesAdded{};
+    const uint16_t LevelWidth;
+    const uint16_t LevelHeight;
+    const uint16_t LevelDepth;
+    void SaveWorld();
+    void LoadWorld();
+    void GenerateChunks(uint16_t amountX, uint16_t amountY, uint16_t amountZ);
+    void GenerateLevel();
+    void Init();
+    void RecalculateLightLevels();
+    int RecalculateLightLevels(int x, int z);
+    void BuildWorldState();
+    bool RevertWorldState(uint64_t tick);
+    void SimulateTicks(uint8_t tickCount);
+    void ApplyChangesList(const std::vector<uint8_t>& changes);
 };

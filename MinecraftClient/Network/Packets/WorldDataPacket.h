@@ -1,16 +1,14 @@
 #pragma once
-#include "ChunkDataPacket.h"
-#include "LightDataPacket.h"
 #include "PacketData.h"
 
 class WorldDataPacket final : public PacketData
 {
-    std::vector<std::unique_ptr<ChunkDataPacket>> Chunks;
-    std::vector<std::unique_ptr<LightDataPacket>> Lights;
+    uint64_t WorldTime;
+    std::vector<uint8_t> Data;
 
 public:
     explicit WorldDataPacket(Packet& packet);
-    [[nodiscard]] const std::vector<std::unique_ptr<ChunkDataPacket>>& GetChunks() const;
-    [[nodiscard]] const std::vector<std::unique_ptr<LightDataPacket>>& GetLights() const;
     [[nodiscard]] EPacketType GetPacketType() const override;
+    [[nodiscard]] uint64_t GetWorldTime() const;
+    [[nodiscard]] const std::vector<uint8_t>& GetData() const;
 };

@@ -1,322 +1,143 @@
 #include "PlayerMp.h"
-#include "Entities/Generic/CameraController.h"
-#include "Util/EngineDefaults.h"
-#include "World/MP/MultiPlayerWorld.h"
 
-void PlayerMp::Render(const float partialTick)
+PlayerMp::PlayerMp(const PlayerState& state) : PlayerController(state)
 {
-    LivingEntity::Render(partialTick);
-    const glm::vec3 pos = GetTransform().GetPosition();
-    glm::vec3 finalCameraPosition = PrevTransform.GetPosition() + (pos - PrevTransform.GetPosition()) * partialTick;
-    GetTransform().SetPosition(finalCameraPosition);
-    finalCameraPosition.y += CAMERA_OFFSET - PLAYER_SIZE.y;
-    MyCamera.Position = finalCameraPosition;
-    Shader::SetMat4(EngineDefaults::GetShader()->GetUniformInt("view"), MyCamera.GetViewMatrix());
-    Shader::SetMat4(EngineDefaults::GetShader()->GetUniformInt("projection"), MyCamera.GetProjectionMatrix());
-    GetTransform().SetPosition(pos);
-    if (SelectedBlockGuiPtr == nullptr)
-    {
-        SelectedBlockGuiPtr = dynamic_cast<SelectedBlockGui<MultiPlayerWorld>*>(GetWorld()->GetGuiOfType<SelectedBlockGui<MultiPlayerWorld>>());
-    }
-    SelectionHighlight.Reset();
-    bool found = false;
-    SelectionHighlight.FaceHit = FindClosestFace(SelectionHighlight.HitPosition, found);
-    SelectionHighlight.BlockHit = found ? GetWorld()->GetBlockAt(SelectionHighlight.HitPosition.x, SelectionHighlight.HitPosition.y, SelectionHighlight.HitPosition.z) : nullptr;
-    //HandleMouseInput();
-    //HandleKeyboardMovementInput();
 }
 
-int PlayerMp::GetSelectionHighlightBrightness(const int x, const int y, const int z, const BlockFaces face)
+void PlayerMp::Tick()
 {
-    switch (face)
-    {
-    case BlockFaces::Top:
-        return GetWorld()->GetBrightnessAt(x, y + 1, z);
-    case BlockFaces::Bottom:
-        return GetWorld()->GetBrightnessAt(x, y - 1, z);
-    case BlockFaces::North:
-        return GetWorld()->GetBrightnessAt(x, y, z + 1);
-    case BlockFaces::South:
-        return GetWorld()->GetBrightnessAt(x, y, z - 1);
-    case BlockFaces::East:
-        return GetWorld()->GetBrightnessAt(x + 1, y, z);
-    case BlockFaces::West:
-        return GetWorld()->GetBrightnessAt(x - 1, y, z);
-    }
-    return 0;
+    InputState = InputStatesHistory[TheWorld->GetWorldTime() % EngineDefaults::ROLLBACK_COUNT];
+    PlayerController::Tick();
 }
 
-void PlayerMp::DisplaySelectionHighlight()
+const ClientInputState& PlayerMp::GetInputState(const size_t tickOffset) const
 {
-    //find closest face
-    const int brightness = GetSelectionHighlightBrightness(SelectionHighlight.HitPosition.x, SelectionHighlight.HitPosition.y, SelectionHighlight.HitPosition.z, SelectionHighlight.FaceHit);
-    if (SelectionHighlight.BlockHit != nullptr)
-    {
-        SelectionHighlight.Render(brightness);
-    }
+    return InputStatesHistory[tickOffset % EngineDefaults::ROLLBACK_COUNT];
 }
 
-PlayerMp::PlayerMp(const EntityDataPacket& data) : LivingEntity(PLAYER_SIZE, data.GetXPos(), data.GetYPos(), data.GetZPos()), MyCamera(CameraController::GetActiveCamera()), PrevMouseX(0), PrevMouseY(0), CurrentSelectedBlock(EBlockType::Stone), SelectedBlockGuiPtr(nullptr), SelectionHighlight(this)
+void PlayerMp::CopyInputStateToHistory(const size_t tickOffset)
 {
-    MyCamera.Position = GetTransform().GetPosition() + glm::vec3(0, CAMERA_OFFSET, 0);
-    MyCamera.Pitch = data.GetXRot();
-    MyCamera.Yaw = data.GetYRot();
-    GetTransform().SetRotation(0.0F, data.GetYRot(), 0.0F);
+    InputStatesHistory[tickOffset % EngineDefaults::ROLLBACK_COUNT] = InputState;
 }
 
-BlockFaces PlayerMp::FindClosestFace(glm::ivec3& blockPosition, bool& foundBlock) const
+EntityState* PlayerMp::GetEntityState() const
 {
-    const glm::vec3 frontVector = MyCamera.GetFrontVector();
-    const glm::vec3 cameraPos = MyCamera.Position;
-    const bool right = frontVector.x > 0.0F;
-    const bool up = frontVector.y > 0.0F;
-    const bool forward = frontVector.z > 0.0F;
-    float totalDistance = 0.0F;
-    const float maxDistance = CalculateMaxDistanceForHighlight(frontVector, up, right, forward);
-    float xDistance = cameraPos.x;
-    float yDistance = cameraPos.y;
-    float zDistance = cameraPos.z;
-    while (totalDistance <= maxDistance)
+    auto* state = new PlayerState(*reinterpret_cast<PlayerState*>(State.get()));
+    state->InputState = InputStatesHistory[TheWorld->GetWorldTime() % EngineDefaults::ROLLBACK_COUNT];
+    return state;
+}
+
+void PlayerMp::ApplyEntityChange(const std::vector<uint8_t>& changes, size_t& pos, EChangeTypeEntity change)
+{
+    switch (change)
     {
-        float distanceForX = ((right ? floor(xDistance) : ceil(xDistance)) - xDistance + (right ? 1.0F : -1.0F)) / frontVector.x;
-        float distanceForY = ((up ? floor(yDistance) : ceil(yDistance)) - yDistance + (up ? 1.0F : -1.0F)) / frontVector.y;
-        float distanceForZ = ((forward ? floor(zDistance) : ceil(zDistance)) - zDistance + (forward ? 1.0F : -1.0F)) / frontVector.z;
-        float distanceForXAbs = abs(distanceForX);
-        if (distanceForXAbs < 0.000001F)
+    case EChangeTypeEntity::PlayerChange:
         {
-            distanceForXAbs = 1.0F;
-            distanceForX += right ? 1.0F : -1.0F;
-        }
-        float distanceForYAbs = abs(distanceForY);
-        if (distanceForYAbs < 0.000001F)
-        {
-            distanceForYAbs = 1.0F;
-            distanceForY += up ? 1.0F : -1.0F;
-        }
-        float distanceForZAbs = abs(distanceForZ);
-        if (distanceForZAbs < 0.000001F)
-        {
-            distanceForZAbs = 1.0F;
-            distanceForZ += forward ? 1.0F : -1.0F;
-        }
-        float minDistance;
-        int xyzChoice;
-        if (distanceForXAbs < distanceForYAbs && distanceForXAbs < distanceForZAbs)
-        {
-            minDistance = distanceForX;
-            xyzChoice = 0;
-        }
-        else if (distanceForYAbs < distanceForZAbs)
-        {
-            minDistance = distanceForY;
-            xyzChoice = 1;
-        }
-        else
-        {
-            minDistance = distanceForZ;
-            xyzChoice = 2;
-        }
-        if (totalDistance + abs(minDistance) <= maxDistance)
-        {
-            xDistance += frontVector.x * minDistance;
-            yDistance += frontVector.y * minDistance;
-            zDistance += frontVector.z * minDistance;
-            blockPosition = glm::vec3(static_cast<int>(floor(xDistance)) - (!right && xyzChoice == 0 ? 1 : 0), static_cast<int>(floor(yDistance)) - (!up && xyzChoice == 1 ? 1 : 0), static_cast<int>(floor(zDistance)) - (!forward && xyzChoice == 2 ? 1 : 0));
-            if (GetWorld()->IsBlockExists(blockPosition.x, blockPosition.y, blockPosition.z))
+            auto* state = reinterpret_cast<PlayerState*>(State.get());
+            const uint8_t changesCount = changes[pos];
+            pos += sizeof(uint8_t);
+            for (uint8_t i = 0; i < changesCount; i++)
             {
-                foundBlock = true;
-                if (xyzChoice == 0 && frontVector.x > 0.0F)
+                const EChangeTypePlayer changeType = *reinterpret_cast<const EChangeTypePlayer*>(&changes[pos]);
+                pos += sizeof(EChangeTypePlayer);
+                switch (changeType)
                 {
-                    return BlockFaces::West;
-                }
-                if (xyzChoice == 0 && frontVector.x < 0.0F)
-                {
-                    return BlockFaces::East;
-                }
-                if (xyzChoice == 1 && frontVector.y > 0.0F)
-                {
-                    return BlockFaces::Bottom;
-                }
-                if (xyzChoice == 1 && frontVector.y < 0.0F)
-                {
-                    return BlockFaces::Top;
-                }
-                if (xyzChoice == 2 && frontVector.z > 0.0F)
-                {
-                    return BlockFaces::South;
-                }
-                if (xyzChoice == 2 && frontVector.z < 0.0F)
-                {
-                    return BlockFaces::North;
+                case EChangeTypePlayer::Jump:
+                    {
+                        state->InputState.JumpPressed = *reinterpret_cast<const bool*>(&changes[pos]);
+                        pos += sizeof(bool);
+                        break;
+                    }
+                case EChangeTypePlayer::FivePressed:
+                    {
+                        state->InputState.FivePressed = *reinterpret_cast<const bool*>(&changes[pos]);
+                        pos += sizeof(bool);
+                        break;
+                    }
+                case EChangeTypePlayer::ForwardAxis:
+                    {
+                        state->InputState.ForwardAxis = *reinterpret_cast<const int8_t*>(&changes[pos]);
+                        pos += sizeof(uint8_t);
+                        break;
+                    }
+                case EChangeTypePlayer::RightAxis:
+                    {
+                        state->InputState.RightAxis = *reinterpret_cast<const int8_t*>(&changes[pos]);
+                        pos += sizeof(uint8_t);
+                        break;
+                    }
+                case EChangeTypePlayer::MouseX:
+                    {
+                        state->InputState.MouseX = *reinterpret_cast<const float*>(&changes[pos]);
+                        pos += sizeof(float);
+                        break;
+                    }
+                case EChangeTypePlayer::MouseY:
+                    {
+                        state->InputState.MouseY = *reinterpret_cast<const float*>(&changes[pos]);
+                        pos += sizeof(float);
+                        break;
+                    }
+                case EChangeTypePlayer::CameraPitch:
+                    {
+                        state->CameraPitch = *reinterpret_cast<const float*>(&changes[pos]);
+                        pos += sizeof(float);
+                        break;
+                    }
+                case EChangeTypePlayer::FourPressed:
+                    {
+                        state->InputState.FourPressed = *reinterpret_cast<const bool*>(&changes[pos]);
+                        pos += sizeof(bool);
+                        break;
+                    }
+                case EChangeTypePlayer::OnePressed:
+                    {
+                        state->InputState.OnePressed = *reinterpret_cast<const bool*>(&changes[pos]);
+                        pos += sizeof(bool);
+                        break;
+                    }
+                case EChangeTypePlayer::TwoPressed:
+                    {
+                        state->InputState.TwoPressed = *reinterpret_cast<const bool*>(&changes[pos]);
+                        pos += sizeof(bool);
+                        break;
+                    }
+                case EChangeTypePlayer::ThreePressed:
+                    {
+                        state->InputState.ThreePressed = *reinterpret_cast<const bool*>(&changes[pos]);
+                        pos += sizeof(bool);
+                        break;
+                    }
+                case EChangeTypePlayer::ResetPos:
+                    {
+                        state->InputState.ResetPressed = *reinterpret_cast<const bool*>(&changes[pos]);
+                        pos += sizeof(bool);
+                        break;
+                    }
+                case EChangeTypePlayer::SpawnZombie:
+                    {
+                        state->InputState.SpawnZombiePressed = *reinterpret_cast<const bool*>(&changes[pos]);
+                        pos += sizeof(bool);
+                        break;
+                    }
+                case EChangeTypePlayer::LeftMouseButton:
+                    {
+                        state->InputState.LeftMouseButtonPressed = *reinterpret_cast<const bool*>(&changes[pos]);
+                        pos += sizeof(bool);
+                        break;
+                    }
+                case EChangeTypePlayer::RightMouseButton:
+                    {
+                        state->InputState.RightMouseButtonPressed = *reinterpret_cast<const bool*>(&changes[pos]);
+                        pos += sizeof(bool);
+                        break;
+                    }
                 }
             }
-        }
-        totalDistance += abs(minDistance);
-    }
-    foundBlock = false;
-    return BlockFaces::Bottom;
-}
-
-float PlayerMp::CalculateMaxDistanceForHighlight(const glm::vec3& front, const bool up, const bool right, const bool forward) const
-{
-    float xDistance = right ? 4.0F + PLAYER_SIZE.x : 3.0F + PLAYER_SIZE.x;
-    float yDistance = up ? 4.0F + 2 * PLAYER_SIZE.y - CAMERA_OFFSET : 3.0F + CAMERA_OFFSET;
-    float zDistance = forward ? 4.0F + PLAYER_SIZE.z : 3.0F + PLAYER_SIZE.z;
-    xDistance /= front.x;
-    yDistance /= front.y;
-    zDistance /= front.z;
-    xDistance = abs(xDistance);
-    yDistance = abs(yDistance);
-    zDistance = abs(zDistance);
-    return glm::min(xDistance, glm::min(yDistance, zDistance));
-}
-
-void PlayerMp::PlaceBlock() const
-{
-    if (SelectionHighlight.BlockHit != nullptr)
-    {
-        const int x = SelectionHighlight.HitPosition.x;
-        const int y = SelectionHighlight.HitPosition.y;
-        const int z = SelectionHighlight.HitPosition.z;
-        const Block* blockToPlace = BlockTypeList::GetBlockTypeData(CurrentSelectedBlock);
-        BoundingBox box = blockToPlace->GetBoundingBox();
-        switch (SelectionHighlight.FaceHit)
-        {
-        case BlockFaces::Bottom:
-            box.Move(static_cast<float>(x), static_cast<float>(y - 1), static_cast<float>(z));
-            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
-            {
-                break;
-            }
-            //GetWorld()->PlaceBlockAt(x, y - 1, z, CurrentSelectedBlock);
-            break;
-        case BlockFaces::Top:
-            box.Move(static_cast<float>(x), static_cast<float>(y + 1), static_cast<float>(z));
-            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
-            {
-                break;
-            }
-            //GetWorld()->PlaceBlockAt(x, y + 1, z, CurrentSelectedBlock);
-            break;
-        case BlockFaces::North:
-            box.Move(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z + 1));
-            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
-            {
-                break;
-            }
-            //GetWorld()->PlaceBlockAt(x, y, z + 1, CurrentSelectedBlock);
-            break;
-        case BlockFaces::South:
-            box.Move(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z - 1));
-            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
-            {
-                break;
-            }
-            //GetWorld()->PlaceBlockAt(x, y, z - 1, CurrentSelectedBlock);
-            break;
-        case BlockFaces::East:
-            box.Move(static_cast<float>(x + 1), static_cast<float>(y), static_cast<float>(z));
-            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
-            {
-                break;
-            }
-            //GetWorld()->PlaceBlockAt(x + 1, y, z, CurrentSelectedBlock);
-            break;
-        case BlockFaces::West:
-            box.Move(static_cast<float>(x - 1), static_cast<float>(y), static_cast<float>(z));
-            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
-            {
-                break;
-            }
-            //GetWorld()->PlaceBlockAt(x - 1, y, z, CurrentSelectedBlock);
             break;
         }
+    default:
+        PlayerController::ApplyEntityChange(changes, pos, change);
+        break;
     }
-}
-
-Frustum PlayerMp::GetCameraFrustum() const
-{
-    return MyCamera.GetFrustum();
-}
-
-float PlayerMp::GetCameraPitch() const
-{
-    return MyCamera.Pitch;
-}
-
-bool PlayerMp::GetMode() const
-{
-    return Mode;
-}
-
-EBlockType PlayerMp::GetCurrentSelectedBlock() const
-{
-    return CurrentSelectedBlock;
-}
-
-void PlayerMp::HandleEntityUpdate(const EntityDataPacket& packet)
-{
-    LivingEntity::HandleEntityUpdate(packet);
-    MyCamera.Pitch = packet.GetXRot();
-    MyCamera.Yaw = packet.GetYRot();
-}
-
-void PlayerMp::HandleMouseMovementInput(const float x, const float y, ClientNetworkManager* network)
-{
-    if (FirstMouseCheck)
-    {
-        FirstMouseCheck = false;
-        PrevMouseX = x;
-        PrevMouseY = y;
-        return;
-    }
-    const float mouseX = x - PrevMouseX;
-    const float mouseY = y - PrevMouseY;
-    PrevMouseX = x;
-    PrevMouseY = y;
-    const auto packetToSend = std::make_shared<Packet>(PacketHeader::MOUSE_POS_PACKET);
-    *packetToSend << mouseX * MouseSensitivity << mouseY * MouseSensitivity;
-    network->WritePacket(packetToSend);
-    /*
-    int state = glfwGetMouseButton(GetWorld()->GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
-    if (state == GLFW_PRESS && !LeftMousePressed)
-    {
-        LeftMousePressed = true;
-        if (Mode)
-        {
-            PlaceBlock();
-        }
-        else
-        {
-            if (SelectionHighlight.BlockHit != nullptr)
-            {
-                //GetWorld()->RemoveBlockAt(SelectionHighlight.HitPosition.x, SelectionHighlight.HitPosition.y, SelectionHighlight.HitPosition.z);
-            }
-        }
-    }
-    else if (state == GLFW_RELEASE)
-    {
-        LeftMousePressed = false;
-    }
-    state = glfwGetMouseButton(GetWorld()->GetWindow(), GLFW_MOUSE_BUTTON_RIGHT);
-    if (state == GLFW_PRESS && !RightMousePressed)
-    {
-        Mode = !Mode;
-        RightMousePressed = true;
-    }
-    else if (state == GLFW_RELEASE)
-    {
-        RightMousePressed = false;
-    }*/
-}
-
-void PlayerMp::HandlePlayerRotationChange(const PlayerRotateChangePacket& packet) const
-{
-    MyCamera.Pitch = packet.GetX();
-    MyCamera.Yaw = packet.GetY();
-}
-
-EEntityType PlayerMp::GetEntityType() const
-{
-    return EEntityType::Player;
 }

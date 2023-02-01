@@ -1,33 +1,26 @@
 #include "WorldDataPacket.h"
 
-WorldDataPacket::WorldDataPacket(Packet& packet)
+WorldDataPacket::WorldDataPacket(Packet& packet) : WorldTime(0)
 {
-    uint32_t chunksCount;
-    uint32_t lightsCount;
-    packet >> chunksCount >> lightsCount;
-    Chunks.reserve(chunksCount * sizeof(ChunkDataPacket));
-    Lights.reserve(lightsCount * sizeof(LightDataPacket));
-    for (uint32_t i = 0; i < chunksCount; i++)
+    Data.resize(packet.GetData().size() - sizeof(uint64_t));
+    for (uint8_t& i : Data)
     {
-        Chunks.emplace_back(new ChunkDataPacket(packet));
+        packet >> i;
     }
-    for (uint32_t i = 0; i < lightsCount; i++)
-    {
-        Lights.emplace_back(new LightDataPacket(packet));
-    }
-}
-
-const std::vector<std::unique_ptr<ChunkDataPacket>>& WorldDataPacket::GetChunks() const
-{
-    return Chunks;
-}
-
-const std::vector<std::unique_ptr<LightDataPacket>>& WorldDataPacket::GetLights() const
-{
-    return Lights;
+    packet >> WorldTime;
 }
 
 EPacketType WorldDataPacket::GetPacketType() const
 {
     return EPacketType::WorldData;
+}
+
+uint64_t WorldDataPacket::GetWorldTime() const
+{
+    return WorldTime;
+}
+
+const std::vector<uint8_t>& WorldDataPacket::GetData() const
+{
+    return Data;
 }

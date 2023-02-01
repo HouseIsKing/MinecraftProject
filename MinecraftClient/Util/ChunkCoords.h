@@ -1,7 +1,6 @@
 #pragma once
-#include "World/Generic/Chunk.h"
+#include "EngineDefaults.h"
 
-template <typename T>
 struct ChunkCoords
 {
     int X;
@@ -9,6 +8,7 @@ struct ChunkCoords
     int Z;
     ChunkCoords(int x, int y, int z);
     ChunkCoords();
+    bool operator<(const ChunkCoords& chunkCoords) const;
 
     constexpr bool operator==(const ChunkCoords& other) const
     {
@@ -16,21 +16,7 @@ struct ChunkCoords
     }
 };
 
-template <typename T>
-struct ChunkComparator
-{
-    std::size_t operator()(const ChunkCoords<T>& other) const
-    {
-        const size_t x = other.X >= 0 ? static_cast<unsigned long long>(2 * other.X) : static_cast<unsigned long long>(-2 * other.X - 1);
-        const size_t y = other.Y >= 0 ? static_cast<unsigned long long>(2 * other.Y) : static_cast<unsigned long long>(-2 * other.Y - 1);
-        const size_t z = other.Z >= 0 ? static_cast<unsigned long long>(2 * other.Z) : static_cast<unsigned long long>(-2 * other.Z - 1);
-        const size_t xyPair = x >= y ? x * x + x + y : y * y + x;
-        return xyPair >= z ? xyPair * xyPair + xyPair + z : z * z + xyPair;
-    }
-};
-
-template <typename T>
-ChunkCoords<T>::ChunkCoords(const int x, const int y, const int z) : X(x / Chunk<T>::CHUNK_WIDTH), Y(y / Chunk<T>::CHUNK_HEIGHT), Z(z / Chunk<T>::CHUNK_DEPTH)
+inline ChunkCoords::ChunkCoords(const int x, const int y, const int z) : X(x / EngineDefaults::CHUNK_WIDTH), Y(y / EngineDefaults::CHUNK_HEIGHT), Z(z / EngineDefaults::CHUNK_DEPTH)
 {
     if (x < 0)
     {
@@ -46,7 +32,28 @@ ChunkCoords<T>::ChunkCoords(const int x, const int y, const int z) : X(x / Chunk
     }
 }
 
-template <typename T>
-ChunkCoords<T>::ChunkCoords() : ChunkCoords(0, 0, 0)
+inline ChunkCoords::ChunkCoords() : ChunkCoords(0, 0, 0)
 {
 }
+
+inline bool ChunkCoords::operator<(const ChunkCoords& chunkCoords) const
+{
+    if (X < chunkCoords.X)
+    {
+        return true;
+    }
+    if (X > chunkCoords.X)
+    {
+        return false;
+    }
+    if (Y < chunkCoords.Y)
+    {
+        return true;
+    }
+    if (Y > chunkCoords.Y)
+    {
+        return false;
+    }
+    return Z < chunkCoords.Z;
+}
+

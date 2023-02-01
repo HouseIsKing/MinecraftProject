@@ -2,16 +2,11 @@
 
 #include <iostream>
 
-#include "Packets/ChunkDataPacket.h"
-#include "Packets/EntityDataPacket.h"
-#include "Packets/EntityRemovedPacket.h"
-#include "Packets/EntitySpawnPacket.h"
-#include "Packets/LightDataPacket.h"
-#include "Packets/PlayerRotateChangePacket.h"
 #include "Packets/WorldDataPacket.h"
-#include "Packets/WorldTimePacket.h"
 #include <asio/read.hpp>
 #include <asio/write.hpp>
+
+#include "Packets/PlayerIdPacket.h"
 
 void ClientNetworkManager::ReadPacketBodyAsync()
 {
@@ -77,28 +72,16 @@ std::shared_ptr<PacketData> ClientNetworkManager::TranslatePacket()
 {
     switch (CurrentPacket.GetHeader().PacketType)
     {
-    case EPacketType::WorldTime:
-        return std::make_shared<WorldTimePacket>(CurrentPacket);
-    case EPacketType::EntityData:
-        return std::make_shared<EntityDataPacket>(CurrentPacket);
-    case EPacketType::ChunkData:
-        return std::make_shared<ChunkDataPacket>(CurrentPacket);
-    case EPacketType::LightsData:
-        return std::make_shared<LightDataPacket>(CurrentPacket);
     case EPacketType::WorldData:
         return std::make_shared<WorldDataPacket>(CurrentPacket);
-    case EPacketType::PlayerRotationChange:
-        return std::make_shared<PlayerRotateChangePacket>(CurrentPacket);
-    case EPacketType::EntityEnterWorld:
-        return std::make_shared<EntitySpawnPacket>(CurrentPacket);
-    case EPacketType::EntityLeaveWorld:
-        return std::make_shared<EntityRemovedPacket>(CurrentPacket);
+    case EPacketType::PlayerId:
+        return std::make_shared<PlayerIdPacket>(CurrentPacket);
     default:
         return nullptr;
     }
 }
 
-ClientNetworkManager::ClientNetworkManager() : Socket(Context), CurrentPacket(PacketHeader(EPacketType::EntityData))
+ClientNetworkManager::ClientNetworkManager() : Socket(Context), CurrentPacket(PacketHeader(EPacketType::ClientInput))
 {
     HeaderBuffer.resize(sizeof(PacketHeader));
 }
