@@ -1,11 +1,9 @@
 #pragma once
-#include <asio/ip/tcp.hpp>
-
 #include "ConnectionToClientInterface.h"
-#include "Packets/Packet.h"
-#include "Packets/PacketData.h"
-#include "Packets/PacketHeader.h"
+#include "Network/Packets/Packet.h"
+#include "Network/Packets/PacketData.h"
 #include "Util/ThreadSafeQueue.h"
+#include <asio/ip/tcp.hpp>
 
 class ServerNetworkManager;
 

@@ -1,10 +1,11 @@
-#include "EntityMeshBlock.h"
+/*#include "EntityMeshBlock.h"
+#include "Util/EngineDefaultsClient.h"
 
 EntityMeshBlock::EntityMeshBlock(const std::string& meshTexture, const float anchorPosX, const float anchorPosY, const float anchorPosZ, const float minX, const float minY, const float minZ, const float maxX, const float maxY, const float maxZ, const std::array<float, 24>& uvs, TessellationHelper& tessellationHelper) : Block(minX, minY, minZ, maxX, maxY, maxZ),
 	TrianglesStartPos(0), BlockUVs(uvs), BlockVerticesPositions(), BlockTransformId(tessellationHelper.AddTransform(new Transform(&CurrentTransform, tessellationHelper.GetTransform(0)))),
 	CurrentTransform(glm::vec3(anchorPosX, anchorPosY, anchorPosZ)), EntityBlockTransform(*tessellationHelper.GetTransform(BlockTransformId)), PrevTransform(CurrentTransform)
 {
-	IndexTextures.push_back(EngineDefaults::RegisterTexture(Texture::LoadTexture(meshTexture)));
+	IndexTextures.push_back(EngineDefaultsClient::RegisterTexture(Texture::LoadTexture(meshTexture)));
 }
 
 void EntityMeshBlock::GenerateTessellationData(TessellationHelper& tessellationHelper, const int brightness) const
@@ -17,12 +18,12 @@ void EntityMeshBlock::GenerateTessellationData(TessellationHelper& tessellationH
 	GenerateTessellationData(tessellationHelper, BlockFaces::West, 0, 0, 0, brightness, 1.0F, 1.0F, 1.0F, 1.0F);
 }
 
-void EntityMeshBlock::GenerateTessellationData(GuiTessellation& /*tessellationHelper*/, const BlockFaces& /*face*/, glm::mat4x4 /*transformationMatrix*/) const
+void EntityMeshBlock::GenerateTessellationData(GuiTessellation& /*tessellationHelper, const BlockFaces& /*face, glm::mat4x4 /*transformationMatrix) const
 {
 }
 
 void EntityMeshBlock::GenerateTessellationData(TessellationHelper& tessellationHelper, const BlockFaces& face,
-                                               const float& /*x*/, const float& /*y*/, const float& /*z*/, const int& brightness, const float r, const float g, const float b, const float a) const
+                                               const float& /*x, const float& /*y, const float& /*z, const int& brightness, const float r, const float g, const float b, const float a) const
 {
 	uint16_t triangleIndex1 = 0;
 	uint16_t triangleIndex2 = 0;
@@ -110,7 +111,7 @@ size_t EntityMeshBlock::GetTrianglesStartPos() const
 	return TrianglesStartPos;
 }
 
-size_t EntityMeshBlock::GetIndexTextureSide(BlockFaces /*face*/) const
+size_t EntityMeshBlock::GetIndexTextureSide(BlockFaces /*face) const
 {
 	return 0;
 }
@@ -123,4 +124,4 @@ TransformStruct& EntityMeshBlock::GetTransform()
 const TransformStruct& EntityMeshBlock::GetPrevTransform() const
 {
 	return PrevTransform;
-}
+}*/

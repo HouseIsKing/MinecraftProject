@@ -1,5 +1,5 @@
 #pragma once
-#include "Entities/Generic/LivingEntity.h"
+/*#include "Entities/Generic/LivingEntity.h"
 #include "Util/States/PlayerState.h"
 #include "World/MP/MultiPlayerWorld.h"
 
@@ -14,4 +14,4 @@ public:
         : LivingEntity(state.EntityTransform.Scale, state.EntityTransform.Position.x, state.EntityTransform.Position.y, state.EntityTransform.Position.z, new PlayerState(state))
     {
     }
-};
+};*/

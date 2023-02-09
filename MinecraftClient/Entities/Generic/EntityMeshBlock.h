@@ -1,8 +1,8 @@
 #pragma once
-#include "World/Generic/Blocks/Block.h"
+/*#include "World/Generic/Blocks/BlockClient.h"
 #include <array>
 
-class EntityMeshBlock final : Block
+class EntityMeshBlock final : BlockClient
 {
 	size_t TrianglesStartPos;
 	std::array<float, 24> BlockUVs;
@@ -24,4 +24,4 @@ public:
 	[[nodiscard]] size_t GetIndexTextureSide(BlockFaces face) const override;
 	[[nodiscard]] TransformStruct& GetTransform();
 	[[nodiscard]] const TransformStruct& GetPrevTransform() const;
-};
+};*/

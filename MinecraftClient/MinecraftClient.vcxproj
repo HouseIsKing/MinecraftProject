@@ -138,6 +138,7 @@
             <BasicRuntimeChecks>Default</BasicRuntimeChecks>
             <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
             <MultiProcessorCompilation>true</MultiProcessorCompilation>
+            <AdditionalIncludeDirectories>$(SolutionDir)/MinecraftProjectLibrary;</AdditionalIncludeDirectories>
         </ClCompile>
         <Link>
             <SubSystem>Console</SubSystem>
@@ -175,113 +176,90 @@
         </Link>
     </ItemDefinitionGroup>
     <ItemGroup>
+        <ClCompile Include="Entities\ClientPlayerRenderer.cpp"/>
         <ClCompile Include="Entities\Generic\Camera.cpp"/>
         <ClCompile Include="Entities\Generic\CameraController.cpp"/>
-        <ClCompile Include="Entities\Generic\Entity.cpp"/>
         <ClCompile Include="Entities\Generic\EntityMeshBlock.cpp"/>
-        <ClCompile Include="Entities\Generic\LivingEntity.cpp"/>
         <ClCompile Include="Entities\Generic\ParticleEntity.cpp"/>
         <ClCompile Include="Entities\Generic\PlayerSelectionHighlight.cpp"/>
         <ClCompile Include="Entities\Generic\Zombie.cpp"/>
-        <ClCompile Include="Entities\MP\OtherPlayer.cpp"/>
         <ClCompile Include="Entities\MP\PlayerMp.cpp"/>
-        <ClCompile Include="Entities\SP\PlayerController.cpp"/>
+        <ClCompile Include="Entities\SP\PlayerRenderer.cpp"/>
         <ClCompile Include="glad.c"/>
         <ClCompile Include="GUI\CrosshairGui.cpp"/>
-        <ClCompile Include="GUI\Gui.cpp"/>
         <ClCompile Include="GUI\PerformanceGui.cpp"/>
         <ClCompile Include="GUI\SelectedBlockGui.cpp"/>
         <ClCompile Include="Network\ClientNetworkManager.cpp"/>
-        <ClCompile Include="Network\Packets\Packet.cpp"/>
-        <ClCompile Include="Network\Packets\PacketHeader.cpp"/>
         <ClCompile Include="Network\Packets\PlayerIdPacket.cpp"/>
         <ClCompile Include="Network\Packets\WorldDataPacket.cpp"/>
         <ClCompile Include="RunMinecraft.cpp"/>
         <ClCompile Include="Shaders\Shader.cpp"/>
         <ClCompile Include="Textures\Texture.cpp"/>
-        <ClCompile Include="Util\BoundingBox.cpp"/>
-        <ClCompile Include="Util\CustomFileManager.cpp"/>
-        <ClCompile Include="Util\CustomRandomEngine.cpp"/>
-        <ClCompile Include="Util\EngineDefaults.cpp"/>
+        <ClCompile Include="Util\EngineDefaultsClient.cpp"/>
         <ClCompile Include="Util\FontManager.cpp"/>
         <ClCompile Include="Util\GuiTessellation.cpp"/>
         <ClCompile Include="Util\GuiVertex.cpp"/>
-        <ClCompile Include="Util\PerlinNoise.cpp"/>
         <ClCompile Include="Util\TessellationHelper.cpp"/>
         <ClCompile Include="Util\TessellationInterface.cpp"/>
         <ClCompile Include="Util\Transform.cpp"/>
         <ClCompile Include="Util\Vertex.cpp"/>
-        <ClCompile Include="World\Generic\Blocks\AirBlock.cpp"/>
-        <ClCompile Include="World\Generic\Blocks\Block.cpp"/>
-        <ClCompile Include="World\Generic\Blocks\BlockTypeList.cpp"/>
-        <ClCompile Include="World\Generic\Blocks\CobblestoneBlock.cpp"/>
-        <ClCompile Include="World\Generic\Blocks\DirtBlock.cpp"/>
-        <ClCompile Include="World\Generic\Blocks\GrassBlock.cpp"/>
-        <ClCompile Include="World\Generic\Blocks\PlanksBlock.cpp"/>
-        <ClCompile Include="World\Generic\Blocks\SaplingBlock.cpp"/>
-        <ClCompile Include="World\Generic\Blocks\StoneBlock.cpp"/>
-        <ClCompile Include="World\Generic\Chunk.cpp"/>
-        <ClCompile Include="World\Generic\World.cpp"/>
+        <ClCompile Include="World\Generic\Blocks\AirBlockRenderer.cpp"/>
+        <ClCompile Include="World\Generic\Blocks\BlockRenderer.cpp"/>
+        <ClCompile Include="World\Generic\Blocks\BlockRendererList.cpp"/>
+        <ClCompile Include="World\Generic\Blocks\CobblestoneBlockRenderer.cpp"/>
+        <ClCompile Include="World\Generic\Blocks\DirtBlockRenderer.cpp"/>
+        <ClCompile Include="World\Generic\Blocks\GrassBlockRenderer.cpp"/>
+        <ClCompile Include="World\Generic\Blocks\PlanksBlockRenderer.cpp"/>
+        <ClCompile Include="World\Generic\Blocks\SaplingBlockRenderer.cpp"/>
+        <ClCompile Include="World\Generic\Blocks\StoneBlockRenderer.cpp"/>
+        <ClCompile Include="World\Generic\ChunkRenderer.cpp"/>
+        <ClCompile Include="World\Generic\ClientWorld.cpp"/>
         <ClCompile Include="World\MP\MultiPlayerWorld.cpp"/>
         <ClCompile Include="World\SP\SinglePlayerWorld.cpp"/>
     </ItemGroup>
     <ItemGroup>
+        <ClInclude Include="Entities\ClientPlayerRenderer.h"/>
         <ClInclude Include="Entities\Generic\Camera.h"/>
         <ClInclude Include="Entities\Generic\CameraController.h"/>
-        <ClInclude Include="Entities\Generic\Entity.h"/>
+        <ClInclude Include="Entities\Generic\EntityRenderer.h"/>
         <ClInclude Include="Entities\Generic\EntityMeshBlock.h"/>
-        <ClInclude Include="Entities\Generic\LivingEntity.h"/>
+        <ClInclude Include="Entities\Generic\LivingEntityRenderer.h"/>
         <ClInclude Include="Entities\Generic\ParticleEntity.h"/>
         <ClInclude Include="Entities\Generic\PlayerSelectionHighlight.h"/>
         <ClInclude Include="Entities\Generic\Zombie.h"/>
         <ClInclude Include="Entities\MP\OtherPlayer.h"/>
         <ClInclude Include="Entities\MP\PlayerMp.h"/>
-        <ClInclude Include="Entities\SP\PlayerController.h"/>
+        <ClInclude Include="Entities\PlayerInputManager.h"/>
+        <ClInclude Include="Entities\SP\PlayerRenderer.h"/>
         <ClInclude Include="GUI\CrosshairGui.h"/>
         <ClInclude Include="GUI\Gui.h"/>
         <ClInclude Include="GUI\PerformanceGui.h"/>
         <ClInclude Include="GUI\SelectedBlockGui.h"/>
         <ClInclude Include="Network\ClientNetworkManager.h"/>
-        <ClInclude Include="Network\Packets\Packet.h"/>
         <ClInclude Include="Network\Packets\PacketData.h"/>
-        <ClInclude Include="Network\Packets\PacketHeader.h"/>
         <ClInclude Include="Network\Packets\PlayerIdPacket.h"/>
         <ClInclude Include="Network\Packets\WorldDataPacket.h"/>
         <ClInclude Include="Shaders\Shader.h"/>
         <ClInclude Include="Textures\Texture.h"/>
-        <ClInclude Include="Util\BoundingBox.h"/>
-        <ClInclude Include="Util\ChunkCoords.h"/>
-        <ClInclude Include="Util\CustomFileManager.h"/>
-        <ClInclude Include="Util\CustomRandomEngine.h"/>
-        <ClInclude Include="Util\EngineDefaults.h"/>
+        <ClInclude Include="Util\EngineDefaultsClient.h"/>
         <ClInclude Include="Util\FontManager.h"/>
         <ClInclude Include="Util\GuiTessellation.h"/>
         <ClInclude Include="Util\GuiVertex.h"/>
-        <ClInclude Include="Util\PerlinNoise.h"/>
-        <ClInclude Include="Util\States\ChunkState.h"/>
-        <ClInclude Include="Util\States\ClientInputState.h"/>
-        <ClInclude Include="Util\States\EntityState.h"/>
-        <ClInclude Include="Util\States\LightState.h"/>
-        <ClInclude Include="Util\States\LivingEntityState.h"/>
-        <ClInclude Include="Util\States\PlayerState.h"/>
-        <ClInclude Include="Util\States\WorldState.h"/>
         <ClInclude Include="Util\TessellationHelper.h"/>
         <ClInclude Include="Util\TessellationInterface.h"/>
-        <ClInclude Include="Util\ThreadSafeQueue.h"/>
         <ClInclude Include="Util\Transform.h"/>
-        <ClInclude Include="Util\TransformStruct.h"/>
         <ClInclude Include="Util\Vertex.h"/>
-        <ClInclude Include="World\Generic\Blocks\AirBlock.h"/>
-        <ClInclude Include="World\Generic\Blocks\Block.h"/>
-        <ClInclude Include="World\Generic\Blocks\BlockTypeList.h"/>
-        <ClInclude Include="World\Generic\Blocks\CobblestoneBlock.h"/>
-        <ClInclude Include="World\Generic\Blocks\DirtBlock.h"/>
-        <ClInclude Include="World\Generic\Blocks\GrassBlock.h"/>
-        <ClInclude Include="World\Generic\Blocks\PlanksBlock.h"/>
-        <ClInclude Include="World\Generic\Blocks\SaplingBlock.h"/>
-        <ClInclude Include="World\Generic\Blocks\StoneBlock.h"/>
-        <ClInclude Include="World\Generic\Chunk.h"/>
-        <ClInclude Include="World\Generic\World.h"/>
+        <ClInclude Include="World\Generic\Blocks\AirBlockRenderer.h"/>
+        <ClInclude Include="World\Generic\Blocks\BlockRenderer.h"/>
+        <ClInclude Include="World\Generic\Blocks\BlockRendererList.h"/>
+        <ClInclude Include="World\Generic\Blocks\CobblestoneBlockRenderer.h"/>
+        <ClInclude Include="World\Generic\Blocks\DirtBlockRenderer.h"/>
+        <ClInclude Include="World\Generic\Blocks\GrassBlockRenderer.h"/>
+        <ClInclude Include="World\Generic\Blocks\PlanksBlockRenderer.h"/>
+        <ClInclude Include="World\Generic\Blocks\SaplingBlockRenderer.h"/>
+        <ClInclude Include="World\Generic\Blocks\StoneBlockRenderer.h"/>
+        <ClInclude Include="World\Generic\ChunkRenderer.h"/>
+        <ClInclude Include="World\Generic\ClientWorld.h"/>
         <ClInclude Include="World\MP\MultiPlayerWorld.h"/>
         <ClInclude Include="World\SP\SinglePlayerWorld.h"/>
     </ItemGroup>
@@ -341,6 +319,12 @@
         <Content Include="Textures\Font\default.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\MinecraftProjectLibrary\MinecraftProjectLibrary.vcxproj">
+            <Project>{d8a5eb12-b5a3-4b18-b5ad-12c75cf5c86d}</Project>
+            <Name>MinecraftProjectLibrary</Name>
+        </ProjectReference>
     </ItemGroup>
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
     <ImportGroup Label="ExtensionTargets">

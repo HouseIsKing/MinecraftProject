@@ -1,7 +1,7 @@
-#include <iostream>
-
-#include "World/MultiPlayerWorld.h"
+#include "ServerManager.h"
 #include <GLFW/glfw3.h>
+#include <World/World.h>
+#include <iostream>
 
 bool run = true;
 
@@ -19,7 +19,7 @@ int main(int /*argc*/, char* /*argv*/[])
 {
     glfwInit();
     SetConsoleCtrlHandler(CtrlHandler, TRUE);
-    MultiPlayerWorld world{256, 64, 256};
+    ServerManager world(256, 64, 256);
     float ticksTimer = 0;
     auto start = static_cast<float>(glfwGetTime());
     while (run)
@@ -27,16 +27,14 @@ int main(int /*argc*/, char* /*argv*/[])
         int i;
         for (i = 0; i < static_cast<int>(ticksTimer / EngineDefaults::TICK_RATE); i++)
         {
-            world.Tick();
+            const auto temp = static_cast<float>(glfwGetTime());
+            world.NewTick();
+            std::cout << "Tick took " << static_cast<float>(glfwGetTime()) - temp << " seconds" << std::endl;
         }
         world.Run();
         const auto end = static_cast<float>(glfwGetTime());
         ticksTimer -= static_cast<float>(i) * EngineDefaults::TICK_RATE;
         ticksTimer += end - start;
-        if (end - start > 0.01F)
-        {
-            std::cout << "Frame time: " << end - start << std::endl;
-        }
         start = end;
     }
     return 0;

@@ -1,4 +1,4 @@
-#include "Zombie.h"
+/*#include "Zombie.h"
 
 #include "World/Generic/World.h"
 
@@ -137,3 +137,4 @@ void Zombie::Tick()
     RightLeg.GetTransform().Rotation = glm::vec3(0.0F, 0.0F, glm::degrees(static_cast<float>(sin(time * 0.6662 + glm::pi<double>())) * 1.4F));
     LeftLeg.GetTransform().Rotation = glm::vec3(0.0F, 0.0F, glm::degrees(static_cast<float>(sin(time * 0.6662)) * 1.4F));
 }
+*/

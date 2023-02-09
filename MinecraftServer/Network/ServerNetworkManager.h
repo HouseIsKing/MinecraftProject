@@ -1,10 +1,7 @@
 #pragma once
-#include "Packets/PacketData.h"
+#include "Network/Packets/PacketData.h"
 #include "Util/ThreadSafeQueue.h"
-#include "Util/ThreadSafeSet.h"
-#include <asio/io_context.hpp>
 #include <asio/ip/tcp.hpp>
-#include <thread>
 
 class ServerNetworkManager
 {
@@ -15,7 +12,7 @@ class ServerNetworkManager
     std::shared_ptr<ConnectionToClient> NewConnection;
     ThreadSafeQueue<ConnectionToClient> NewConnections;
     ThreadSafeQueue<ConnectionToClient> RemovedConnections;
-    std::thread ContextThread = std::thread([&]() { Context.run(); });
+    std::thread ContextThread = std::thread([&] { Context.run(); });
 
     void RunAcceptor();
 

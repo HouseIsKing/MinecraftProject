@@ -1,23 +1,17 @@
 #pragma once
-#include "Entities/SP/PlayerController.h"
-#include "World/Generic/Chunk.h"
-#include "World/Generic/World.h"
+#include "World/Generic/ClientWorld.h"
+#include <GLFW/glfw3.h>
 
-class SinglePlayerWorld final : public World
+class SinglePlayerWorld final : public ClientWorld
 {
-    void SaveWorld();
-    void LoadWorld();
-    void GenerateChunks(uint16_t amountX, uint16_t amountY, uint16_t amountZ);
-    void GenerateLevel();
-    void Init() override;
-    void RecalculateLightLevels();
-
 public:
     SinglePlayerWorld(uint16_t width, uint16_t height, uint16_t depth, GLFWwindow* window);
     ~SinglePlayerWorld() override;
-    SinglePlayerWorld(const SinglePlayerWorld& other) = delete;
-    SinglePlayerWorld& operator=(const SinglePlayerWorld& other) = delete;
-    SinglePlayerWorld(SinglePlayerWorld&& other) = delete;
-    SinglePlayerWorld& operator=(SinglePlayerWorld&& other) = delete;
+    SinglePlayerWorld(const SinglePlayerWorld&) = delete;
+    SinglePlayerWorld& operator=(const SinglePlayerWorld&) = delete;
+    SinglePlayerWorld(SinglePlayerWorld&&) = delete;
+    SinglePlayerWorld& operator=(SinglePlayerWorld&&) = delete;
     void Run() override;
+    void NewTick() override;
+    void HandlePacket(const PacketData* packet) override;
 };

@@ -1,4 +1,4 @@
-#include "MultiPlayerWorld.h"
+/*#include "MultiPlayerWorld.h"
 
 #include <iostream>
 
@@ -81,7 +81,7 @@ void MultiPlayerWorld::BuildWorldState()
 {
     WorldState& worldState = WorldStates[WorldTime % WorldStates.size()];
     worldState.Chunks.clear();
-    for (Chunk& chunk : Chunks | std::views::values)
+    for (ChunkRenderer& chunk : Chunks | std::views::values)
     {
         worldState.Chunks.emplace_hint(worldState.Chunks.end(), chunk.GetChunkPos(), chunk.GetChunkState());
     }
@@ -258,4 +258,4 @@ void MultiPlayerWorld::ApplyChangesList(const std::vector<uint8_t>& changes)
 MultiPlayerWorld::~MultiPlayerWorld()
 {
     glDeleteBuffers(1, &FogsBuffer);
-}
+}*/

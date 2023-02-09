@@ -1,7 +1,6 @@
 #pragma once
+#include "Util/EngineDefaults.h"
 #include <glm/glm.hpp>
-
-#include "TransformStruct.h"
 
 class Transform
 {

@@ -1,5 +1,5 @@
 #include "TessellationHelper.h"
-#include "EngineDefaults.h"
+#include "EngineDefaultsClient.h"
 
 Transform* TessellationHelper::GetTransform(const size_t id) const
 {
@@ -31,7 +31,7 @@ glm::mat4x4 TessellationHelper::GetTransformationMatrix(const size_t id) const
 
 TessellationHelper::TessellationHelper(TransformStruct* transform)
 {
-	TheShader = EngineDefaults::GetShader();
+	TheShader = EngineDefaultsClient::GetShader();
 	PositionUniform = TheShader->GetUniformInt("transformationMatrix");
 	TessellationTransforms.emplace_back(new Transform(transform));
 }

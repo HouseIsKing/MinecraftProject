@@ -1,5 +1,5 @@
 #pragma once
-#include "Entity.h"
+/*#include "Entity.h"
 #include "Util/EngineDefaults.h"
 
 class Block;
@@ -19,4 +19,4 @@ public:
     ParticleEntity(float x, float y, float z, float xSpeed, float ySpeed, float zSpeed, const Block* blockType);
     void Tick() override;
     void Render(float partialTick) override;
-};
+};*/

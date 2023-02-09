@@ -1,11 +1,8 @@
 #include "ClientNetworkManager.h"
-
 #include <iostream>
-
 #include "Packets/WorldDataPacket.h"
 #include <asio/read.hpp>
 #include <asio/write.hpp>
-
 #include "Packets/PlayerIdPacket.h"
 
 void ClientNetworkManager::ReadPacketBodyAsync()

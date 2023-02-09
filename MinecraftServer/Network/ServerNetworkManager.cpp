@@ -1,5 +1,5 @@
 #include "ServerNetworkManager.h"
-
+#include "ConnectionToClient.h"
 #include <iostream>
 
 void ServerNetworkManager::RunAcceptor()
@@ -45,7 +45,7 @@ std::shared_ptr<PacketData> ServerNetworkManager::GetNextPacket()
     {
         return Packets.Pop();
     }
-    return nullptr;
+    return {};
 }
 
 std::shared_ptr<ConnectionToClient> ServerNetworkManager::GetNextNewConnection()
@@ -54,7 +54,7 @@ std::shared_ptr<ConnectionToClient> ServerNetworkManager::GetNextNewConnection()
     {
         return NewConnections.Pop();
     }
-    return nullptr;
+    return {};
 }
 
 std::shared_ptr<ConnectionToClient> ServerNetworkManager::GetNextRemovedConnection()
@@ -63,7 +63,7 @@ std::shared_ptr<ConnectionToClient> ServerNetworkManager::GetNextRemovedConnecti
     {
         return RemovedConnections.Pop();
     }
-    return nullptr;
+    return {};
 }
 
 asio::io_context& ServerNetworkManager::GetContext()

@@ -1,4 +1,5 @@
 #pragma once
+#include "Network/Packets/Packet.h"
 #include "PacketData.h"
 
 class PlayerIdPacket final : public PacketData

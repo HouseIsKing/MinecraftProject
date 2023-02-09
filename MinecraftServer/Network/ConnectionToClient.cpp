@@ -3,8 +3,7 @@
 #include <asio/read.hpp>
 #include <asio/write.hpp>
 #include <iostream>
-
-#include "Packets/ClientInputPacket.h"
+#include "Network/Packets/ClientInputPacket.h"
 
 ConnectionToClient::ConnectionToClient(asio::io_context& ioContext, ServerNetworkManager* networkManager) : Socket(std::make_unique<asio::ip::tcp::socket>(ioContext)), NetworkManager(networkManager), CurrentPacket(PacketHeader(EPacketType::ClientInput))
 {

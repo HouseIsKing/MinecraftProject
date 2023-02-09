@@ -4,6 +4,7 @@
 #include <asio/io_context.hpp>
 #include <asio/ip/tcp.hpp>
 #include <thread>
+#include "Network/Packets/Packet.h"
 
 class ClientNetworkManager
 {

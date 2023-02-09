@@ -1,7 +1,6 @@
 #pragma once
+#include "Util/EngineDefaults.h"
 #include <memory>
-
-#include "PacketHeader.h"
 
 class ConnectionToClient;
 

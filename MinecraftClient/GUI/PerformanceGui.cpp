@@ -1,14 +1,14 @@
 #include "PerformanceGui.h"
-
+#include "Util/EngineDefaultsClient.h"
 #include <GLFW/glfw3.h>
 
-#include "World/Generic/World.h"
+#include "World/Generic/ClientWorld.h"
 
 void PerformanceGui::DrawStringAt(const std::string& text, float x, float y, const float z, const float r, const float g, const float b, const float a)
 {
     int width = 0;
     int height = 0;
-    glfwGetWindowSize(TheWorld->GetWindow(), &width, &height);
+    glfwGetWindowSize(ClientWorld::GetWorld()->GetWindow(), &width, &height);
     const float fWidth = static_cast<float>(width) * 240.0F / 2.0F / static_cast<float>(height);
     constexpr float fHeight = 240.0F / 2.0F;
     x = -fWidth + x;
@@ -29,11 +29,11 @@ void PerformanceGui::DrawStringAt(const std::string& text, float x, float y, con
         this->Tessellation.AddTriangle(index4);
         this->Tessellation.AddTriangle(index1);
         this->Tessellation.AddTriangle(index3);
-        offsetX += static_cast<float>(EngineDefaults::GetFontManager().GetCharacterWidth(c));
+        offsetX += static_cast<float>(EngineDefaultsClient::GetFontManager().GetCharacterWidth(c));
     }
 }
 
-PerformanceGui::PerformanceGui() : FontTexture(EngineDefaults::RegisterTexture(Texture::LoadTexture("Textures/Font/default.png")))
+PerformanceGui::PerformanceGui() : FontTexture(EngineDefaultsClient::RegisterTexture(Texture::LoadTexture("Textures/Font/default.png")))
 {
 }
 
@@ -43,7 +43,7 @@ void PerformanceGui::Rebuild()
     {
         this->Tessellation.Reset();
     }
-    const std::string text = std::to_string(TheWorld->GetFps()) + " FPS";
+    const std::string text = std::to_string(ClientWorld::GetWorld()->GetFps()) + " FPS";
     DrawStringAt(Version, 3.0F, 3.0F, 0.0F, 0.25F, 0.25F, 0.25F, 1.0F);
     DrawStringAt(Version, 2.0F, 2.0F, 0.0F, 1.0F, 1.0F, 1.0F, 1.0F);
     DrawStringAt(text, 3.0F, 13.0F, 0.0F, 0.25F, 0.25F, 0.25F, 1.0F);

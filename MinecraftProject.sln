@@ -4,8 +4,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MinecraftServer", "MinecraftServer\MinecraftServer.vcxproj", "{F69A0165-D311-456C-9106-1B4E12339A3E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D8A5EB12-B5A3-4B18-B5AD-12C75CF5C86D} = {D8A5EB12-B5A3-4B18-B5AD-12C75CF5C86D}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MinecraftClient", "MinecraftClient\MinecraftClient.vcxproj", "{9258F95B-DA8F-427B-BE2C-5FA98C5275FA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D8A5EB12-B5A3-4B18-B5AD-12C75CF5C86D} = {D8A5EB12-B5A3-4B18-B5AD-12C75CF5C86D}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MinecraftProjectLibrary", "MinecraftProjectLibrary\MinecraftProjectLibrary.vcxproj", "{D8A5EB12-B5A3-4B18-B5AD-12C75CF5C86D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +39,14 @@ Global
 		{9258F95B-DA8F-427B-BE2C-5FA98C5275FA}.Release|x64.Build.0 = Release|x64
 		{9258F95B-DA8F-427B-BE2C-5FA98C5275FA}.Release|x86.ActiveCfg = Release|Win32
 		{9258F95B-DA8F-427B-BE2C-5FA98C5275FA}.Release|x86.Build.0 = Release|Win32
+		{D8A5EB12-B5A3-4B18-B5AD-12C75CF5C86D}.Debug|x64.ActiveCfg = Debug|x64
+		{D8A5EB12-B5A3-4B18-B5AD-12C75CF5C86D}.Debug|x64.Build.0 = Debug|x64
+		{D8A5EB12-B5A3-4B18-B5AD-12C75CF5C86D}.Debug|x86.ActiveCfg = Debug|Win32
+		{D8A5EB12-B5A3-4B18-B5AD-12C75CF5C86D}.Debug|x86.Build.0 = Debug|Win32
+		{D8A5EB12-B5A3-4B18-B5AD-12C75CF5C86D}.Release|x64.ActiveCfg = Release|x64
+		{D8A5EB12-B5A3-4B18-B5AD-12C75CF5C86D}.Release|x64.Build.0 = Release|x64
+		{D8A5EB12-B5A3-4B18-B5AD-12C75CF5C86D}.Release|x86.ActiveCfg = Release|Win32
+		{D8A5EB12-B5A3-4B18-B5AD-12C75CF5C86D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

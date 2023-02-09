@@ -1,9 +1,9 @@
 #include "GuiTessellation.h"
-#include "EngineDefaults.h"
+#include "EngineDefaultsClient.h"
 
 GuiTessellation::GuiTessellation()
 {
-    TheShader = EngineDefaults::GetShader(1);
+    TheShader = EngineDefaultsClient::GetShader(1);
 }
 
 uint16_t GuiTessellation::AddVertex(const GuiVertex& vertex)

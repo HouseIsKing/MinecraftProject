@@ -1,4 +1,4 @@
-#include "PlayerSelectionHighlight.h"
+/*#include "PlayerSelectionHighlight.h"
 
 #include "Entities/SP/PlayerController.h"
 
@@ -134,4 +134,4 @@ void PlayerSelectionHighlight::Render(const int& brightness)
 	glEnable(GL_BLEND);
 	Tessellation.Draw();
 	glDisable(GL_BLEND);
-}
+}*/

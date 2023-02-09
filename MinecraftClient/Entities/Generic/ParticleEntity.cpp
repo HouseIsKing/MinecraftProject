@@ -1,7 +1,7 @@
-#include "ParticleEntity.h"
+/*#include "ParticleEntity.h"
 
 #include "Util/States/PlayerState.h"
-#include "World/Generic/Blocks/Block.h"
+#include "World/Generic/Blocks/BlockClient.h"
 #include "World/Generic/World.h"
 
 void ParticleEntity::GenerateTextureTessellation(const int lightLevel)
@@ -70,4 +70,4 @@ void ParticleEntity::Render(const float partialTick)
     this->Tessellation.Draw();
     this->Tessellation.FreeMemory();
     this->GetTransform().Position = pos;
-}
+}*/

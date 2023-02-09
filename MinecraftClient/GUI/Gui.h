@@ -8,11 +8,9 @@ class Gui
 protected:
     GuiTessellation Tessellation;
     Gui() = default;
-    static World* TheWorld;
 
 public:
     bool Active = false;
-    static void SetWorld(World* newWorld);
     virtual ~Gui() = default;
     Gui(const Gui&) = delete;
     Gui& operator=(const Gui&) = delete;

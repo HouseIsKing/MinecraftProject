@@ -1,5 +1,5 @@
 #pragma once
-#include "EntityMeshBlock.h"
+/*#include "EntityMeshBlock.h"
 #include "LivingEntity.h"
 #include "Util/EngineDefaults.h"
 #include <GLFW/glfw3.h>
@@ -23,4 +23,4 @@ public:
     Zombie(float x, float y, float z);
     void Render(float partialTick) override;
     void Tick() override;
-};
+};*/

@@ -1,7 +1,6 @@
 #pragma once
+#include "Util/EngineDefaults.h"
 #include <memory>
-
-#include "Packet.h"
 
 class PacketData
 {

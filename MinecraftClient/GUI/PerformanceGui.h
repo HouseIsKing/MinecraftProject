@@ -1,6 +1,5 @@
 #pragma once
 #include "Gui.h"
-#include "Util/EngineDefaults.h"
 
 class PerformanceGui final : public Gui
 {

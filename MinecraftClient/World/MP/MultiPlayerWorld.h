@@ -1,5 +1,5 @@
 #pragma once
-#include "Network/ClientNetworkManager.h"
+/*#include "Network/ClientNetworkManager.h"
 #include "Util/States/WorldState.h"
 #include "World/Generic/World.h"
 
@@ -22,8 +22,5 @@ public:
     std::array<WorldState, EngineDefaults::ROLLBACK_COUNT> WorldStates{};
     MultiPlayerWorld(GLFWwindow* window, const std::string& name, const std::string& ip);
     void Run() override;
-    bool RevertWorldState(uint64_t tick);
     void BuildWorldState();
-    void Tick() override;
-    void SimulateTicks(uint8_t tickCount);
-};
+};*/

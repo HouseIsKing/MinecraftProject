@@ -1,4 +1,4 @@
-#include "PlayerMp.h"
+/*#include "PlayerMp.h"
 
 PlayerMp::PlayerMp(const PlayerState& state) : PlayerController(state)
 {
@@ -140,4 +140,4 @@ void PlayerMp::ApplyEntityChange(const std::vector<uint8_t>& changes, size_t& po
         PlayerController::ApplyEntityChange(changes, pos, change);
         break;
     }
-}
+}*/

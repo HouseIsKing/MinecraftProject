@@ -1,8 +1,9 @@
 #pragma once
-#include "Util/EngineDefaults.h"
-#include "World/Generic/Blocks/Block.h"
+/*#include "Util/EngineDefaults.h"
+#include "World/Generic/Blocks/BlockClient.h"
 #include "World/Generic/Blocks/BlockTypeList.h"
 #include <chrono>
+#include "World/Blocks/Block.h"
 
 class PlayerController;
 
@@ -20,4 +21,4 @@ public:
 	BlockFaces FaceHit;
 	glm::ivec3 HitPosition;
 	void Render(const int& brightness);
-};
+};*/

@@ -1,7 +1,5 @@
 #include "ClientInputPacket.h"
 
-#include <utility>
-
 ClientInputPacket::ClientInputPacket(Packet& packet, std::shared_ptr<ConnectionToClient> connection) : PacketData(
     std::move(connection))
 {
@@ -9,7 +7,7 @@ ClientInputPacket::ClientInputPacket(Packet& packet, std::shared_ptr<ConnectionT
     packet >> State;
 }
 
-const ClientInputState& ClientInputPacket::GetState() const
+const ClientInputStruct& ClientInputPacket::GetState() const
 {
     return State;
 }

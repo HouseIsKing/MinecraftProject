@@ -1,7 +1,6 @@
 #pragma once
 #include "Gui.h"
-#include "World/Generic/Blocks/BlockTypeList.h"
-#include <glm/gtx/transform.hpp>
+#include "Util/EngineDefaults.h"
 
 class SelectedBlockGui final : public Gui
 {

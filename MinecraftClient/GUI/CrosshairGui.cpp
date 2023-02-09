@@ -1,10 +1,9 @@
 #include "CrosshairGui.h"
-
 #include <GLFW/glfw3.h>
+#include "Util/EngineDefaultsClient.h"
+#include "World/Generic/ClientWorld.h"
 
-#include "World/Generic/World.h"
-
-CrosshairGui::CrosshairGui() : TextureIndex(EngineDefaults::RegisterTexture(Texture::LoadTexture("Textures/HighlightTexture.png")))
+CrosshairGui::CrosshairGui() : TextureIndex(EngineDefaultsClient::RegisterTexture(Texture::LoadTexture("Textures/HighlightTexture.png")))
 {
     Rebuild();
 }
@@ -30,7 +29,7 @@ void CrosshairGui::Rebuild()
     }
     int width = 0;
     int height = 0;
-    glfwGetWindowSize(TheWorld->GetWindow(), &width, &height);
+    glfwGetWindowSize(ClientWorld::GetWorld()->GetWindow(), &width, &height);
     const float fWidth = static_cast<float>(width) * 240.0F / 2.0F / static_cast<float>(height);
     constexpr float fHeight = 240.0F / 2.0F;
     uint16_t index1 = this->Tessellation.AddVertex(GuiVertex(-4.0F / fWidth, -0.0F / fHeight, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, 1.0F, TextureIndex));
