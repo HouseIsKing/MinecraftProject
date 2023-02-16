@@ -23,4 +23,5 @@ public:
     virtual void GenerateTessellationData(const Block* block, GuiTessellation& tessellationHelper, const BlockFaces& face, glm::mat4x4 transformationMatrix) const;
     [[nodiscard]] virtual DrawType GetDrawType() const;
     [[nodiscard]] virtual size_t GetIndexTextureSide(BlockFaces face) const = 0;
+    [[nodiscard]] uint16_t GetTextureFromIndex(size_t textureIndex) const;
 };

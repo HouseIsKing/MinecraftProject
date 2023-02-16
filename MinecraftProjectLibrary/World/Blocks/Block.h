@@ -17,7 +17,7 @@ public:
     Block& operator=(Block&&) = delete;
     [[nodiscard]] BoundingBox GetBoundingBox() const;
     virtual void Tick(World* world, int x, int y, int z) const;
-    virtual void OnBreak(World* world, int x, int y, int z) const;
+    virtual void OnBreak(const int x, const int y, const int z) const;
     [[nodiscard]] virtual bool IsSolidBlock() const;
     [[nodiscard]] virtual bool IsBlockingLight() const;
 };

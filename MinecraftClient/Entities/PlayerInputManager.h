@@ -5,5 +5,5 @@ struct PlayerInputManager
 {
     float PrevMouseX{0.0F};
     float PrevMouseY{0.0F};
-    ClientInputStruct Input{};
+    ClientInputStatusStruct Input{};
 };

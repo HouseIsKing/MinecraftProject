@@ -1,24 +1,24 @@
 #pragma once
-/*#include "Util/EngineDefaults.h"
-#include "World/Generic/Blocks/BlockClient.h"
-#include "World/Generic/Blocks/BlockTypeList.h"
-#include <chrono>
+#include "Util/TessellationHelper.h"
 #include "World/Blocks/Block.h"
+#include <chrono>
 
-class PlayerController;
+#include "Util/States/PlayerState.h"
 
 class PlayerSelectionHighlight
 {
 	TessellationHelper Tessellation;
 	TransformStruct Transform;
 	uint16_t TextureIndex;
-	PlayerController* Player;
-
-public:
-	explicit PlayerSelectionHighlight(PlayerController* player);
+	const PlayerState& Player;
 	void Reset();
 	const Block* BlockHit;
 	BlockFaces FaceHit;
 	glm::ivec3 HitPosition;
-	void Render(const int& brightness);
-};*/
+	[[nodiscard]] float CalculateMaxDistanceForHighlight(const glm::vec3& front, bool up, bool right, bool forward) const;
+	void FindClosestFace();
+
+public:
+	explicit PlayerSelectionHighlight(const PlayerState& player);
+	void Render();
+};

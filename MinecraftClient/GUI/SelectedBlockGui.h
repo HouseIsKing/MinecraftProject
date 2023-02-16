@@ -1,14 +1,14 @@
 #pragma once
 #include "Gui.h"
 #include "Util/EngineDefaults.h"
+#include "Util/States/PlayerState.h"
 
 class SelectedBlockGui final : public Gui
 {
-    EBlockType CurrentBlockType;
+    const PlayerState& State;
 
 public:
-    void SwitchBlockType(EBlockType blockType);
-    SelectedBlockGui();
+    explicit SelectedBlockGui(const PlayerState& player);
     void Render() override;
     void Rebuild() override;
 };

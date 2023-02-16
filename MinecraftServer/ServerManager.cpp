@@ -26,33 +26,37 @@ void ServerManager::Run()
 {
     //Handle newly connected clients
     std::shared_ptr<ConnectionToClient> newCon = NetworkManager.GetNextNewConnection();
-    while (newCon != nullptr)
+    while (newCon)
     {
         //CustomRandomEngine random;
         //const auto x = static_cast<float>(random.GetNext(LevelWidth));
         //const auto y = static_cast<float>(LevelHeight + 3);
         //const auto z = static_cast<float>(random.GetNext(LevelDepth));
-        const uint16_t id = EntityAvailableIDs.top();
-        EntityAvailableIDs.pop();
-        State.AddPlayer(id, 0.0F, 70.0F, 0.0F);
-        Connections.emplace(newCon, &State.GetPlayer(id));
+        PlayerState state{};
+        state.EntityTransform.Position = glm::vec3(0.0F, 70.0F, 0.0F);
+        State.AddEntity(&state);
+        Connections.emplace(newCon, dynamic_cast<Player*>(State.GetEntity<PlayerStateWrapper, PlayerState>(state.EntityId)));
         auto packet = std::make_shared<Packet>(PacketHeader::PLAYER_ID_PACKET);
-        *packet << id;
+        *packet << state.EntityId;
         newCon->WritePacket(packet);
+        std::vector<uint8_t> data{};
+        State.WriteAllDataToVector(data);
+        const auto packetToSend = std::make_shared<Packet>(PacketHeader(EPacketType::WorldData, static_cast<uint32_t>(data.size())), data);
+        newCon->WritePacket(packetToSend);
         newCon = NetworkManager.GetNextNewConnection();
     }
     //Handle packets
     std::shared_ptr<PacketData> nextPacket = NetworkManager.GetNextPacket();
-    while (nextPacket != nullptr)
+    while (nextPacket)
     {
         HandlePacket(nextPacket.get());
         nextPacket = NetworkManager.GetNextPacket();
     }
     //Handle disconnected clients
     std::shared_ptr<ConnectionToClient> closedCon = NetworkManager.GetNextRemovedConnection();
-    while (closedCon != nullptr)
+    while (closedCon)
     {
-        State.RemovePlayer(Connections[closedCon]->GetEntityId());
+        State.RemoveEntity(Connections[closedCon]->GetState().EntityId);
         Connections.erase(closedCon);
         closedCon = NetworkManager.GetNextRemovedConnection();
     }
@@ -62,7 +66,7 @@ void ServerManager::NewTick()
 {
     for (auto it = State.GetPlayersIterator(); it != State.GetState().Players.end(); ++it)
     {
-        it->second.NewTick();
+        it->second->NewTick();
     }
     Tick();
 }
@@ -72,16 +76,9 @@ void ServerManager::HandlePacket(const PacketData* packet)
     if (packet->GetPacketType() == EPacketType::ClientInput)
     {
         const uint64_t currentWorldTick = State.GetState().WorldTime;
-        if (const auto* clientInputPacket = reinterpret_cast<const ClientInputPacket*>(packet); clientInputPacket->GetWorldTickSent() == 0)
+        if (const auto* clientInputPacket = dynamic_cast<const ClientInputPacket*>(packet); RevertWorldState(clientInputPacket->GetWorldTickSent() - 1))
         {
-            std::vector<uint8_t> data{};
-            State.WriteAllDataToVector(data);
-            const auto packetToSend = std::make_shared<Packet>(PacketHeader(EPacketType::WorldData, static_cast<uint32_t>(data.size())), data);
-            packet->GetConnectionToClient()->WritePacket(packetToSend);
-        }
-        else if (RevertWorldState(clientInputPacket->GetWorldTickSent() - 1))
-        {
-            Connections[packet->GetConnectionToClient()]->SetClientInput(State.GetState().WorldTime, clientInputPacket->GetState());
+            Connections[packet->GetConnectionToClient()]->SetClientInput(State.GetState().WorldTime + 1, clientInputPacket->GetState());
             Tick();
             std::vector<uint8_t> changes{};
             State.WriteChangesToVector(changes);

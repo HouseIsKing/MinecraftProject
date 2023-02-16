@@ -20,6 +20,8 @@ int main(int /*argc*/, char* /*argv*/[])
     glfwInit();
     SetConsoleCtrlHandler(CtrlHandler, TRUE);
     ServerManager world(256, 64, 256);
+    world.NewTick();
+    world.NewTick();
     float ticksTimer = 0;
     auto start = static_cast<float>(glfwGetTime());
     while (run)
@@ -27,9 +29,7 @@ int main(int /*argc*/, char* /*argv*/[])
         int i;
         for (i = 0; i < static_cast<int>(ticksTimer / EngineDefaults::TICK_RATE); i++)
         {
-            const auto temp = static_cast<float>(glfwGetTime());
             world.NewTick();
-            std::cout << "Tick took " << static_cast<float>(glfwGetTime()) - temp << " seconds" << std::endl;
         }
         world.Run();
         const auto end = static_cast<float>(glfwGetTime());

@@ -21,6 +21,7 @@ public:
     EntityRenderer(EntityRenderer&&) noexcept = default;
     EntityRenderer& operator=(EntityRenderer&&) noexcept = default;
     void virtual Render(float partialTick);
+    void virtual Changed();
 };
 
 template <typename StateType> requires std::is_base_of_v<EntityState, StateType>
@@ -30,5 +31,10 @@ EntityRenderer<StateType>::EntityRenderer(const StateType& state, const StateTyp
 
 template <typename StateType> requires std::is_base_of_v<EntityState, StateType>
 void EntityRenderer<StateType>::Render(float /*partialTick*/)
+{
+}
+
+template <typename StateType> requires std::is_base_of_v<EntityState, StateType>
+void EntityRenderer<StateType>::Changed()
 {
 }

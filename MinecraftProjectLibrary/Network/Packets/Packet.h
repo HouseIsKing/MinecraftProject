@@ -20,6 +20,7 @@ public:
     Packet& operator>>(uint16_t& data);
     Packet& operator>>(uint8_t& data);
     Packet& operator>>(ClientInputStruct& state);
+    Packet& operator>>(ClientInputStatusStruct& state);
     Packet& operator<<(const std::string& data);
     Packet& operator<<(const float& data);
     Packet& operator<<(const long& data);
@@ -29,6 +30,7 @@ public:
     Packet& operator<<(const uint16_t& data);
     Packet& operator<<(const uint8_t& data);
     Packet& operator<<(const ClientInputStruct& state);
+    Packet& operator<<(const ClientInputStatusStruct& state);
     std::vector<uint8_t>& GetData();
     [[nodiscard]] const PacketHeader& GetHeader() const;
 };

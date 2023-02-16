@@ -1,9 +1,13 @@
 #include "ClientPlayerRenderer.h"
 #include "Generic/CameraController.h"
 #include "Util/EngineDefaultsClient.h"
+#include "World/Generic/ClientWorld.h"
 
-ClientPlayerRenderer::ClientPlayerRenderer(const PlayerState& playerState, const PlayerState& oldPlayerState) : PlayerRenderer(playerState, oldPlayerState), MyCamera(CameraController::GetActiveCamera())
+ClientPlayerRenderer::ClientPlayerRenderer(const PlayerState& playerState, const PlayerState& oldPlayerState) : PlayerRenderer(playerState, oldPlayerState), MyCamera(CameraController::GetActiveCamera()), SelectionHighlight(playerState), BlockGui(new SelectedBlockGui(playerState))
 {
+    ClientWorld::GetWorld()->AddGui(BlockGui);
+    BlockGui->Active = true;
+    BlockGui->Rebuild();
 }
 
 Frustum ClientPlayerRenderer::GetCameraFrustum() const
@@ -25,8 +29,17 @@ void ClientPlayerRenderer::Render(const float partialTick)
     MyCamera.Position = finalCameraPosition;
     Shader::SetMat4(EngineDefaultsClient::GetShader()->GetUniformInt("view"), MyCamera.GetViewMatrix());
     Shader::SetMat4(EngineDefaultsClient::GetShader()->GetUniformInt("projection"), MyCamera.GetProjectionMatrix());
-    /*SelectionHighlight.Reset();
-    bool found = false;
-    SelectionHighlight.FaceHit = FindClosestFace(SelectionHighlight.HitPosition, found);
-    SelectionHighlight.BlockHit = found ? TheWorld->GetBlockAt(SelectionHighlight.HitPosition.x, SelectionHighlight.HitPosition.y, SelectionHighlight.HitPosition.z) : nullptr;*/
+}
+
+void ClientPlayerRenderer::Changed()
+{
+    if (OldState.CurrentSelectedBlock != State.CurrentSelectedBlock)
+    {
+        BlockGui->Rebuild();
+    }
+}
+
+void ClientPlayerRenderer::RenderSelectionHighlight()
+{
+    SelectionHighlight.Render();
 }

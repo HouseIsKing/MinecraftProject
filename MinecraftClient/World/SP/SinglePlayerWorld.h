@@ -11,7 +11,6 @@ public:
     SinglePlayerWorld& operator=(const SinglePlayerWorld&) = delete;
     SinglePlayerWorld(SinglePlayerWorld&&) = delete;
     SinglePlayerWorld& operator=(SinglePlayerWorld&&) = delete;
-    void Run() override;
     void NewTick() override;
     void HandlePacket(const PacketData* packet) override;
 };

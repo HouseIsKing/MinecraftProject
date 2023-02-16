@@ -1,18 +1,12 @@
 #pragma once
-#include "Entities/Generic/CameraController.h"
-#include "GUI/Gui.h"
-#include <algorithm>
-#include <map>
-#include <stack>
-#include <unordered_set>
-#include <GLFW/glfw3.h>
-
 #include "ChunkRenderer.h"
 #include "Entities/ClientPlayerRenderer.h"
+#include "Entities/Generic/BlockParticleEntityRenderer.h"
 #include "Entities/PlayerInputManager.h"
-#include "Entities/SP/PlayerRenderer.h"
-#include "Util/CustomRandomEngine.h"
+#include "GUI/Gui.h"
 #include "World/World.h"
+#include <GLFW/glfw3.h>
+#include <unordered_set>
 
 class ClientWorld : public World
 {
@@ -21,6 +15,7 @@ class ClientWorld : public World
 protected:
     std::unordered_map<ChunkCoords, ChunkRenderer, ChunkCoordsHasher> ChunkRenderers{};
     std::unordered_map<uint16_t, PlayerRenderer> PlayerRenderers{};
+    std::unordered_map<uint16_t, BlockParticleEntityRenderer> BlockParticleEntityRenderers{};
     std::unordered_set<ChunkRenderer*> DirtyChunksDuplicatorCheck{};
     std::vector<ChunkRenderer*> DirtyChunks{};
     std::vector<std::unique_ptr<Gui>> Guis{};
@@ -40,18 +35,25 @@ protected:
     void DrawGui() const;
     void RebuildGui() const;
     void DrawWorld(float partialTick);
+    void ChunkChanged(const ChunkCoords& coords) override;
+    void ChunkAdded(const ChunkCoords& coords) override;
+    void ChunkRemoved(const ChunkCoords& coords) override;
+    void EntityAdded(uint16_t entityId) override;
+    void EntityChanged(uint16_t entityId) override;
+    void EntityRemoved(uint16_t entityId) override;
     ClientWorld(GLFWwindow* window, uint16_t levelHeight, uint16_t levelWidth, uint16_t levelDepth);
-    void UpdateChunksNear(int x, int y, int z);
 
 public:
+    CustomRandomEngine RenderRandomEngine{};
     [[nodiscard]] GLFWwindow* GetWindow() const;
     [[nodiscard]] int GetFps() const;
-    [[nodiscard]] const Player& GetPlayer() const;
+    [[nodiscard]] const Player* GetPlayer() const;
     void HandleWindowResize(int height, int width) const;
-    void AddChunkAsDirty(ChunkRenderer* chunk);
     void NewTick() override;
+    void Run() override;
     template <typename T>
     [[nodiscard]] T* GetGuiOfType() const;
+    void AddGui(Gui* gui);
     void HandleKeyCallback(int key, int action);
     void HandleCursorPosCallback(float xPos, float yPos);
     void HandleMouseButtonCallback(int button, int action);

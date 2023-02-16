@@ -6,7 +6,7 @@
 #include <memory>
 
 std::unique_ptr<SinglePlayerWorld> spWorld{};
-std::unique_ptr<SinglePlayerWorld> mpWorld{};
+std::unique_ptr<MultiPlayerWorld> mpWorld{};
 
 void ErrorCallback(const int error, const char* description)
 {
@@ -73,8 +73,9 @@ void MainLoopMulti(GLFWwindow* window, const std::string& ip, const std::string&
     auto cam = Camera(glm::vec3(0.0F), 1920.0F / 1080.0F);
     CameraController::SetActiveCamera(cam);
     const double start = glfwGetTime();
-    //mpWorld = std::make_unique<MultiPlayerWorld>(window, name, ip);
+    mpWorld = std::make_unique<MultiPlayerWorld>(window, name, ip);
     std::cout << "World creation took " << glfwGetTime() - start << " seconds" << std::endl;
+    glfwPollEvents();
     glClearColor(0.5F, 0.8F, 1.0F, 1.0F);
     glClearDepthf(1.0F);
     glDepthFunc(GL_LEQUAL);
@@ -90,12 +91,12 @@ void MainLoopMulti(GLFWwindow* window, const std::string& ip, const std::string&
 
 void MainLoop(GLFWwindow* window)
 {
-    std::cout << glfwGetTimerFrequency() << std::endl;
     auto cam = Camera(glm::vec3(0.0F), 1920.0F / 1080.0F);
     CameraController::SetActiveCamera(cam);
     const double start = glfwGetTime();
     spWorld = std::make_unique<SinglePlayerWorld>(static_cast<uint16_t>(256), static_cast<uint16_t>(64), static_cast<uint16_t>(256), window);
     std::cout << "World creation took " << glfwGetTime() - start << " seconds" << std::endl;
+    glfwPollEvents();
     glClearColor(0.5F, 0.8F, 1.0F, 1.0F);
     glClearDepthf(1.0F);
     glDepthFunc(GL_LEQUAL);

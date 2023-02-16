@@ -1,6 +1,10 @@
 #include "BlockRenderer.h"
-#include "Entities/Generic/ParticleEntity.h"
 #include "Util/EngineDefaults.h"
+
+uint16_t BlockRenderer::GetTextureFromIndex(const size_t textureIndex) const
+{
+	return IndexTextures[textureIndex];
+}
 
 void BlockRenderer::GenerateTessellationDataForAllFaces(const Block* block, TessellationHelper& tessellationHelper, const float& x, const float& y, const float& z, const int& brightness, float r, float g, float b, float a) const
 {

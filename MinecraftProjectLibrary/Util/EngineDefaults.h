@@ -3,28 +3,32 @@
 #include <glm/vec3.hpp>
 #include <vector>
 
+struct TransformStruct;
+struct ClientInputStruct;
+struct ChunkCoords;
+
 class EngineDefaults
 {
 public:
     static constexpr glm::vec3 PLAYER_SIZE = glm::vec3(0.3F, 0.9F, 0.3F);
+    static constexpr glm::vec3 PARTICLE_SIZE = glm::vec3(0.1F, 0.1F, 0.1F);
     static constexpr float CAMERA_OFFSET = 1.62F;
     static constexpr char CHUNK_WIDTH = 16;
     static constexpr char CHUNK_HEIGHT = 16;
     static constexpr char CHUNK_DEPTH = 16;
     static constexpr float TICK_RATE = 0.05F;
     static constexpr size_t ROLLBACK_COUNT = 1 * static_cast<size_t>(1.0F / TICK_RATE);
-
     static float ConvertLightLevelToAmbient(int lightLevel);
     static uint16_t GetChunkLocalIndex(int x, int y, int z);
-    template <typename T>
+    template <typename T> requires std::is_fundamental_v<T> or std::is_enum_v<T> or std::is_same_v<glm::vec3, T> or std::is_same_v<glm::vec2, T> or std::is_same_v<ChunkCoords, T> or std::is_same_v<ClientInputStruct, T> or std::is_same_v<TransformStruct, T> or std::is_same_v<glm::ivec2, T>
     static const T& ReadDataFromVector(const std::vector<uint8_t>& vector, size_t& pos);
-    template <class T>
+    template <class T> requires std::is_fundamental_v<T> or std::is_enum_v<T> or std::is_same_v<glm::vec3, T> or std::is_same_v<glm::vec2, T> or std::is_same_v<ChunkCoords, T> or std::is_same_v<ClientInputStruct, T> or std::is_same_v<TransformStruct, T> or std::is_same_v<glm::ivec2, T>
     static void EmplaceReplaceDataInVector(std::vector<uint8_t>& vector, const T* data);
-    template <typename T>
+    template <typename T> requires std::is_fundamental_v<T> or std::is_enum_v<T> or std::is_same_v<glm::vec3, T> or std::is_same_v<glm::vec2, T> or std::is_same_v<ChunkCoords, T> or std::is_same_v<ClientInputStruct, T> or std::is_same_v<TransformStruct, T> or std::is_same_v<glm::ivec2, T>
     static void EmplaceReplaceDataInVector(std::vector<uint8_t>& vector, const T* data, size_t pos);
 };
 
-template <typename T>
+template <typename T> requires std::is_fundamental_v<T> or std::is_enum_v<T> or std::is_same_v<glm::vec3, T> or std::is_same_v<glm::vec2, T> or std::is_same_v<ChunkCoords, T> or std::is_same_v<ClientInputStruct, T> or std::is_same_v<TransformStruct, T> or std::is_same_v<glm::ivec2, T>
 const T& EngineDefaults::ReadDataFromVector(const std::vector<uint8_t>& vector, size_t& pos)
 {
     const T& result = *reinterpret_cast<const T*>(vector.data() + pos);
@@ -32,13 +36,13 @@ const T& EngineDefaults::ReadDataFromVector(const std::vector<uint8_t>& vector, 
     return result;
 }
 
-template <typename T>
+template <typename T> requires std::is_fundamental_v<T> or std::is_enum_v<T> or std::is_same_v<glm::vec3, T> or std::is_same_v<glm::vec2, T> or std::is_same_v<ChunkCoords, T> or std::is_same_v<ClientInputStruct, T> or std::is_same_v<TransformStruct, T> or std::is_same_v<glm::ivec2, T>
 void EngineDefaults::EmplaceReplaceDataInVector(std::vector<uint8_t>& vector, const T* data)
 {
     EmplaceReplaceDataInVector(vector, data, vector.size());
 }
 
-template <typename T>
+template <typename T> requires std::is_fundamental_v<T> or std::is_enum_v<T> or std::is_same_v<glm::vec3, T> or std::is_same_v<glm::vec2, T> or std::is_same_v<ChunkCoords, T> or std::is_same_v<ClientInputStruct, T> or std::is_same_v<TransformStruct, T> or std::is_same_v<glm::ivec2, T>
 void EngineDefaults::EmplaceReplaceDataInVector(std::vector<uint8_t>& vector, const T* data, const size_t pos)
 {
     if (vector.size() == pos)
@@ -99,13 +103,21 @@ enum class EChangeTypeEntity : uint8_t
     JumpRequested,
     HorizontalInput,
     VerticalInput,
+    BlockParticleLifeTime,
+    BlockParticleAge,
+    BlockParticleBlockType,
     PlayerCameraPitch,
     PlayerInputState,
+    PlayerMode,
+    PlayerCurrentSelectedBlock,
 };
 
 enum class EChangeType : uint8_t
 {
     WorldTime,
+    BlockParticleEnterWorld,
+    BlockParticleState,
+    BlockParticleLeaveWorld,
     PlayerEnterWorld,
     PlayerState,
     PlayerLeaveWorld,
@@ -125,6 +137,24 @@ enum class EEntityType : uint8_t
     Zombie,
 };
 
+enum class EKeySet : uint8_t
+{
+    LeftMouseButton,
+    RightMouseButton,
+    Jump,
+    Reset,
+    SpawnZombie,
+    One,
+    Two,
+    Three,
+    Four,
+    Five,
+    Up,
+    Down,
+    Left,
+    Right,
+};
+
 struct IVec2Comparator
 {
     bool operator()(const glm::ivec2& a, const glm::ivec2& b) const
@@ -141,22 +171,26 @@ struct IVec2Comparator
     }
 };
 
+struct ClientInputStatusStruct
+{
+    float MouseX{0.0F};
+    float MouseY{0.0F};
+    uint8_t KeySet1{0}; // bit 0 = LeftMouseButtonPressed, bit 1 = RightMouseButtonPressed, bit 2 = JumpPressed, bit 3 = ResetPressed, bit 4 = SpawnZombiePressed, bit 5 = OnePressed, bit 6 = TwoPressed, bit 7 = ThreePressed
+    uint8_t KeySet2{0}; // bit 0 = FourPressed, bit 1 = FivePressed, bit 2 = ForwardPressed, bit 3 = BackwardPressed, bit 4 = LeftPressed, bit 5 = RightPressed
+    void SetKey(EKeySet key, bool pressed);
+};
+
 struct ClientInputStruct
 {
     float MouseX{0.0F};
     float MouseY{0.0F};
-    bool LeftMouseButtonPressed{false};
-    bool RightMouseButtonPressed{false};
-    int8_t ForwardAxis{0};
-    int8_t RightAxis{0};
-    bool JumpPressed{false};
-    bool ResetPressed{false};
-    bool SpawnZombiePressed{false};
-    bool OnePressed{false};
-    bool TwoPressed{false};
-    bool ThreePressed{false};
-    bool FourPressed{false};
-    bool FivePressed{false};
+    uint8_t KeySet1Pressed{0}; // bit 0 = LeftMouseButtonPressed, bit 1 = RightMouseButtonPressed, bit 2 = JumpPressed, bit 3 = ResetPressed, bit 4 = SpawnZombiePressed, bit 5 = OnePressed, bit 6 = TwoPressed, bit 7 = ThreePressed
+    uint8_t KeySet1Hold{0}; // bit 0 = LeftMouseButtonHold, bit 1 = RightMouseButtonHold, bit 2 = JumpHold, bit 3 = ResetHold, bit 4 = SpawnZombieHold, bit 5 = OneHold, bit 6 = TwoHold, bit 7 = ThreeHold
+    uint8_t KeySet2Pressed{0}; // bit 0 = FourPressed, bit 1 = FivePressed, bit 2 = ForwardPressed, bit 3 = BackwardPressed, bit 4 = LeftPressed, bit 5 = RightPressed
+    uint8_t KeySet2Hold{0}; // bit 0 = FourHold, bit 1 = FiveHold, bit 2 = ForwardHold, bit 3 = BackwardHold, bit 4 = LeftHold, bit 5 = RightHold
+    [[nodiscard]] bool IsKeyPressed(EKeySet key) const;
+    [[nodiscard]] bool IsKeyHold(EKeySet key) const;
+    ClientInputStruct& operator<<(const ClientInputStatusStruct& clientInputStatusStruct);
 };
 
 struct TransformStruct
@@ -169,6 +203,14 @@ struct TransformStruct
 
 struct State
 {
+    State() = default;
+    virtual ~State() = default;
+    State(const State&) = default;
+    State& operator=(const State&) = default;
+    State(State&&) = default;
+    State& operator=(State&&) = default;
+    virtual void Serialize(std::vector<uint8_t>& changes) const = 0;
+    virtual void Deserialize(const std::vector<uint8_t>& changes, size_t& pos) = 0;
 };
 
 struct ChunkCoords

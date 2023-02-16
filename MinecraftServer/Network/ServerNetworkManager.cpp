@@ -45,7 +45,7 @@ std::shared_ptr<PacketData> ServerNetworkManager::GetNextPacket()
     {
         return Packets.Pop();
     }
-    return {};
+    return {nullptr};
 }
 
 std::shared_ptr<ConnectionToClient> ServerNetworkManager::GetNextNewConnection()
@@ -54,7 +54,7 @@ std::shared_ptr<ConnectionToClient> ServerNetworkManager::GetNextNewConnection()
     {
         return NewConnections.Pop();
     }
-    return {};
+    return {nullptr};
 }
 
 std::shared_ptr<ConnectionToClient> ServerNetworkManager::GetNextRemovedConnection()
@@ -63,7 +63,7 @@ std::shared_ptr<ConnectionToClient> ServerNetworkManager::GetNextRemovedConnecti
     {
         return RemovedConnections.Pop();
     }
-    return {};
+    return {nullptr};
 }
 
 asio::io_context& ServerNetworkManager::GetContext()

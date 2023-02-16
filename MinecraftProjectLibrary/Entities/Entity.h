@@ -22,8 +22,6 @@ public:
     Entity(Entity&&) = delete;
     virtual void Tick();
     [[nodiscard]] BoundingBox GetBoundingBox() const;
-    [[nodiscard]] uint16_t GetEntityId() const;
-    [[nodiscard]] EEntityType GetEntityType() const;
     [[nodiscard]] const StateType& GetState() const;
     [[nodiscard]] const StateType& GetOldState() const;
     void AttachEntityChange(std::vector<uint8_t>& changes) const;
@@ -175,18 +173,6 @@ BoundingBox Entity<Wrapper, StateType>::GetBoundingBox() const
 }
 
 template <typename Wrapper, typename StateType> requires std::is_base_of_v<EntityStateWrapper<StateType>, Wrapper>
-uint16_t Entity<Wrapper, StateType>::GetEntityId() const
-{
-    return State.GetState().EntityId;
-}
-
-template <typename Wrapper, typename StateType> requires std::is_base_of_v<EntityStateWrapper<StateType>, Wrapper>
-EEntityType Entity<Wrapper, StateType>::GetEntityType() const
-{
-    return State.GetState().EntityType;
-}
-
-template <typename Wrapper, typename StateType> requires std::is_base_of_v<EntityStateWrapper<StateType>, Wrapper>
 const StateType& Entity<Wrapper, StateType>::GetState() const
 {
     return State.GetState();
@@ -207,13 +193,13 @@ void Entity<Wrapper, StateType>::AttachEntityChange(std::vector<uint8_t>& change
 template <typename Wrapper, typename StateType> requires std::is_base_of_v<EntityStateWrapper<StateType>, Wrapper>
 void Entity<Wrapper, StateType>::AttachEntityData(std::vector<uint8_t>& data) const
 {
-    EngineDefaults::EmplaceReplaceDataInVector(data, &State.GetState());
+    State.GetState().Serialize(data);
 }
 
 template <typename Wrapper, typename StateType> requires std::is_base_of_v<EntityStateWrapper<StateType>, Wrapper>
 void Entity<Wrapper, StateType>::RevertEntityChanges(const std::vector<uint8_t>& changes, size_t& pos)
 {
-    const uint8_t changeCount = EngineDefaults::ReadDataFromVector<uint8_t>(changes, pos);
+    const uint16_t changeCount = EngineDefaults::ReadDataFromVector<uint16_t>(changes, pos);
     for (int i = 0; i < changeCount; i++)
     {
         const EChangeTypeEntity change = EngineDefaults::ReadDataFromVector<EChangeTypeEntity>(changes, pos);

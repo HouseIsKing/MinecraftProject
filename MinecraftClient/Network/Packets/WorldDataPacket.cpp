@@ -1,13 +1,7 @@
 #include "WorldDataPacket.h"
 
-WorldDataPacket::WorldDataPacket(Packet& packet) : WorldTime(0)
+WorldDataPacket::WorldDataPacket(Packet& packet) : Data(packet.GetData()), WorldTime(*reinterpret_cast<uint64_t*>(Data.data() + sizeof uint64_t + sizeof uint16_t + sizeof EChangeType))
 {
-    Data.resize(packet.GetData().size() - sizeof(uint64_t));
-    for (uint8_t& i : Data)
-    {
-        packet >> i;
-    }
-    packet >> WorldTime;
 }
 
 EPacketType WorldDataPacket::GetPacketType() const

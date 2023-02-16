@@ -180,7 +180,7 @@
         <ClCompile Include="Entities\Generic\Camera.cpp"/>
         <ClCompile Include="Entities\Generic\CameraController.cpp"/>
         <ClCompile Include="Entities\Generic\EntityMeshBlock.cpp"/>
-        <ClCompile Include="Entities\Generic\ParticleEntity.cpp"/>
+        <ClCompile Include="Entities\Generic\BlockParticleEntityRenderer.cpp"/>
         <ClCompile Include="Entities\Generic\PlayerSelectionHighlight.cpp"/>
         <ClCompile Include="Entities\Generic\Zombie.cpp"/>
         <ClCompile Include="Entities\MP\PlayerMp.cpp"/>
@@ -224,7 +224,7 @@
         <ClInclude Include="Entities\Generic\EntityRenderer.h"/>
         <ClInclude Include="Entities\Generic\EntityMeshBlock.h"/>
         <ClInclude Include="Entities\Generic\LivingEntityRenderer.h"/>
-        <ClInclude Include="Entities\Generic\ParticleEntity.h"/>
+        <ClInclude Include="Entities\Generic\BlockParticleEntityRenderer.h"/>
         <ClInclude Include="Entities\Generic\PlayerSelectionHighlight.h"/>
         <ClInclude Include="Entities\Generic\Zombie.h"/>
         <ClInclude Include="Entities\MP\OtherPlayer.h"/>

@@ -20,6 +20,7 @@
     </ItemGroup>
     <ItemGroup>
         <ClCompile Include="Entities\EntityMeshBlock.cpp"/>
+        <ClCompile Include="Entities\BlockParticleEntity.cpp"/>
         <ClCompile Include="Entities\Player.cpp"/>
         <ClCompile Include="Entities\Zombie.cpp"/>
         <ClCompile Include="Network\Packets\Packet.cpp"/>
@@ -30,6 +31,7 @@
         <ClCompile Include="Util\EngineDefaults.cpp"/>
         <ClCompile Include="Util\PerlinNoise.cpp"/>
         <ClCompile Include="Util\States\ChunkStateWrapper.cpp"/>
+        <ClCompile Include="Util\States\BlockParticleEntityStateWrapper.cpp"/>
         <ClCompile Include="Util\States\PlayerStateWrapper.cpp"/>
         <ClCompile Include="Util\States\WorldStateWrapper.cpp"/>
         <ClCompile Include="World\Blocks\AirBlock.cpp"/>
@@ -44,6 +46,7 @@
         <ClInclude Include="Entities\Entity.h"/>
         <ClInclude Include="Entities\EntityMeshBlock.h"/>
         <ClInclude Include="Entities\LivingEntity.h"/>
+        <ClInclude Include="Entities\BlockParticleEntity.h"/>
         <ClInclude Include="Entities\Player.h"/>
         <ClInclude Include="Entities\Zombie.h"/>
         <ClInclude Include="Network\Packets\Packet.h"/>
@@ -59,6 +62,8 @@
         <ClInclude Include="Util\States\EntityStateWrapper.h"/>
         <ClInclude Include="Util\States\LivingEntityState.h"/>
         <ClInclude Include="Util\States\LivingEntityStateWrapper.h"/>
+        <ClInclude Include="Util\States\BlockParticleEntityState.h"/>
+        <ClInclude Include="Util\States\BlockParticleEntityStateWrapper.h"/>
         <ClInclude Include="Util\States\PlayerState.h"/>
         <ClInclude Include="Util\States\PlayerStateWrapper.h"/>
         <ClInclude Include="Util\States\StateWrapper.h"/>
@@ -165,7 +170,6 @@
         <ClCompile>
             <PrecompiledHeader>NotUsing</PrecompiledHeader>
             <WarningLevel>Level4</WarningLevel>
-            <Optimization>Full</Optimization>
             <SDLCheck>true</SDLCheck>
             <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions);_ITERATOR_DEBUG_LEVEL=0;</PreprocessorDefinitions>
             <ConformanceMode>true</ConformanceMode>
@@ -173,8 +177,10 @@
             <AdditionalIncludeDirectories>$(SolutionDir)/Include;$(ProjectDir);</AdditionalIncludeDirectories>
             <LanguageStandard>stdcpplatest</LanguageStandard>
             <LanguageStandard_C>stdc17</LanguageStandard_C>
-            <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+            <DebugInformationFormat>OldStyle</DebugInformationFormat>
             <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+            <MultiProcessorCompilation>true</MultiProcessorCompilation>
+            <Optimization>Full</Optimization>
         </ClCompile>
         <Link>
             <SubSystem>Windows</SubSystem>

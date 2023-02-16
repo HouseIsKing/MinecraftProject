@@ -58,7 +58,6 @@ void ConnectionToClient::ReadPacketBodyAsync()
                {
                    if (!error)
                    {
-                       std::cout << "Received client input" << std::chrono::system_clock::now() << std::endl;
                        NetworkManager->AddPacket(TranslatePacket());
                        ReadPacketHeaderAsync();
                    }

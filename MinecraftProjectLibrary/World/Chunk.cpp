@@ -1,6 +1,6 @@
 #include "Chunk.h"
-#include "World.h"
 #include "Blocks/BlockTypeList.h"
+#include "World.h"
 
 
 Chunk::Chunk(const int x, const int y, const int z) : Chunk(ChunkCoords(x, y, z))
@@ -44,6 +44,7 @@ void Chunk::SetBlockTypeAt(const uint16_t index, const EBlockType block)
 {
     if (State.GetState().Blocks[index] != block)
     {
+        World::GetWorld()->ChunkChanged(State.GetState().ChunkPosition);
         State.SetBlockAt(index, block);
     }
 }
@@ -57,6 +58,7 @@ void Chunk::RevertChunkChanges(const std::vector<uint8_t>& changes, size_t& pos)
         State.SetBlockAt(index, EngineDefaults::ReadDataFromVector<EBlockType>(changes, pos));
         pos += sizeof(EBlockType);
     }
+    World::GetWorld()->ChunkChanged(State.GetState().ChunkPosition);
 }
 
 void Chunk::AttachChunkChanges(std::vector<uint8_t>& changes) const
@@ -71,5 +73,5 @@ void Chunk::ClearAllChanges()
 
 void Chunk::AttachChunkData(std::vector<uint8_t>& data) const
 {
-    EngineDefaults::EmplaceReplaceDataInVector(data, &State.GetState());
+    State.GetState().Serialize(data);
 }

@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <glm/ext/scalar_constants.hpp>
 #include <iostream>
+#include <unordered_set>
 
 #include "Blocks/BlockTypeList.h"
 
@@ -15,9 +16,9 @@ void World::SaveWorld() const
     CustomFileManager fileManager{"level.dat", "w"};
     const WorldState& state = State.GetState();
     fileManager << state.Chunks.size();
-    for (const auto& val : state.Chunks | std::views::values)
+    for (const auto* val : state.Chunks | std::views::values)
     {
-        fileManager << val;
+        fileManager << val->GetState();
     }
 }
 
@@ -30,13 +31,10 @@ void World::LoadWorld()
         fileManager >> size;
         for (size_t i = 0; i < size; i++)
         {
-            ChunkCoords coords;
-            fileManager >> coords;
-            const int x = coords.GetX() * EngineDefaults::CHUNK_WIDTH;
-            const int y = coords.GetY() * EngineDefaults::CHUNK_HEIGHT;
-            const int z = coords.GetZ() * EngineDefaults::CHUNK_DEPTH;
-            State.AddChunk(x, y, z);
-            fileManager >> State.GetChunk(coords);
+            ChunkState state;
+            fileManager >> state;
+            State.AddChunk(state);
+            ChunkAdded(state.ChunkPosition);
         }
     }
     else
@@ -56,43 +54,17 @@ void World::LoadWorld()
 World::World(const uint16_t width, const uint16_t height, const uint16_t depth) : LevelWidth(width), LevelHeight(height), LevelDepth(depth)
 {
     TheWorld = this;
-    for (uint16_t i = 0xFFFF; i != 0; i--)
-    {
-        EntityAvailableIDs.push(i);
-    }
-    EntityAvailableIDs.push(0);
     BlockTypeList::InitBlockTypes();
-}
-
-void World::RemovePlayer(const uint16_t id)
-{
-    PlayersToRemove.push_back(id);
-}
-
-Player& World::GetPlayer(const uint16_t id)
-{
-    return State.GetPlayer(id);
 }
 
 void World::Tick()
 {
+    State.ClearAllChanges();
     State.SetWorldTime(State.GetState().WorldTime + 1);
     TickRandomEngine = State.GetState().RandomEngine;
-    for (auto& val : PlayersToAdd)
-    {
-        State.AddPlayer(val.EntityId, val.EntityTransform.Position.x, val.EntityTransform.Position.y, val.EntityTransform.Position.z);
-    }
-    PlayersToAdd.clear();
-    for (uint16_t val : PlayersToRemove)
-    {
-        State.RemovePlayer(val);
-        EntityAvailableIDs.push(val);
-    }
-    PlayersToRemove.clear();
-    for (auto it = State.GetPlayersIterator(); it != State.GetState().Players.end(); ++it)
-    {
-        it->second.Tick();
-    }
+    ProcessTickEntities();
+    ProcessAddingEntities();
+    ProcessRemovingEntities();
     const int numTilesToTick = LevelWidth * LevelHeight * LevelDepth / 400;
     for (int i = 0; i < numTilesToTick; i++)
     {
@@ -145,10 +117,11 @@ void World::BuildWorldChanges()
 
 bool World::RevertWorldState(const uint64_t tick)
 {
-    if (tick + ChangesLists.size() <= State.GetState().WorldTime || tick > State.GetState().WorldTime)
+    if (tick + ChangesLists.size() <= State.GetState().WorldTime || tick >= State.GetState().WorldTime)
     {
         return false;
     }
+    State.ClearAllChanges();
     for (size_t i = State.GetState().WorldTime; i > tick; i--)
     {
         RevertChangesList(ChangesLists[i % ChangesLists.size()]);
@@ -166,19 +139,62 @@ void World::SimulateTicks(const uint8_t tickCount)
 
 void World::RevertChangesList(const std::vector<uint8_t>& changes)
 {
-    size_t pos = 0;
+    size_t pos = sizeof uint16_t;
+    std::unordered_set<uint16_t> removedEntities{};
     while (pos < changes.size())
     {
         switch (EngineDefaults::ReadDataFromVector<EChangeType>(changes, pos))
         {
+        case EChangeType::BlockParticleState:
+            {
+                if (uint16_t entityId = EngineDefaults::ReadDataFromVector<uint16_t>(changes, pos); !removedEntities.contains(entityId))
+                {
+                    State.GetEntity<BlockParticleEntityStateWrapper, BlockParticleEntityState>(entityId)->RevertEntityChanges(changes, pos);
+                }
+                else
+                {
+                    BlockParticleTrash.RevertEntityChanges(changes, pos);
+                }
+                break;
+            }
+        case EChangeType::BlockParticleEnterWorld:
+            {
+                const uint32_t changeCount = EngineDefaults::ReadDataFromVector<uint32_t>(changes, pos);
+                for (uint32_t i = 0; i < changeCount; i++)
+                {
+                    BlockParticleEntityState state{};
+                    state.Deserialize(changes, pos);
+                    removedEntities.emplace(state.EntityId);
+                    State.RemoveEntity(state.EntityId);
+                }
+                break;
+            }
+        case EChangeType::BlockParticleLeaveWorld:
+            {
+                const uint32_t changeCount = EngineDefaults::ReadDataFromVector<uint32_t>(changes, pos);
+                for (uint32_t i = 0; i < changeCount; i++)
+                {
+                    BlockParticleEntityState state{};
+                    state.Deserialize(changes, pos);
+                    State.AddEntity(&state, true);
+                }
+                break;
+            }
         case EChangeType::ChunkState:
             {
-                State.GetChunk(EngineDefaults::ReadDataFromVector<ChunkCoords>(changes, pos)).RevertChunkChanges(changes, pos);
+                State.GetChunk(EngineDefaults::ReadDataFromVector<ChunkCoords>(changes, pos))->RevertChunkChanges(changes, pos);
                 break;
             }
         case EChangeType::PlayerState:
             {
-                State.GetPlayer(EngineDefaults::ReadDataFromVector<uint16_t>(changes, pos)).RevertEntityChanges(changes, pos);
+                if (const auto& player = EngineDefaults::ReadDataFromVector<uint16_t>(changes, pos); !removedEntities.contains(player))
+                {
+                    State.GetEntity<PlayerStateWrapper, PlayerState>(player)->RevertEntityChanges(changes, pos);
+                }
+                else
+                {
+                    PlayerTrash.RevertEntityChanges(changes, pos);
+                }
                 break;
             }
         case EChangeType::LightState:
@@ -210,7 +226,9 @@ void World::RevertChangesList(const std::vector<uint8_t>& changes)
                 const uint32_t changeCount = EngineDefaults::ReadDataFromVector<uint32_t>(changes, pos);
                 for (uint32_t i = 0; i < changeCount; i++)
                 {
-                    State.RemoveChunk(EngineDefaults::ReadDataFromVector<ChunkState>(changes, pos).ChunkPosition);
+                    ChunkState state{};
+                    state.Deserialize(changes, pos);
+                    State.RemoveChunk(state.ChunkPosition);
                 }
                 break;
             }
@@ -219,7 +237,9 @@ void World::RevertChangesList(const std::vector<uint8_t>& changes)
                 const uint32_t changeCount = EngineDefaults::ReadDataFromVector<uint32_t>(changes, pos);
                 for (uint32_t i = 0; i < changeCount; i++)
                 {
-                    State.AddChunk(EngineDefaults::ReadDataFromVector<ChunkState>(changes, pos));
+                    ChunkState state{};
+                    state.Deserialize(changes, pos);
+                    State.AddChunk(state);
                 }
                 break;
             }
@@ -228,7 +248,10 @@ void World::RevertChangesList(const std::vector<uint8_t>& changes)
                 const uint32_t changeCount = EngineDefaults::ReadDataFromVector<uint32_t>(changes, pos);
                 for (uint32_t i = 0; i < changeCount; i++)
                 {
-                    State.RemovePlayer(EngineDefaults::ReadDataFromVector<PlayerState>(changes, pos).EntityId);
+                    PlayerState state{};
+                    state.Deserialize(changes, pos);
+                    removedEntities.emplace(state.EntityId);
+                    State.RemoveEntity(state.EntityId);
                 }
                 break;
             }
@@ -237,7 +260,9 @@ void World::RevertChangesList(const std::vector<uint8_t>& changes)
                 const uint32_t changeCount = EngineDefaults::ReadDataFromVector<uint32_t>(changes, pos);
                 for (uint32_t i = 0; i < changeCount; i++)
                 {
-                    State.AddPlayer(EngineDefaults::ReadDataFromVector<PlayerState>(changes, pos));
+                    PlayerState state{};
+                    state.Deserialize(changes, pos);
+                    State.AddEntity(&state, true);
                 }
                 break;
             }
@@ -268,6 +293,72 @@ void World::RevertChangesList(const std::vector<uint8_t>& changes)
     State.ClearAllChanges();
 }
 
+void World::UpdateChunksNear(const int x, const int y, const int z)
+{
+    const Chunk* chunk = GetChunkAt(x, y + 1, z);
+    if (chunk != nullptr)
+    {
+        ChunkChanged(chunk->GetState().ChunkPosition);
+    }
+    chunk = GetChunkAt(x, y - 1, z);
+    if (chunk != nullptr)
+    {
+        ChunkChanged(chunk->GetState().ChunkPosition);
+    }
+    chunk = GetChunkAt(x, y, z + 1);
+    if (chunk != nullptr)
+    {
+        ChunkChanged(chunk->GetState().ChunkPosition);
+    }
+    chunk = GetChunkAt(x, y, z - 1);
+    if (chunk != nullptr)
+    {
+        ChunkChanged(chunk->GetState().ChunkPosition);
+    }
+    chunk = GetChunkAt(x + 1, y, z);
+    if (chunk != nullptr)
+    {
+        ChunkChanged(chunk->GetState().ChunkPosition);
+    }
+    chunk = GetChunkAt(x - 1, y, z);
+    if (chunk != nullptr)
+    {
+        ChunkChanged(chunk->GetState().ChunkPosition);
+    }
+}
+
+void World::ProcessAddingEntities()
+{
+    for (const std::unique_ptr<EntityState>& state : EntitiesToAdd)
+    {
+        State.AddEntity(state.get());
+        EntityAdded(state->EntityId);
+    }
+    EntitiesToAdd.clear();
+}
+
+void World::ProcessRemovingEntities()
+{
+    for (const uint16_t entityId : EntitiesToRemove)
+    {
+        State.RemoveEntity(entityId);
+        EntityRemoved(entityId);
+    }
+    EntitiesToRemove.clear();
+}
+
+void World::ProcessTickEntities()
+{
+    for (auto it = State.GetPlayersIterator(); it != State.GetState().Players.end(); ++it)
+    {
+        it->second->Tick();
+    }
+    for (auto it = State.GetBlockParticleEntitiesIterator(); it != State.GetState().BlockParticleEntities.end(); ++it)
+    {
+        it->second->Tick();
+    }
+}
+
 void World::GenerateChunks(const uint16_t amountX, const uint16_t amountY, const uint16_t amountZ)
 {
     for (int x = 0; x < amountX; x++)
@@ -276,7 +367,10 @@ void World::GenerateChunks(const uint16_t amountX, const uint16_t amountY, const
         {
             for (int z = 0; z < amountZ; z++)
             {
-                State.AddChunk(x * EngineDefaults::CHUNK_WIDTH, y * EngineDefaults::CHUNK_HEIGHT, z * EngineDefaults::CHUNK_DEPTH);
+                ChunkState state{};
+                state.ChunkPosition = ChunkCoords(x * EngineDefaults::CHUNK_WIDTH, y * EngineDefaults::CHUNK_HEIGHT, z * EngineDefaults::CHUNK_DEPTH);
+                State.AddChunk(state);
+                ChunkAdded(state.ChunkPosition);
             }
         }
     }
@@ -388,12 +482,12 @@ void World::GenerateLevel()
     State.SetRandomSeed(random.Seed);
 }
 
-const Block* World::GetBlockAt(const int x, const int y, const int z)
+const Block* World::GetBlockAt(const int x, const int y, const int z) const
 {
     return BlockTypeList::GetBlockTypeData(GetBlockTypeAt(x, y, z));
 }
 
-EBlockType World::GetBlockTypeAt(const int x, const int y, const int z)
+EBlockType World::GetBlockTypeAt(const int x, const int y, const int z) const
 {
     const Chunk* chunk = GetChunkAt(x, y, z);
     if (chunk == nullptr)
@@ -403,14 +497,14 @@ EBlockType World::GetBlockTypeAt(const int x, const int y, const int z)
     return chunk->GetBlockTypeAt(x, y, z);
 }
 
-Chunk* World::GetChunkAt(const int x, const int y, const int z)
+Chunk* World::GetChunkAt(const int x, const int y, const int z) const
 {
     const auto pos = ChunkCoords(x, y, z);
     if (!State.GetState().Chunks.contains(pos))
     {
         return nullptr;
     }
-    return &State.GetChunk(pos);
+    return State.GetChunk(pos);
 }
 
 /**
@@ -435,12 +529,37 @@ int World::GetBrightnessAt(const int x, const int y, const int z) const
     return 0;
 }
 
-bool World::IsBlockSolid(const int x, const int y, const int z)
+bool World::IsBlockSolid(const int x, const int y, const int z) const
 {
     return GetBlockAt(x, y, z)->IsSolidBlock();
 }
 
-bool World::IsBlockExists(const int x, const int y, const int z)
+void World::ChunkChanged(const ChunkCoords& /*coords*/)
+{
+}
+
+void World::ChunkAdded(const ChunkCoords& /*coords*/)
+{
+}
+
+void World::ChunkRemoved(const ChunkCoords& /*coords*/)
+{
+}
+
+void World::EntityAdded(uint16_t /*entityId*/)
+{
+}
+
+void World::EntityChanged(uint16_t /*entityId*/)
+{
+}
+
+void World::EntityRemoved(uint16_t /*entityId*/)
+{
+}
+
+
+bool World::IsBlockExists(const int x, const int y, const int z) const
 {
     return GetBlockTypeAt(x, y, z) != EBlockType::Air;
 }
@@ -455,9 +574,20 @@ void World::PlaceBlockAt(const int x, const int y, const int z, const EBlockType
     const Block* previousBlock = chunk->GetBlockAt(x, y, z);
     const Block* block = BlockTypeList::GetBlockTypeData(blockType);
     chunk->SetBlockTypeAt(x, y, z, blockType);
+    if (block->IsSolidBlock() != previousBlock->IsSolidBlock())
+    {
+        UpdateChunksNear(x, y, z);
+    }
     if (block->IsBlockingLight() != previousBlock->IsBlockingLight())
     {
-        RecalculateLightLevels(x, z);
+        const int16_t change = RecalculateLightLevels(x, z);
+        for (int16_t i = 0; i < change; i++)
+        {
+            if (const Chunk* chunkLight = GetChunkAt(x, y + i, z); chunkLight != nullptr)
+            {
+                ChunkChanged(chunkLight->GetState().ChunkPosition);
+            }
+        }
     }
 }
 
@@ -469,15 +599,26 @@ void World::RemoveBlockAt(const int x, const int y, const int z)
         return;
     }
     const Block* block = chunk->GetBlockAt(x, y, z);
-    block->OnBreak(this, x, y, z);
+    block->OnBreak(x, y, z);
     chunk->SetBlockTypeAt(x, y, z, EBlockType::Air);
+    if (block->IsSolidBlock())
+    {
+        UpdateChunksNear(x, y, z);
+    }
     if (block->IsBlockingLight())
     {
-        RecalculateLightLevels(x, z);
+        const int16_t change = RecalculateLightLevels(x, z);
+        for (int16_t i = 0; i < static_cast<int16_t>(abs(change)); i++)
+        {
+            if (const Chunk* chunkLight = GetChunkAt(x, y + -i, z); chunkLight != nullptr)
+            {
+                ChunkChanged(chunkLight->GetState().ChunkPosition);
+            }
+        }
     }
 }
 
-std::vector<BoundingBox> World::GetBlockBoxesInBoundingBox(const BoundingBox& boundingBox)
+std::vector<BoundingBox> World::GetBlockBoxesInBoundingBox(const BoundingBox& boundingBox) const
 {
     std::vector<BoundingBox> result{};
     for (int x = static_cast<int>(boundingBox.GetMinX()); static_cast<float>(x) <= boundingBox.GetMaxX(); x++)

@@ -118,6 +118,16 @@ Packet& Packet::operator>>(ClientInputStruct& state)
     return *this;
 }
 
+Packet& Packet::operator>>(ClientInputStatusStruct& state)
+{
+    if (DataPos + sizeof(ClientInputStatusStruct) > Header.PacketSize)
+    {
+        throw std::runtime_error("Packet size exceeded");
+    }
+    state = *reinterpret_cast<ClientInputStatusStruct*>(Data.data() + DataPos);
+    return *this;
+}
+
 Packet& Packet::operator<<(const std::string& data)
 {
     if (Data.size() + data.size() > Header.PacketSize)
@@ -205,5 +215,15 @@ Packet& Packet::operator<<(const ClientInputStruct& state)
         throw std::runtime_error("Packet size exceeded");
     }
     Data.insert(Data.end(), reinterpret_cast<const uint8_t*>(&state), reinterpret_cast<const uint8_t*>(&state) + sizeof(ClientInputStruct));
+    return *this;
+}
+
+Packet& Packet::operator<<(const ClientInputStatusStruct& state)
+{
+    if (Data.size() + sizeof(ClientInputStatusStruct) > Header.PacketSize)
+    {
+        throw std::runtime_error("Packet size exceeded");
+    }
+    Data.insert(Data.end(), reinterpret_cast<const uint8_t*>(&state), reinterpret_cast<const uint8_t*>(&state) + sizeof(ClientInputStatusStruct));
     return *this;
 }

@@ -33,41 +33,17 @@ CustomFileManager& CustomFileManager::operator<<(const std::size_t& size)
     return *this;
 }
 
-CustomFileManager& CustomFileManager::operator<<(const ChunkCoords& coords)
+CustomFileManager& CustomFileManager::operator<<(const ChunkState& state)
 {
-    *this << coords.GetX() << coords.GetY() << coords.GetZ();
+    gzwrite(FileStream, &state.ChunkPosition, sizeof(ChunkCoords));
+    gzwrite(FileStream, state.Blocks.data(), static_cast<uint32_t>(state.Blocks.size()) * sizeof(EBlockType));
     return *this;
 }
 
-CustomFileManager& CustomFileManager::operator<<(const Chunk& chunk)
+CustomFileManager& CustomFileManager::operator>>(ChunkState& state)
 {
-    *this << chunk.GetState().ChunkPosition;
-    for (EBlockType block : chunk.GetState().Blocks)
-    {
-        *this << block;
-    }
-    return *this;
-}
-
-CustomFileManager& CustomFileManager::operator>>(ChunkCoords& coords)
-{
-    int x;
-    int y;
-    int z;
-    *this >> x >> y >> z;
-    coords = ChunkCoords(x * EngineDefaults::CHUNK_WIDTH, y * EngineDefaults::CHUNK_WIDTH, z * EngineDefaults::CHUNK_DEPTH);
-    return *this;
-}
-
-CustomFileManager& CustomFileManager::operator>>(Chunk& chunk)
-{
-    constexpr uint16_t size = EngineDefaults::CHUNK_HEIGHT * EngineDefaults::CHUNK_DEPTH * EngineDefaults::CHUNK_WIDTH;
-    for (uint16_t i = 0; i < size; i++)
-    {
-        EBlockType blockType;
-        *this >> blockType;
-        chunk.SetBlockTypeAt(i, blockType);
-    }
+    gzread(FileStream, &state.ChunkPosition, sizeof(ChunkCoords));
+    gzread(FileStream, state.Blocks.data(), static_cast<uint32_t>(state.Blocks.size()) * sizeof(EBlockType));
     return *this;
 }
 

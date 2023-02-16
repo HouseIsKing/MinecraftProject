@@ -7,7 +7,7 @@ ClientInputPacket::ClientInputPacket(Packet& packet, std::shared_ptr<ConnectionT
     packet >> State;
 }
 
-const ClientInputStruct& ClientInputPacket::GetState() const
+const ClientInputStatusStruct& ClientInputPacket::GetState() const
 {
     return State;
 }

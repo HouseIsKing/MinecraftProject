@@ -8,7 +8,6 @@ ChunkRenderer::ChunkRenderer(const ChunkState& state) : State(state), Tessellati
 {
     const ChunkCoords& coords = state.ChunkPosition;
     ChunkTransform.Position = glm::vec3(static_cast<float>(coords.GetX() * EngineDefaults::CHUNK_WIDTH), static_cast<float>(coords.GetY() * EngineDefaults::CHUNK_HEIGHT), static_cast<float>(coords.GetZ() * EngineDefaults::CHUNK_DEPTH));
-    ClientWorld::GetWorld()->AddChunkAsDirty(this);
 }
 
 void ChunkRenderer::DrawBlock(const EBlockType blockType, const int x, const int y, const int z)
@@ -124,7 +123,7 @@ void ChunkRenderer::DrawDefaultBlock(const BlockRenderer* block, const int x, co
 float ChunkRenderer::GetDistanceFromPlayer() const
 {
     const auto& player = ClientWorld::GetWorld()->GetPlayer();
-    const glm::vec3 temp = player.GetState().EntityTransform.Position - ChunkTransform.Position - glm::vec3(EngineDefaults::CHUNK_WIDTH / 2.0F, EngineDefaults::CHUNK_HEIGHT / 2.0F, EngineDefaults::CHUNK_DEPTH / 2.0F);
+    const glm::vec3 temp = player->GetState().EntityTransform.Position - ChunkTransform.Position - glm::vec3(EngineDefaults::CHUNK_WIDTH / 2.0F, EngineDefaults::CHUNK_HEIGHT / 2.0F, EngineDefaults::CHUNK_DEPTH / 2.0F);
     return dot(temp, temp);
 }
 

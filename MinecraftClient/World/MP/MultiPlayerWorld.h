@@ -1,17 +1,10 @@
 #pragma once
-/*#include "Network/ClientNetworkManager.h"
-#include "Util/States/WorldState.h"
-#include "World/Generic/World.h"
+#include "Network/ClientNetworkManager.h"
+#include "World/Generic/ClientWorld.h"
 
-class PlayerMp;
-
-class MultiPlayerWorld final : public World
+class MultiPlayerWorld final : public ClientWorld
 {
-    void Init() override;
     ClientNetworkManager NetworkManager;
-    uint16_t NextId;
-    void HandlePacket(const PacketData* packet);
-    void ApplyChangesList(const std::vector<uint8_t>& changes);
 
 public:
     ~MultiPlayerWorld() override;
@@ -19,8 +12,9 @@ public:
     MultiPlayerWorld& operator=(const MultiPlayerWorld& other) = delete;
     MultiPlayerWorld(MultiPlayerWorld&& other) = delete;
     MultiPlayerWorld& operator=(MultiPlayerWorld&& other) = delete;
-    std::array<WorldState, EngineDefaults::ROLLBACK_COUNT> WorldStates{};
     MultiPlayerWorld(GLFWwindow* window, const std::string& name, const std::string& ip);
     void Run() override;
-    void BuildWorldState();
-};*/
+    void NewTick() override;
+    void HandlePacket(const PacketData* packet) override;
+    void ApplyChangesList(const std::vector<uint8_t>& changes);
+};

@@ -56,6 +56,7 @@ uint16_t EngineDefaultsClient::RegisterTexture(Texture* texture)
 void EngineDefaultsClient::InitTextures()
 {
     BlockTypeList::InitBlockTypes();
+    RegisterTexture(Texture::LoadTexture("Textures/HighlightTexture.png"));
     RegisterTexture(Texture::LoadTexture("Textures/Entities/zombie.png"));
     BuildTextureUbo();
 }

@@ -1,6 +1,5 @@
 ﻿#pragma once
-#include "EngineDefaults.h"
-#include "World/Chunk.h"
+#include "States/ChunkState.h"
 #include "Zlib/zlib.h"
 #include <string>
 
@@ -19,12 +18,10 @@ public:
     CustomFileManager& operator<<(const uint8_t& blockType);
     CustomFileManager& operator<<(const EBlockType& blockType);
     CustomFileManager& operator<<(const std::size_t& size);
-    CustomFileManager& operator<<(const ChunkCoords& coords);
-    CustomFileManager& operator<<(const Chunk& chunk);
+    CustomFileManager& operator<<(const ChunkState& state);
     CustomFileManager& operator>>(int& number);
     CustomFileManager& operator>>(uint8_t& blockType);
     CustomFileManager& operator>>(EBlockType& blockType);
     CustomFileManager& operator>>(std::size_t& size);
-    CustomFileManager& operator>>(ChunkCoords& coords);
-    CustomFileManager& operator>>(Chunk& chunk);
+    CustomFileManager& operator>>(ChunkState& state);
 };

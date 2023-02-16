@@ -5,13 +5,7 @@
 #include "World/Generic/ClientWorld.h"
 #include "World/Generic/Blocks/BlockRendererList.h"
 
-void SelectedBlockGui::SwitchBlockType(const EBlockType blockType)
-{
-    CurrentBlockType = blockType;
-    Rebuild();
-}
-
-SelectedBlockGui::SelectedBlockGui() : CurrentBlockType(EBlockType::Cobblestone)
+SelectedBlockGui::SelectedBlockGui(const PlayerState& player) : State(player)
 {
 }
 
@@ -46,8 +40,8 @@ void SelectedBlockGui::Rebuild()
     orthoMatrix = rotate(orthoMatrix, glm::radians(45.0F), glm::vec3(0.0F, 1.0F, 0.0F));
     orthoMatrix = translate(orthoMatrix, glm::vec3(-1.5F, 0.5F, -0.5F));
     orthoMatrix = scale(orthoMatrix, glm::vec3(-1.0F, -1.0F, 1.0F));
-    const Block* block = BlockTypeList::GetBlockTypeData(CurrentBlockType);
-    const BlockRenderer* blockRenderer = BlockRendererList::GetBlockRenderer(CurrentBlockType);
+    const Block* block = BlockTypeList::GetBlockTypeData(State.CurrentSelectedBlock);
+    const BlockRenderer* blockRenderer = BlockRendererList::GetBlockRenderer(State.CurrentSelectedBlock);
     if (blockRenderer->GetDrawType() == DrawType::Default)
     {
         blockRenderer->GenerateTessellationData(block, Tessellation, BlockFaces::South, orthoMatrix);

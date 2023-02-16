@@ -5,12 +5,11 @@
 #include <algorithm>
 #include <glm/common.hpp>
 
-Player::Player(const float x, const float y, const float z, const uint16_t& id) : LivingEntity(EngineDefaults::PLAYER_SIZE, x, y, z, id), FaceHit(BlockFaces::Top), BlockHit(nullptr), BlockHitPosition(), CurrentSelectedBlock(EBlockType::Stone)
+Player::Player(const float x, const float y, const float z, const uint16_t& id) : LivingEntity(EngineDefaults::PLAYER_SIZE, x, y, z, id)
 {
 }
 
-Player::Player(const PlayerState& state) : LivingEntity(state), FaceHit(BlockFaces::Bottom), BlockHit(nullptr), BlockHitPosition(),
-                                           CurrentSelectedBlock(EBlockType::Cobblestone)
+Player::Player(const PlayerState& state) : LivingEntity(state)
 {
 }
 
@@ -19,17 +18,17 @@ void Player::Tick()
     LivingEntity::Tick();
     State.SetInputState(ClientInputs[World::GetWorld()->GetWorldTime() % EngineDefaults::ROLLBACK_COUNT]);
     HandleClientInput();
-    bool found = false;
-    FaceHit = FindClosestFace(found);
-    BlockHit = found ? World::GetWorld()->GetBlockAt(BlockHitPosition.x, BlockHitPosition.y, BlockHitPosition.z) : nullptr;
+    //bool found = false;
+    //FaceHit = FindClosestFace(found);
+    //BlockHit = found ? World::GetWorld()->GetBlockAt(BlockHitPosition.x, BlockHitPosition.y, BlockHitPosition.z) : nullptr;
 }
 
 void Player::NewTick()
 {
-    ClientInputs[(World::GetWorld()->GetWorldTime() + 1) % EngineDefaults::ROLLBACK_COUNT] = {};
+    SetClientInput(World::GetWorld()->GetWorldTime() + 1, {});
 }
 
-BlockFaces Player::FindClosestFace(bool& foundBlock)
+BlockFaces Player::FindClosestFace(bool& foundBlock, glm::ivec3& hitPosition) const
 {
     const PlayerState& state = State.GetState();
     TransformStruct cameraTransform = state.EntityTransform;
@@ -89,8 +88,8 @@ BlockFaces Player::FindClosestFace(bool& foundBlock)
             xDistance += frontVector.x * minDistance;
             yDistance += frontVector.y * minDistance;
             zDistance += frontVector.z * minDistance;
-            BlockHitPosition = glm::ivec3(static_cast<int>(floor(xDistance)) - (!right && xyzChoice == 0 ? 1 : 0), static_cast<int>(floor(yDistance)) - (!up && xyzChoice == 1 ? 1 : 0), static_cast<int>(floor(zDistance)) - (!forward && xyzChoice == 2 ? 1 : 0));
-            if (World::GetWorld()->IsBlockExists(BlockHitPosition.x, BlockHitPosition.y, BlockHitPosition.z))
+            hitPosition = glm::ivec3(static_cast<int>(floor(xDistance)) - (!right && xyzChoice == 0 ? 1 : 0), static_cast<int>(floor(yDistance)) - (!up && xyzChoice == 1 ? 1 : 0), static_cast<int>(floor(zDistance)) - (!forward && xyzChoice == 2 ? 1 : 0));
+            if (World::GetWorld()->IsBlockExists(hitPosition.x, hitPosition.y, hitPosition.z))
             {
                 foundBlock = true;
                 if (xyzChoice == 0 && frontVector.x > 0.0F)
@@ -139,66 +138,63 @@ float Player::CalculateMaxDistanceForHighlight(const glm::vec3& front, const boo
     return glm::min(xDistance, glm::min(yDistance, zDistance));
 }
 
-void Player::PlaceBlock() const
+void Player::PlaceBlock(const glm::ivec3& hitPos, const BlockFaces& faceHit) const
 {
-    if (BlockHit != nullptr)
+    const int x = hitPos.x;
+    const int y = hitPos.y;
+    const int z = hitPos.z;
+    const Block* blockToPlace = BlockTypeList::GetBlockTypeData(State.GetState().CurrentSelectedBlock);
+    BoundingBox box = blockToPlace->GetBoundingBox();
+    switch (faceHit)
     {
-        const int x = BlockHitPosition.x;
-        const int y = BlockHitPosition.y;
-        const int z = BlockHitPosition.z;
-        const Block* blockToPlace = BlockTypeList::GetBlockTypeData(CurrentSelectedBlock);
-        BoundingBox box = blockToPlace->GetBoundingBox();
-        switch (FaceHit)
+    case BlockFaces::Bottom:
+        box.Move(static_cast<float>(x), static_cast<float>(y - 1), static_cast<float>(z));
+        if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
         {
-        case BlockFaces::Bottom:
-            box.Move(static_cast<float>(x), static_cast<float>(y - 1), static_cast<float>(z));
-            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
-            {
-                break;
-            }
-            World::GetWorld()->PlaceBlockAt(x, y - 1, z, CurrentSelectedBlock);
-            break;
-        case BlockFaces::Top:
-            box.Move(static_cast<float>(x), static_cast<float>(y + 1), static_cast<float>(z));
-            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
-            {
-                break;
-            }
-            World::GetWorld()->PlaceBlockAt(x, y + 1, z, CurrentSelectedBlock);
-            break;
-        case BlockFaces::North:
-            box.Move(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z + 1));
-            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
-            {
-                break;
-            }
-            World::GetWorld()->PlaceBlockAt(x, y, z + 1, CurrentSelectedBlock);
-            break;
-        case BlockFaces::South:
-            box.Move(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z - 1));
-            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
-            {
-                break;
-            }
-            World::GetWorld()->PlaceBlockAt(x, y, z - 1, CurrentSelectedBlock);
-            break;
-        case BlockFaces::East:
-            box.Move(static_cast<float>(x + 1), static_cast<float>(y), static_cast<float>(z));
-            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
-            {
-                break;
-            }
-            World::GetWorld()->PlaceBlockAt(x + 1, y, z, CurrentSelectedBlock);
-            break;
-        case BlockFaces::West:
-            box.Move(static_cast<float>(x - 1), static_cast<float>(y), static_cast<float>(z));
-            if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
-            {
-                break;
-            }
-            World::GetWorld()->PlaceBlockAt(x - 1, y, z, CurrentSelectedBlock);
             break;
         }
+        World::GetWorld()->PlaceBlockAt(x, y - 1, z, State.GetState().CurrentSelectedBlock);
+        break;
+    case BlockFaces::Top:
+        box.Move(static_cast<float>(x), static_cast<float>(y + 1), static_cast<float>(z));
+        if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
+        {
+            break;
+        }
+        World::GetWorld()->PlaceBlockAt(x, y + 1, z, State.GetState().CurrentSelectedBlock);
+        break;
+    case BlockFaces::North:
+        box.Move(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z + 1));
+        if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
+        {
+            break;
+        }
+        World::GetWorld()->PlaceBlockAt(x, y, z + 1, State.GetState().CurrentSelectedBlock);
+        break;
+    case BlockFaces::South:
+        box.Move(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z - 1));
+        if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
+        {
+            break;
+        }
+        World::GetWorld()->PlaceBlockAt(x, y, z - 1, State.GetState().CurrentSelectedBlock);
+        break;
+    case BlockFaces::East:
+        box.Move(static_cast<float>(x + 1), static_cast<float>(y), static_cast<float>(z));
+        if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
+        {
+            break;
+        }
+        World::GetWorld()->PlaceBlockAt(x + 1, y, z, State.GetState().CurrentSelectedBlock);
+        break;
+    case BlockFaces::West:
+        box.Move(static_cast<float>(x - 1), static_cast<float>(y), static_cast<float>(z));
+        if (blockToPlace->IsSolidBlock() && box.IsIntersecting(GetBoundingBox()))
+        {
+            break;
+        }
+        World::GetWorld()->PlaceBlockAt(x - 1, y, z, State.GetState().CurrentSelectedBlock);
+        break;
     }
 }
 
@@ -236,30 +232,85 @@ void Player::ApplyRevertEntityChange(const std::vector<uint8_t>& changes, size_t
     }
 }
 
-bool Player::GetMode() const
+void Player::SetClientInput(const uint64_t index, const ClientInputStatusStruct& input)
 {
-    return Mode;
-}
-
-EBlockType Player::GetCurrentSelectedBlock() const
-{
-    return CurrentSelectedBlock;
-}
-
-void Player::SetClientInput(const uint64_t index, const ClientInputStruct& input)
-{
-    ClientInputs[index % ClientInputs.size()] = input;
+    ClientInputs[index % ClientInputs.size()] = ClientInputs[(index - 1) % ClientInputs.size()];
+    ClientInputs[index % ClientInputs.size()] = ClientInputs[index % ClientInputs.size()] << input;
 }
 
 void Player::HandleClientInput()
 {
     const ClientInputStruct& input = State.GetState().InputState;
-    State.SetVerticalInput(input.ForwardAxis);
-    State.SetHorizontalInput(input.RightAxis);
-    State.SetJumpRequested(input.JumpPressed);
+    int8_t verticalInput = 0;
+    int8_t horizontalInput = 0;
+    if (input.IsKeyHold(EKeySet::Up))
+    {
+        verticalInput += 1;
+    }
+    if (input.IsKeyHold(EKeySet::Down))
+    {
+        verticalInput -= 1;
+    }
+    if (input.IsKeyHold(EKeySet::Left))
+    {
+        horizontalInput -= 1;
+    }
+    if (input.IsKeyHold(EKeySet::Right))
+    {
+        horizontalInput += 1;
+    }
+    State.SetVerticalInput(verticalInput);
+    State.SetHorizontalInput(horizontalInput);
+    State.SetJumpRequested(input.IsKeyHold(EKeySet::Jump));
     State.SetCameraPitch(std::clamp<float>(State.GetState().CameraPitch - input.MouseY, -89.0F, 89.0F));
     const glm::vec3& rot = State.GetState().EntityTransform.Rotation;
     State.SetRotation(glm::vec3(rot.x, rot.y + input.MouseX, rot.z));
+    if (input.IsKeyPressed(EKeySet::One))
+    {
+        State.SetCurrentSelectedBlock(EBlockType::Stone);
+    }
+    if (input.IsKeyPressed(EKeySet::Two))
+    {
+        State.SetCurrentSelectedBlock(EBlockType::Dirt);
+    }
+    if (input.IsKeyPressed(EKeySet::Three))
+    {
+        State.SetCurrentSelectedBlock(EBlockType::Cobblestone);
+    }
+    if (input.IsKeyPressed(EKeySet::Four))
+    {
+        State.SetCurrentSelectedBlock(EBlockType::Planks);
+    }
+    if (input.IsKeyPressed(EKeySet::Five))
+    {
+        State.SetCurrentSelectedBlock(EBlockType::Sapling);
+    }
+    if (input.IsKeyPressed(EKeySet::RightMouseButton))
+    {
+        State.SetMode(!State.GetState().Mode);
+    }
+    if (input.IsKeyPressed(EKeySet::Reset))
+    {
+        State.SetPosition(glm::vec3(World::GetWorld()->TickRandomEngine.GetNextFloat() * 256.0F, 67.0F, World::GetWorld()->TickRandomEngine.GetNextFloat() * 256.0F));
+    }
+    if (input.IsKeyPressed(EKeySet::LeftMouseButton))
+    {
+        bool found = false;
+        glm::ivec3 hitPosition;
+        const BlockFaces hitFace = FindClosestFace(found, hitPosition);
+        if (found)
+        {
+            if (State.GetState().Mode)
+            {
+                PlaceBlock(hitPosition, hitFace);
+            }
+            else
+            {
+                World::GetWorld()->RemoveBlockAt(hitPosition.x, hitPosition.y, hitPosition.z);
+            }
+        }
+    }
+    World::GetWorld()->EntityChanged(State.GetState().EntityId);
     // Add more input handling
 }
 
@@ -270,39 +321,6 @@ void Player::HandleKeyChangePacket(const KeyChangePacket& packet)
     const int action = packet.GetAction();
     switch (packet.GetKey())
     {
-    case GLFW_KEY_1:
-        if (action == GLFW_PRESS)
-        {
-            CurrentSelectedBlock = EBlockType::Stone;
-        }
-        break;
-    case GLFW_KEY_2:
-        if (action == GLFW_PRESS)
-        {
-            CurrentSelectedBlock = EBlockType::Dirt;
-        }
-        break;
-    case GLFW_KEY_3:
-        if (action == GLFW_PRESS)
-        {
-            CurrentSelectedBlock = EBlockType::Cobblestone;
-        }
-        break;
-    case GLFW_KEY_4:
-        if (action == GLFW_PRESS)
-        {
-            CurrentSelectedBlock = EBlockType::Planks;
-        }
-        break;
-    case GLFW_KEY_5:
-        if (action == GLFW_PRESS)
-        {
-            CurrentSelectedBlock = EBlockType::Sapling;
-        }
-        break;
-    case GLFW_KEY_R:
-        GetTransform().SetPosition(EngineDefaults::GetNextFloat() * 256.0F, 67.0F, EngineDefaults::GetNextFloat() * 256.0F);
-        break;
     case GLFW_KEY_G:
     default:
         break;
@@ -323,13 +341,6 @@ void Player::HandleMouseClickPacket(const MouseChangePacket& packet)
             {
                 GetWorld()->RemoveBlockAt(BlockHitPosition.x, BlockHitPosition.y, BlockHitPosition.z);
             }
-        }
-    }
-    else if (packet.GetButton() == GLFW_MOUSE_BUTTON_RIGHT)
-    {
-        if (packet.GetAction() == GLFW_PRESS)
-        {
-            Mode = !Mode;
         }
     }
 }

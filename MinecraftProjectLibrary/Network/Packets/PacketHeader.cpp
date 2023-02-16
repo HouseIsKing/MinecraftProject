@@ -17,4 +17,4 @@ std::array<uint8_t, sizeof(PacketHeader)> PacketHeader::Serialize() const
 }
 
 const PacketHeader PacketHeader::PLAYER_ID_PACKET = {EPacketType::PlayerId, sizeof(uint16_t)};
-const PacketHeader PacketHeader::CLIENT_INPUT_HEADER = {EPacketType::ClientInput, sizeof(ClientInputStruct) + sizeof(uint64_t)};
+const PacketHeader PacketHeader::CLIENT_INPUT_HEADER = {EPacketType::ClientInput, sizeof(ClientInputStatusStruct) + sizeof(uint64_t)};

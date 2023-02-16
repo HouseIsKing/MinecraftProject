@@ -4,8 +4,8 @@
 
 class WorldDataPacket final : public PacketData
 {
-    uint64_t WorldTime;
     std::vector<uint8_t> Data;
+    uint64_t WorldTime{};
 
 public:
     explicit WorldDataPacket(Packet& packet);
