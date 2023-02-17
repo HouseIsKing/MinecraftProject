@@ -4,6 +4,16 @@
 #include "Network/Packets/Packet.h"
 #include <iostream>
 
+void ServerManager::PreTick()
+{
+    World::PreTick();
+    for (uint16_t id : DisconnectedClients)
+    {
+        dynamic_cast<Player*>(State.GetEntity<PlayerStateWrapper, PlayerState>(id))->Disconnect();
+    }
+    DisconnectedClients.clear();
+}
+
 ServerManager::~ServerManager()
 {
     try
@@ -38,7 +48,10 @@ void ServerManager::Run()
         Connections.emplace(newCon, dynamic_cast<Player*>(State.GetEntity<PlayerStateWrapper, PlayerState>(state.EntityId)));
         auto packet = std::make_shared<Packet>(PacketHeader::PLAYER_ID_PACKET);
         *packet << state.EntityId;
-        newCon->WritePacket(packet);
+        for (const auto& key : Connections | std::ranges::views::keys)
+        {
+            dynamic_cast<ConnectionToClient*>(key.get())->WritePacket(packet);
+        }
         std::vector<uint8_t> data{};
         State.WriteAllDataToVector(data);
         const auto packetToSend = std::make_shared<Packet>(PacketHeader(EPacketType::WorldData, static_cast<uint32_t>(data.size())), data);
@@ -56,7 +69,9 @@ void ServerManager::Run()
     std::shared_ptr<ConnectionToClient> closedCon = NetworkManager.GetNextRemovedConnection();
     while (closedCon)
     {
-        State.RemoveEntity(Connections[closedCon]->GetState().EntityId);
+        //Plan remove entity
+        //EntitiesToRemove.emplace_back(Connections[closedCon]->GetState().EntityId);
+        DisconnectedClients.emplace_back(Connections[closedCon]->GetState().EntityId);
         Connections.erase(closedCon);
         closedCon = NetworkManager.GetNextRemovedConnection();
     }
@@ -83,7 +98,10 @@ void ServerManager::HandlePacket(const PacketData* packet)
             std::vector<uint8_t> changes{};
             State.WriteChangesToVector(changes);
             const auto packetToSend = std::make_shared<Packet>(PacketHeader(EPacketType::WorldData, static_cast<uint32_t>(changes.size())), changes);
-            packet->GetConnectionToClient()->WritePacket(packetToSend);
+            for (const auto& key : Connections | std::ranges::views::keys)
+            {
+                dynamic_cast<ConnectionToClient*>(key.get())->WritePacket(packetToSend);
+            }
             SimulateTicks(static_cast<uint8_t>(currentWorldTick - State.GetState().WorldTime));
         }
         else

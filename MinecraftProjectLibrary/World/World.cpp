@@ -60,6 +60,7 @@ World::World(const uint16_t width, const uint16_t height, const uint16_t depth) 
 void World::Tick()
 {
     State.ClearAllChanges();
+    PreTick();
     State.SetWorldTime(State.GetState().WorldTime + 1);
     TickRandomEngine = State.GetState().RandomEngine;
     ProcessTickEntities();
@@ -149,11 +150,11 @@ void World::RevertChangesList(const std::vector<uint8_t>& changes)
             {
                 if (uint16_t entityId = EngineDefaults::ReadDataFromVector<uint16_t>(changes, pos); !removedEntities.contains(entityId))
                 {
-                    State.GetEntity<BlockParticleEntityStateWrapper, BlockParticleEntityState>(entityId)->RevertEntityChanges(changes, pos);
+                    State.GetEntity<BlockParticleEntityStateWrapper, BlockParticleEntityState>(entityId)->ApplyRevertEntityChanges(changes, pos, true);
                 }
                 else
                 {
-                    BlockParticleTrash.RevertEntityChanges(changes, pos);
+                    BlockParticleTrash.ApplyRevertEntityChanges(changes, pos, true);
                 }
                 break;
             }
@@ -166,6 +167,7 @@ void World::RevertChangesList(const std::vector<uint8_t>& changes)
                     state.Deserialize(changes, pos);
                     removedEntities.emplace(state.EntityId);
                     State.RemoveEntity(state.EntityId);
+                    EntityRemoved(state.EntityId);
                 }
                 break;
             }
@@ -177,23 +179,24 @@ void World::RevertChangesList(const std::vector<uint8_t>& changes)
                     BlockParticleEntityState state{};
                     state.Deserialize(changes, pos);
                     State.AddEntity(&state, true);
+                    EntityAdded(state.EntityId);
                 }
                 break;
             }
         case EChangeType::ChunkState:
             {
-                State.GetChunk(EngineDefaults::ReadDataFromVector<ChunkCoords>(changes, pos))->RevertChunkChanges(changes, pos);
+                State.GetChunk(EngineDefaults::ReadDataFromVector<ChunkCoords>(changes, pos))->ApplyRevertChunkChanges(changes, pos, true);
                 break;
             }
         case EChangeType::PlayerState:
             {
                 if (const auto& player = EngineDefaults::ReadDataFromVector<uint16_t>(changes, pos); !removedEntities.contains(player))
                 {
-                    State.GetEntity<PlayerStateWrapper, PlayerState>(player)->RevertEntityChanges(changes, pos);
+                    State.GetEntity<PlayerStateWrapper, PlayerState>(player)->ApplyRevertEntityChanges(changes, pos, true);
                 }
                 else
                 {
-                    PlayerTrash.RevertEntityChanges(changes, pos);
+                    PlayerTrash.ApplyRevertEntityChanges(changes, pos, true);
                 }
                 break;
             }
@@ -204,8 +207,8 @@ void World::RevertChangesList(const std::vector<uint8_t>& changes)
                 {
                     const glm::ivec2 lightPos = EngineDefaults::ReadDataFromVector<glm::ivec2>(changes, pos);
                     const uint8_t lightLevel = EngineDefaults::ReadDataFromVector<uint8_t>(changes, pos);
-                    pos += sizeof(uint8_t);
                     State.ChangeLight(lightPos, lightLevel);
+                    pos += sizeof(uint8_t);
                 }
                 break;
             }
@@ -252,6 +255,7 @@ void World::RevertChangesList(const std::vector<uint8_t>& changes)
                     state.Deserialize(changes, pos);
                     removedEntities.emplace(state.EntityId);
                     State.RemoveEntity(state.EntityId);
+                    EntityRemoved(state.EntityId);
                 }
                 break;
             }
@@ -263,6 +267,7 @@ void World::RevertChangesList(const std::vector<uint8_t>& changes)
                     PlayerState state{};
                     state.Deserialize(changes, pos);
                     State.AddEntity(&state, true);
+                    EntityAdded(state.EntityId);
                 }
                 break;
             }
@@ -532,6 +537,10 @@ int World::GetBrightnessAt(const int x, const int y, const int z) const
 bool World::IsBlockSolid(const int x, const int y, const int z) const
 {
     return GetBlockAt(x, y, z)->IsSolidBlock();
+}
+
+void World::PreTick()
+{
 }
 
 void World::ChunkChanged(const ChunkCoords& /*coords*/)

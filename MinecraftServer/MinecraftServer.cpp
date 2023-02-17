@@ -21,7 +21,6 @@ int main(int /*argc*/, char* /*argv*/[])
     SetConsoleCtrlHandler(CtrlHandler, TRUE);
     ServerManager world(256, 64, 256);
     world.NewTick();
-    world.NewTick();
     float ticksTimer = 0;
     auto start = static_cast<float>(glfwGetTime());
     while (run)

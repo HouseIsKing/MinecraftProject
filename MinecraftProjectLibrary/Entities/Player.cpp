@@ -15,12 +15,14 @@ Player::Player(const PlayerState& state) : LivingEntity(state)
 
 void Player::Tick()
 {
-    LivingEntity::Tick();
+    if (State.GetState().InputState.Disconnect)
+    {
+        World::GetWorld()->EntitiesToRemove.emplace_back(GetState().EntityId);
+        return;
+    }
     State.SetInputState(ClientInputs[World::GetWorld()->GetWorldTime() % EngineDefaults::ROLLBACK_COUNT]);
     HandleClientInput();
-    //bool found = false;
-    //FaceHit = FindClosestFace(found);
-    //BlockHit = found ? World::GetWorld()->GetBlockAt(BlockHitPosition.x, BlockHitPosition.y, BlockHitPosition.z) : nullptr;
+    LivingEntity::Tick();
 }
 
 void Player::NewTick()
@@ -238,6 +240,13 @@ void Player::SetClientInput(const uint64_t index, const ClientInputStatusStruct&
     ClientInputs[index % ClientInputs.size()] = ClientInputs[index % ClientInputs.size()] << input;
 }
 
+void Player::Disconnect()
+{
+    ClientInputStruct input;
+    input.Disconnect = true;
+    State.SetInputState(input);
+}
+
 void Player::HandleClientInput()
 {
     const ClientInputStruct& input = State.GetState().InputState;
@@ -311,37 +320,4 @@ void Player::HandleClientInput()
         }
     }
     World::GetWorld()->EntityChanged(State.GetState().EntityId);
-    // Add more input handling
 }
-
-
-/*
-void Player::HandleKeyChangePacket(const KeyChangePacket& packet)
-{
-    const int action = packet.GetAction();
-    switch (packet.GetKey())
-    {
-    case GLFW_KEY_G:
-    default:
-        break;
-    }
-}
-
-void Player::HandleMouseClickPacket(const MouseChangePacket& packet)
-{
-    if (packet.GetButton() == GLFW_MOUSE_BUTTON_LEFT)
-    {
-        if (packet.GetAction() == GLFW_PRESS)
-        {
-            if (Mode)
-            {
-                PlaceBlock();
-            }
-            else if (BlockHit != nullptr)
-            {
-                GetWorld()->RemoveBlockAt(BlockHitPosition.x, BlockHitPosition.y, BlockHitPosition.z);
-            }
-        }
-    }
-}
-*/

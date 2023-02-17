@@ -22,4 +22,5 @@ public:
     void Tick() override;
     void NewTick();
     void SetClientInput(uint64_t index, const ClientInputStatusStruct& input);
+    void Disconnect();
 };

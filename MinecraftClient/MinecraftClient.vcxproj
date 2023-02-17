@@ -183,7 +183,6 @@
         <ClCompile Include="Entities\Generic\BlockParticleEntityRenderer.cpp"/>
         <ClCompile Include="Entities\Generic\PlayerSelectionHighlight.cpp"/>
         <ClCompile Include="Entities\Generic\Zombie.cpp"/>
-        <ClCompile Include="Entities\MP\PlayerMp.cpp"/>
         <ClCompile Include="Entities\SP\PlayerRenderer.cpp"/>
         <ClCompile Include="glad.c"/>
         <ClCompile Include="GUI\CrosshairGui.cpp"/>
@@ -227,8 +226,6 @@
         <ClInclude Include="Entities\Generic\BlockParticleEntityRenderer.h"/>
         <ClInclude Include="Entities\Generic\PlayerSelectionHighlight.h"/>
         <ClInclude Include="Entities\Generic\Zombie.h"/>
-        <ClInclude Include="Entities\MP\OtherPlayer.h"/>
-        <ClInclude Include="Entities\MP\PlayerMp.h"/>
         <ClInclude Include="Entities\PlayerInputManager.h"/>
         <ClInclude Include="Entities\SP\PlayerRenderer.h"/>
         <ClInclude Include="GUI\CrosshairGui.h"/>

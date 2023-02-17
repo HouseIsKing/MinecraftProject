@@ -32,6 +32,14 @@ uint16_t EngineDefaults::GetChunkLocalIndex(int x, int y, int z)
     return static_cast<uint16_t>(x + z * CHUNK_WIDTH + y * CHUNK_WIDTH * CHUNK_DEPTH);
 }
 
+glm::ivec3 EngineDefaults::GetChunkLocalPosition(const uint16_t index)
+{
+    const auto& x = index % CHUNK_WIDTH;
+    const auto& z = (index / CHUNK_WIDTH) % CHUNK_DEPTH;
+    const auto& y = index / (CHUNK_WIDTH * CHUNK_DEPTH);
+    return {x, y, z};
+}
+
 void ClientInputStatusStruct::SetKey(const EKeySet key, const bool pressed)
 {
     switch(key)

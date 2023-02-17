@@ -7,6 +7,7 @@ class ServerManager final : World
 {
     ServerNetworkManager NetworkManager;
     std::unordered_map<std::shared_ptr<ConnectionToClientInterface>, Player*, ConnectionHasher, ConnectionEqual> Connections{};
+    std::vector<uint16_t> DisconnectedClients{};
 
 public:
     ~ServerManager() override;
@@ -18,4 +19,5 @@ public:
     void Run() override;
     void NewTick() override;
     void HandlePacket(const PacketData* packet) override;
+    void PreTick() override;
 };

@@ -38,28 +38,54 @@ void MultiPlayerWorld::NewTick()
     const auto packet = std::make_shared<Packet>(PacketHeader::CLIENT_INPUT_HEADER);
     *packet << State.GetState().WorldTime + 1 << PlayerInput.Input;
     NetworkManager.WritePacket(packet);
+    LastTickSentData = State.GetState().WorldTime + 1;
     ClientWorld::NewTick();
 }
 
 void MultiPlayerWorld::HandlePacket(const PacketData* packet)
 {
-    const auto* const worldDataPacket = dynamic_cast<const WorldDataPacket*>(packet);
-    const std::vector<uint8_t>& localChanges = ChangesLists[worldDataPacket->GetWorldTime() % ChangesLists.size()];
-    const std::vector<uint8_t>& remoteChanges = worldDataPacket->GetData();
-    if (remoteChanges.size() != localChanges.size() || std::memcmp(remoteChanges.data(), localChanges.data(), localChanges.size()) != 0)
+    if (packet->GetPacketType() == EPacketType::PlayerId)
     {
-        for (size_t i = 0; i < worldDataPacket->GetData().size(); i++)
+        PlayerState state{};
+        State.AddEntity(&state);
+        EntityAdded(state.EntityId);
+    }
+    else
+    {
+        const auto* const worldDataPacket = dynamic_cast<const WorldDataPacket*>(packet);
+        if (worldDataPacket->GetWorldTime() > LastTickSentData)
         {
-            if (worldDataPacket->GetData()[i] != ChangesLists[(worldDataPacket->GetWorldTime()) % ChangesLists.size()][i])
-                std::cout << "Different at " << i << std::endl;
+            return;
         }
-        std::cout << "Different" << std::endl;
+        const std::vector<uint8_t>& localChanges = ChangesLists[worldDataPacket->GetWorldTime() % ChangesLists.size()];
+        const std::vector<uint8_t>& remoteChanges = worldDataPacket->GetData();
+        if (remoteChanges.size() != localChanges.size() || std::memcmp(remoteChanges.data(), localChanges.data(), localChanges.size()) != 0)
+        {
+            /*
+            for (size_t i = 0; i < worldDataPacket->GetData().size(); i++)
+            {
+                if (worldDataPacket->GetData()[i] != ChangesLists[(worldDataPacket->GetWorldTime()) % ChangesLists.size()][i])
+                    std::cout << "Different at " << i << std::endl;
+            }
+            std::cout << "Different" << std::endl;*/
+            State.ClearAllChanges();
+            const size_t currentWorldTime = State.GetState().WorldTime;
+            for (size_t i = currentWorldTime; i >= worldDataPacket->GetWorldTime(); i--)
+            {
+                RevertChangesList(ChangesLists[i % ChangesLists.size()]);
+            }
+            ApplyChangesList(remoteChanges);
+            ChangesLists[State.GetState().WorldTime % ChangesLists.size()] = remoteChanges;
+            assert(currentWorldTime - State.GetState().WorldTime < 25);
+            SimulateTicks(static_cast<uint8_t>(currentWorldTime - State.GetState().WorldTime));
+        }
     }
 }
 
 void MultiPlayerWorld::ApplyChangesList(const std::vector<uint8_t>& changes)
 {
-    size_t pos = 0;
+    size_t pos = sizeof uint16_t;
+    std::unordered_set<uint16_t> removedEntities{};
     while (pos < changes.size())
     {
         switch (EngineDefaults::ReadDataFromVector<EChangeType>(changes, pos))
@@ -121,6 +147,7 @@ void MultiPlayerWorld::ApplyChangesList(const std::vector<uint8_t>& changes)
                     State.RemoveEntity(state.EntityId);
                     EntityRemoved(state.EntityId);
                 }
+                break;
             }
         case EChangeType::WorldTime:
             {
@@ -134,11 +161,85 @@ void MultiPlayerWorld::ApplyChangesList(const std::vector<uint8_t>& changes)
                 State.SetRandomSeed(EngineDefaults::ReadDataFromVector<uint64_t>(changes, pos));
                 break;
             }
-        default:
-            break;
+        case EChangeType::ChunkState:
+            {
+                State.GetChunk(EngineDefaults::ReadDataFromVector<ChunkCoords>(changes, pos))->ApplyRevertChunkChanges(changes, pos, false);
+                break;
+            }
+        case EChangeType::BlockParticleEnterWorld:
+            {
+                const uint32_t changeCount = EngineDefaults::ReadDataFromVector<uint32_t>(changes, pos);
+                for (uint32_t i = 0; i < changeCount; i++)
+                {
+                    BlockParticleEntityState state{};
+                    state.Deserialize(changes, pos);
+                    State.AddEntity(&state, true);
+                    EntityAdded(state.EntityId);
+                }
+                break;
+            }
+        case EChangeType::BlockParticleLeaveWorld:
+            {
+                const uint32_t changeCount = EngineDefaults::ReadDataFromVector<uint32_t>(changes, pos);
+                for (uint32_t i = 0; i < changeCount; i++)
+                {
+                    BlockParticleEntityState state{};
+                    state.Deserialize(changes, pos);
+                    removedEntities.emplace(state.EntityId);
+                    State.RemoveEntity(state.EntityId);
+                    EntityRemoved(state.EntityId);
+                }
+                break;
+            }
+        case EChangeType::LightLeaveWorld:
+            {
+                const uint32_t changeCount = EngineDefaults::ReadDataFromVector<uint32_t>(changes, pos);
+                for (uint32_t i = 0; i < changeCount; i++)
+                {
+                    const auto& lightPos = EngineDefaults::ReadDataFromVector<glm::ivec2>(changes, pos);
+                    pos += sizeof uint8_t;
+                    State.RemoveLight(lightPos);
+                }
+                break;
+            }
+        case EChangeType::LightState:
+            {
+                const uint32_t count = EngineDefaults::ReadDataFromVector<uint32_t>(changes, pos);
+                for (uint32_t i = 0; i < count; i++)
+                {
+                    const glm::ivec2 lightPos = EngineDefaults::ReadDataFromVector<glm::ivec2>(changes, pos);
+                    pos += sizeof(uint8_t);
+                    const uint8_t lightLevel = EngineDefaults::ReadDataFromVector<uint8_t>(changes, pos);
+                    State.ChangeLight(lightPos, lightLevel);
+                }
+                break;
+            }
+        case EChangeType::PlayerState:
+            {
+                if (const auto& player = EngineDefaults::ReadDataFromVector<uint16_t>(changes, pos); !removedEntities.contains(player))
+                {
+                    State.GetEntity<PlayerStateWrapper, PlayerState>(player)->ApplyRevertEntityChanges(changes, pos, false);
+                }
+                else
+                {
+                    PlayerTrash.ApplyRevertEntityChanges(changes, pos, false);
+                }
+                break;
+            }
+        case EChangeType::BlockParticleState:
+            {
+                if (uint16_t entityId = EngineDefaults::ReadDataFromVector<uint16_t>(changes, pos); !removedEntities.contains(entityId))
+                {
+                    State.GetEntity<BlockParticleEntityStateWrapper, BlockParticleEntityState>(entityId)->ApplyRevertEntityChanges(changes, pos, true);
+                }
+                else
+                {
+                    BlockParticleTrash.ApplyRevertEntityChanges(changes, pos, true);
+                }
+                break;
+            }
         }
     }
-    State.ClearAllChanges();
 }
 
 MultiPlayerWorld::~MultiPlayerWorld()

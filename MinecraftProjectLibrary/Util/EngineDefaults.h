@@ -26,6 +26,7 @@ public:
     static void EmplaceReplaceDataInVector(std::vector<uint8_t>& vector, const T* data);
     template <typename T> requires std::is_fundamental_v<T> or std::is_enum_v<T> or std::is_same_v<glm::vec3, T> or std::is_same_v<glm::vec2, T> or std::is_same_v<ChunkCoords, T> or std::is_same_v<ClientInputStruct, T> or std::is_same_v<TransformStruct, T> or std::is_same_v<glm::ivec2, T>
     static void EmplaceReplaceDataInVector(std::vector<uint8_t>& vector, const T* data, size_t pos);
+    static glm::ivec3 GetChunkLocalPosition(unsigned short index);
 };
 
 template <typename T> requires std::is_fundamental_v<T> or std::is_enum_v<T> or std::is_same_v<glm::vec3, T> or std::is_same_v<glm::vec2, T> or std::is_same_v<ChunkCoords, T> or std::is_same_v<ClientInputStruct, T> or std::is_same_v<TransformStruct, T> or std::is_same_v<glm::ivec2, T>
@@ -182,6 +183,7 @@ struct ClientInputStatusStruct
 
 struct ClientInputStruct
 {
+    bool Disconnect{false};
     float MouseX{0.0F};
     float MouseY{0.0F};
     uint8_t KeySet1Pressed{0}; // bit 0 = LeftMouseButtonPressed, bit 1 = RightMouseButtonPressed, bit 2 = JumpPressed, bit 3 = ResetPressed, bit 4 = SpawnZombiePressed, bit 5 = OnePressed, bit 6 = TwoPressed, bit 7 = ThreePressed

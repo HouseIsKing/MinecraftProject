@@ -14,7 +14,7 @@ public:
     [[nodiscard]] const ChunkState& GetState() const;
     void SetBlockTypeAt(int x, int y, int z, EBlockType block);
     void SetBlockTypeAt(uint16_t index, EBlockType block);
-    void RevertChunkChanges(const std::vector<uint8_t>& changes, size_t& pos);
+    void ApplyRevertChunkChanges(const std::vector<uint8_t>& changes, size_t& pos, bool revert);
     void AttachChunkChanges(std::vector<uint8_t>& changes) const;
     void AttachChunkData(std::vector<uint8_t>& data) const;
     void ClearAllChanges();

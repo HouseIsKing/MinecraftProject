@@ -10,7 +10,7 @@ class Entity
 protected:
     Wrapper State;
     void CheckCollisionAndMove();
-    virtual void ApplyRevertEntityChange(const std::vector<uint8_t>& changes, size_t& pos, EChangeTypeEntity change, bool revert = true);
+    virtual void ApplyRevertEntityChange(const std::vector<uint8_t>& changes, size_t& pos, EChangeTypeEntity change, bool revert);
 
 public:
     Entity(const glm::vec3& entitySize, const glm::vec3& position, const uint16_t& id);
@@ -26,7 +26,7 @@ public:
     [[nodiscard]] const StateType& GetOldState() const;
     void AttachEntityChange(std::vector<uint8_t>& changes) const;
     void AttachEntityData(std::vector<uint8_t>& data) const;
-    void RevertEntityChanges(const std::vector<uint8_t>& changes, size_t& pos);
+    void ApplyRevertEntityChanges(const std::vector<uint8_t>& changes, size_t& pos, bool revert);
     void ClearAllChanges();
 };
 
@@ -197,13 +197,13 @@ void Entity<Wrapper, StateType>::AttachEntityData(std::vector<uint8_t>& data) co
 }
 
 template <typename Wrapper, typename StateType> requires std::is_base_of_v<EntityStateWrapper<StateType>, Wrapper>
-void Entity<Wrapper, StateType>::RevertEntityChanges(const std::vector<uint8_t>& changes, size_t& pos)
+void Entity<Wrapper, StateType>::ApplyRevertEntityChanges(const std::vector<uint8_t>& changes, size_t& pos, bool revert)
 {
     const uint16_t changeCount = EngineDefaults::ReadDataFromVector<uint16_t>(changes, pos);
     for (int i = 0; i < changeCount; i++)
     {
         const EChangeTypeEntity change = EngineDefaults::ReadDataFromVector<EChangeTypeEntity>(changes, pos);
-        ApplyRevertEntityChange(changes, pos, change);
+        ApplyRevertEntityChange(changes, pos, change, revert);
     }
 }
 

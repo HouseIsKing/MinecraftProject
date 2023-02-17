@@ -16,6 +16,7 @@ public:
     World& operator=(World&& other) = delete;
     virtual void Run() = 0;
     virtual void NewTick() = 0;
+    virtual void PreTick();
     virtual void HandlePacket(const PacketData* packet) = 0;
     virtual void ChunkChanged(const ChunkCoords& coords);
     virtual void ChunkAdded(const ChunkCoords& coords);

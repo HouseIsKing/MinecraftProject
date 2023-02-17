@@ -49,14 +49,22 @@ void Chunk::SetBlockTypeAt(const uint16_t index, const EBlockType block)
     }
 }
 
-void Chunk::RevertChunkChanges(const std::vector<uint8_t>& changes, size_t& pos)
+void Chunk::ApplyRevertChunkChanges(const std::vector<uint8_t>& changes, size_t& pos, const bool revert)
 {
     const auto& changeCount = EngineDefaults::ReadDataFromVector<uint16_t>(changes, pos);
     for (size_t i = 0; i < changeCount; i++)
     {
         const auto& index = EngineDefaults::ReadDataFromVector<uint16_t>(changes, pos);
-        State.SetBlockAt(index, EngineDefaults::ReadDataFromVector<EBlockType>(changes, pos));
-        pos += sizeof(EBlockType);
+        if (revert)
+        {
+            State.SetBlockAt(index, EngineDefaults::ReadDataFromVector<EBlockType>(changes, pos));
+            pos += sizeof(EBlockType);
+        }
+        else
+        {
+            pos += sizeof(EBlockType);
+            State.SetBlockAt(index, EngineDefaults::ReadDataFromVector<EBlockType>(changes, pos));
+        }
     }
     World::GetWorld()->ChunkChanged(State.GetState().ChunkPosition);
 }

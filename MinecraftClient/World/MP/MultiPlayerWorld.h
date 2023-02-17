@@ -5,6 +5,7 @@
 class MultiPlayerWorld final : public ClientWorld
 {
     ClientNetworkManager NetworkManager;
+    uint64_t LastTickSentData{};
 
 public:
     ~MultiPlayerWorld() override;
