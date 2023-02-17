@@ -50,7 +50,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
@@ -85,10 +84,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir);$(SolutionDir)/Include</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(SolutionDir)/lib;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -114,7 +109,7 @@
           <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
           <LanguageStandard>stdcpplatest</LanguageStandard>
           <LanguageStandard_C>stdc17</LanguageStandard_C>
-          <DisableSpecificWarnings>4005;</DisableSpecificWarnings>
+          <DisableSpecificWarnings></DisableSpecificWarnings>
           <BasicRuntimeChecks>Default</BasicRuntimeChecks>
           <MultiProcessorCompilation>true</MultiProcessorCompilation>
           <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -124,7 +119,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);glfw3.lib;OpenGL32.lib;zlibwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+        <AdditionalDependencies>$(CoreLibraryDependencies);glfw3d.lib;OpenGL32.lib;zlibwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -149,340 +144,32 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
         <Optimization>MaxSpeed</Optimization>
         <FunctionLevelLinking>true</FunctionLevelLinking>
         <IntrinsicFunctions>true</IntrinsicFunctions>
-        <SDLCheck>true</SDLCheck>
-        <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_WIN32_WINNT=0x0601;</PreprocessorDefinitions>
+        <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_WIN32_WINNT=0x0601</PreprocessorDefinitions>
         <ConformanceMode>true</ConformanceMode>
         <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
         <LanguageStandard>stdcpplatest</LanguageStandard>
         <LanguageStandard_C>stdc17</LanguageStandard_C>
-        <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-        <DisableSpecificWarnings>4005</DisableSpecificWarnings>
         <MultiProcessorCompilation>true</MultiProcessorCompilation>
-        <AdditionalIncludeDirectories>$(SolutionDir)/MinecraftProjectLibrary</AdditionalIncludeDirectories>
+        <AdditionalIncludeDirectories>$(SolutionDir)/Include;$(ProjectDir);$(SolutionDir)/MinecraftProjectLibrary;</AdditionalIncludeDirectories>
     </ClCompile>
       <Link>
           <SubSystem>Console</SubSystem>
           <EnableCOMDATFolding>true</EnableCOMDATFolding>
           <OptimizeReferences>true</OptimizeReferences>
           <GenerateDebugInformation>true</GenerateDebugInformation>
-          <AdditionalDependencies>$(CoreLibraryDependencies);glfw3.lib;OpenGL32.lib;zlibwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-          <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+          <AdditionalDependencies>$(CoreLibraryDependencies);zlibwapi.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+          <AdditionalLibraryDirectories>$(SolutionDir)/lib;</AdditionalLibraryDirectories>
       </Link>
   </ItemDefinitionGroup>
     <ItemGroup>
         <ClCompile Include="MinecraftServer.cpp"/>
-        <ClCompile Include="Network\ConnectionToClient.cpp">
-            <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
-            <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-            <Optimization>Full</Optimization>
-            <SupportJustMyCode>true</SupportJustMyCode>
-            <AssemblerOutput>NoListing</AssemblerOutput>
-            <AssemblerListingLocation>x64\Debug\</AssemblerListingLocation>
-            <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
-            <BrowseInformation>false</BrowseInformation>
-            <BrowseInformationFile>x64\Debug\</BrowseInformationFile>
-            <CompileAs>Default</CompileAs>
-            <ConformanceMode>true</ConformanceMode>
-            <DiagnosticsFormat>Column</DiagnosticsFormat>
-            <DisableLanguageExtensions>false</DisableLanguageExtensions>
-            <ErrorReporting>Prompt</ErrorReporting>
-            <ExpandAttributedSource>false</ExpandAttributedSource>
-            <ExceptionHandling>Sync</ExceptionHandling>
-            <EnableASAN>false</EnableASAN>
-            <EnableFuzzer>false</EnableFuzzer>
-            <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
-            <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
-            <FloatingPointModel>Precise</FloatingPointModel>
-            <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
-            <GenerateModuleDependencies>false</GenerateModuleDependencies>
-            <GenerateSourceDependencies>false</GenerateSourceDependencies>
-            <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
-            <InlineFunctionExpansion>Default</InlineFunctionExpansion>
-            <IntrinsicFunctions>false</IntrinsicFunctions>
-            <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
-            <LanguageStandard>stdcpplatest</LanguageStandard>
-            <LanguageStandard_C>stdc17</LanguageStandard_C>
-            <MinimalRebuild>false</MinimalRebuild>
-            <ModuleDependenciesFile>x64\Debug\</ModuleDependenciesFile>
-            <ModuleOutputFile>x64\Debug\</ModuleOutputFile>
-            <OmitDefaultLibName>false</OmitDefaultLibName>
-            <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
-            <WholeProgramOptimization>false</WholeProgramOptimization>
-            <ObjectFileName>x64\Debug\</ObjectFileName>
-            <CallingConvention>Cdecl</CallingConvention>
-            <ProgramDataBaseFileName>x64\Debug\vc143.pdb</ProgramDataBaseFileName>
-            <PrecompiledHeader>NotUsing</PrecompiledHeader>
-            <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-            <PrecompiledHeaderOutputFile>x64\Debug\MinecraftServer.pch</PrecompiledHeaderOutputFile>
-            <PreprocessToFile>false</PreprocessToFile>
-            <PreprocessKeepComments>false</PreprocessKeepComments>
-            <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
-            <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
-            <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
-            <ShowIncludes>false</ShowIncludes>
-            <SourceDependenciesFile>x64\Debug\</SourceDependenciesFile>
-            <SuppressStartupBanner>true</SuppressStartupBanner>
-            <BufferSecurityCheck>true</BufferSecurityCheck>
-            <SmallerTypeCheck>false</SmallerTypeCheck>
-            <SpectreMitigation>false</SpectreMitigation>
-            <StructMemberAlignment>Default</StructMemberAlignment>
-            <TrackerLogDirectory>x64\Debug\MinecraftServer.tlog\</TrackerLogDirectory>
-            <TranslateIncludes>false</TranslateIncludes>
-            <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
-            <TreatWarningAsError>false</TreatWarningAsError>
-            <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
-            <UseFullPaths>true</UseFullPaths>
-            <WarningLevel>Level4</WarningLevel>
-            <XMLDocumentationFileName>x64\Debug\</XMLDocumentationFileName>
-            <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-            <IntelJCCErratum>false</IntelJCCErratum>
-            <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
-            <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
-            <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
-            <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
-            <PreprocessorDefinitions>_DEBUG;_CONSOLE;_UNICODE;UNICODE;;_WIN32_WINNT=0x0601;_ITERATOR_DEBUG_LEVEL=0;</PreprocessorDefinitions>
-            <SDLCheck>true</SDLCheck>
-            <AdditionalIncludeDirectories>C:\Users\amitz\RiderProjects\MinecraftProject\/Include;C:\Users\amitz\RiderProjects\MinecraftProject\MinecraftProjectLibrary\;</AdditionalIncludeDirectories>
-            <LinkCompiled>true</LinkCompiled>
-            <LibCompiled>true</LibCompiled>
-            <DisableSpecificWarnings>4005;</DisableSpecificWarnings>
-            <MultiProcessorCompilation>true</MultiProcessorCompilation>
-        </ClCompile>
-        <ClCompile Include="Network\Packets\ClientInputPacket.cpp">
-            <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
-            <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-            <Optimization>Full</Optimization>
-            <SupportJustMyCode>true</SupportJustMyCode>
-            <AssemblerOutput>NoListing</AssemblerOutput>
-            <AssemblerListingLocation>x64\Debug\</AssemblerListingLocation>
-            <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
-            <BrowseInformation>false</BrowseInformation>
-            <BrowseInformationFile>x64\Debug\</BrowseInformationFile>
-            <CompileAs>Default</CompileAs>
-            <ConformanceMode>true</ConformanceMode>
-            <DiagnosticsFormat>Column</DiagnosticsFormat>
-            <DisableLanguageExtensions>false</DisableLanguageExtensions>
-            <ErrorReporting>Prompt</ErrorReporting>
-            <ExpandAttributedSource>false</ExpandAttributedSource>
-            <ExceptionHandling>Sync</ExceptionHandling>
-            <EnableASAN>false</EnableASAN>
-            <EnableFuzzer>false</EnableFuzzer>
-            <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
-            <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
-            <FloatingPointModel>Precise</FloatingPointModel>
-            <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
-            <GenerateModuleDependencies>false</GenerateModuleDependencies>
-            <GenerateSourceDependencies>false</GenerateSourceDependencies>
-            <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
-            <InlineFunctionExpansion>Default</InlineFunctionExpansion>
-            <IntrinsicFunctions>false</IntrinsicFunctions>
-            <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
-            <LanguageStandard>stdcpplatest</LanguageStandard>
-            <LanguageStandard_C>stdc17</LanguageStandard_C>
-            <MinimalRebuild>false</MinimalRebuild>
-            <ModuleDependenciesFile>x64\Debug\</ModuleDependenciesFile>
-            <ModuleOutputFile>x64\Debug\</ModuleOutputFile>
-            <OmitDefaultLibName>false</OmitDefaultLibName>
-            <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
-            <WholeProgramOptimization>false</WholeProgramOptimization>
-            <ObjectFileName>x64\Debug\</ObjectFileName>
-            <CallingConvention>Cdecl</CallingConvention>
-            <ProgramDataBaseFileName>x64\Debug\vc143.pdb</ProgramDataBaseFileName>
-            <PrecompiledHeader>NotUsing</PrecompiledHeader>
-            <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-            <PrecompiledHeaderOutputFile>x64\Debug\MinecraftServer.pch</PrecompiledHeaderOutputFile>
-            <PreprocessToFile>false</PreprocessToFile>
-            <PreprocessKeepComments>false</PreprocessKeepComments>
-            <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
-            <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
-            <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
-            <ShowIncludes>false</ShowIncludes>
-            <SourceDependenciesFile>x64\Debug\</SourceDependenciesFile>
-            <SuppressStartupBanner>true</SuppressStartupBanner>
-            <BufferSecurityCheck>true</BufferSecurityCheck>
-            <SmallerTypeCheck>false</SmallerTypeCheck>
-            <SpectreMitigation>false</SpectreMitigation>
-            <StructMemberAlignment>Default</StructMemberAlignment>
-            <TrackerLogDirectory>x64\Debug\MinecraftServer.tlog\</TrackerLogDirectory>
-            <TranslateIncludes>false</TranslateIncludes>
-            <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
-            <TreatWarningAsError>false</TreatWarningAsError>
-            <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
-            <UseFullPaths>true</UseFullPaths>
-            <WarningLevel>Level4</WarningLevel>
-            <XMLDocumentationFileName>x64\Debug\</XMLDocumentationFileName>
-            <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-            <IntelJCCErratum>false</IntelJCCErratum>
-            <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
-            <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
-            <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
-            <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
-            <PreprocessorDefinitions>_DEBUG;_CONSOLE;_UNICODE;UNICODE;;_WIN32_WINNT=0x0601;_ITERATOR_DEBUG_LEVEL=0;</PreprocessorDefinitions>
-            <SDLCheck>true</SDLCheck>
-            <AdditionalIncludeDirectories>C:\Users\amitz\RiderProjects\MinecraftProject\/Include;C:\Users\amitz\RiderProjects\MinecraftProject\MinecraftProjectLibrary\;</AdditionalIncludeDirectories>
-            <LinkCompiled>true</LinkCompiled>
-            <LibCompiled>true</LibCompiled>
-            <DisableSpecificWarnings>4005;</DisableSpecificWarnings>
-            <MultiProcessorCompilation>true</MultiProcessorCompilation>
-        </ClCompile>
-        <ClCompile Include="Network\Packets\PacketData.cpp">
-            <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
-            <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-            <Optimization>Full</Optimization>
-            <SupportJustMyCode>true</SupportJustMyCode>
-            <AssemblerOutput>NoListing</AssemblerOutput>
-            <AssemblerListingLocation>x64\Debug\</AssemblerListingLocation>
-            <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
-            <BrowseInformation>false</BrowseInformation>
-            <BrowseInformationFile>x64\Debug\</BrowseInformationFile>
-            <CompileAs>Default</CompileAs>
-            <ConformanceMode>true</ConformanceMode>
-            <DiagnosticsFormat>Column</DiagnosticsFormat>
-            <DisableLanguageExtensions>false</DisableLanguageExtensions>
-            <ErrorReporting>Prompt</ErrorReporting>
-            <ExpandAttributedSource>false</ExpandAttributedSource>
-            <ExceptionHandling>Sync</ExceptionHandling>
-            <EnableASAN>false</EnableASAN>
-            <EnableFuzzer>false</EnableFuzzer>
-            <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
-            <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
-            <FloatingPointModel>Precise</FloatingPointModel>
-            <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
-            <GenerateModuleDependencies>false</GenerateModuleDependencies>
-            <GenerateSourceDependencies>false</GenerateSourceDependencies>
-            <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
-            <InlineFunctionExpansion>Default</InlineFunctionExpansion>
-            <IntrinsicFunctions>false</IntrinsicFunctions>
-            <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
-            <LanguageStandard>stdcpplatest</LanguageStandard>
-            <LanguageStandard_C>stdc17</LanguageStandard_C>
-            <MinimalRebuild>false</MinimalRebuild>
-            <ModuleDependenciesFile>x64\Debug\</ModuleDependenciesFile>
-            <ModuleOutputFile>x64\Debug\</ModuleOutputFile>
-            <OmitDefaultLibName>false</OmitDefaultLibName>
-            <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
-            <WholeProgramOptimization>false</WholeProgramOptimization>
-            <ObjectFileName>x64\Debug\</ObjectFileName>
-            <CallingConvention>Cdecl</CallingConvention>
-            <ProgramDataBaseFileName>x64\Debug\vc143.pdb</ProgramDataBaseFileName>
-            <PrecompiledHeader>NotUsing</PrecompiledHeader>
-            <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-            <PrecompiledHeaderOutputFile>x64\Debug\MinecraftServer.pch</PrecompiledHeaderOutputFile>
-            <PreprocessToFile>false</PreprocessToFile>
-            <PreprocessKeepComments>false</PreprocessKeepComments>
-            <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
-            <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
-            <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
-            <ShowIncludes>false</ShowIncludes>
-            <SourceDependenciesFile>x64\Debug\</SourceDependenciesFile>
-            <SuppressStartupBanner>true</SuppressStartupBanner>
-            <BufferSecurityCheck>true</BufferSecurityCheck>
-            <SmallerTypeCheck>false</SmallerTypeCheck>
-            <SpectreMitigation>false</SpectreMitigation>
-            <StructMemberAlignment>Default</StructMemberAlignment>
-            <TrackerLogDirectory>x64\Debug\MinecraftServer.tlog\</TrackerLogDirectory>
-            <TranslateIncludes>false</TranslateIncludes>
-            <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
-            <TreatWarningAsError>false</TreatWarningAsError>
-            <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
-            <UseFullPaths>true</UseFullPaths>
-            <WarningLevel>Level4</WarningLevel>
-            <XMLDocumentationFileName>x64\Debug\</XMLDocumentationFileName>
-            <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-            <IntelJCCErratum>false</IntelJCCErratum>
-            <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
-            <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
-            <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
-            <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
-            <PreprocessorDefinitions>_DEBUG;_CONSOLE;_UNICODE;UNICODE;;_WIN32_WINNT=0x0601;_ITERATOR_DEBUG_LEVEL=0;</PreprocessorDefinitions>
-            <SDLCheck>true</SDLCheck>
-            <AdditionalIncludeDirectories>C:\Users\amitz\RiderProjects\MinecraftProject\/Include;C:\Users\amitz\RiderProjects\MinecraftProject\MinecraftProjectLibrary\;</AdditionalIncludeDirectories>
-            <LinkCompiled>true</LinkCompiled>
-            <LibCompiled>true</LibCompiled>
-            <DisableSpecificWarnings>4005;</DisableSpecificWarnings>
-            <MultiProcessorCompilation>true</MultiProcessorCompilation>
-        </ClCompile>
-        <ClCompile Include="Network\ServerNetworkManager.cpp">
-            <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
-            <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-            <Optimization>Full</Optimization>
-            <SupportJustMyCode>true</SupportJustMyCode>
-            <AssemblerOutput>NoListing</AssemblerOutput>
-            <AssemblerListingLocation>x64\Debug\</AssemblerListingLocation>
-            <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
-            <BrowseInformation>false</BrowseInformation>
-            <BrowseInformationFile>x64\Debug\</BrowseInformationFile>
-            <CompileAs>Default</CompileAs>
-            <ConformanceMode>true</ConformanceMode>
-            <DiagnosticsFormat>Column</DiagnosticsFormat>
-            <DisableLanguageExtensions>false</DisableLanguageExtensions>
-            <ErrorReporting>Prompt</ErrorReporting>
-            <ExpandAttributedSource>false</ExpandAttributedSource>
-            <ExceptionHandling>Sync</ExceptionHandling>
-            <EnableASAN>false</EnableASAN>
-            <EnableFuzzer>false</EnableFuzzer>
-            <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
-            <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
-            <FloatingPointModel>Precise</FloatingPointModel>
-            <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
-            <GenerateModuleDependencies>false</GenerateModuleDependencies>
-            <GenerateSourceDependencies>false</GenerateSourceDependencies>
-            <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
-            <InlineFunctionExpansion>Default</InlineFunctionExpansion>
-            <IntrinsicFunctions>false</IntrinsicFunctions>
-            <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
-            <LanguageStandard>stdcpplatest</LanguageStandard>
-            <LanguageStandard_C>stdc17</LanguageStandard_C>
-            <MinimalRebuild>false</MinimalRebuild>
-            <ModuleDependenciesFile>x64\Debug\</ModuleDependenciesFile>
-            <ModuleOutputFile>x64\Debug\</ModuleOutputFile>
-            <OmitDefaultLibName>false</OmitDefaultLibName>
-            <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
-            <WholeProgramOptimization>false</WholeProgramOptimization>
-            <ObjectFileName>x64\Debug\</ObjectFileName>
-            <CallingConvention>Cdecl</CallingConvention>
-            <ProgramDataBaseFileName>x64\Debug\vc143.pdb</ProgramDataBaseFileName>
-            <PrecompiledHeader>NotUsing</PrecompiledHeader>
-            <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-            <PrecompiledHeaderOutputFile>x64\Debug\MinecraftServer.pch</PrecompiledHeaderOutputFile>
-            <PreprocessToFile>false</PreprocessToFile>
-            <PreprocessKeepComments>false</PreprocessKeepComments>
-            <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
-            <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
-            <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
-            <ShowIncludes>false</ShowIncludes>
-            <SourceDependenciesFile>x64\Debug\</SourceDependenciesFile>
-            <SuppressStartupBanner>true</SuppressStartupBanner>
-            <BufferSecurityCheck>true</BufferSecurityCheck>
-            <SmallerTypeCheck>false</SmallerTypeCheck>
-            <SpectreMitigation>false</SpectreMitigation>
-            <StructMemberAlignment>Default</StructMemberAlignment>
-            <TrackerLogDirectory>x64\Debug\MinecraftServer.tlog\</TrackerLogDirectory>
-            <TranslateIncludes>false</TranslateIncludes>
-            <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
-            <TreatWarningAsError>false</TreatWarningAsError>
-            <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
-            <UseFullPaths>true</UseFullPaths>
-            <WarningLevel>Level4</WarningLevel>
-            <XMLDocumentationFileName>x64\Debug\</XMLDocumentationFileName>
-            <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-            <IntelJCCErratum>false</IntelJCCErratum>
-            <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
-            <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
-            <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
-            <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
-            <PreprocessorDefinitions>_DEBUG;_CONSOLE;_UNICODE;UNICODE;;_WIN32_WINNT=0x0601;_ITERATOR_DEBUG_LEVEL=0;</PreprocessorDefinitions>
-            <SDLCheck>true</SDLCheck>
-            <AdditionalIncludeDirectories>C:\Users\amitz\RiderProjects\MinecraftProject\/Include;C:\Users\amitz\RiderProjects\MinecraftProject\MinecraftProjectLibrary\;</AdditionalIncludeDirectories>
-            <LinkCompiled>true</LinkCompiled>
-            <LibCompiled>true</LibCompiled>
-            <DisableSpecificWarnings>4005;</DisableSpecificWarnings>
-            <MultiProcessorCompilation>true</MultiProcessorCompilation>
-        </ClCompile>
+        <ClCompile Include="Network\ConnectionToClient.cpp"/>
+        <ClCompile Include="Network\Packets\ClientInputPacket.cpp"/>
+        <ClCompile Include="Network\Packets\PacketData.cpp"/>
+        <ClCompile Include="Network\ServerNetworkManager.cpp"/>
         <ClCompile Include="ServerManager.cpp"/>
     </ItemGroup>
     <ItemGroup>

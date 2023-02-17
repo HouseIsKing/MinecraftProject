@@ -1,5 +1,4 @@
 #include "CrosshairGui.h"
-#include <GLFW/glfw3.h>
 #include "Util/EngineDefaultsClient.h"
 #include "World/Generic/ClientWorld.h"
 

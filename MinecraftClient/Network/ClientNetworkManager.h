@@ -1,8 +1,7 @@
 #pragma once
 #include "Packets/PacketData.h"
 #include "Util/ThreadSafeQueue.h"
-#include <asio/io_context.hpp>
-#include <asio/ip/tcp.hpp>
+#include "IncludeSorter.h"
 #include <thread>
 #include "Network/Packets/Packet.h"
 

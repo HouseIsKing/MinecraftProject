@@ -114,7 +114,6 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
         <ConfigurationType>StaticLibrary</ConfigurationType>
-        <UseDebugLibraries>false</UseDebugLibraries>
         <PlatformToolset>v143</PlatformToolset>
         <WholeProgramOptimization>true</WholeProgramOptimization>
         <CharacterSet>Unicode</CharacterSet>
@@ -149,7 +148,6 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
         <LinkIncremental>false</LinkIncremental>
-        <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);;$(SolutionDir)/lib</LibraryPath>
     </PropertyGroup>
     <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
         <ClCompile>
@@ -187,7 +185,7 @@
             <GenerateDebugInformation>true</GenerateDebugInformation>
         </Link>
         <Lib>
-            <AdditionalDependencies>glfw3.lib;zlibwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+            <AdditionalDependencies>zlibwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
         </Lib>
     </ItemDefinitionGroup>
     <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -216,13 +214,13 @@
             <Optimization>MaxSpeed</Optimization>
             <FunctionLevelLinking>true</FunctionLevelLinking>
             <IntrinsicFunctions>true</IntrinsicFunctions>
-            <SDLCheck>true</SDLCheck>
             <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
             <ConformanceMode>true</ConformanceMode>
             <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
             <LanguageStandard>stdcpplatest</LanguageStandard>
             <LanguageStandard_C>stdc17</LanguageStandard_C>
             <AdditionalIncludeDirectories>$(SolutionDir)/Include;$(ProjectDir);</AdditionalIncludeDirectories>
+            <MultiProcessorCompilation>true</MultiProcessorCompilation>
         </ClCompile>
         <Link>
             <SubSystem>Windows</SubSystem>
@@ -231,7 +229,8 @@
             <GenerateDebugInformation>true</GenerateDebugInformation>
         </Link>
         <Lib>
-            <AdditionalDependencies>$(CoreLibraryDependencies);glfw3.lib;OpenGL32.lib;zlibwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+            <AdditionalDependencies>zlibwapi.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+            <AdditionalLibraryDirectories>$(SolutionDir)/lib;</AdditionalLibraryDirectories>
         </Lib>
     </ItemDefinitionGroup>
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>

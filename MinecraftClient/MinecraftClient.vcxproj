@@ -87,8 +87,6 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
         <LinkIncremental>false</LinkIncremental>
-        <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir);$(SolutionDir)/Include</IncludePath>
-        <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(SolutionDir)/lib;$(LibraryPath)</LibraryPath>
         <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
     </PropertyGroup>
     <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -129,13 +127,10 @@
     </ItemDefinitionGroup>
     <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
         <ClCompile>
-            <WarningLevel>Level4</WarningLevel>
             <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_WIN32_WINNT=0x0601; _ITERATOR_DEBUG_LEVEL=0;</PreprocessorDefinitions>
             <ConformanceMode>true</ConformanceMode>
             <LanguageStandard>stdcpplatest</LanguageStandard>
             <LanguageStandard_C>stdc17</LanguageStandard_C>
-            <DisableSpecificWarnings>4100;4101;4005</DisableSpecificWarnings>
-            <BasicRuntimeChecks>Default</BasicRuntimeChecks>
             <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
             <MultiProcessorCompilation>true</MultiProcessorCompilation>
             <AdditionalIncludeDirectories>$(SolutionDir)/MinecraftProjectLibrary;</AdditionalIncludeDirectories>
@@ -143,36 +138,32 @@
         <Link>
             <SubSystem>Console</SubSystem>
             <GenerateDebugInformation>true</GenerateDebugInformation>
-            <AdditionalDependencies>glfw3.lib;OpenGL32.lib;zlibwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+            <AdditionalDependencies>glfw3d.lib;zlibwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
             <ShowProgress>LinkVerboseLib</ShowProgress>
         </Link>
     </ItemDefinitionGroup>
     <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
         <ClCompile>
-            <WarningLevel>Level4</WarningLevel>
             <FunctionLevelLinking>true</FunctionLevelLinking>
-            <IntrinsicFunctions>true</IntrinsicFunctions>
-            <SDLCheck>true</SDLCheck>
             <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_WIN32_WINNT=0x0601</PreprocessorDefinitions>
             <ConformanceMode>true</ConformanceMode>
             <LanguageStandard>stdcpplatest</LanguageStandard>
             <LanguageStandard_C>stdc17</LanguageStandard_C>
-            <DisableSpecificWarnings>4100;4101;4005</DisableSpecificWarnings>
-            <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-            <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-            <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
             <GenerateSourceDependencies>true</GenerateSourceDependencies>
             <MultiProcessorCompilation>true</MultiProcessorCompilation>
+            <AdditionalIncludeDirectories>$(SolutionDir)/Include;$(ProjectDir);$(SolutionDir)/MinecraftProjectLibrary;</AdditionalIncludeDirectories>
+            <DisableSpecificWarnings></DisableSpecificWarnings>
         </ClCompile>
         <Link>
             <SubSystem>Console</SubSystem>
             <EnableCOMDATFolding>false</EnableCOMDATFolding>
             <OptimizeReferences>true</OptimizeReferences>
             <GenerateDebugInformation>true</GenerateDebugInformation>
-            <AdditionalDependencies>$(CoreLibraryDependencies);glfw3.lib;OpenGL32.lib;zlibwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+            <AdditionalDependencies>glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
             <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
             <IgnoreSpecificDefaultLibraries>
             </IgnoreSpecificDefaultLibraries>
+            <AdditionalLibraryDirectories>$(SolutionDir)/lib;</AdditionalLibraryDirectories>
         </Link>
     </ItemDefinitionGroup>
     <ItemGroup>
@@ -232,6 +223,7 @@
         <ClInclude Include="GUI\Gui.h"/>
         <ClInclude Include="GUI\PerformanceGui.h"/>
         <ClInclude Include="GUI\SelectedBlockGui.h"/>
+        <ClInclude Include="IncludeSorter.h"/>
         <ClInclude Include="Network\ClientNetworkManager.h"/>
         <ClInclude Include="Network\Packets\PacketData.h"/>
         <ClInclude Include="Network\Packets\PlayerIdPacket.h"/>

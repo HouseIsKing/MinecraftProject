@@ -1,7 +1,5 @@
 #include "PerformanceGui.h"
 #include "Util/EngineDefaultsClient.h"
-#include <GLFW/glfw3.h>
-
 #include "World/Generic/ClientWorld.h"
 
 void PerformanceGui::DrawStringAt(const std::string& text, float x, float y, const float z, const float r, const float g, const float b, const float a)
