@@ -228,6 +228,30 @@ void Player::ApplyRevertEntityChange(const std::vector<uint8_t>& changes, size_t
             State.SetCameraPitch(EngineDefaults::ReadDataFromVector<float>(changes, pos));
         }
         break;
+    case EChangeTypeEntity::PlayerMode:
+        if (revert)
+        {
+            State.SetMode(EngineDefaults::ReadDataFromVector<bool>(changes, pos));
+            pos += sizeof(bool);
+        }
+        else
+        {
+            pos += sizeof(bool);
+            State.SetMode(EngineDefaults::ReadDataFromVector<bool>(changes, pos));
+        }
+        break;
+    case EChangeTypeEntity::PlayerCurrentSelectedBlock:
+        if (revert)
+        {
+            State.SetCurrentSelectedBlock(EngineDefaults::ReadDataFromVector<EBlockType>(changes, pos));
+            pos += sizeof(EBlockType);
+        }
+        else
+        {
+            pos += sizeof(EBlockType);
+            State.SetCurrentSelectedBlock(EngineDefaults::ReadDataFromVector<EBlockType>(changes, pos));
+        }
+        break;
     default:
         LivingEntity::ApplyRevertEntityChange(changes, pos, change, revert);
         break;

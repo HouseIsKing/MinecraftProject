@@ -210,6 +210,8 @@ void MultiPlayerWorld::ApplyChangesList(const std::vector<uint8_t>& changes)
                     const glm::ivec2 lightPos = EngineDefaults::ReadDataFromVector<glm::ivec2>(changes, pos);
                     pos += sizeof(uint8_t);
                     const uint8_t lightLevel = EngineDefaults::ReadDataFromVector<uint8_t>(changes, pos);
+                    const uint8_t previousLightLevel = State.GetState().Lights.at(lightPos);
+                    LightChanged(lightPos.x, previousLightLevel, lightPos.y, static_cast<int16_t>(lightLevel - previousLightLevel));
                     State.ChangeLight(lightPos, lightLevel);
                 }
                 break;

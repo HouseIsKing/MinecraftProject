@@ -10,35 +10,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4f885148-8e28-4ab6-9a1d-8675988ae9cb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/MinecraftClient/IncludeSorter.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/x64/Debug/Minecraf.D8A5EB12.tlog/CL.10972.write.1.tlog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/x64/Debug/Minecraf.D8A5EB12.tlog/CL.command.1.tlog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/x64/Debug/Minecraf.D8A5EB12.tlog/CL.read.1.tlog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/x64/Release/Minecraf.D8A5EB12.tlog/CL.10956.write.1.tlog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/x64/Release/Minecraf.D8A5EB12.tlog/CL.command.1.tlog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/x64/Release/Minecraf.D8A5EB12.tlog/CL.read.1.tlog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/x64/Release/Minecraf.D8A5EB12.tlog/Lib-link.read.1.tlog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/x64/Release/Minecraf.D8A5EB12.tlog/Lib-link.write.1.tlog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/x64/Release/Minecraf.D8A5EB12.tlog/Lib.command.1.tlog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/x64/Release/Minecraf.D8A5EB12.tlog/MinecraftProjectLibrary.lastbuildstate" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/x64/Release/MinecraftProjectLibrary.Build.CppClean.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/x64/Release/MinecraftProjectLibrary.lib.recipe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/x64/Release/MinecraftProjectLibrary.vcxproj.FileListAbsolute.txt" afterDir="false" />
+    <list default="true" id="4f885148-8e28-4ab6-9a1d-8675988ae9cb" name="Changes" comment="fixed warnings and prepared for first testing stage with a friend">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MinecraftProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MinecraftProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftClient/GUI/CrosshairGui.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/GUI/CrosshairGui.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftClient/GUI/PerformanceGui.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/GUI/PerformanceGui.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftClient/MinecraftClient.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/MinecraftClient.vcxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/ClientNetworkManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/ClientNetworkManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/ClientNetworkManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/ClientNetworkManager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftClient/Shaders/Shader.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Shaders/Shader.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftClient/Textures/Texture.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Textures/Texture.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/MinecraftProjectLibrary.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/MinecraftProjectLibrary.vcxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/x64/Debug/Minecraf.D8A5EB12.tlog/Lib-link.read.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/x64/Debug/Minecraf.D8A5EB12.tlog/Lib-link.read.1.tlog" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/x64/Debug/Minecraf.D8A5EB12.tlog/Lib.command.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/x64/Debug/Minecraf.D8A5EB12.tlog/Lib.command.1.tlog" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/x64/Debug/MinecraftProjectLibrary.Build.CppClean.log" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/x64/Debug/MinecraftProjectLibrary.Build.CppClean.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/x64/Debug/vc143.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftServer/MinecraftServer.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/MinecraftServer.vcxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/World/MP/MultiPlayerWorld.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/World/MP/MultiPlayerWorld.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/Entities/Player.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/Entities/Player.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/Util/EngineDefaults.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/Util/EngineDefaults.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/Util/EngineDefaults.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/Util/EngineDefaults.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/World/Chunk.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/World/Chunk.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/World/World.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/World/World.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/World/World.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/World/World.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,6 +104,12 @@
     <setting file="file://$PROJECT_DIR$/MinecraftClient/Entities/Generic/EntityMeshBlock.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftClient/Entities/Generic/EntityMeshBlock.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftClient/Entities/Generic/Zombie.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftClient/GUI/CrosshairGui.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftClient/GUI/PerformanceGui.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftClient/Network/ClientNetworkManager.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftClient/Network/ClientNetworkManager.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftClient/Shaders/Shader.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftClient/Textures/Texture.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftClient/World/Generic/Blocks/BlockRenderer.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftClient/World/Generic/ChunkRenderer.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftClient/World/Generic/ChunkRenderer.h" root0="FORCE_HIGHLIGHTING" />
@@ -173,7 +159,7 @@
     ]
   }
 }</component>
-  <component name="RunManager" selected="C++ Project.MinecraftClient">
+  <component name="RunManager" selected="C++ Project.MinecraftServer">
     <configuration name="MinecraftClient" type="CppProject" factoryName="C++ Project">
       <configuration_1>
         <option name="CONFIGURATION" value="Debug" />
@@ -434,7 +420,7 @@
       <workItem from="1675410463106" duration="55789000" />
       <workItem from="1675751379542" duration="58240000" />
       <workItem from="1676020489206" duration="112845000" />
-      <workItem from="1676626888093" duration="18759000" />
+      <workItem from="1676626888093" duration="29197000" />
     </task>
     <task id="LOCAL-00001" summary="AAAAAAAAAAAAAAAAAAAAAA finally got the bindless textures to work">
       <created>1652106111120</created>
@@ -695,7 +681,14 @@
       <option name="project" value="LOCAL" />
       <updated>1676649161827</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="fixed warnings and prepared for first testing stage with a friend">
+      <created>1676672353917</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1676672353917</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -729,7 +722,6 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="rd-20090515 completed" />
     <MESSAGE value="rd-160052 completed" />
     <MESSAGE value="rd-161348 completed!" />
     <MESSAGE value="mc-161807 completed" />
@@ -754,7 +746,8 @@
     <MESSAGE value="Merged Server And Client Code&#10;&#10;Still WIP" />
     <MESSAGE value="One player networking completed, Server can handle one player(for now)" />
     <MESSAGE value="Server now supports more than 1 player, requires heavy testing" />
-    <option name="LAST_COMMIT_MESSAGE" value="Server now supports more than 1 player, requires heavy testing" />
+    <MESSAGE value="fixed warnings and prepared for first testing stage with a friend" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed warnings and prepared for first testing stage with a friend" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />

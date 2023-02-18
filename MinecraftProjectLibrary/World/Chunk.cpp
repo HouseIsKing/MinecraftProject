@@ -44,7 +44,8 @@ void Chunk::SetBlockTypeAt(const uint16_t index, const EBlockType block)
 {
     if (State.GetState().Blocks[index] != block)
     {
-        World::GetWorld()->ChunkChanged(State.GetState().ChunkPosition);
+        const glm::ivec3 pos = EngineDefaults::GetChunkGlobalPosition(State.GetState().ChunkPosition, index);
+        World::GetWorld()->BlockChanged(pos.x, pos.y, pos.z, block, State.GetState().Blocks[index]);
         State.SetBlockAt(index, block);
     }
 }
@@ -57,16 +58,17 @@ void Chunk::ApplyRevertChunkChanges(const std::vector<uint8_t>& changes, size_t&
         const auto& index = EngineDefaults::ReadDataFromVector<uint16_t>(changes, pos);
         if (revert)
         {
+            //SetBlockTypeAt(index, EngineDefaults::ReadDataFromVector<EBlockType>(changes, pos));
             State.SetBlockAt(index, EngineDefaults::ReadDataFromVector<EBlockType>(changes, pos));
             pos += sizeof(EBlockType);
         }
         else
         {
             pos += sizeof(EBlockType);
-            State.SetBlockAt(index, EngineDefaults::ReadDataFromVector<EBlockType>(changes, pos));
+            //State.SetBlockAt(index, EngineDefaults::ReadDataFromVector<EBlockType>(changes, pos));
+            SetBlockTypeAt(index, EngineDefaults::ReadDataFromVector<EBlockType>(changes, pos));
         }
     }
-    World::GetWorld()->ChunkChanged(State.GetState().ChunkPosition);
 }
 
 void Chunk::AttachChunkChanges(std::vector<uint8_t>& changes) const

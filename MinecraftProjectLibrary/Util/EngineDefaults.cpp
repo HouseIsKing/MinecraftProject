@@ -40,6 +40,12 @@ glm::ivec3 EngineDefaults::GetChunkLocalPosition(const uint16_t index)
     return {x, y, z};
 }
 
+glm::ivec3 EngineDefaults::GetChunkGlobalPosition(const ChunkCoords& chunkCoords, const uint16_t index)
+{
+    const glm::ivec3 localPos = GetChunkLocalPosition(index);
+    return {localPos.x + chunkCoords.GetX() * CHUNK_WIDTH, localPos.y + chunkCoords.GetY() * CHUNK_HEIGHT, localPos.z + chunkCoords.GetZ() * CHUNK_DEPTH};
+}
+
 void ClientInputStatusStruct::SetKey(const EKeySet key, const bool pressed)
 {
     switch(key)

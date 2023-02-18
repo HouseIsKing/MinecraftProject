@@ -90,7 +90,7 @@ void World::RecalculateLightLevels()
     }
 }
 
-int16_t World::RecalculateLightLevels(const int x, const int z)
+void World::RecalculateLightLevels(const int x, const int z)
 {
     if (const auto pos = glm::ivec2(x, z); State.GetState().Lights.contains(pos))
     {
@@ -100,13 +100,13 @@ int16_t World::RecalculateLightLevels(const int x, const int z)
             if (GetBlockAt(x, y, z)->IsBlockingLight())
             {
                 State.ChangeLight(pos, y);
-                return static_cast<int16_t>(y - previousLightLevel);
+                LightChanged(x, y, z, static_cast<int16_t>(y - previousLightLevel));
+                return;
             }
         }
         State.ChangeLight(pos, 0);
-        return static_cast<int16_t>(-previousLightLevel);
+        LightChanged(x, 0, z, static_cast<int16_t>(-previousLightLevel));
     }
-    return 0;
 }
 
 void World::BuildWorldChanges()
@@ -567,6 +567,40 @@ void World::EntityRemoved(uint16_t /*entityId*/)
 {
 }
 
+void World::BlockChanged(const int x, const int y, const int z, const EBlockType newBlock, const EBlockType oldBlock)
+{
+    ChunkChanged(ChunkCoords(x, y, z));
+    const Block* previousBlock = BlockTypeList::GetBlockTypeData(oldBlock);
+    if (const Block* block = BlockTypeList::GetBlockTypeData(newBlock); block->IsSolidBlock() != previousBlock->IsSolidBlock())
+    {
+        UpdateChunksNear(x, y, z);
+    }
+}
+
+void World::LightChanged(const int x, const int y, const int z, const int16_t change)
+{
+    if (change > 0)
+    {
+        for (int16_t i = 0; i < change; i++)
+        {
+            if (const Chunk* chunkLight = GetChunkAt(x, y + i, z); chunkLight != nullptr)
+            {
+                ChunkChanged(chunkLight->GetState().ChunkPosition);
+            }
+        }
+    }
+    else
+    {
+        for (int16_t i = 0; i < static_cast<int16_t>(abs(change)); i++)
+        {
+            if (const Chunk* chunkLight = GetChunkAt(x, y - i, z); chunkLight != nullptr)
+            {
+                ChunkChanged(chunkLight->GetState().ChunkPosition);
+            }
+        }
+    }
+
+}
 
 bool World::IsBlockExists(const int x, const int y, const int z) const
 {
@@ -580,23 +614,13 @@ void World::PlaceBlockAt(const int x, const int y, const int z, const EBlockType
     {
         return;
     }
-    const Block* previousBlock = chunk->GetBlockAt(x, y, z);
-    const Block* block = BlockTypeList::GetBlockTypeData(blockType);
+    const EBlockType oldBlockType = chunk->GetBlockTypeAt(x, y, z);
     chunk->SetBlockTypeAt(x, y, z, blockType);
-    if (block->IsSolidBlock() != previousBlock->IsSolidBlock())
+    BlockChanged(x, y, z, blockType, oldBlockType);
+    const Block* block = BlockTypeList::GetBlockTypeData(blockType);
+    if (const Block* oldBlock = BlockTypeList::GetBlockTypeData(oldBlockType); block->IsBlockingLight() != oldBlock->IsBlockingLight() && y >= State.GetState().Lights.at(glm::ivec2(x, z)))
     {
-        UpdateChunksNear(x, y, z);
-    }
-    if (block->IsBlockingLight() != previousBlock->IsBlockingLight())
-    {
-        const int16_t change = RecalculateLightLevels(x, z);
-        for (int16_t i = 0; i < change; i++)
-        {
-            if (const Chunk* chunkLight = GetChunkAt(x, y + i, z); chunkLight != nullptr)
-            {
-                ChunkChanged(chunkLight->GetState().ChunkPosition);
-            }
-        }
+        RecalculateLightLevels(x, z);
     }
 }
 
@@ -607,23 +631,13 @@ void World::RemoveBlockAt(const int x, const int y, const int z)
     {
         return;
     }
-    const Block* block = chunk->GetBlockAt(x, y, z);
+    const EBlockType oldBlockType = chunk->GetBlockTypeAt(x, y, z);
+    const Block* block = BlockTypeList::GetBlockTypeData(oldBlockType);
     block->OnBreak(x, y, z);
     chunk->SetBlockTypeAt(x, y, z, EBlockType::Air);
-    if (block->IsSolidBlock())
+    if (block->IsBlockingLight() && y >= State.GetState().Lights.at(glm::ivec2(x, z)))
     {
-        UpdateChunksNear(x, y, z);
-    }
-    if (block->IsBlockingLight())
-    {
-        const int16_t change = RecalculateLightLevels(x, z);
-        for (int16_t i = 0; i < static_cast<int16_t>(abs(change)); i++)
-        {
-            if (const Chunk* chunkLight = GetChunkAt(x, y + -i, z); chunkLight != nullptr)
-            {
-                ChunkChanged(chunkLight->GetState().ChunkPosition);
-            }
-        }
+        RecalculateLightLevels(x, z);
     }
 }
 

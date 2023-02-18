@@ -27,6 +27,7 @@ public:
     template <typename T> requires std::is_fundamental_v<T> or std::is_enum_v<T> or std::is_same_v<glm::vec3, T> or std::is_same_v<glm::vec2, T> or std::is_same_v<ChunkCoords, T> or std::is_same_v<ClientInputStruct, T> or std::is_same_v<TransformStruct, T> or std::is_same_v<glm::ivec2, T>
     static void EmplaceReplaceDataInVector(std::vector<uint8_t>& vector, const T* data, size_t pos);
     static glm::ivec3 GetChunkLocalPosition(unsigned short index);
+    static glm::ivec3 GetChunkGlobalPosition(const ChunkCoords& chunkCoords, uint16_t index);
 };
 
 template <typename T> requires std::is_fundamental_v<T> or std::is_enum_v<T> or std::is_same_v<glm::vec3, T> or std::is_same_v<glm::vec2, T> or std::is_same_v<ChunkCoords, T> or std::is_same_v<ClientInputStruct, T> or std::is_same_v<TransformStruct, T> or std::is_same_v<glm::ivec2, T>
