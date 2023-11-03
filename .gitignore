@@ -30,13 +30,12 @@
 *.exe
 *.out
 *.app
-/.vs/MinecraftProject/v17
+/.vs
 /MinecraftClient/x64
 /MinecraftServer/x64
 /MinecraftProjectLibrary/x64
 /Include
 /Lib
-/x64/Debug
-/x64/Release
+/x64
 /MinecraftClient/level.dat
 /MinecraftServer/level.dat
