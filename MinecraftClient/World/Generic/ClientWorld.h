@@ -14,13 +14,13 @@ class ClientWorld : public World
 
 protected:
     std::unordered_map<ChunkCoords, ChunkRenderer, ChunkCoordsHasher> ChunkRenderers{};
-    std::unordered_map<uint16_t, PlayerRenderer> PlayerRenderers{};
-    std::unordered_map<uint16_t, BlockParticleEntityRenderer> BlockParticleEntityRenderers{};
+    std::unordered_map<uint16_t, std::unique_ptr<EntityRenderer>> EntityRenderers{};
+    std::unordered_map<uint16_t, std::pair<EEntityType, bool>> EntityRenderersDirty{};
     std::unordered_set<ChunkRenderer*> DirtyChunksDuplicatorCheck{};
     std::vector<ChunkRenderer*> DirtyChunks{};
     std::vector<std::unique_ptr<Gui>> Guis{};
     PlayerInputManager PlayerInput{};
-    std::unique_ptr<ClientPlayerRenderer> LocalPlayerRenderer{};
+    ClientPlayerRenderer* LocalPlayerRenderer{nullptr};
     uint16_t PlayerId;
     GLuint FogsBuffer{0};
     GLFWwindow* TheAppWindow;
@@ -30,6 +30,7 @@ protected:
     float LastTimeFrame{0};
     float DeltaFrameTime{0};
     float TickTimer{0};
+    float MaxFrameTime{0.0F};
     void Init();
     void InitFog();
     void DrawGui() const;
@@ -39,15 +40,15 @@ protected:
     void ChunkAdded(const ChunkCoords& coords) override;
     void ChunkRemoved(const ChunkCoords& coords) override;
     void EntityAdded(uint16_t entityId) override;
-    void EntityChanged(uint16_t entityId) override;
     void EntityRemoved(uint16_t entityId) override;
+    void CreateEntityRenderer(uint16_t entityId);
     ClientWorld(GLFWwindow* window, uint16_t levelHeight, uint16_t levelWidth, uint16_t levelDepth);
 
 public:
     CustomRandomEngine RenderRandomEngine{};
     [[nodiscard]] GLFWwindow* GetWindow() const;
     [[nodiscard]] int GetFps() const;
-    [[nodiscard]] const Player* GetPlayer() const;
+    [[nodiscard]] Player* GetPlayer() const;
     void HandleWindowResize(int height, int width) const;
     void NewTick() override;
     void Run() override;
@@ -57,6 +58,7 @@ public:
     void HandleKeyCallback(int key, int action);
     void HandleCursorPosCallback(float xPos, float yPos);
     void HandleMouseButtonCallback(int button, int action);
+    void UpdateRenderer();
     static ClientWorld* GetWorld();
 };
 

@@ -29,8 +29,8 @@ public:
     ConnectionToClient& operator=(const ConnectionToClient&) = delete;
     ConnectionToClient(ConnectionToClient&&) = delete;
     ConnectionToClient& operator=(ConnectionToClient&&) = delete;
-
     asio::ip::tcp::socket& GetSocket() const;
+    size_t LastTickPacketReceived{0};
 
     bool operator==(const ConnectionToClient& other) const
     {
@@ -38,5 +38,5 @@ public:
     }
 
     void Start();
-    void WritePacket(const std::shared_ptr<Packet>& packet);
+    void WritePacket(const std::shared_ptr<Packet>& packet, const std::shared_ptr<ConnectionToClient>& thisPointer) const;
 };

@@ -6,6 +6,8 @@ class ConnectionToClientInterface
 {
 public:
     std::string ClientName;
+    std::uint64_t LastTickSent{0};
+    std::uint64_t LastInputProcessed{0};
     ConnectionToClientInterface() = default;
     virtual ~ConnectionToClientInterface() = default;
     ConnectionToClientInterface(const ConnectionToClientInterface&) = default;

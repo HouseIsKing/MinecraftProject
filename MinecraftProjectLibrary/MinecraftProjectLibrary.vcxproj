@@ -5,6 +5,10 @@
             <Configuration>Debug</Configuration>
             <Platform>Win32</Platform>
         </ProjectConfiguration>
+        <ProjectConfiguration Include="Profiler|x64">
+            <Configuration>Profiler</Configuration>
+            <Platform>x64</Platform>
+        </ProjectConfiguration>
         <ProjectConfiguration Include="Release|Win32">
             <Configuration>Release</Configuration>
             <Platform>Win32</Platform>
@@ -34,6 +38,7 @@
         <ClCompile Include="Util\States\BlockParticleEntityStateWrapper.cpp"/>
         <ClCompile Include="Util\States\PlayerStateWrapper.cpp"/>
         <ClCompile Include="Util\States\WorldStateWrapper.cpp"/>
+        <ClCompile Include="Util\Tracy\TracyClient.cpp"/>
         <ClCompile Include="World\Blocks\AirBlock.cpp"/>
         <ClCompile Include="World\Blocks\Block.cpp"/>
         <ClCompile Include="World\Blocks\BlockTypeList.cpp"/>
@@ -117,6 +122,10 @@
         <PlatformToolset>v143</PlatformToolset>
         <WholeProgramOptimization>true</WholeProgramOptimization>
         <CharacterSet>Unicode</CharacterSet>
+    </PropertyGroup>
+    <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Profiler|x64'">
+        <PlatformToolset>v143</PlatformToolset>
+        <ConfigurationType>StaticLibrary</ConfigurationType>
     </PropertyGroup>
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
     <ImportGroup Label="ExtensionSettings">
@@ -210,11 +219,11 @@
     <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
         <ClCompile>
             <PrecompiledHeader>NotUsing</PrecompiledHeader>
-            <WarningLevel>Level3</WarningLevel>
+            <WarningLevel>Level4</WarningLevel>
             <Optimization>MaxSpeed</Optimization>
             <FunctionLevelLinking>true</FunctionLevelLinking>
             <IntrinsicFunctions>true</IntrinsicFunctions>
-            <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+            <PreprocessorDefinitions>NDEBUG;_LIB;TRACY_ENABLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
             <ConformanceMode>true</ConformanceMode>
             <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
             <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -228,6 +237,20 @@
             <OptimizeReferences>true</OptimizeReferences>
             <GenerateDebugInformation>true</GenerateDebugInformation>
         </Link>
+        <Lib>
+            <AdditionalDependencies>zlibwapi.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+            <AdditionalLibraryDirectories>$(SolutionDir)/lib;</AdditionalLibraryDirectories>
+        </Lib>
+    </ItemDefinitionGroup>
+    <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Profiler|x64'">
+        <ClCompile>
+            <LanguageStandard>stdcpplatest</LanguageStandard>
+            <LanguageStandard_C>stdc17</LanguageStandard_C>
+            <WarningLevel>Level4</WarningLevel>
+            <TreatWarningAsError>true</TreatWarningAsError>
+            <DisableSpecificWarnings>4267</DisableSpecificWarnings>
+            <AdditionalIncludeDirectories>$(SolutionDir)/Include;$(ProjectDir);</AdditionalIncludeDirectories>
+        </ClCompile>
         <Lib>
             <AdditionalDependencies>zlibwapi.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
             <AdditionalLibraryDirectories>$(SolutionDir)/lib;</AdditionalLibraryDirectories>

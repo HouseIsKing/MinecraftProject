@@ -53,11 +53,19 @@ public:
 template <>
 inline Entity<PlayerStateWrapper, PlayerState>* WorldStateWrapper::GetEntity<PlayerStateWrapper, PlayerState>(const uint16_t& entityId)
 {
-    return State.Players.at(entityId);
+    if (State.Players.contains(entityId))
+    {
+        return State.Players.at(entityId);
+    }
+    return nullptr;
 }
 
 template <>
 inline Entity<BlockParticleEntityStateWrapper, BlockParticleEntityState>* WorldStateWrapper::GetEntity<BlockParticleEntityStateWrapper, BlockParticleEntityState>(const uint16_t& entityId)
 {
-    return State.BlockParticleEntities.at(entityId);
+    if (State.BlockParticleEntities.contains(entityId))
+    {
+        return State.BlockParticleEntities.at(entityId);
+    }
+    return nullptr;
 }

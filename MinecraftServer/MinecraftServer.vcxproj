@@ -5,6 +5,10 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+      <ProjectConfiguration Include="Profiler|x64">
+          <Configuration>Profiler</Configuration>
+          <Platform>x64</Platform>
+      </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
@@ -25,7 +29,7 @@
     <RootNamespace>MinecraftServer</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
+    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
   <PropertyGroup>
     <PreferredToolArchitecture>x64</PreferredToolArchitecture>
   </PropertyGroup>
@@ -53,6 +57,9 @@
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+    <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Profiler|x64'">
+        <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
   <ImportGroup Label="ExtensionSettings">
@@ -154,6 +161,7 @@
         <LanguageStandard_C>stdc17</LanguageStandard_C>
         <MultiProcessorCompilation>true</MultiProcessorCompilation>
         <AdditionalIncludeDirectories>$(SolutionDir)/Include;$(ProjectDir);$(SolutionDir)/MinecraftProjectLibrary;</AdditionalIncludeDirectories>
+        <WarningLevel>Level4</WarningLevel>
     </ClCompile>
       <Link>
           <SubSystem>Console</SubSystem>
@@ -163,6 +171,21 @@
           <AdditionalDependencies>$(CoreLibraryDependencies);zlibwapi.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
           <AdditionalLibraryDirectories>$(SolutionDir)/lib;</AdditionalLibraryDirectories>
       </Link>
+  </ItemDefinitionGroup>
+    <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Profiler|x64'">
+        <ClCompile>
+            <AdditionalIncludeDirectories>$(SolutionDir)/Include;$(ProjectDir);$(SolutionDir)/MinecraftProjectLibrary;</AdditionalIncludeDirectories>
+            <WarningLevel>Level4</WarningLevel>
+            <TreatWarningAsError>true</TreatWarningAsError>
+            <DisableSpecificWarnings>4267</DisableSpecificWarnings>
+            <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_WIN32_WINNT=0x0601</PreprocessorDefinitions>
+            <LanguageStandard>stdcpplatest</LanguageStandard>
+            <LanguageStandard_C>stdc17</LanguageStandard_C>
+        </ClCompile>
+        <Link>
+            <AdditionalDependencies>$(CoreLibraryDependencies);zlibwapi.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+            <AdditionalLibraryDirectories>$(SolutionDir)/lib;</AdditionalLibraryDirectories>
+        </Link>
   </ItemDefinitionGroup>
     <ItemGroup>
         <ClCompile Include="MinecraftServer.cpp"/>

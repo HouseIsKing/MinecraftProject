@@ -11,9 +11,8 @@ class ClientPlayerRenderer final : public PlayerRenderer
     SelectedBlockGui* BlockGui;
 
 public:
-    ClientPlayerRenderer(const PlayerState& playerState, const PlayerState& oldPlayerState);
+    explicit ClientPlayerRenderer(uint16_t entityId);
     [[nodiscard]] Frustum GetCameraFrustum() const;
     void Render(float partialTick) override;
-    void Changed() override;
     void RenderSelectionHighlight();
 };

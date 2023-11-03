@@ -3,6 +3,8 @@
 #include "Network/Packets/WorldDataPacket.h"
 #include <iostream>
 
+#include "Network/Packets/OtherPlayerInputPacket.h"
+
 
 MultiPlayerWorld::MultiPlayerWorld(GLFWwindow* window, const std::string& name, const std::string& ip) : ClientWorld(window, 64, 256, 256)
 {
@@ -18,7 +20,7 @@ MultiPlayerWorld::MultiPlayerWorld(GLFWwindow* window, const std::string& name, 
     {
         next = NetworkManager.GetNextPacket();
     }
-    ApplyChangesList(dynamic_cast<WorldDataPacket*>(next.get())->GetData());
+    ApplyChangesList(dynamic_cast<WorldDataPacket*>(next.get())->GetData()[0]);
     LastTimeFrame = static_cast<float>(glfwGetTime());
 }
 
@@ -30,56 +32,73 @@ void MultiPlayerWorld::Run()
         HandlePacket(next.get());
         next = NetworkManager.GetNextPacket();
     }
+    if (TickTimer >= EngineDefaults::TICK_RATE)
+    {
+        PacketId++;
+        const auto packet = std::make_shared<Packet>(PacketHeader::CLIENT_INPUT_HEADER);
+        *packet << PacketId;
+        *packet << PlayerInput.Input;
+        NetworkManager.WritePacket(packet);
+        InputsSentButNotConfirmed.emplace(PacketId, PlayerInput.Input);
+    }
     ClientWorld::Run();
-}
-
-void MultiPlayerWorld::NewTick()
-{
-    const auto packet = std::make_shared<Packet>(PacketHeader::CLIENT_INPUT_HEADER);
-    *packet << State.GetState().WorldTime + 1 << PlayerInput.Input;
-    NetworkManager.WritePacket(packet);
-    LastTickSentData = State.GetState().WorldTime + 1;
-    ClientWorld::NewTick();
 }
 
 void MultiPlayerWorld::HandlePacket(const PacketData* packet)
 {
-    if (packet->GetPacketType() == EPacketType::PlayerId)
+    const auto* worldDataPacket = dynamic_cast<const WorldDataPacket*>(packet);
+    /*
+    if (SkippedTicksCount == EngineDefaults::ROLLBACK_COUNT)
     {
-        PlayerState state{};
-        State.AddEntity(&state);
-        EntityAdded(state.EntityId);
+        for (size_t i = 0; i < EngineDefaults::ROLLBACK_COUNT; ++i)
+        {
+            worldDataPacket = dynamic_cast<const WorldDataPacket*>(PacketsRead.front().get());
+            const std::vector<uint8_t>& remoteChanges = worldDataPacket->GetData();
+            State.ClearAllChanges();
+            ApplyChangesList(remoteChanges);
+            ChangesLists[State.GetState().WorldTime % ChangesLists.size()] = remoteChanges;
+            PacketsRead.pop();
+        }
+        SkippedTicksCount = 0;
+        TickTimer = 0;
+        LastTimeFrame = static_cast<float>(glfwGetTime());
+    }
+    */
+    //std::cout << "Server Processed Tick " << worldDataPacket->GetLastTickServerProcessed() << std::endl;
+   /* if (worldDataPacket->GetLastTickServerProcessed() + EngineDefaults::ROLLBACK_COUNT > PacketId)
+    {
+        InputsSentButNotConfirmed.erase(InputsSentButNotConfirmed.begin(), InputsSentButNotConfirmed.upper_bound(worldDataPacket->GetLastTickServerProcessed()));
+        const std::vector<uint8_t>& remoteChanges = worldDataPacket->GetData();
+        RevertWorldState(State.GetState().WorldTime - InputsSentButNotConfirmed.size() - 1);
+        State.ClearAllChanges();
+        ApplyChangesList(remoteChanges);
+        ChangesLists[worldDataPacket->GetLastTickServerProcessed() % ChangesLists.size()] = remoteChanges;
+        SimulateTicks(InputsSentButNotConfirmed, PlayerId);
     }
     else
     {
-        const auto* const worldDataPacket = dynamic_cast<const WorldDataPacket*>(packet);
-        if (worldDataPacket->GetWorldTime() > LastTickSentData)
+        InputsSentButNotConfirmed.erase(InputsSentButNotConfirmed.begin(), InputsSentButNotConfirmed.upper_bound(worldDataPacket->GetLastTickServerProcessed()));
+        ApplyChangesList(worldDataPacket->GetData());
+        ChangesLists[worldDataPacket->GetLastTickServerProcessed() % ChangesLists.size()] = worldDataPacket->GetData();
+    }*/
+    //State.ClearAllChanges();
+    if (worldDataPacket->GetLastInputIdServerProcessed() != 0)
+    {
+        InputsSentButNotConfirmed.erase(worldDataPacket->GetLastInputIdServerProcessed());
+        RevertWorldState(State.GetState().WorldTime - InputsSentButNotConfirmed.size() - 1);
+        State.ClearAllChanges();
+        for (const std::vector<uint8_t>& data : worldDataPacket->GetData())
         {
-            return;
+            ApplyChangesList(data);
+            ChangesLists[State.GetState().WorldTime % ChangesLists.size()] = data;
         }
-        const std::vector<uint8_t>& localChanges = ChangesLists[worldDataPacket->GetWorldTime() % ChangesLists.size()];
-        const std::vector<uint8_t>& remoteChanges = worldDataPacket->GetData();
-        if (remoteChanges.size() != localChanges.size() || std::memcmp(remoteChanges.data(), localChanges.data(), localChanges.size()) != 0)
-        {
-            /*
-            for (size_t i = 0; i < worldDataPacket->GetData().size(); i++)
-            {
-                if (worldDataPacket->GetData()[i] != ChangesLists[(worldDataPacket->GetWorldTime()) % ChangesLists.size()][i])
-                    std::cout << "Different at " << i << std::endl;
-            }
-            std::cout << "Different" << std::endl;*/
-            State.ClearAllChanges();
-            const size_t currentWorldTime = State.GetState().WorldTime;
-            for (size_t i = currentWorldTime; i >= worldDataPacket->GetWorldTime(); i--)
-            {
-                RevertChangesList(ChangesLists[i % ChangesLists.size()]);
-            }
-            ApplyChangesList(remoteChanges);
-            ChangesLists[State.GetState().WorldTime % ChangesLists.size()] = remoteChanges;
-            assert(currentWorldTime - State.GetState().WorldTime < 25);
-            SimulateTicks(static_cast<uint8_t>(currentWorldTime - State.GetState().WorldTime));
-        }
+        SimulateTicks(InputsSentButNotConfirmed, PlayerId);
     }
+    /*
+    else
+    {
+        SkippedTicksCount++;
+    } */
 }
 
 void MultiPlayerWorld::ApplyChangesList(const std::vector<uint8_t>& changes)
@@ -232,7 +251,7 @@ void MultiPlayerWorld::ApplyChangesList(const std::vector<uint8_t>& changes)
             {
                 if (uint16_t entityId = EngineDefaults::ReadDataFromVector<uint16_t>(changes, pos); !removedEntities.contains(entityId))
                 {
-                    State.GetEntity<BlockParticleEntityStateWrapper, BlockParticleEntityState>(entityId)->ApplyRevertEntityChanges(changes, pos, true);
+                    State.GetEntity<BlockParticleEntityStateWrapper, BlockParticleEntityState>(entityId)->ApplyRevertEntityChanges(changes, pos, false);
                 }
                 else
                 {

@@ -1,7 +1,10 @@
 #pragma once
+#include <deque>
+#include <queue>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <vector>
+#include "BoundingBox.h"
 
 struct TransformStruct;
 struct ClientInputStruct;
@@ -17,7 +20,7 @@ public:
     static constexpr char CHUNK_HEIGHT = 16;
     static constexpr char CHUNK_DEPTH = 16;
     static constexpr float TICK_RATE = 0.05F;
-    static constexpr size_t ROLLBACK_COUNT = 1 * static_cast<size_t>(1.0F / TICK_RATE);
+    static constexpr size_t ROLLBACK_COUNT = 200;
     static float ConvertLightLevelToAmbient(int lightLevel);
     static uint16_t GetChunkLocalIndex(int x, int y, int z);
     template <typename T> requires std::is_fundamental_v<T> or std::is_enum_v<T> or std::is_same_v<glm::vec3, T> or std::is_same_v<glm::vec2, T> or std::is_same_v<ChunkCoords, T> or std::is_same_v<ClientInputStruct, T> or std::is_same_v<TransformStruct, T> or std::is_same_v<glm::ivec2, T>
@@ -28,6 +31,9 @@ public:
     static void EmplaceReplaceDataInVector(std::vector<uint8_t>& vector, const T* data, size_t pos);
     static glm::ivec3 GetChunkLocalPosition(unsigned short index);
     static glm::ivec3 GetChunkGlobalPosition(const ChunkCoords& chunkCoords, uint16_t index);
+    static std::vector<uint8_t> Inflate(const std::vector<uint8_t>& dataToInflate);
+    static std::vector<uint8_t> Deflate(const std::vector<uint8_t>& dataToDeflate);
+    static BoundingBox GetBoundingBoxFromEntityState(const glm::vec3& pos, const glm::vec3& scale);
 };
 
 template <typename T> requires std::is_fundamental_v<T> or std::is_enum_v<T> or std::is_same_v<glm::vec3, T> or std::is_same_v<glm::vec2, T> or std::is_same_v<ChunkCoords, T> or std::is_same_v<ClientInputStruct, T> or std::is_same_v<TransformStruct, T> or std::is_same_v<glm::ivec2, T>
@@ -179,12 +185,13 @@ struct ClientInputStatusStruct
     float MouseY{0.0F};
     uint8_t KeySet1{0}; // bit 0 = LeftMouseButtonPressed, bit 1 = RightMouseButtonPressed, bit 2 = JumpPressed, bit 3 = ResetPressed, bit 4 = SpawnZombiePressed, bit 5 = OnePressed, bit 6 = TwoPressed, bit 7 = ThreePressed
     uint8_t KeySet2{0}; // bit 0 = FourPressed, bit 1 = FivePressed, bit 2 = ForwardPressed, bit 3 = BackwardPressed, bit 4 = LeftPressed, bit 5 = RightPressed
+    uint8_t KeySet3{0};
+    uint8_t KeySet4{0};
     void SetKey(EKeySet key, bool pressed);
 };
 
 struct ClientInputStruct
 {
-    bool Disconnect{false};
     float MouseX{0.0F};
     float MouseY{0.0F};
     uint8_t KeySet1Pressed{0}; // bit 0 = LeftMouseButtonPressed, bit 1 = RightMouseButtonPressed, bit 2 = JumpPressed, bit 3 = ResetPressed, bit 4 = SpawnZombiePressed, bit 5 = OnePressed, bit 6 = TwoPressed, bit 7 = ThreePressed
@@ -262,5 +269,20 @@ struct ChunkCoordsHasher
         const size_t z = chunkCoords.GetZ() >= 0 ? static_cast<unsigned long long>(2 * chunkCoords.GetZ()) : static_cast<unsigned long long>(-2 * chunkCoords.GetZ() - 1);
         const size_t xyPair = x >= y ? x * x + x + y : y * y + x;
         return xyPair >= z ? xyPair * xyPair + xyPair + z : z * z + xyPair;
+    }
+};
+
+template <typename T, int MaxLen, typename Container=std::deque<T>>
+class FixedQueue : public std::queue<T, Container>
+{
+public:
+    // ReSharper disable once CppInconsistentNaming
+    void push(const T& value)
+    {
+        if (this->size() == MaxLen)
+        {
+            this->c.pop_front();
+        }
+        std::queue<T, Container>::push(value);
     }
 };

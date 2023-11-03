@@ -1,5 +1,9 @@
 #include "Packet.h"
+
+#include <iostream>
 #include <stdexcept>
+#include <GLFW/glfw3.h>
+#include <Zlib/zlib.h>
 
 Packet::Packet(const PacketHeader& header) : Header(header), DataPos(0)
 {
@@ -115,6 +119,7 @@ Packet& Packet::operator>>(ClientInputStruct& state)
         throw std::runtime_error("Packet size exceeded");
     }
     state = *reinterpret_cast<ClientInputStruct*>(Data.data() + DataPos);
+    DataPos += sizeof(ClientInputStruct);
     return *this;
 }
 
@@ -125,6 +130,18 @@ Packet& Packet::operator>>(ClientInputStatusStruct& state)
         throw std::runtime_error("Packet size exceeded");
     }
     state = *reinterpret_cast<ClientInputStatusStruct*>(Data.data() + DataPos);
+    DataPos += sizeof(ClientInputStatusStruct);
+    return *this;
+}
+
+Packet& Packet::operator>>(std::vector<uint8_t>& data)
+{
+    if (DataPos + data.size() > Header.PacketSize)
+    {
+        throw std::runtime_error("Packet size exceeded");
+    }
+    data = std::vector(Data.begin() + static_cast<int>(DataPos), Data.end());
+    DataPos += data.size();
     return *this;
 }
 
@@ -225,5 +242,15 @@ Packet& Packet::operator<<(const ClientInputStatusStruct& state)
         throw std::runtime_error("Packet size exceeded");
     }
     Data.insert(Data.end(), reinterpret_cast<const uint8_t*>(&state), reinterpret_cast<const uint8_t*>(&state) + sizeof(ClientInputStatusStruct));
+    return *this;
+}
+
+Packet& Packet::operator<<(const std::vector<uint8_t>& data)
+{
+    if (Data.size() + data.size() > Header.PacketSize)
+    {
+        throw std::runtime_error("Packet size exceeded");
+    }
+    Data.insert(Data.end(), data.begin(), data.end());
     return *this;
 }

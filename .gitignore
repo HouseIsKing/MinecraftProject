@@ -34,8 +34,13 @@
 /MinecraftClient/x64
 /MinecraftServer/x64
 /MinecraftProjectLibrary/x64
+/MinecraftProjectLibrary/Util/Tracy/libbacktrace
+/MinecraftProjectLibrary/Util/Tracy/client
+/MinecraftProjectLibrary/Util/Tracy/common
+/MinecraftProjectLibrary/Util/Tracy/tracy
 /Include
 /Lib
 /x64
 /MinecraftClient/level.dat
 /MinecraftServer/level.dat
+/.idea

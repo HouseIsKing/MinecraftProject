@@ -33,15 +33,20 @@ void ConnectionToClient::Start()
     ReadPacketHeaderAsync();
 }
 
-void ConnectionToClient::WritePacket(const std::shared_ptr<Packet>& packet)
+void ConnectionToClient::WritePacket(const std::shared_ptr<Packet>& packet, const std::shared_ptr<ConnectionToClient>&
+                                     thisPointer) const
 {
-    post(NetworkManager->GetContext(), [this, packet]
+    post(NetworkManager->GetContext(), [thisPointer, packet]
     {
-        const bool isEmpty = OutgoingPackets.GetSize() == 0;
-        OutgoingPackets.Push(packet);
+        if (thisPointer == nullptr)
+        {
+            return;
+        }
+        const bool isEmpty = thisPointer->OutgoingPackets.GetSize() == 0;
+        thisPointer->OutgoingPackets.Push(packet);
         if (isEmpty)
         {
-            WritePacketHeaderAsync();
+            thisPointer->WritePacketHeaderAsync();
         }
     });
 }
@@ -128,7 +133,9 @@ std::shared_ptr<PacketData> ConnectionToClient::TranslatePacket()
     switch (CurrentPacket.GetHeader().PacketType)
     {
     case EPacketType::ClientInput:
-        return std::make_shared<ClientInputPacket>(CurrentPacket, GetSharedPtr());
+        {
+            return std::make_shared<ClientInputPacket>(CurrentPacket, GetSharedPtr());
+        }
     default:
         return nullptr;
     }

@@ -1,5 +1,7 @@
 #include "ClientWorld.h"
 
+#include <iostream>
+
 #include "Blocks/BlockRendererList.h"
 #include "Entities/Generic/CameraController.h"
 #include "GUI/CrosshairGui.h"
@@ -180,6 +182,30 @@ void ClientWorld::HandleMouseButtonCallback(const int button, const int action)
     }
 }
 
+void ClientWorld::UpdateRenderer()
+{
+    for (const auto& dirtyEntity : EntityRenderersDirty)
+    {
+        if (dirtyEntity.second.second)
+        {
+            EntityRenderers.erase(dirtyEntity.first);
+        }
+        else if (EntityRenderers.contains(dirtyEntity.first))
+        {
+            if (EntityRenderers.at(dirtyEntity.first)->GetEntityTypeRenderer() != dirtyEntity.second.first)
+            {
+                EntityRenderers.erase(dirtyEntity.first);
+                CreateEntityRenderer(dirtyEntity.first);
+            }
+        }
+        else
+        {
+            CreateEntityRenderer(dirtyEntity.first);
+        }
+    }
+    EntityRenderersDirty.clear();
+}
+
 ClientWorld* ClientWorld::GetWorld()
 {
     return TheWorld;
@@ -223,9 +249,11 @@ void ClientWorld::RebuildGui() const
 
 void ClientWorld::DrawWorld(const float partialTick)
 {
+    UpdateRenderer();
+    RenderRandomEngine = TickRandomEngine;
     Shader::SetUnsignedInt(EngineDefaultsClient::GetShader(0)->GetUniformInt("worldTime"), static_cast<GLuint>(State.GetState().WorldTime % 24000L));
     glEnable(GL_CULL_FACE);
-    if (LocalPlayerRenderer)
+    if (LocalPlayerRenderer != nullptr)
     {
         LocalPlayerRenderer->Render(partialTick);
         const Frustum frustum = LocalPlayerRenderer->GetCameraFrustum();
@@ -243,11 +271,11 @@ void ClientWorld::DrawWorld(const float partialTick)
                 chunk.Draw();
             }
         }
-        for (auto& blockParticle : BlockParticleEntityRenderers)
+        for (const auto& entityRenderer : EntityRenderers | std::views::values)
         {
-            if (frustum.CubeInFrustum(State.GetState().BlockParticleEntities.at(blockParticle.first)->GetBoundingBox()))
+            if (const EntityState& state = entityRenderer->GetState(); frustum.CubeInFrustum(EngineDefaults::GetBoundingBoxFromEntityState(state.EntityTransform.Position, state.EntityTransform.Scale)))
             {
-                blockParticle.second.Render(partialTick);
+                entityRenderer->Render(partialTick);
             }
         }
         LocalPlayerRenderer->RenderSelectionHighlight();
@@ -258,11 +286,14 @@ void ClientWorld::DrawWorld(const float partialTick)
     const auto time = static_cast<float>(glfwGetTime());
     DeltaFrameTime += time - LastTimeFrame;
     TickTimer += time - LastTimeFrame;
+    MaxFrameTime = std::max(MaxFrameTime, time - LastTimeFrame);
     LastTimeFrame = time;
     if (DeltaFrameTime > 1.0F)
     {
         DeltaFrameTime -= 1.0F;
         Fps = Frames;
+        std::cout << "Highest frame time: " << MaxFrameTime << "s" << std::endl;
+        MaxFrameTime = 0.0F;
         Frames = 0;
     }
 }
@@ -287,7 +318,7 @@ int ClientWorld::GetFps() const
     return Fps;
 }
 
-const Player* ClientWorld::GetPlayer() const
+Player* ClientWorld::GetPlayer() const
 {
     return State.GetState().Players.at(PlayerId);
 }
@@ -309,15 +340,40 @@ void ClientWorld::ChunkAdded(const ChunkCoords& coords)
 
 void ClientWorld::ChunkRemoved(const ChunkCoords& coords)
 {
-    //ChunkRenderers.erase(coords);
+    ChunkRenderers.erase(coords);
 }
 
 void ClientWorld::EntityAdded(uint16_t entityId)
 {
+    if (EntityRenderersDirty.contains(entityId))
+    {
+        EntityRenderersDirty[entityId].first = State.GetEntityIdToType().at(entityId);
+        EntityRenderersDirty[entityId].second = false;
+    }
+    else
+    {
+        EntityRenderersDirty.emplace(entityId, std::make_pair(State.GetEntityIdToType().at(entityId), false));
+    }
+}
+
+void ClientWorld::EntityRemoved(const uint16_t entityId)
+{
+    if (EntityRenderersDirty.contains(entityId))
+    {
+        EntityRenderersDirty[entityId].second = true;
+    }
+    else
+    {
+        EntityRenderersDirty.emplace(entityId, std::make_pair(EEntityType::Zombie, true));
+    }
+}
+
+void ClientWorld::CreateEntityRenderer(uint16_t entityId)
+{
     if (entityId == PlayerId)
     {
-        const Entity<PlayerStateWrapper, PlayerState>* player = State.GetEntity<PlayerStateWrapper, PlayerState>(entityId);
-        LocalPlayerRenderer = std::make_unique<ClientPlayerRenderer>(player->GetState(), player->GetOldState());
+        LocalPlayerRenderer = new ClientPlayerRenderer(entityId);
+        EntityRenderers.emplace(entityId, LocalPlayerRenderer);
     }
     else
     {
@@ -325,56 +381,17 @@ void ClientWorld::EntityAdded(uint16_t entityId)
         {
         case EEntityType::Player:
             {
-                const Entity<PlayerStateWrapper, PlayerState>* player = State.GetEntity<PlayerStateWrapper, PlayerState>(entityId);
-                PlayerRenderers.emplace(std::piecewise_construct, std::forward_as_tuple(entityId), std::forward_as_tuple(player->GetState(), player->GetOldState()));
+                EntityRenderers.emplace(entityId, new PlayerRenderer(entityId));
                 break;
             }
         case EEntityType::BlockBreakParticle:
             {
-                const Entity<BlockParticleEntityStateWrapper, BlockParticleEntityState>* blockParticle = State.GetEntity<BlockParticleEntityStateWrapper, BlockParticleEntityState>(entityId);
-                BlockParticleEntityRenderers.emplace(std::piecewise_construct, std::forward_as_tuple(entityId), std::forward_as_tuple(blockParticle->GetState(), blockParticle->GetOldState()));
+                EntityRenderers.emplace(entityId, new BlockParticleEntityRenderer(entityId));
                 break;
             }
         case EEntityType::Zombie:
             break;
         }
-    }
-}
-
-void ClientWorld::EntityChanged(uint16_t entityId)
-{
-    if (entityId == PlayerId)
-    {
-        LocalPlayerRenderer->Changed();
-    }
-    else
-    {
-        switch (State.GetEntityIdToType().at(entityId))
-        {
-        case EEntityType::Player:
-            PlayerRenderers.at(entityId).Changed();
-            break;
-        case EEntityType::BlockBreakParticle:
-            BlockParticleEntityRenderers.at(entityId).Changed();
-            break;
-        case EEntityType::Zombie:
-            break;
-        }
-    }
-}
-
-void ClientWorld::EntityRemoved(uint16_t entityId)
-{
-    switch (State.GetEntityIdToType().at(entityId))
-    {
-    case EEntityType::Player:
-        PlayerRenderers.erase(entityId);
-        break;
-    case EEntityType::BlockBreakParticle:
-        BlockParticleEntityRenderers.erase(entityId);
-        break;
-    case EEntityType::Zombie:
-        break;
     }
 }
 
@@ -388,11 +405,7 @@ void ClientWorld::HandleWindowResize(const int height, const int width) const
 
 void ClientWorld::NewTick()
 {
-    for (auto it = State.GetPlayersIterator(); it != State.GetState().Players.end(); ++it)
-    {
-        it->second->NewTick();
-    }
-    dynamic_cast<Player*>(State.GetEntity<PlayerStateWrapper, PlayerState>(PlayerId))->SetClientInput(State.GetState().WorldTime + 1, PlayerInput.Input);
+    dynamic_cast<Player*>(State.GetEntity<PlayerStateWrapper, PlayerState>(PlayerId))->AddClientInputToQueue(PlayerInput.Input, State.GetState().WorldTime + 1);
     Tick();
     PlayerInput.Input.MouseX = 0;
     PlayerInput.Input.MouseY = 0;

@@ -31,5 +31,6 @@ public:
     ClientNetworkManager& operator=(ClientNetworkManager&&) = delete;
     void Start(const std::string& ip, const std::string& name);
     std::shared_ptr<PacketData> GetNextPacket();
+    size_t GetLastTickPacketReceived() const;
     void WritePacket(const std::shared_ptr<Packet>& packet);
 };

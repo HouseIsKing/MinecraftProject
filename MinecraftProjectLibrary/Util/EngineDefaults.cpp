@@ -1,7 +1,10 @@
 #include "EngineDefaults.h"
 
+#include <iostream>
 #include <GLFW/glfw3.h>
 #include <glm/trigonometric.hpp>
+#include <gzip/compress.hpp>
+#include <gzip/decompress.hpp>
 
 float EngineDefaults::ConvertLightLevelToAmbient(const int lightLevel)
 {
@@ -46,9 +49,26 @@ glm::ivec3 EngineDefaults::GetChunkGlobalPosition(const ChunkCoords& chunkCoords
     return {localPos.x + chunkCoords.GetX() * CHUNK_WIDTH, localPos.y + chunkCoords.GetY() * CHUNK_HEIGHT, localPos.z + chunkCoords.GetZ() * CHUNK_DEPTH};
 }
 
+std::vector<uint8_t> EngineDefaults::Inflate(const std::vector<uint8_t>& dataToInflate)
+{
+    std::string result = gzip::decompress(reinterpret_cast<const char*>(dataToInflate.data()), dataToInflate.size());
+    return {result.begin(), result.end()};
+}
+
+std::vector<uint8_t> EngineDefaults::Deflate(const std::vector<uint8_t>& dataToDeflate)
+{
+    std::string result = gzip::compress(reinterpret_cast<const char*>(dataToDeflate.data()), dataToDeflate.size());
+    return {result.begin(), result.end()};
+}
+
+BoundingBox EngineDefaults::GetBoundingBoxFromEntityState(const glm::vec3& pos, const glm::vec3& scale)
+{
+    return {pos.x - scale.x, pos.y - scale.y, pos.z - scale.z, pos.x + scale.x, pos.y + scale.y, pos.z + scale.z};
+}
+
 void ClientInputStatusStruct::SetKey(const EKeySet key, const bool pressed)
 {
-    switch(key)
+    switch (key)
     {
     case EKeySet::LeftMouseButton:
         KeySet1 = (KeySet1 & 0xFE) + static_cast<uint8_t>(pressed);

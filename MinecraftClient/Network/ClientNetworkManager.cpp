@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Packets/WorldDataPacket.h"
 #include "IncludeSorter.h"
+#include "Packets/OtherPlayerInputPacket.h"
 #include "Packets/PlayerIdPacket.h"
 
 void ClientNetworkManager::ReadPacketBodyAsync()
@@ -69,12 +70,18 @@ std::shared_ptr<PacketData> ClientNetworkManager::TranslatePacket()
     switch (CurrentPacket.GetHeader().PacketType)
     {
     case EPacketType::WorldData:
-        return std::make_shared<WorldDataPacket>(CurrentPacket);
+        {
+            auto packet = std::make_shared<WorldDataPacket>(CurrentPacket);
+            return packet;
+        }
     case EPacketType::PlayerId:
         return std::make_shared<PlayerIdPacket>(CurrentPacket);
-    default:
-        return nullptr;
+    case EPacketType::ClientInput:
+        {
+            return std::make_shared<OtherPlayerInputPacket>(CurrentPacket);
+        }
     }
+    return nullptr;
 }
 
 ClientNetworkManager::ClientNetworkManager() : Socket(Context), CurrentPacket(PacketHeader(EPacketType::ClientInput))
@@ -93,6 +100,11 @@ void ClientNetworkManager::Start(const std::string& ip, const std::string& name)
 {
     asio::error_code ec;
     Socket.connect(asio::ip::tcp::endpoint(asio::ip::address::from_string(ip), 25565), ec);
+    Socket.set_option(asio::ip::tcp::no_delay(true));
+    Socket.set_option(asio::detail::socket_option::integer<IPPROTO_IP, IP_TOS>(24));
+    Socket.set_option(asio::socket_base::keep_alive(false));
+    Socket.set_option(asio::socket_base::reuse_address(false));
+    Socket.set_option(asio::detail::socket_option::integer<SOL_SOCKET, SO_RCVTIMEO>(100));
     CurrentPacket = Packet{PacketHeader(EPacketType::PlayerId, static_cast<uint16_t>(name.size()))};
     CurrentPacket << name;
     Socket.write_some(asio::buffer(CurrentPacket.GetHeader().Serialize(), sizeof(PacketHeader)), ec);

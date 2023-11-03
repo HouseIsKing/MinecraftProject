@@ -10,7 +10,7 @@ class PlayerSelectionHighlight
 	TessellationHelper Tessellation;
 	TransformStruct Transform;
 	uint16_t TextureIndex;
-	const PlayerState& Player;
+	const uint16_t PlayerId;
 	void Reset();
 	const Block* BlockHit;
 	BlockFaces FaceHit;
@@ -19,6 +19,6 @@ class PlayerSelectionHighlight
 	void FindClosestFace();
 
 public:
-	explicit PlayerSelectionHighlight(const PlayerState& player);
+	explicit PlayerSelectionHighlight(const uint16_t playerId);
 	void Render();
 };

@@ -1,40 +1,23 @@
 #pragma once
 #include "Entities/Entity.h"
 #include "Util/BoundingBox.h"
-#include "Util/States/EntityState.h"
 #include "Util/TessellationHelper.h"
 
-template <typename StateType> requires std::is_base_of_v<EntityState, StateType>
 class EntityRenderer
 {
 protected:
-    const StateType& State;
-    const StateType& OldState;
+    const uint16_t EntityId;
     TessellationHelper Tessellation;
     TransformStruct Transform;
-    EntityRenderer(const StateType& state, const StateType& oldState);
+    explicit EntityRenderer(uint16_t entityId);
 
 public:
     virtual ~EntityRenderer() = default;
-    EntityRenderer(const EntityRenderer&) = default;
-    EntityRenderer& operator=(const EntityRenderer&) = default;
-    EntityRenderer(EntityRenderer&&) noexcept = default;
-    EntityRenderer& operator=(EntityRenderer&&) noexcept = default;
-    void virtual Render(float partialTick);
-    void virtual Changed();
+    EntityRenderer(const EntityRenderer&) = delete;
+    EntityRenderer& operator=(const EntityRenderer&) = delete;
+    EntityRenderer(EntityRenderer&&) noexcept = delete;
+    EntityRenderer& operator=(EntityRenderer&&) noexcept = delete;
+    virtual void Render(float partialTick);
+    virtual const EntityState& GetState() = 0;
+    virtual EEntityType GetEntityTypeRenderer() = 0;
 };
-
-template <typename StateType> requires std::is_base_of_v<EntityState, StateType>
-EntityRenderer<StateType>::EntityRenderer(const StateType& state, const StateType& oldState) : State(state), OldState(oldState), Tessellation(&Transform), Transform(State.EntityTransform)
-{
-}
-
-template <typename StateType> requires std::is_base_of_v<EntityState, StateType>
-void EntityRenderer<StateType>::Render(float /*partialTick*/)
-{
-}
-
-template <typename StateType> requires std::is_base_of_v<EntityState, StateType>
-void EntityRenderer<StateType>::Changed()
-{
-}

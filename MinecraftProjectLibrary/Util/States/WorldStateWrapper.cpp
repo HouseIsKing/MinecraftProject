@@ -243,7 +243,7 @@ void WorldStateWrapper::ClearAllChanges()
 
 void WorldStateWrapper::WriteAllDataToVector(std::vector<uint8_t>& data) const
 {
-    const uint16_t changeCount = static_cast<uint16_t>(Changes.size());
+    const auto changeCount = static_cast<uint16_t>(Changes.size());
     EngineDefaults::EmplaceReplaceDataInVector(data, &changeCount);
     auto change = EChangeType::WorldTime;
     EngineDefaults::EmplaceReplaceDataInVector(data, &change);

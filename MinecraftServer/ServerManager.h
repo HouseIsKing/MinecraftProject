@@ -7,7 +7,8 @@ class ServerManager final : World
 {
     ServerNetworkManager NetworkManager;
     std::unordered_map<std::shared_ptr<ConnectionToClientInterface>, Player*, ConnectionHasher, ConnectionEqual> Connections{};
-    std::vector<uint16_t> DisconnectedClients{};
+    float TickTimer = 0.0F;
+    float StartTime;
 
 public:
     ~ServerManager() override;

@@ -4,21 +4,79 @@
     <projectFile>ConsoleApplication1/ConsoleApplication1.vcxproj</projectFile>
     <projectFile>MinecraftClient/MinecraftClient.vcxproj</projectFile>
     <projectFile>MinecraftProject/MinecraftProejct.vcxproj</projectFile>
+    <projectFile>MinecraftProjectLibrary/MinecraftProjectLibrary.vcxproj</projectFile>
     <projectFile>MinecraftServer/MinecraftServer.vcxproj</projectFile>
   </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4f885148-8e28-4ab6-9a1d-8675988ae9cb" name="Changes" comment="fixed warnings and prepared for first testing stage with a friend">
+    <list default="true" id="4f885148-8e28-4ab6-9a1d-8675988ae9cb" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/EntityRenderer.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/LivingEntityRenderer.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/OtherPlayerInputPacket.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/OtherPlayerInputPacket.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/Util/Tracy/TracyClient.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/Util/TracyClient.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/x64/Profiler/MinecraftClient.ilk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/x64/Profiler/MinecraftClient.pdb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/x64/Profiler/MinecraftProjectLibrary.pdb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/x64/Profiler/MinecraftServer.ilk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/x64/Profiler/MinecraftServer.pdb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/x64/Profiler/Shaders/FragmentShader.glsl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/x64/Profiler/Shaders/GUIFragmentShader.glsl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/x64/Profiler/Shaders/GUIVertexShader.glsl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/x64/Profiler/Shaders/VertexShader.glsl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/x64/Profiler/Textures/Blocks/Planks.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/x64/Profiler/Textures/Blocks/Sapling.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/x64/Profiler/Textures/Blocks/Stone.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/x64/Profiler/Textures/Entities/zombie.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/x64/Profiler/Textures/Font/default.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/x64/Release.rar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MinecraftProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MinecraftProject/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/ClientPlayerRenderer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/ClientPlayerRenderer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/ClientPlayerRenderer.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/ClientPlayerRenderer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/BlockParticleEntityRenderer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/BlockParticleEntityRenderer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/BlockParticleEntityRenderer.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/BlockParticleEntityRenderer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/EntityRenderer.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/EntityRenderer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/LivingEntityRenderer.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/LivingEntityRenderer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/PlayerSelectionHighlight.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/PlayerSelectionHighlight.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/PlayerSelectionHighlight.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/Generic/PlayerSelectionHighlight.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/SP/PlayerRenderer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/SP/PlayerRenderer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Entities/SP/PlayerRenderer.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Entities/SP/PlayerRenderer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/MinecraftClient.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/MinecraftClient.vcxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/ClientNetworkManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/ClientNetworkManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/ClientNetworkManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/ClientNetworkManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/WorldDataPacket.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/WorldDataPacket.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/Network/Packets/WorldDataPacket.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/Network/Packets/WorldDataPacket.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/World/Generic/ClientWorld.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/World/Generic/ClientWorld.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/World/Generic/ClientWorld.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/World/Generic/ClientWorld.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftClient/World/MP/MultiPlayerWorld.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/World/MP/MultiPlayerWorld.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftClient/World/MP/MultiPlayerWorld.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftClient/World/MP/MultiPlayerWorld.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject.sln" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProject.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProject.sln.DotSettings.user" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/Entities/Player.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/Entities/Player.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/Entities/Player.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/Entities/Player.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/MinecraftProjectLibrary.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/MinecraftProjectLibrary.vcxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/Network/Packets/Packet.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/Network/Packets/Packet.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/Network/Packets/Packet.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/Network/Packets/Packet.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/Util/CustomRandomEngine.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/Util/CustomRandomEngine.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/Util/EngineDefaults.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/Util/EngineDefaults.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/Util/EngineDefaults.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/Util/EngineDefaults.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/World/Chunk.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/World/Chunk.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/Util/States/WorldStateWrapper.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/Util/States/WorldStateWrapper.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/Util/States/WorldStateWrapper.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/Util/States/WorldStateWrapper.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/World/World.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/World/World.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinecraftProjectLibrary/World/World.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftProjectLibrary/World/World.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/MinecraftServer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/MinecraftServer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/MinecraftServer.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/MinecraftServer.vcxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/ConnectionToClient.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Network/ConnectionToClient.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/ConnectionToClient.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Network/ConnectionToClient.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/ConnectionToClientInterface.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Network/ConnectionToClientInterface.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/Packets/ClientInputPacket.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Network/Packets/ClientInputPacket.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/Packets/ClientInputPacket.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Network/Packets/ClientInputPacket.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/Network/ServerNetworkManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/Network/ServerNetworkManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/ServerManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/ServerManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MinecraftServer/ServerManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/MinecraftServer/ServerManager.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,6 +89,7 @@
         <option value="ShiningBlack &lt;amitzxzx@gmail.com&gt;" />
       </list>
     </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RESET_MODE" value="HARD" />
     <option name="SIGN_OFF_COMMIT" value="true" />
   </component>
@@ -38,52 +97,39 @@
     <setting file="file://$PROJECT_DIR$/../../../../Program Files (x86)/Windows Kits/10/Include/10.0.19041.0/um/WinBase.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../Program Files (x86)/Windows Kits/10/Include/10.0.22000.0/shared/minwindef.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../Program Files (x86)/Windows Kits/10/Include/10.0.22000.0/ucrt/corecrt_math.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files (x86)/Windows Kits/10/Include/10.0.22000.0/um/WinSock2.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../Program Files (x86)/Windows Kits/10/Include/10.0.22000.0/um/consoleapi.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../Program Files (x86)/Windows Kits/10/Include/10.0.22000.0/um/gl/GL.h" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/algorithm" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/array" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/cmath" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/concepts" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/deque" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/functional" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/future" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/initializer_list" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/list" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/map" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/memory" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/mutex" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/queue" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/type_traits" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/unordered_map" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/utility" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/vcruntime_string.h" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/vector" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/xhash" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/xmemory" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/xstddef" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/xstring" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/xthreads.h" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/xtree" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.34.31933/include/xutility" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.37.32822/include/deque" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.37.32822/include/memory" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.37.32822/include/vector" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.37.32822/include/xutility" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/GLFW/glfw3.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Include/Zlib/zlib.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/async_result.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/basic_socket.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/basic_stream_socket.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/buffer.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/detail/bind_handler.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/detail/buffer_sequence_adapter.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Include/asio/detail/config.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/detail/executor_op.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/detail/handler_invoke_helpers.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/detail/handler_work.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Include/asio/detail/impl/socket_ops.ipp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/detail/impl/throw_error.ipp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/detail/impl/win_iocp_io_context.ipp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Include/asio/detail/socket_option.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/detail/socket_types.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/detail/throw_error.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/detail/throw_exception.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/detail/win_iocp_operation.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/detail/win_iocp_socket_accept_op.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/detail/win_iocp_socket_send_op.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Include/asio/detail/win_iocp_socket_service.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Include/asio/error.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/handler_invoke_hook.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Include/asio/impl/error_code.ipp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/impl/io_context.ipp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/asio/impl/read.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glad/glad.h" root0="SKIP_HIGHLIGHTING" />
@@ -99,25 +145,26 @@
     <setting file="file://$PROJECT_DIR$/Include/glm/ext/vector_float3.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glm/fwd.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/glm/gtx/transform.inl" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Include/gzip/compress.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Include/gzip/decompress.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Include/stb_image.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftClient/Entities/Generic/BlockParticleEntityRenderer.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftClient/Entities/Generic/BlockParticleEntityRenderer.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftClient/Entities/Generic/EntityMeshBlock.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftClient/Entities/Generic/EntityMeshBlock.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftClient/Entities/Generic/EntityRenderer.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftClient/Entities/Generic/Zombie.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftClient/GUI/CrosshairGui.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftClient/GUI/PerformanceGui.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftClient/Network/ClientNetworkManager.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftClient/Network/ClientNetworkManager.h" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftClient/Shaders/Shader.h" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftClient/Textures/Texture.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftClient/World/Generic/Blocks/BlockRenderer.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftClient/World/Generic/ChunkRenderer.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftClient/World/Generic/ChunkRenderer.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftClient/World/Generic/ClientWorld.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftClient/World/Generic/ClientWorld.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MinecraftClient/World/MP/MultiPlayerWorld.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftProjectLibrary/Entities/Entity.h" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftProjectLibrary/World/Chunk.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftProjectLibrary/Util/CustomRandomEngine.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftProjectLibrary/Util/States/WorldStateWrapper.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/MinecraftProjectLibrary/Util/Tracy/client/tracy_SPSCQueue.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/MinecraftProjectLibrary/Util/TracyClient.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/amitz/RiderProjects/MinecraftProject/MinecraftServer/Network/ConnectionToClient.h" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -126,6 +173,10 @@
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="28ZN1jy80nEXv1cnmawVFFqadPh" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -143,12 +194,14 @@
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.4910448&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors.Assembly Explorer&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -165,6 +218,7 @@
         <option name="CONFIGURATION" value="Debug" />
         <option name="PLATFORM" value="x64" />
         <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/MinecraftClient/MinecraftClient.vcxproj" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
         <option name="WORKING_DIRECTORY" value="$(LocalDebuggerWorkingDirectory)" />
@@ -175,6 +229,7 @@
         <option name="CONFIGURATION" value="Debug" />
         <option name="PLATFORM" value="x86" />
         <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/MinecraftClient/MinecraftClient.vcxproj" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
         <option name="WORKING_DIRECTORY" value="$(LocalDebuggerWorkingDirectory)" />
@@ -185,6 +240,7 @@
         <option name="CONFIGURATION" value="Release" />
         <option name="PLATFORM" value="x64" />
         <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/MinecraftClient/MinecraftClient.vcxproj" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
         <option name="WORKING_DIRECTORY" value="$(LocalDebuggerWorkingDirectory)" />
@@ -195,12 +251,24 @@
         <option name="CONFIGURATION" value="Release" />
         <option name="PLATFORM" value="x86" />
         <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/MinecraftClient/MinecraftClient.vcxproj" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
         <option name="WORKING_DIRECTORY" value="$(LocalDebuggerWorkingDirectory)" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
       </configuration_4>
+      <configuration_5>
+        <option name="CONFIGURATION" value="Profiler" />
+        <option name="PLATFORM" value="x64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/MinecraftClient/MinecraftClient.vcxproj" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
+        <option name="EXE_PATH" value="$(TargetPath)" />
+        <option name="PROGRAM_PARAMETERS" value="" />
+        <option name="WORKING_DIRECTORY" value="$(ProjectDir)" />
+        <option name="PASS_PARENT_ENVS" value="1" />
+        <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      </configuration_5>
       <option name="DEFAULT_PROJECT_PATH" value="$PROJECT_DIR$/MinecraftClient/MinecraftClient.vcxproj" />
       <method v="2">
         <option name="Build" />
@@ -211,8 +279,9 @@
         <option name="CONFIGURATION" value="Release" />
         <option name="PLATFORM" value="x64" />
         <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/MinecraftClient/MinecraftClient.vcxproj" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(TargetPath)" />
-        <option name="PROGRAM_PARAMETERS" value="Server ShiningBlack 87.71.128.102" />
+        <option name="PROGRAM_PARAMETERS" value="Server ShiningBlack 127.0.0.1" />
         <option name="WORKING_DIRECTORY" value="$(ProjectDir)" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
@@ -221,12 +290,24 @@
         <option name="CONFIGURATION" value="Debug" />
         <option name="PLATFORM" value="x64" />
         <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/MinecraftClient/MinecraftClient.vcxproj" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments) Server ShiningBlack 192.168.1.115" />
         <option name="WORKING_DIRECTORY" value="$(LocalDebuggerWorkingDirectory)" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
       </configuration_2>
+      <configuration_3>
+        <option name="CONFIGURATION" value="Profiler" />
+        <option name="PLATFORM" value="x64" />
+        <option name="PROJECT_FILE_PATH" value="" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
+        <option name="EXE_PATH" value="$(TargetPath)" />
+        <option name="PROGRAM_PARAMETERS" value="" />
+        <option name="WORKING_DIRECTORY" value="$(ProjectDir)" />
+        <option name="PASS_PARENT_ENVS" value="1" />
+        <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      </configuration_3>
       <option name="DEFAULT_PROJECT_PATH" value="" />
       <method v="2">
         <option name="Build" />
@@ -237,8 +318,9 @@
         <option name="CONFIGURATION" value="Release" />
         <option name="PLATFORM" value="x64" />
         <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/MinecraftClient/MinecraftClient.vcxproj" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(TargetPath)" />
-        <option name="PROGRAM_PARAMETERS" value="Server MidnightStorm 87.71.128.102" />
+        <option name="PROGRAM_PARAMETERS" value="Server MidnightStorm 127.0.0.1" />
         <option name="WORKING_DIRECTORY" value="$(ProjectDir)" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
@@ -247,13 +329,86 @@
         <option name="CONFIGURATION" value="Debug" />
         <option name="PLATFORM" value="x64" />
         <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/MinecraftClient/MinecraftClient.vcxproj" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments) Server MidnightStorm 192.168.1.115" />
         <option name="WORKING_DIRECTORY" value="$(LocalDebuggerWorkingDirectory)" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
       </configuration_2>
+      <configuration_3>
+        <option name="CONFIGURATION" value="Profiler" />
+        <option name="PLATFORM" value="x64" />
+        <option name="PROJECT_FILE_PATH" value="" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
+        <option name="EXE_PATH" value="$(TargetPath)" />
+        <option name="PROGRAM_PARAMETERS" value="" />
+        <option name="WORKING_DIRECTORY" value="$(ProjectDir)" />
+        <option name="PASS_PARENT_ENVS" value="1" />
+        <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      </configuration_3>
       <option name="DEFAULT_PROJECT_PATH" value="" />
+      <method v="2">
+        <option name="Build" />
+      </method>
+    </configuration>
+    <configuration name="MinecraftProjectLibrary" type="CppProject" factoryName="C++ Project">
+      <configuration_1>
+        <option name="CONFIGURATION" value="Debug" />
+        <option name="PLATFORM" value="x64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/MinecraftProjectLibrary/MinecraftProjectLibrary.vcxproj" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
+        <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
+        <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
+        <option name="WORKING_DIRECTORY" value="$(LocalDebuggerWorkingDirectory)" />
+        <option name="PASS_PARENT_ENVS" value="1" />
+        <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      </configuration_1>
+      <configuration_2>
+        <option name="CONFIGURATION" value="Debug" />
+        <option name="PLATFORM" value="x86" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/MinecraftProjectLibrary/MinecraftProjectLibrary.vcxproj" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
+        <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
+        <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
+        <option name="WORKING_DIRECTORY" value="$(LocalDebuggerWorkingDirectory)" />
+        <option name="PASS_PARENT_ENVS" value="1" />
+        <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      </configuration_2>
+      <configuration_3>
+        <option name="CONFIGURATION" value="Profiler" />
+        <option name="PLATFORM" value="x64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/MinecraftProjectLibrary/MinecraftProjectLibrary.vcxproj" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
+        <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
+        <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
+        <option name="WORKING_DIRECTORY" value="$(LocalDebuggerWorkingDirectory)" />
+        <option name="PASS_PARENT_ENVS" value="1" />
+        <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      </configuration_3>
+      <configuration_4>
+        <option name="CONFIGURATION" value="Release" />
+        <option name="PLATFORM" value="x64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/MinecraftProjectLibrary/MinecraftProjectLibrary.vcxproj" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
+        <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
+        <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
+        <option name="WORKING_DIRECTORY" value="$(LocalDebuggerWorkingDirectory)" />
+        <option name="PASS_PARENT_ENVS" value="1" />
+        <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      </configuration_4>
+      <configuration_5>
+        <option name="CONFIGURATION" value="Release" />
+        <option name="PLATFORM" value="x86" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/MinecraftProjectLibrary/MinecraftProjectLibrary.vcxproj" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
+        <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
+        <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
+        <option name="WORKING_DIRECTORY" value="$(LocalDebuggerWorkingDirectory)" />
+        <option name="PASS_PARENT_ENVS" value="1" />
+        <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      </configuration_5>
+      <option name="DEFAULT_PROJECT_PATH" value="$PROJECT_DIR$/MinecraftProjectLibrary/MinecraftProjectLibrary.vcxproj" />
       <method v="2">
         <option name="Build" />
       </method>
@@ -263,6 +418,7 @@
         <option name="CONFIGURATION" value="Debug" />
         <option name="PLATFORM" value="x64" />
         <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/MinecraftServer/MinecraftServer.vcxproj" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
         <option name="WORKING_DIRECTORY" value="$(LocalDebuggerWorkingDirectory)" />
@@ -273,6 +429,7 @@
         <option name="CONFIGURATION" value="Debug" />
         <option name="PLATFORM" value="x86" />
         <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/MinecraftServer/MinecraftServer.vcxproj" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
         <option name="WORKING_DIRECTORY" value="$(LocalDebuggerWorkingDirectory)" />
@@ -283,6 +440,7 @@
         <option name="CONFIGURATION" value="Release" />
         <option name="PLATFORM" value="x64" />
         <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/MinecraftServer/MinecraftServer.vcxproj" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
         <option name="WORKING_DIRECTORY" value="$(LocalDebuggerWorkingDirectory)" />
@@ -293,18 +451,31 @@
         <option name="CONFIGURATION" value="Release" />
         <option name="PLATFORM" value="x86" />
         <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/MinecraftServer/MinecraftServer.vcxproj" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
         <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
         <option name="WORKING_DIRECTORY" value="$(LocalDebuggerWorkingDirectory)" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
       </configuration_4>
+      <configuration_5>
+        <option name="CONFIGURATION" value="Profiler" />
+        <option name="PLATFORM" value="x64" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/MinecraftServer/MinecraftServer.vcxproj" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
+        <option name="EXE_PATH" value="$(TargetPath)" />
+        <option name="PROGRAM_PARAMETERS" value="" />
+        <option name="WORKING_DIRECTORY" value="$(ProjectDir)" />
+        <option name="PASS_PARENT_ENVS" value="1" />
+        <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      </configuration_5>
       <option name="DEFAULT_PROJECT_PATH" value="$PROJECT_DIR$/MinecraftServer/MinecraftServer.vcxproj" />
       <method v="2">
         <option name="Build" />
       </method>
     </configuration>
     <list>
+      <item itemvalue="C++ Project.MinecraftProjectLibrary" />
       <item itemvalue="C++ Project.MinecraftClient" />
       <item itemvalue="C++ Project.MinecraftServer" />
       <item itemvalue="C++ Project.MinecraftClientServer" />
@@ -420,7 +591,25 @@
       <workItem from="1675410463106" duration="55789000" />
       <workItem from="1675751379542" duration="58240000" />
       <workItem from="1676020489206" duration="112845000" />
-      <workItem from="1676626888093" duration="29197000" />
+      <workItem from="1676626888093" duration="70732000" />
+      <workItem from="1677152842462" duration="7469000" />
+      <workItem from="1677169704795" duration="3756000" />
+      <workItem from="1677236534046" duration="8635000" />
+      <workItem from="1677932558438" duration="88000" />
+      <workItem from="1677932665281" duration="34609000" />
+      <workItem from="1678862827712" duration="22303000" />
+      <workItem from="1680331965650" duration="669000" />
+      <workItem from="1681454330007" duration="42000" />
+      <workItem from="1681454497178" duration="127000" />
+      <workItem from="1688032319371" duration="68000" />
+      <workItem from="1690380605143" duration="204000" />
+      <workItem from="1690381697547" duration="610000" />
+      <workItem from="1698500988157" duration="11286000" />
+      <workItem from="1698741830765" duration="6662000" />
+      <workItem from="1698811949924" duration="6133000" />
+      <workItem from="1698999123960" duration="4655000" />
+      <workItem from="1699013280066" duration="40000" />
+      <workItem from="1699013367870" duration="559000" />
     </task>
     <task id="LOCAL-00001" summary="AAAAAAAAAAAAAAAAAAAAAA finally got the bindless textures to work">
       <created>1652106111120</created>
@@ -688,7 +877,22 @@
       <option name="project" value="LOCAL" />
       <updated>1676672353917</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="fixed some bugs in rendering on multiplayer worlds">
+      <created>1676739186773</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1676739186773</updated>
+    </task>
+    <task id="LOCAL-00040" summary="gitignore update">
+      <option name="closed" value="true" />
+      <created>1699013901673</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1699013901673</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -722,8 +926,6 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="rd-160052 completed" />
-    <MESSAGE value="rd-161348 completed!" />
     <MESSAGE value="mc-161807 completed" />
     <MESSAGE value="Version 0.02a Completed" />
     <MESSAGE value="Version 0.03a completed" />
@@ -747,20 +949,15 @@
     <MESSAGE value="One player networking completed, Server can handle one player(for now)" />
     <MESSAGE value="Server now supports more than 1 player, requires heavy testing" />
     <MESSAGE value="fixed warnings and prepared for first testing stage with a friend" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed warnings and prepared for first testing stage with a friend" />
+    <MESSAGE value="fixed some bugs in rendering on multiplayer worlds" />
+    <MESSAGE value="gitignore update" />
+    <option name="LAST_COMMIT_MESSAGE" value="gitignore update" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/MinecraftServer/ServerManager.cpp</url>
-          <line>108</line>
-          <option name="timeStamp" value="146" />
-        </line-breakpoint>
-      </breakpoints>
       <default-breakpoints>
         <breakpoint enabled="true" type="DotNet Exception Breakpoints" />
         <breakpoint enabled="true" type="CidrExceptionBreakpoint" />

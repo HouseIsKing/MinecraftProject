@@ -3,19 +3,10 @@
 #include "Util/States/PlayerState.h"
 
 
-class PlayerRenderer : public LivingEntityRenderer<PlayerState>
+class PlayerRenderer : public LivingEntityRenderer
 {
-    //EBlockType CurrentSelectedBlock;
-    //SelectedBlockGui* SelectedBlockGuiPtr;
-    //static int GetSelectionHighlightBrightness(int x, int y, int z, BlockFaces face);
-    //void PlaceBlock() const;
-    //void HandleMouseInput();
-    //void HandleKeyboardMovementInput();
 public:
-    PlayerRenderer(const PlayerState& playerState, const PlayerState& oldPlayerState);
-    //[[nodiscard]] bool GetMode() const;
-    //[[nodiscard]] EBlockType GetCurrentSelectedBlock() const;
-    //void UpdateMouseMove(float x, float y);
-    //void KeyboardButtonPressed(int button, int action);
-    //void MouseButtonPressed(int button, int action);
+    explicit PlayerRenderer(uint16_t entityId);
+    const EntityState& GetState() override;
+    EEntityType GetEntityTypeRenderer() override;
 };

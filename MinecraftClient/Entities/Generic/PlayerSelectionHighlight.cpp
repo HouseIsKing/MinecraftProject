@@ -8,10 +8,6 @@
 #include "World/Generic/Blocks/BlockRendererList.h"
 #include "World/World.h"
 
-PlayerSelectionHighlight::PlayerSelectionHighlight(const PlayerState& player) : Tessellation(&Transform), TextureIndex(EngineDefaultsClient::RegisterTexture(Texture::LoadTexture("Textures/HighlightTexture.png"))),
-	Player(player), BlockHit(nullptr), FaceHit(BlockFaces::Bottom), HitPosition(0, 0, 0)
-{
-}
 
 void PlayerSelectionHighlight::Reset()
 {
@@ -28,8 +24,9 @@ void PlayerSelectionHighlight::Render()
 		return;
 	}
 	Transform.Position = glm::vec3(HitPosition.x, HitPosition.y, HitPosition.z);
+	const PlayerState& state = World::GetWorld()->GetEntityState<PlayerStateWrapper, PlayerState>(PlayerId).first;
 	const auto helper = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
-	if (Player.Mode)
+	if (state.Mode)
 	{
 		const float bright = static_cast<float>(sin(static_cast<double>(helper.count()) / 100.0)) * 0.2F + 0.8F;
 		const float alpha = static_cast<float>(sin(static_cast<double>(helper.count()) / 200.0)) * 0.2F + 0.5F;
@@ -38,27 +35,27 @@ void PlayerSelectionHighlight::Render()
 		{
 		case BlockFaces::Top:
 			brightness = World::GetWorld()->GetBrightnessAt(HitPosition.x, HitPosition.y + 1, HitPosition.z);
-			BlockRendererList::GetBlockRenderer(Player.CurrentSelectedBlock)->GenerateTessellationDataForAllFaces(BlockTypeList::GetBlockTypeData(Player.CurrentSelectedBlock), Tessellation, 0.0F, 1.0F, 0.0F, brightness, bright, bright, bright, alpha);
+			BlockRendererList::GetBlockRenderer(state.CurrentSelectedBlock)->GenerateTessellationDataForAllFaces(BlockTypeList::GetBlockTypeData(state.CurrentSelectedBlock), Tessellation, 0.0F, 1.0F, 0.0F, brightness, bright, bright, bright, alpha);
 			break;
 		case BlockFaces::Bottom:
 			brightness = World::GetWorld()->GetBrightnessAt(HitPosition.x, HitPosition.y - 1, HitPosition.z);
-			BlockRendererList::GetBlockRenderer(Player.CurrentSelectedBlock)->GenerateTessellationDataForAllFaces(BlockTypeList::GetBlockTypeData(Player.CurrentSelectedBlock), Tessellation, 0.0F, -1.0F, 0.0F, brightness, bright, bright, bright, alpha);
+			BlockRendererList::GetBlockRenderer(state.CurrentSelectedBlock)->GenerateTessellationDataForAllFaces(BlockTypeList::GetBlockTypeData(state.CurrentSelectedBlock), Tessellation, 0.0F, -1.0F, 0.0F, brightness, bright, bright, bright, alpha);
 			break;
 		case BlockFaces::North:
 			brightness = World::GetWorld()->GetBrightnessAt(HitPosition.x, HitPosition.y, HitPosition.z + 1);
-			BlockRendererList::GetBlockRenderer(Player.CurrentSelectedBlock)->GenerateTessellationDataForAllFaces(BlockTypeList::GetBlockTypeData(Player.CurrentSelectedBlock), Tessellation, 0.0F, 0.0F, 1.0F, brightness, bright, bright, bright, alpha);
+			BlockRendererList::GetBlockRenderer(state.CurrentSelectedBlock)->GenerateTessellationDataForAllFaces(BlockTypeList::GetBlockTypeData(state.CurrentSelectedBlock), Tessellation, 0.0F, 0.0F, 1.0F, brightness, bright, bright, bright, alpha);
 			break;
 		case BlockFaces::South:
 			brightness = World::GetWorld()->GetBrightnessAt(HitPosition.x, HitPosition.y, HitPosition.z - 1);
-			BlockRendererList::GetBlockRenderer(Player.CurrentSelectedBlock)->GenerateTessellationDataForAllFaces(BlockTypeList::GetBlockTypeData(Player.CurrentSelectedBlock), Tessellation, 0.0F, 0.0F, -1.0F, brightness, bright, bright, bright, alpha);
+			BlockRendererList::GetBlockRenderer(state.CurrentSelectedBlock)->GenerateTessellationDataForAllFaces(BlockTypeList::GetBlockTypeData(state.CurrentSelectedBlock), Tessellation, 0.0F, 0.0F, -1.0F, brightness, bright, bright, bright, alpha);
 			break;
 		case BlockFaces::East:
 			brightness = World::GetWorld()->GetBrightnessAt(HitPosition.x + 1, HitPosition.y, HitPosition.z);
-			BlockRendererList::GetBlockRenderer(Player.CurrentSelectedBlock)->GenerateTessellationDataForAllFaces(BlockTypeList::GetBlockTypeData(Player.CurrentSelectedBlock), Tessellation, 1.0F, 0.0F, 0.0F, brightness, bright, bright, bright, alpha);
+			BlockRendererList::GetBlockRenderer(state.CurrentSelectedBlock)->GenerateTessellationDataForAllFaces(BlockTypeList::GetBlockTypeData(state.CurrentSelectedBlock), Tessellation, 1.0F, 0.0F, 0.0F, brightness, bright, bright, bright, alpha);
 			break;
 		case BlockFaces::West:
 			brightness = World::GetWorld()->GetBrightnessAt(HitPosition.x - 1, HitPosition.y, HitPosition.z);
-			BlockRendererList::GetBlockRenderer(Player.CurrentSelectedBlock)->GenerateTessellationDataForAllFaces(BlockTypeList::GetBlockTypeData(Player.CurrentSelectedBlock), Tessellation, -1.0F, 0.0F, 0.0F, brightness, bright, bright, bright, alpha);
+			BlockRendererList::GetBlockRenderer(state.CurrentSelectedBlock)->GenerateTessellationDataForAllFaces(BlockTypeList::GetBlockTypeData(state.CurrentSelectedBlock), Tessellation, -1.0F, 0.0F, 0.0F, brightness, bright, bright, bright, alpha);
 			break;
 		}
 	}
@@ -252,4 +249,8 @@ void PlayerSelectionHighlight::FindClosestFace()
 		}
 		totalDistance += abs(minDistance);
 	}
+}
+
+PlayerSelectionHighlight::PlayerSelectionHighlight(const uint16_t playerId) : Tessellation(&Transform), TextureIndex(EngineDefaultsClient::RegisterTexture(Texture::LoadTexture("Textures/HighlightTexture.png"))), PlayerId(playerId), BlockHit(nullptr), FaceHit(BlockFaces::Bottom), HitPosition(0, 0, 0)
+{
 }

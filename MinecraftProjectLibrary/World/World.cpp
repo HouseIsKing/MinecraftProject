@@ -130,10 +130,11 @@ bool World::RevertWorldState(const uint64_t tick)
     return true;
 }
 
-void World::SimulateTicks(const uint8_t tickCount)
+void World::SimulateTicks(const std::map<uint64_t, ClientInputStatusStruct>& inputYetToBeProcessed, const uint16_t playerEntityId)
 {
-    for (uint8_t i = 0; i < tickCount; i++)
+    for (std::pair<const unsigned long long, ClientInputStatusStruct> input : inputYetToBeProcessed)
     {
+        dynamic_cast<Player*>(State.GetEntity<PlayerStateWrapper, PlayerState>(playerEntityId))->AddClientInputToQueue(input.second, input.first);
         Tick();
     }
 }
@@ -556,10 +557,6 @@ void World::ChunkRemoved(const ChunkCoords& /*coords*/)
 }
 
 void World::EntityAdded(uint16_t /*entityId*/)
-{
-}
-
-void World::EntityChanged(uint16_t /*entityId*/)
 {
 }
 

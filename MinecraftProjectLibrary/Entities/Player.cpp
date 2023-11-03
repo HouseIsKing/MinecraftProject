@@ -11,23 +11,39 @@ Player::Player(const float x, const float y, const float z, const uint16_t& id) 
 
 Player::Player(const PlayerState& state) : LivingEntity(state)
 {
+    for (auto& input : ClientInputs)
+    {
+        input = state.InputState;
+    }
 }
 
 void Player::Tick()
 {
-    if (State.GetState().InputState.Disconnect)
+    if (!ClientInputQueue.empty())
     {
-        World::GetWorld()->EntitiesToRemove.emplace_back(GetState().EntityId);
-        return;
+        const ClientInputStatusStruct input = ClientInputQueue.front().second;
+        LastInputProcessed = ClientInputQueue.front().first;
+        ClientInputQueue.pop();
+        ClientInputs[LastInputProcessed % ClientInputs.size()] = ClientInputs[(LastInputProcessed - 1) % ClientInputs.size()];
+        ClientInputs[LastInputProcessed % ClientInputs.size()] = ClientInputs[LastInputProcessed % ClientInputs.size()] << input;
+        State.SetInputState(ClientInputs[LastInputProcessed % ClientInputs.size()]);
     }
-    State.SetInputState(ClientInputs[World::GetWorld()->GetWorldTime() % EngineDefaults::ROLLBACK_COUNT]);
+    else
+    {
+        State.SetInputState(ClientInputStruct{});
+    }
     HandleClientInput();
     LivingEntity::Tick();
 }
 
-void Player::NewTick()
+void Player::AddClientInputToQueue(const ClientInputStatusStruct& input, const uint64_t& inputId)
 {
-    SetClientInput(World::GetWorld()->GetWorldTime() + 1, {});
+    ClientInputQueue.emplace(inputId, input);
+}
+
+uint64_t Player::GetLastInputProcessed() const
+{
+    return LastInputProcessed;
 }
 
 BlockFaces Player::FindClosestFace(bool& foundBlock, glm::ivec3& hitPosition) const
@@ -126,7 +142,7 @@ BlockFaces Player::FindClosestFace(bool& foundBlock, glm::ivec3& hitPosition) co
     return BlockFaces::Bottom;
 }
 
-float Player::CalculateMaxDistanceForHighlight(const glm::vec3& front, const bool up, const bool right, const bool forward) const
+float Player::CalculateMaxDistanceForHighlight(const glm::vec3& front, const bool up, const bool right, const bool forward)
 {
     float xDistance = right ? 4.0F + EngineDefaults::PLAYER_SIZE.x : 3.0F + EngineDefaults::PLAYER_SIZE.x;
     float yDistance = up ? 4.0F + 2 * EngineDefaults::PLAYER_SIZE.y - EngineDefaults::CAMERA_OFFSET : 3.0F + EngineDefaults::CAMERA_OFFSET;
@@ -258,19 +274,6 @@ void Player::ApplyRevertEntityChange(const std::vector<uint8_t>& changes, size_t
     }
 }
 
-void Player::SetClientInput(const uint64_t index, const ClientInputStatusStruct& input)
-{
-    ClientInputs[index % ClientInputs.size()] = ClientInputs[(index - 1) % ClientInputs.size()];
-    ClientInputs[index % ClientInputs.size()] = ClientInputs[index % ClientInputs.size()] << input;
-}
-
-void Player::Disconnect()
-{
-    ClientInputStruct input;
-    input.Disconnect = true;
-    State.SetInputState(input);
-}
-
 void Player::HandleClientInput()
 {
     const ClientInputStruct& input = State.GetState().InputState;
@@ -343,5 +346,4 @@ void Player::HandleClientInput()
             }
         }
     }
-    World::GetWorld()->EntityChanged(State.GetState().EntityId);
 }
